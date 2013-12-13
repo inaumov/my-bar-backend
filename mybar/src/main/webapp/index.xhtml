@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/templates/BasicTemplate.xhtml">
+    <ui:define name="content">
+        <h:graphicImage id="mainPic" library="images" name="cocktail-final.jpg"></h:graphicImage>
+        <h:panelGroup layout="block" id="servicesTablePanel">
+            <h:panelGrid columns="3" id="servicesTable">
+                <h:panelGroup>
+                    <h:graphicImage library="images/footer" name="step_1.jpg"></h:graphicImage>
+                    <div>
+                        <h1>Step 1</h1>
+                    </div>
+                    <h2>Bring ingredients :)</h2>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <h:graphicImage library="images/footer" name="step_2.jpg"></h:graphicImage>
+                    <div>
+                        <h1>Step 2</h1>
+                    </div>
+                    <h2>Choose from menu</h2>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <h:graphicImage library="images/footer" name="step_3.jpg"></h:graphicImage>
+                    <div>
+                        <h1>Step 3</h1>
+                    </div>
+                    <h2>Wait for barman</h2>
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>
+</html>

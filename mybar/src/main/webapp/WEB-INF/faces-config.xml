@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+              version="2.1">
+
+    <!-- Enable Spring -->
+    <application>
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+    </application>
+
+    <!-- Navigation Rules -->
+
+<!--     <navigation-rule>
+         <from-view-id>/shoppingCart.xhtml</from-view-id>
+         <navigation-case>
+             <from-action>
+             #{navigationController.processPage1}
+           </from-action>
+             <from-outcome>page</from-outcome>
+             <to-view-id>page1.xhtml</to-view-id>
+         </navigation-case>
+         <navigation-case>
+             <from-action>
+             #{navigationController.processPage2}
+              </from-action>
+             <from-outcome>page</from-outcome>
+             <to-view-id>page2.xhtml</to-view-id>
+         </navigation-case>
+    </navigation-rule>-->
+    <navigation-rule>
+        <from-view-id>/registration.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/secured/registration/registered.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failure</from-outcome>
+            <to-view-id>/registrationFailed.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/secured/manage/user/accounts.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>add</from-outcome>
+            <to-view-id>/secured/manage/user/account.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>edit</from-outcome>
+            <to-view-id>/secured/manage/user/account.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <!-- Validators -->
+    <validator>
+        <display-name>UserPasswordValidator</display-name>
+        <validator-id>passwordValidator</validator-id>
+        <validator-class>mybar.app.managedbean.validator.PasswordValidator</validator-class>
+    </validator>
+    <validator>
+        <display-name>DishImageValidator</display-name>
+        <validator-id>fileValidator</validator-id>
+        <validator-class>mybar.app.managedbean.validator.FileValidator</validator-class>
+    </validator>
+<!--
+    <validator>
+        <display-name>EmailValidator</display-name>
+        <validator-id>emailValidator</validator-id>
+        <validator-class>restaurant.app.managedbeansedbeans.EmailValidator</validator-class>
+        <property>
+        <property-name>userBean</property-name>
+        <property-class></property-class>
+    </property>
+    </validator>
+-->
+    <converter>
+        <converter-for-class>java.lang.Enum</converter-for-class>
+        <converter-class>javax.faces.convert.EnumConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>categoryConverter</converter-id>
+        <converter-class>mybar.app.managedbean.converter.CategoryConverter</converter-class>
+    </converter>
+
+    <!-- managed beans -->
+    <managed-bean>
+        <managed-bean-name>emailValidator</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.validator.EmailValidator</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>loginBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.LoginBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+        <managed-property>
+            <property-name>navigationController</property-name>
+            <value>#{navigationController}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authenticationService</property-name>
+            <value>#{authenticationService}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>navigationController</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.NavigationController</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>categoryBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.CategoryBean</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>dishBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.DishBean</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>containerBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.ContainerBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>reportBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.ReportBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>userBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.UserBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>securedUserBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.SecuredUserBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>orderBean</managed-bean-name>
+        <managed-bean-class>mybar.app.managedbean.OrderBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+</faces-config>

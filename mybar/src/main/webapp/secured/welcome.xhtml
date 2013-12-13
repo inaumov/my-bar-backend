@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <title>Secured Welcome Page</title>
+</h:head>
+<h:body>
+    <h3>Welcome, #{loginBean.username}</h3>
+
+    <h3>You have got the following granted authorities:</h3>
+    <h:dataTable value="#{loginBean.authorities}" var="role">
+        <h:column>
+            #{role}
+        </h:column>
+    </h:dataTable>
+    <br/>
+    <h:outputText value="This is a secured welcome page!"/>
+    <br/>
+    <h:panelGrid columns="2">
+        <h:form>
+            <h:commandLink action="#{loginBean.doLogout}" value="Logout" styleClass="main-link"/>
+        </h:form>
+        <h:link outcome="/index.xhtml" value="Back to home" styleClass="main-link"/>
+    </h:panelGrid>
+</h:body>
+</html>

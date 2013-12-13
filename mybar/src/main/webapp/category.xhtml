@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<f:metadata>
+    <f:viewParam name="id" value="#{categoryBean.id}"/>
+    <f:event type="preRenderView" listener="#{categoryBean.init}"/>
+</f:metadata>
+
+<ui:composition template="/WEB-INF/templates/BasicTemplate.xhtml">
+    <ui:define name="content">
+
+        <!-- menu content -->
+
+        <h:panelGroup id="menu">
+            <ui:repeat value="#{categoryBean.dishes}" var="dish" varStatus="loop">
+                <h:panelGroup layout="block" class="element" rendered="#{dish.activeStatus == 'ENABLED'}">
+                    <div class="menuLeft">
+                        <h:form rendered="#{loginBean.hasShoppingCart()}">
+                            <h:graphicImage library="images/menu" name="test_menu.jpg" styleClass="dish"/>
+                            <h:outputText value="#{containerBean.count(dish)}" styleClass="counter"/>
+                            <h:commandButton action="#{containerBean.add(dish)}" value="Buy" styleClass="main-button buy" type="submit"/>
+                        </h:form>
+                        <h:graphicImage library="images/menu" name="#{dish.name}.jpg" styleClass="dish" rendered="#{!loginBean.hasShoppingCart()}"/>
+                    </div>
+                    <h:panelGrid class="menuRight" columns="1">
+                        <h:outputText value="Dish ID: #{dish.id}" rendered="#{loginBean.isAdmin()}"/>
+                        <h:outputText value="#{dish.name}"/>
+                        <h:outputText value="#{dish.description}"/>
+                        <h:outputText value="#{dish.price} UAH"/>
+                        <h:link value="Edit" outcome="/secured/manage/menu/dish.xhtml" styleClass="main-button" rendered="#{loginBean.isAdmin()}">
+                            <f:param name="id" value="#{dish.id}"/>
+                        </h:link>
+                    </h:panelGrid>
+                </h:panelGroup>
+            </ui:repeat>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>
+</html>

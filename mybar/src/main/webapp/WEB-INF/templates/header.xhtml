@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<body>
+<ui:composition>
+
+    <h:link outcome="/index.xhtml">
+        <h:graphicImage library="images" name="logo_cocktail_13.jpg"/>
+    </h:link>
+
+    <h:panelGroup layout="block" id="shopping-cart-panel" rendered="#{loginBean.hasShoppingCart()}">
+        <div>
+            <h:graphicImage id="cart-image" library="images" name="empty-cart-dark.png"/>
+            <h:outputText id="cart-items-amount" value="#{containerBean.totalItems()}"/>
+            <h:outputText id="cart-text" value="items in your"/>
+            <h:link id="cart-link" outcome="/shoppingCart.xhtml"
+                    value="shopping cart"/>
+        </div>
+    </h:panelGroup>
+    <div id="login-button-panel">
+        <h:link outcome="/secured/manage/user/accounts.xhtml" value="User management"
+                rendered="#{loginBean.isSuper()}" styleClass="main-link"/>
+        <h:link outcome="/secured/report/report.xhtml" value="Report"
+                rendered="#{loginBean.isAnalyst()}" styleClass="main-link"/>
+        <h:link outcome="/secured/kitchen/list.xhtml" value="Kitchen"
+                rendered="#{loginBean.isCock()}" styleClass="main-link"/>
+        <h:link outcome="/secured/delivery/list.xhtml" value="Delivery"
+                rendered="#{loginBean.isDelivery()}" styleClass="main-link"/>
+
+        <h:form rendered="#{loginBean.loggedIn}" id="logout">
+            <h:commandLink action="#{loginBean.doLogout()}" value="Sign Out" styleClass="main-link"/>
+        </h:form>
+        <h:link id="register" outcome="/registration.xhtml" value="Sign Up"
+                rendered="#{loginBean.loggedIn == false}" styleClass="main-link"/>
+        <h:link id="login" outcome="/login.xhtml" value="Sign In"
+                rendered="#{loginBean.loggedIn == false}" styleClass="main-link"/>
+    </div>
+</ui:composition>
+</body>
+</html>
