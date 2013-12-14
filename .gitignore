@@ -42,3 +42,9 @@ target
 bin
 build
 out
+
+# Images #
+*.jpg
+*.jpeg
+*.png
+*.gif
