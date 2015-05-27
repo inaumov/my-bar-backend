@@ -1,27 +1,19 @@
-package mybar.app.managedbean;
+package mybar.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import mybar.entity.Category;
 import mybar.entity.Dish;
 import mybar.service.MenuManagementService;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@Component
-@ManagedBean(name = "categoryBean")
-@SessionScoped
-public class CategoryBean implements Serializable {
+public class MenuController implements Serializable {
 
-    Logger logger = LoggerFactory.getLogger(CategoryBean.class);
+    Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
     MenuManagementService menuManagementService;
@@ -50,7 +42,7 @@ public class CategoryBean implements Serializable {
     public void init() {
         if (id < 0 || id > 5) {
             String message = "Bad request. Please use a link from within the system.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+
             return;
         }
 
@@ -58,8 +50,6 @@ public class CategoryBean implements Serializable {
 
         if (menu == null) {
             String message = "Bad request. Unknown user.";
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
         } else {
             logger.info("Loaded menu for category id=" + String.valueOf(id));
         }
@@ -79,7 +69,7 @@ public class CategoryBean implements Serializable {
         return menu;
     }
 
-    public boolean isSelected(int index){
+    public boolean isSelected(int index) {
         return id == index;
     }
 }

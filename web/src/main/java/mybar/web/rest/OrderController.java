@@ -1,19 +1,13 @@
-package mybar.app.managedbean;
+package mybar.web.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import mybar.OrderStatus;
 import mybar.entity.Order;
 import mybar.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import java.util.List;
 
-@Component
-@ManagedBean(name = "orderBean")
-@SessionScoped
-public class OrderBean {
+public class OrderController {
 
     @Autowired
     private OrderService orderService;

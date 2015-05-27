@@ -8,60 +8,37 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
 
-    <display-name>E-Restaurant</display-name>
-
-    <!-- Enable JSF Servlet -->
-    <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <!-- JSF URL mapping -->
-    <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.xhtml</url-pattern>
-    </servlet-mapping>
-
-    <!-- CONFIGURATION FILES both Bean definition and security -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            /WEB-INF/applicationContext.xml
-            /WEB-INF/spring-security.xml
-        </param-value>
-    </context-param>
-
-    <!-- Spring Login filter -->
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-
-    <!-- Set the login filter to secure all the pages in the /secured/* path of the application  -->
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
-
-    <!-- JSF Impl Configuration Listeners -->
-    <listener>
-        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-    </listener>
-
-    <!-- Spring listeners -->
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-    </listener>
+    <display-name>My Bar</display-name>
 
     <!-- Default welcome page -->
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
+
+    <!-- The context params that read by ContextLoaderListener  -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/applicationContext.xml
+            /WEB-INF/rest-servlet.xml
+            /WEB-INF/spring-security.xml
+        </param-value>
+    </context-param>
+
+    <!-- This listener will load other application context file in addition -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/service/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>

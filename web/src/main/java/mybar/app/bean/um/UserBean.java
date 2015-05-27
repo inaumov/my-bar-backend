@@ -1,15 +1,14 @@
-package mybar.app.managedbean;
+package mybar.app.bean.um;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import mybar.ActiveStatus;
 import mybar.api.um.IRole;
 import mybar.api.um.IUser;
-import mybar.service.UserManagementService;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Component
-public abstract class AbstractUserBean implements IUser {
+@XmlRootElement(name = "user")
+public class UserBean implements IUser {
 
     private int id;
     private String login;
@@ -19,13 +18,15 @@ public abstract class AbstractUserBean implements IUser {
     private String email;
     private String address;
     private List<IRole> roles;
-
-    @Autowired
-    UserManagementService userManagementService;
+    private ActiveStatus activeStatus;
 
     @Override
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -89,6 +90,15 @@ public abstract class AbstractUserBean implements IUser {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public ActiveStatus getActiveStatus() {
+        return activeStatus;
+    }
+
+    public void setActiveStatus(ActiveStatus activeStatus) {
+        this.activeStatus = activeStatus;
     }
 
 }

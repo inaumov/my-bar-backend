@@ -1,19 +1,13 @@
-package mybar.app.managedbean;
+package mybar.web.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import mybar.Report;
 import mybar.service.ReportService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import java.util.Date;
 import java.util.List;
 
-@Component
-@ManagedBean(name = "reportBean")
-@RequestScoped
-public class ReportBean {
+public class ReportController {
 
     private Date startDate, endDate;
 
@@ -22,7 +16,7 @@ public class ReportBean {
     @Autowired
     private ReportService reportService;
 
-    public ReportBean() {
+    public ReportController() {
     }
 
     public Date getStartDate() {

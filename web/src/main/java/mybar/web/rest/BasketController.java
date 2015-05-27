@@ -1,22 +1,16 @@
-package mybar.app.managedbean;
+package mybar.web.rest;
 
+import mybar.entity.Dish;
+import mybar.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import mybar.entity.Dish;
-import mybar.service.ClientService;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import java.util.*;
+import java.util.Map;
 
-@Component
-@ManagedBean(name = "containerBean")
-@SessionScoped
-public class ContainerBean {
+public class BasketController {
 
-    Logger logger = LoggerFactory.getLogger(ContainerBean.class);
+    Logger logger = LoggerFactory.getLogger(BasketController.class);
 
     @Autowired
     private ClientService clientService;
