@@ -1,12 +1,11 @@
 package mybar.web.rest;
 
 import mybar.WebRole;
-import mybar.api.um.IRole;
 import mybar.api.um.IUser;
 import mybar.app.bean.um.BeanFactory;
+import mybar.app.bean.um.RoleBean;
 import mybar.app.bean.um.UserBean;
 import mybar.app.bean.um.UserList;
-import mybar.entity.um.Role;
 import mybar.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -50,9 +49,9 @@ public class UserController {
     public ModelAndView addUser(@RequestBody String body) {
         Source source = new StreamSource(new StringReader(body));
         UserBean userBean = (UserBean) marshaller.unmarshal(source);
-        Role role = new Role();
+        RoleBean role = new RoleBean();
         role.setWebRole(WebRole.ROLE_CLIENT);
-        userBean.setRoles(Arrays.<IRole>asList(role));
+        userBean.setRoles(Arrays.<RoleBean>asList(role));
         userManagementService.createUser(userBean);
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }

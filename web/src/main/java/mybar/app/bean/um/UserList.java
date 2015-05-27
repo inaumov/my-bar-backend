@@ -10,6 +10,9 @@ public class UserList {
     private int count;
     private List<UserBean> users;
 
+    public UserList() {
+    }
+
     public UserList(List<UserBean> users) {
         this.users = users;
         this.count = users.size();

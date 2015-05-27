@@ -1,7 +1,6 @@
 package mybar.app.bean.um;
 
 import mybar.ActiveStatus;
-import mybar.api.um.IRole;
 import mybar.api.um.IUser;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +16,7 @@ public class UserBean implements IUser {
     private String surname;
     private String email;
     private String address;
-    private List<IRole> roles;
+    private List<RoleBean> roles;
     private ActiveStatus activeStatus;
 
     @Override
@@ -39,11 +38,11 @@ public class UserBean implements IUser {
     }
 
     @Override
-    public List<IRole> getRoles() {
+    public List<RoleBean> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<IRole> roles) {
+    public void setRoles(List<RoleBean> roles) {
         this.roles = roles;
     }
 
