@@ -1,6 +1,7 @@
 package mybar.app.bean.um;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class UserList {
     }
 
     @XmlElement(name = "user")
+    @XmlElementWrapper
     public List<UserBean> getUsers() {
         return users;
     }

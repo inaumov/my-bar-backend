@@ -3,10 +3,12 @@ package mybar.app.bean.um;
 import mybar.ActiveStatus;
 import mybar.api.um.IUser;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "user")
+@XmlType(propOrder = {"login", "name", "surname", "email", "roles"})
 public class UserBean implements IUser {
 
     private int id;
@@ -16,10 +18,11 @@ public class UserBean implements IUser {
     private String surname;
     private String email;
     private String address;
-    private List<RoleBean> roles;
+    private List<RoleBean> roles = new ArrayList<>();
     private ActiveStatus activeStatus;
 
     @Override
+    @XmlTransient
     public int getId() {
         return id;
     }
@@ -38,6 +41,8 @@ public class UserBean implements IUser {
     }
 
     @Override
+    @XmlElement(name = "role")
+    @XmlElementWrapper(name = "roles")
     public List<RoleBean> getRoles() {
         return roles;
     }
@@ -47,6 +52,7 @@ public class UserBean implements IUser {
     }
 
     @Override
+    @XmlTransient
     public String getPassword() {
         return password;
     }
@@ -83,6 +89,7 @@ public class UserBean implements IUser {
     }
 
     @Override
+    @XmlTransient
     public String getAddress() {
         return address;
     }
@@ -92,6 +99,7 @@ public class UserBean implements IUser {
     }
 
     @Override
+    @XmlAttribute(name = "active")
     public ActiveStatus getActiveStatus() {
         return activeStatus;
     }
