@@ -1,0 +1,55 @@
+allprojects  {
+    apply plugin: 'eclipse'
+
+    group = 'com.mybar'
+    version = '1.0-SNAPSHOT'
+
+    eclipse {
+        classpath { downloadSources = true }
+    }
+}
+
+ext {
+    springVersion = '4.1.6.RELEASE'
+    springSecurityVersion = '4.0.1.RELEASE'
+    junitVersion = '4.12'
+    hibernateVersion = '4.3.10.Final'
+    slf4jVersion = '1.7.12'
+    derbyVersion = '10.11.1.1'
+}
+
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        compile "org.eclipse.persistence:javax.persistence:2.1.0"
+        compile "org.hibernate:hibernate-core:${hibernateVersion}"
+        compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
+        compile "org.springframework:spring-core:${springVersion}"
+        compile "org.springframework:spring-context:${springVersion}"
+        compile "org.springframework:spring-beans:${springVersion}"
+        compile "org.springframework:spring-tx:${springVersion}"
+        compile "org.springframework:spring-jdbc:${springVersion}"
+        compile "org.springframework:spring-orm:${springVersion}"
+        compile "org.springframework:spring-web:${springVersion}"
+        compile "org.slf4j:slf4j-api:${slf4jVersion}"
+        compile "org.slf4j:slf4j-simple:${slf4jVersion}"
+        compile "com.github.springtestdbunit:spring-test-dbunit:1.2.1"
+
+        testCompile "org.springframework:spring-test:${springVersion}"
+        testCompile "junit:junit:${junitVersion}"
+        testCompile "org.dbunit:dbunit:2.4.9" // should be updated to 2.5.1 when 'allowEmptyFields' property is added to spring-test-dbunit
+        testCompile "org.apache.derby:derby:${derbyVersion}"
+        testCompile "org.apache.derby:derbyclient:${derbyVersion}"
+    }
+}
+

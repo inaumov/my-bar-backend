@@ -1,5 +1,13 @@
 package mybar.web.rest;
 
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
 import mybar.WebRole;
 import mybar.api.um.IUser;
 import mybar.app.bean.um.BeanFactory;
@@ -7,18 +15,16 @@ import mybar.app.bean.um.RoleBean;
 import mybar.app.bean.um.UserBean;
 import mybar.app.bean.um.UserList;
 import mybar.service.UserManagementService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -51,7 +57,7 @@ public class UserController {
         UserBean userBean = (UserBean) marshaller.unmarshal(source);
         RoleBean role = new RoleBean();
         role.setWebRole(WebRole.ROLE_CLIENT);
-        userBean.setRoles(Arrays.<RoleBean>asList(role));
+        userBean.setRoles(Arrays.<RoleBean> asList(role));
         userManagementService.createUser(userBean);
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }

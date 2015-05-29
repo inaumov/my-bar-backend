@@ -28,6 +28,7 @@
 *.settings
 *.project
 *.classpath
+*.springBeans
 
 # Intellij IDEA project #
 #########################
@@ -48,3 +49,4 @@ out
 *.jpeg
 *.png
 *.gif
+/.gradle/

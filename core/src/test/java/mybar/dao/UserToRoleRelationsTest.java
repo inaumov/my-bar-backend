@@ -1,25 +1,15 @@
 package mybar.dao;
 
-import mybar.entity.um.Role;
-import mybar.entity.um.User;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
+import mybar.entity.um.Role;
+import mybar.entity.um.User;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:mybar/spring-test-config.xml")
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class UserToRoleRelationsTest extends BaseDaoTest {
 
     @Autowired
@@ -33,7 +23,7 @@ public class UserToRoleRelationsTest extends BaseDaoTest {
         User user = userDAO.read(CLIENT1_ID);
         Collection<Role> roles = user.getRoles();
         assertEquals(2, roles.size());
-        for(Role role : roles) {
+        for (Role role : roles) {
             assertEquals(role, roleDAO.getRole(role.getId()));
         }
     }

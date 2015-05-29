@@ -4,7 +4,7 @@ public interface IStorage {
 
     int getId();
 
-    <T extends IIngredient>T getIngredient();
+    <T extends IIngredient> T getIngredient();
 
     double getVolume();
 

@@ -1,7 +1,14 @@
 package mybar.api;
 
-import mybar.entity.*;
+import mybar.entity.Basis;
+import mybar.entity.Category;
+import mybar.entity.Dish;
+import mybar.entity.Ingredient;
+import mybar.entity.Order;
+import mybar.entity.Storage;
 
+
+// FIXME: casting is required to avoid compilation error "ambiguous method declaration"
 public class EntityFactory {
 
     public static final Category from(final ICategory category) {
@@ -26,7 +33,7 @@ public class EntityFactory {
         entity.setDishType(dish.getDishType());
         entity.setActiveStatus(dish.getActiveStatus());
         entity.setPicture(dish.getPicture());
-        entity.setCategory(from(dish.getCategory()));
+        entity.setCategory(from((Category)dish.getCategory()));
         return entity;
     }
 
@@ -35,7 +42,7 @@ public class EntityFactory {
         entity.setId(basis.getId());
         entity.setValue(basis.getValue());
         entity.setVolume(basis.getVolume());
-        entity.setIngredient(from(basis.getIngredient()));
+        entity.setIngredient(from((Ingredient)basis.getIngredient()));
         return entity;
     }
 
@@ -44,7 +51,7 @@ public class EntityFactory {
         entity.setId(storage.getId());
         entity.setVolume(storage.getVolume());
         entity.setPrice(storage.getPrice());
-        entity.setIngredient(from(storage.getIngredient()));
+        entity.setIngredient(from((Ingredient)storage.getIngredient()));
         return entity;
     }
 

@@ -1,19 +1,19 @@
 package mybar.dao;
 
-import mybar.ActiveStatus;
-import mybar.DishType;
-import mybar.entity.Category;
-import mybar.entity.Dish;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import mybar.ActiveStatus;
+import mybar.DishType;
+import mybar.entity.Category;
+import mybar.entity.Dish;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MenuTest extends BaseDaoTest {
 
