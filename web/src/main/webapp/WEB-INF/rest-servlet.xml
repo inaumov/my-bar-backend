@@ -16,8 +16,14 @@
 	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="classesToBeBound">
 			<list>
+				<value>mybar.app.bean.um.RoleBean</value>
 				<value>mybar.app.bean.um.UserBean</value>
 				<value>mybar.app.bean.um.UserList</value>
+			</list>
+		</property>
+		<property name="adapters">
+			<list>
+				<bean class="mybar.app.bean.um.RoleAdapter"/>
 			</list>
 		</property>
 	</bean>

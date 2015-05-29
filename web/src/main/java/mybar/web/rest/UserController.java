@@ -34,7 +34,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/user/{id}")
     public ModelAndView getUser(@PathVariable("id") String id) {
         IUser user = userManagementService.findByUsername(id);
-        return new ModelAndView(XML_VIEW_NAME, "user", user);
+        return new ModelAndView(XML_VIEW_NAME, "user", BeanFactory.from(user));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}")
