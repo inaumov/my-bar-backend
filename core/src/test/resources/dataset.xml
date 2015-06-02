@@ -29,23 +29,23 @@
     <category ID="2" NAME="Long"/>
     <category ID="3" NAME="Coffee"/>
     <category ID="4" NAME="Tea"/>
-    <dish ID="1" CATEGORY_ID="1" NAME="B52" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="2" CATEGORY_ID="1" NAME="B53" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="3" CATEGORY_ID="1" NAME="Green Mexican" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="4" CATEGORY_ID="1" NAME="Blow Job" DISHTYPE="KITCHEN" IS_ACTIVE="0"></dish>
-    <dish ID="5" CATEGORY_ID="2" NAME="Long Island Iced Tea" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="6" CATEGORY_ID="2" NAME="Tequila Sunrise" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="7" CATEGORY_ID="2" NAME="Black Russian" DISHTYPE="KITCHEN" IS_ACTIVE="0"></dish>
-    <dish ID="8" CATEGORY_ID="2" NAME="Hurricane" DISHTYPE="KITCHEN"  IS_ACTIVE="0"></dish>
-    <dish ID="9" CATEGORY_ID="2" NAME="Mai Tai" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="10" CATEGORY_ID="2" NAME="Margarita" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="11" CATEGORY_ID="2" NAME="Mojito" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="12" CATEGORY_ID="3" NAME="Americano" DISHTYPE="NON_KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="13" CATEGORY_ID="3" NAME="Espresso" DISHTYPE="NON_KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="14" CATEGORY_ID="4" NAME="Phu-Er" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="15" CATEGORY_ID="4" NAME="Roibush" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="16" CATEGORY_ID="4" NAME="Da Hong Pao" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
-    <dish ID="17" CATEGORY_ID="4" NAME="Yunnan Gold" DISHTYPE="KITCHEN" IS_ACTIVE="1"></dish>
+    <drink ID="1" CATEGORY_ID="1" NAME="B52" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="2" CATEGORY_ID="1" NAME="B53" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="3" CATEGORY_ID="1" NAME="Green Mexican" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="4" CATEGORY_ID="1" NAME="Blow Job" PREPARATION="KITCHEN" IS_ACTIVE="0"></drink>
+    <drink ID="5" CATEGORY_ID="2" NAME="Long Island Iced Tea" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="6" CATEGORY_ID="2" NAME="Tequila Sunrise" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="7" CATEGORY_ID="2" NAME="Black Russian" PREPARATION="KITCHEN" IS_ACTIVE="0"></drink>
+    <drink ID="8" CATEGORY_ID="2" NAME="Hurricane" PREPARATION="KITCHEN"  IS_ACTIVE="0"></drink>
+    <drink ID="9" CATEGORY_ID="2" NAME="Mai Tai" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="10" CATEGORY_ID="2" NAME="Margarita" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="11" CATEGORY_ID="2" NAME="Mojito" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="12" CATEGORY_ID="3" NAME="Americano" PREPARATION="NON_KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="13" CATEGORY_ID="3" NAME="Espresso" PREPARATION="NON_KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="14" CATEGORY_ID="4" NAME="Phu-Er" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="15" CATEGORY_ID="4" NAME="Roibush" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="16" CATEGORY_ID="4" NAME="Da Hong Pao" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="17" CATEGORY_ID="4" NAME="Yunnan Gold" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
     <ingredient ID="1" NAME="Vodka"></ingredient>
     <ingredient ID="2" NAME="Gin"></ingredient>
     <ingredient ID="3" NAME="Rum"></ingredient>
@@ -63,15 +63,15 @@
     <ingredient ID="15" NAME="Sugar"></ingredient>
     <ingredient ID="16" NAME="Coffee liqueur"></ingredient>
     <ingredient ID="17" NAME="Coca Cola"></ingredient>
-    <basis ID="1" DISH_ID="1" INGREDIENT_ID="8" VOLUME="0.02" VALUE="ml"></basis>
-    <basis ID="2" DISH_ID="1" INGREDIENT_ID="11" VOLUME="0.02" VALUE="ml"></basis>
-    <basis ID="3" DISH_ID="1" INGREDIENT_ID="16" VOLUME="0.02" VALUE="ml"></basis>
-    <basis ID="4" DISH_ID="7" INGREDIENT_ID="16" VOLUME="0.05" VALUE="ml"></basis>
-    <basis ID="5" DISH_ID="7" INGREDIENT_ID="17" VOLUME="0.15" VALUE="ml"></basis>
-    <basis ID="6" DISH_ID="7" INGREDIENT_ID="14" VOLUME="5" VALUE="pcs"></basis>
-    <basis ID="7" DISH_ID="6" INGREDIENT_ID="13" VOLUME="0.15" VALUE="ml"></basis>
-    <basis ID="8" DISH_ID="6" INGREDIENT_ID="4" VOLUME="0.05" VALUE="pcs"></basis>
-    <basis ID="9" DISH_ID="6" INGREDIENT_ID="14" VOLUME="5" VALUE="ml"></basis>
+    <basis ID="1" DRINK_ID="1" INGREDIENT_ID="8" VOLUME="0.02" VALUE="ml"></basis>
+    <basis ID="2" DRINK_ID="1" INGREDIENT_ID="11" VOLUME="0.02" VALUE="ml"></basis>
+    <basis ID="3" DRINK_ID="1" INGREDIENT_ID="16" VOLUME="0.02" VALUE="ml"></basis>
+    <basis ID="4" DRINK_ID="7" INGREDIENT_ID="16" VOLUME="0.05" VALUE="ml"></basis>
+    <basis ID="5" DRINK_ID="7" INGREDIENT_ID="17" VOLUME="0.15" VALUE="ml"></basis>
+    <basis ID="6" DRINK_ID="7" INGREDIENT_ID="14" VOLUME="5" VALUE="pcs"></basis>
+    <basis ID="7" DRINK_ID="6" INGREDIENT_ID="13" VOLUME="0.15" VALUE="ml"></basis>
+    <basis ID="8" DRINK_ID="6" INGREDIENT_ID="4" VOLUME="0.05" VALUE="pcs"></basis>
+    <basis ID="9" DRINK_ID="6" INGREDIENT_ID="14" VOLUME="5" VALUE="ml"></basis>
 
     <!-- killer feature -->
     <storage ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120"></storage>
@@ -83,10 +83,10 @@
     <storage ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119"></storage>
 
     <!-- what is done -->
-    <orders ID="1" USER_ID="6" DISH_ID="1" SOLD="2013-08-16" IS_DONE="PREPARED" AMOUNT="3"></orders>
-    <orders ID="2" USER_ID="6" DISH_ID="2" SOLD="2013-08-17" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
-    <orders ID="3" USER_ID="6" DISH_ID="3" SOLD="2013-08-17" IS_DONE="PREPARED" AMOUNT="1"></orders>
-    <orders ID="4" USER_ID="6" DISH_ID="4" SOLD="2013-08-25" IS_DONE="PREPARED" AMOUNT="5"></orders>
-    <orders ID="5" USER_ID="6" DISH_ID="5" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="2"></orders>
-    <orders ID="6" USER_ID="6" DISH_ID="6" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
+    <orders ID="1" USER_ID="6" DRINK_ID="1" SOLD="2013-08-16" IS_DONE="PREPARED" AMOUNT="3"></orders>
+    <orders ID="2" USER_ID="6" DRINK_ID="2" SOLD="2013-08-17" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
+    <orders ID="3" USER_ID="6" DRINK_ID="3" SOLD="2013-08-17" IS_DONE="PREPARED" AMOUNT="1"></orders>
+    <orders ID="4" USER_ID="6" DRINK_ID="4" SOLD="2013-08-25" IS_DONE="PREPARED" AMOUNT="5"></orders>
+    <orders ID="5" USER_ID="6" DRINK_ID="5" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="2"></orders>
+    <orders ID="6" USER_ID="6" DRINK_ID="6" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
 </dataset>

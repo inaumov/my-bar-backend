@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import mybar.entity.Category;
-import mybar.entity.Dish;
+import mybar.entity.Drink;
 import mybar.service.MenuManagementService;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ public class MenuController implements Serializable {
     private int id;
     private String name;
 
-    private Collection<Dish> menu;
+    private Collection<Drink> menu;
 
     public int getId() {
         return id;
@@ -46,7 +46,7 @@ public class MenuController implements Serializable {
             return;
         }
 
-        menu = menuManagementService.getAllCategories().get(id).getDishes();
+        menu = menuManagementService.getAllCategories().get(id).getDrinks();
 
         if (menu == null) {
             String message = "Bad request. Unknown user.";
@@ -65,7 +65,7 @@ public class MenuController implements Serializable {
         return menuManagementService.getAllCategories();
     }
 
-    public Collection<Dish> getDishes() {
+    public Collection<Drink> getDrinks() {
         return menu;
     }
 

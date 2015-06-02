@@ -1,12 +1,12 @@
 package mybar.api;
 
 import mybar.ActiveStatus;
-import mybar.DishType;
+import mybar.Preparation;
 
 import java.sql.Blob;
 import java.util.Collection;
 
-public interface IDish {
+public interface IDrink {
 
     int getId();
 
@@ -18,7 +18,7 @@ public interface IDish {
 
     String getDescription();
 
-    DishType getDishType();
+    Preparation getPreparation();
 
     ActiveStatus getActiveStatus();
 

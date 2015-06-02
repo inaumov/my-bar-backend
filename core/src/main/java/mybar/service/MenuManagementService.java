@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.ActiveStatus;
 import mybar.api.EntityFactory;
-import mybar.api.IDish;
+import mybar.api.IDrink;
 import mybar.dao.CategoryDAO;
-import mybar.dao.DishDAO;
+import mybar.dao.DrinkDAO;
 import mybar.dao.OrderDAO;
 import mybar.entity.Category;
-import mybar.entity.Dish;
+import mybar.entity.Drink;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class MenuManagementService {
     private CategoryDAO categoryDao;
 
     @Autowired
-    private DishDAO dishDao;
+    private DrinkDAO drinkDao;
 
     @Autowired
     private OrderDAO orderDao;
@@ -40,7 +40,7 @@ public class MenuManagementService {
     @Transactional
     public void removeCategory(Category c) throws Exception {
         try {
-            if (c.getDishes().isEmpty())
+            if (c.getDrinks().isEmpty())
                 categoryDao.delete(c);
             else
                 throw new Exception("The menu for this category " + c.getName() + " is not empty");
@@ -48,39 +48,39 @@ public class MenuManagementService {
         }
     }
 
-    // dishes
+    // drinks
 
     @Transactional
-    public void saveOrUpdateDish(IDish d) {
-        Dish dish = EntityFactory.from(d);
-        if (dish.getId() == 0) {
-            dishDao.create(dish);
+    public void saveOrUpdateDrink(IDrink d) {
+        Drink drink = EntityFactory.from(d);
+        if (drink.getId() == 0) {
+            drinkDao.create(drink);
         } else {
-            dishDao.update(dish);
+            drinkDao.update(drink);
         }
     }
 
     @Transactional
-    public void removeDish(IDish d) throws Exception {
-        boolean hasRef = orderDao.findDishInHistory(d);
+    public void removeDrink(IDrink d) throws Exception {
+        boolean hasRef = orderDao.findDrinkInHistory(d);
         if (hasRef) {
-            Dish dish = EntityFactory.from(d);
-            dish.setActiveStatus(ActiveStatus.DISABLED);
-            dishDao.update(dish);
+            Drink drink = EntityFactory.from(d);
+            drink.setActiveStatus(ActiveStatus.DISABLED);
+            drinkDao.update(drink);
         } else {
-            dishDao.delete(d);
+            drinkDao.delete(d);
         }
     }
 
-    public boolean dishIsInHistory(IDish dish) {
-        boolean hasRef = orderDao.findDishInHistory(dish);
+    public boolean drinkIsInHistory(IDrink drink) {
+        boolean hasRef = orderDao.findDrinkInHistory(drink);
         return hasRef;
     }
 
     @Transactional
-    public void moveDishToCategory(Dish d, Category c) {
+    public void moveDrinkToCategory(Drink d, Category c) {
         d.setCategory(c);
-        dishDao.update(d);
+        drinkDao.update(d);
     }
 
     @Transactional
@@ -88,7 +88,7 @@ public class MenuManagementService {
         return categoryDao.findAll();
     }
 
-    public IDish findDish(int id) {
-        return dishDao.read(id);
+    public IDrink findDrink(int id) {
+        return drinkDao.read(id);
     }
 }

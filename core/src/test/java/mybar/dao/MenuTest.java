@@ -1,13 +1,12 @@
 package mybar.dao;
 
 import mybar.ActiveStatus;
-import mybar.DishType;
+import mybar.Preparation;
 import mybar.entity.Category;
-import mybar.entity.Dish;
+import mybar.entity.Drink;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +20,7 @@ public class MenuTest extends BaseDaoTest {
     private CategoryDAO categoryDAO;
 
     @Autowired
-    private DishDAO dishDAO;
+    private DrinkDAO drinkDAO;
 
     @Test
     public void testSelectAllCategories() throws Exception {
@@ -40,66 +39,66 @@ public class MenuTest extends BaseDaoTest {
     }
 
     @Test
-    public void testGetDishesForCategory() throws Exception {
+    public void testGetDrinksForCategory() throws Exception {
         List<Category> list = categoryDAO.findAll();
         Iterator<Category> it = list.iterator();
 
         // test first category
-        Collection<Dish> dishes = it.next().getDishes();
-        assertEquals(4, dishes.size());
-        Iterator<Dish> dish = dishes.iterator();
-        assertDish(dish.next(), 1, 1, "B52", DishType.KITCHEN, ActiveStatus.ENABLED);
-        assertDish(dish.next(), 2, 1, "B53", DishType.KITCHEN, ActiveStatus.ENABLED);
-        assertDish(dish.next(), 3, 1, "Green Mexican", DishType.KITCHEN, ActiveStatus.ENABLED);
-        assertDish(dish.next(), 4, 1, "Blow Job", DishType.KITCHEN, ActiveStatus.DISABLED);
+        Collection<Drink> drinks = it.next().getDrinks();
+        assertEquals(4, drinks.size());
+        Iterator<Drink> drink = drinks.iterator();
+        assertDrink(drink.next(), 1, 1, "B52", Preparation.KITCHEN, ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 2, 1, "B53", Preparation.KITCHEN, ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 3, 1, "Green Mexican", Preparation.KITCHEN, ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 4, 1, "Blow Job", Preparation.KITCHEN, ActiveStatus.DISABLED);
 
         // second category
-        dishes = it.next().getDishes();
-        assertEquals(7, dishes.size());
+        drinks = it.next().getDrinks();
+        assertEquals(7, drinks.size());
 
         // third category
-        dishes = it.next().getDishes();
-        assertEquals(2, dishes.size());
-        dish = dishes.iterator();
-        assertDish(dish.next(), 12, 3, "Americano", DishType.NON_KITCHEN, ActiveStatus.ENABLED);
+        drinks = it.next().getDrinks();
+        assertEquals(2, drinks.size());
+        drink = drinks.iterator();
+        assertDrink(drink.next(), 12, 3, "Americano", Preparation.NON_KITCHEN, ActiveStatus.ENABLED);
 
         // forth category
-        dishes = it.next().getDishes();
-        assertEquals(4, dishes.size());
+        drinks = it.next().getDrinks();
+        assertEquals(4, drinks.size());
     }
 
-    private void assertDish(Dish dish, int id, int categoryId, String name, DishType dishType, ActiveStatus status) {
-        assertEquals(id, dish.getId());
-        assertEquals(categoryId, dish.getCategory().getId());
-        assertEquals(name, dish.getName());
-        assertEquals(dishType, dish.getDishType());
-        assertEquals(status, dish.getActiveStatus());
+    private void assertDrink(Drink drink, int id, int categoryId, String name, Preparation preparation, ActiveStatus status) {
+        assertEquals(id, drink.getId());
+        assertEquals(categoryId, drink.getCategory().getId());
+        assertEquals(name, drink.getName());
+        assertEquals(preparation, drink.getPreparation());
+        assertEquals(status, drink.getActiveStatus());
     }
 
     @Test
-    public void testSaveDish() throws Exception {
+    public void testSaveDrink() throws Exception {
         Category firstCategory = categoryDAO.findAll().iterator().next();
         for (int i = 99; i < 109; i++) {
-            Dish dish = new Dish();
-            dish.setCategory(firstCategory);
-            dish.setDishType(DishType.KITCHEN);
-            dish.setName("Dish " + (char) i);
-            dish.setActiveStatus(ActiveStatus.ENABLED);
-            dishDAO.create(dish);
+            Drink drink = new Drink();
+            drink.setCategory(firstCategory);
+            drink.setPreparation(Preparation.KITCHEN);
+            drink.setName("Drink " + (char) i);
+            drink.setActiveStatus(ActiveStatus.ENABLED);
+            drinkDAO.create(drink);
 
-            // Now persists the category dish relationship
-            Collection<Dish> dishes = firstCategory.getDishes();
-            if (dishes != null)
-                dishes.add(dish);
+            // Now persists the category drink relationship
+            Collection<Drink> drinks = firstCategory.getDrinks();
+            if (drinks != null)
+                drinks.add(drink);
             categoryDAO.update(firstCategory);
         }
-        assertEquals(14, getAndAssertDishes().size());
+        assertEquals(14, getAndAssertDrinks().size());
     }
 
     @Test
-    public void testRemoveDishWhenNoSales() throws Exception {
+    public void testRemoveDrinkWhenNoSales() throws Exception {
         Category firstCategory = categoryDAO.findAll().iterator().next();
-        firstCategory.getDishes().clear();
+        firstCategory.getDrinks().clear();
         categoryDAO.update(firstCategory);
     }
 
@@ -109,31 +108,31 @@ public class MenuTest extends BaseDaoTest {
     }
 
     @Test
-    public void testEditDish() throws Exception {
+    public void testEditDrink() throws Exception {
 
     }
 
     @Test
-    public void testGetBasisForDish() throws Exception {
+    public void testGetBasisForDrink() throws Exception {
 
     }
 
-    protected Collection<Dish> getAndAssertDishes() {
+    protected Collection<Drink> getAndAssertDrinks() {
         Category c = categoryDAO.findAll().iterator().next();
-        Collection<Dish> dishList = c.getDishes();
-        assertDishList(dishList);
-        return dishList;
+        Collection<Drink> drinkList = c.getDrinks();
+        assertDrinkList(drinkList);
+        return drinkList;
     }
 
-    protected void assertDishList(Collection<Dish> all) {
-        Iterator<Dish> it = all.iterator();
+    protected void assertDrinkList(Collection<Drink> all) {
+        Iterator<Drink> it = all.iterator();
         for (int id = 1; id <= all.size(); id++) {
-            Dish dish = it.next();
-            assertNotNull(dish.getId());
-            assertNotNull(dish.getName());
-            assertNotNull(dish.getDishType());
-            assertNotNull(dish.getActiveStatus());
-            assertEquals(1, dish.getCategory().getId());
+            Drink drink = it.next();
+            assertNotNull(drink.getId());
+            assertNotNull(drink.getName());
+            assertNotNull(drink.getPreparation());
+            assertNotNull(drink.getActiveStatus());
+            assertEquals(1, drink.getCategory().getId());
         }
     }
 

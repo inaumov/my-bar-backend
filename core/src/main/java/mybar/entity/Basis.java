@@ -23,7 +23,7 @@ public class Basis implements IBasis {
     private QuantityValue value;
 
     @ManyToOne
-    private Dish dish;
+    private Drink drink;
 
     @Override
     public int getId() {

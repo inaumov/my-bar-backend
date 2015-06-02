@@ -46,7 +46,7 @@ public class OrderDaoTest extends BaseDaoTest {
         assertEquals(amount, r.getAmount());
     }
 
-    private void assertOrder(Order o, int id, int dishId, OrderStatus status, int amount) {
+    private void assertOrder(Order o, int id, int drinkId, OrderStatus status, int amount) {
 
     }
 

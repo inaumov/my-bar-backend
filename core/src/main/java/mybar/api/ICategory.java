@@ -8,6 +8,6 @@ public interface ICategory {
 
     String getName();
 
-    Collection<? extends IDish> getDishes();
+    Collection<? extends IDrink> getDrinks();
 
 }

@@ -18,15 +18,15 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Dish from (final IDish dish) {
-        Dish entity = new Dish();
-        entity.setId(dish.getId());
-        entity.setName(dish.getName());
-        entity.setDescription(dish.getDescription());
-        entity.setDishType(dish.getDishType());
-        entity.setActiveStatus(dish.getActiveStatus());
-        entity.setPicture(dish.getPicture());
-        entity.setCategory(from(dish.getCategory()));
+    public static final Drink from (final IDrink drink) {
+        Drink entity = new Drink();
+        entity.setId(drink.getId());
+        entity.setName(drink.getName());
+        entity.setDescription(drink.getDescription());
+        entity.setPreparation(drink.getPreparation());
+        entity.setActiveStatus(drink.getActiveStatus());
+        entity.setPicture(drink.getPicture());
+        entity.setCategory(from(drink.getCategory()));
         return entity;
     }
 

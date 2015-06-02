@@ -1,6 +1,6 @@
 package mybar.web.rest;
 
-import mybar.entity.Dish;
+import mybar.entity.Drink;
 import mybar.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +15,12 @@ public class BasketController {
     @Autowired
     private ClientService clientService;
 
-    public void add(Dish dish) {
-        clientService.addDishToCart(dish);
+    public void add(Drink drink) {
+        clientService.addDrinkToBasket(drink);
     }
 
-    public void remove(Dish dish) {
-        clientService.removeDishFromCart(dish);
+    public void remove(Drink drink) {
+        clientService.removeDrinkFromBasket(drink);
     }
 
     public double getTotalPrice() {
@@ -31,30 +31,30 @@ public class BasketController {
         return clientService.totalItems();
     }
 
-    public int count(Dish dish) {
+    public int count(Drink drink) {
         int cnt = 0;
         try {
-            cnt = getDishes().get(dish);
+            cnt = getDrinks().get(drink);
         } catch (NullPointerException e) {
             return cnt;
         }
-        logger.info("Found dishes in cart = " + dish.getCategory().getName() + "|" + dish.getName() + " :: " + cnt);
+        logger.info("Found drinks in basket = " + drink.getCategory().getName() + "|" + drink.getName() + " :: " + cnt);
         return cnt;
     }
 
-    public double totalPerDish(Dish dish) {
+    public double totalPerDrink(Drink drink) {
         double sum = 0;
         try {
-            sum = count(dish) * dish.getPrice();
+            sum = count(drink) * drink.getPrice();
         } catch (NullPointerException e) {
             return sum;
         }
         return sum;
     }
 
-    public Map<Dish, Integer> getDishes() {
-        Map<Dish, Integer> dishes = clientService.getDishes();
-        return dishes;
+    public Map<Drink, Integer> getDrinks() {
+        Map<Drink, Integer> drinks = clientService.getDrinks();
+        return drinks;
     }
 
     public String complete() {

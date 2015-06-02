@@ -15,7 +15,7 @@ public class Category implements ICategory {
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    private Collection<Dish> dishes;
+    private Collection<Drink> drinks;
 
     @Override
     public int getId() {
@@ -35,12 +35,12 @@ public class Category implements ICategory {
         this.name = name;
     }
 
-    public Collection<Dish> getDishes() {
-        return dishes;
+    public Collection<Drink> getDrinks() {
+        return drinks;
     }
 
-    public void setDishes(Collection<Dish> dishes) {
-        this.dishes = dishes;
+    public void setDrinks(Collection<Drink> drinks) {
+        this.drinks = drinks;
     }
 
 }

@@ -1,19 +1,19 @@
 package mybar.entity;
 
 import mybar.ActiveStatus;
-import mybar.DishType;
-import mybar.api.IDish;
+import mybar.Preparation;
+import mybar.api.IDrink;
 
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.Collection;
 
 @Entity
-@SequenceGenerator(name = "DISH_SEQUENCE", sequenceName = "DISH_SEQUENCE", allocationSize = 3, initialValue = 1)
-public class Dish implements IDish {
+@SequenceGenerator(name = "DRINK_SEQUENCE", sequenceName = "DRINK_SEQUENCE", allocationSize = 3, initialValue = 1)
+public class Drink implements IDrink {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DISH_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DRINK_SEQUENCE")
     private int id;
 
     @Column(name = "NAME")
@@ -23,7 +23,7 @@ public class Dish implements IDish {
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
-    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "drink", fetch = FetchType.LAZY)
     private Collection<Basis> basisList;
 
     @Column(name = "DESCRIPTION", nullable = true)
@@ -33,8 +33,8 @@ public class Dish implements IDish {
     private double price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "DISHTYPE")
-    private DishType dishType;
+    @Column(name = "PREPARATION")
+    private Preparation preparation;
 
     @Column(name = "IS_ACTIVE")
     @Enumerated(EnumType.ORDINAL)
@@ -97,12 +97,12 @@ public class Dish implements IDish {
     }
 
     @Override
-    public DishType getDishType() {
-        return dishType;
+    public Preparation getPreparation() {
+        return preparation;
     }
 
-    public void setDishType(DishType dishType) {
-        this.dishType = dishType;
+    public void setPreparation(Preparation preparation) {
+        this.preparation = preparation;
     }
 
     @Override

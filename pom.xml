@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>MyBar</name>
+    <name>MyBar :: Parent</name>
     <url>http://maven.apache.org</url>
 
     <properties>

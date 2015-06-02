@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
 import mybar.dao.OrderDAO;
 import mybar.dao.UserDAO;
-import mybar.entity.Dish;
+import mybar.entity.Drink;
 import mybar.entity.Order;
 
 import java.util.*;
@@ -22,45 +22,45 @@ public class ClientService {
     @Autowired
     private UserDAO user;
 
-    private Map<Dish, Integer> cart;
+    private Map<Drink, Integer> basket;
 
     {
-        Comparator<Dish> cmp = new Comparator<Dish>() {
+        Comparator<Drink> cmp = new Comparator<Drink>() {
             @Override
-            public int compare(Dish o1, Dish o2) {
+            public int compare(Drink o1, Drink o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         };
-        cart = new TreeMap<Dish, Integer>(cmp);
+        basket = new TreeMap<Drink, Integer>(cmp);
     }
 
-    public void addDishToCart(Dish dish) {
-        Integer count = cart.get(dish);
-        cart.put(dish, (count == null) ? 1 : count + 1);
+    public void addDrinkToBasket(Drink drink) {
+        Integer count = basket.get(drink);
+        basket.put(drink, (count == null) ? 1 : count + 1);
     }
 
-    public void removeDishFromCart(Dish dish) {
-        cart.remove(dish);
+    public void removeDrinkFromBasket(Drink drink) {
+        basket.remove(drink);
     }
 
-    public Map<Dish, Integer> getDishes() {
-        return cart;
+    public Map<Drink, Integer> getDrinks() {
+        return basket;
     }
 
     public double getTotalPrice() {
         double total = 0.0;
-        Set<Map.Entry<Dish, Integer>> entries = cart.entrySet();
+        Set<Map.Entry<Drink, Integer>> entries = basket.entrySet();
         for (Map.Entry entry : entries) {
-            Dish dish = (Dish) entry.getKey();
+            Drink drink = (Drink) entry.getKey();
             int cnt = entry.getValue().hashCode();
-            total += dish.getPrice() * cnt;
+            total += drink.getPrice() * cnt;
         }
         return total;
     }
 
     public int totalItems() {
         int cnt = 0;
-        Collection<Integer> values = cart.values();
+        Collection<Integer> values = basket.values();
         for (Integer i : values) {
             cnt+=i;
         }
@@ -69,17 +69,17 @@ public class ClientService {
 
     @Transactional
     public void completeOrder() {
-        // todo: implement dishes quantity
-        Set<Dish> orders = cart.keySet();
-        for (Dish dish : orders) {
+        // todo: implement drinks quantity
+        Set<Drink> orders = basket.keySet();
+        for (Drink drink : orders) {
             Order order = new Order();
-            order.setDish(dish);
-            order.setAmount(cart.get(dish));
+            order.setDrink(drink);
+            order.setAmount(basket.get(drink));
             order.setOrderStatus(OrderStatus.NON_PREPARED);
             order.setUser(user.read(6));
             orderDao.create(order);
         }
-        cart.clear();
+        basket.clear();
     }
 
 }

@@ -21,8 +21,8 @@ public class Order implements IOrder {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "DISH_ID")
-    private Dish dish;
+    @JoinColumn(name = "DRINK_ID")
+    private Drink drink;
 
     @Temporal(TemporalType.DATE)
     private Date sold;
@@ -43,12 +43,12 @@ public class Order implements IOrder {
         this.id = id;
     }
 
-    public Dish getDish() {
-        return dish;
+    public Drink getDrink() {
+        return drink;
     }
 
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    public void setDrink(Drink drink) {
+        this.drink = drink;
     }
 
     @Override

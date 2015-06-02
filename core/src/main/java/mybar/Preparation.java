@@ -1,6 +1,6 @@
 package mybar;
 
-public enum DishType {
+public enum Preparation {
 
     KITCHEN,
     NON_KITCHEN

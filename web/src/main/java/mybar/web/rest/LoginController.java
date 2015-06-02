@@ -92,7 +92,7 @@ public class LoginController implements Serializable {
         return false;
     }
 
-    public boolean hasShoppingCart() {
+    public boolean hasShoppingBasket() {
         return isClient() ^ isAnonymous();
     }
 

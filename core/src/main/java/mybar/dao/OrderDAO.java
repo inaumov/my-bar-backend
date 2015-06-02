@@ -3,7 +3,7 @@ package mybar.dao;
 import org.springframework.stereotype.Repository;
 import mybar.OrderStatus;
 import mybar.Report;
-import mybar.api.IDish;
+import mybar.api.IDrink;
 import mybar.entity.Order;
 
 import javax.persistence.TypedQuery;
@@ -33,9 +33,9 @@ public class OrderDAO extends GenericDaoImpl<Order> {
         return orders;
     }
 
-    public boolean findDishInHistory(IDish d) {
-        TypedQuery<Order> q = em.createQuery("SELECT o FROM Order o WHERE o.dish.id = :dish_id", Order.class);
-        q.setParameter("dish_id", d.getId());
+    public boolean findDrinkInHistory(IDrink d) {
+        TypedQuery<Order> q = em.createQuery("SELECT o FROM Order o WHERE o.drink.id = :drink_id", Order.class);
+        q.setParameter("drink_id", d.getId());
         q.setMaxResults(1);
         List<Order> orders = q.getResultList();
         if (!orders.isEmpty())
@@ -44,7 +44,7 @@ public class OrderDAO extends GenericDaoImpl<Order> {
     }
 
     public List<Report> getReportForPeriod(Date startDate, Date endDate) {
-        TypedQuery<Report> q = em.createQuery("SELECT new mybar.Report(d.name, o.amount) FROM Order o, Dish d WHERE o.dish.id = d.id AND o.sold >= :startDate AND o.sold <= :endDate", Report.class);
+        TypedQuery<Report> q = em.createQuery("SELECT new mybar.Report(d.name, o.amount) FROM Order o, Drink d WHERE o.drink.id = d.id AND o.sold >= :startDate AND o.sold <= :endDate", Report.class);
         q.setParameter("startDate", startDate);
         q.setParameter("endDate", endDate);
         return q.getResultList();
