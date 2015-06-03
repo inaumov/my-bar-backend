@@ -2,7 +2,7 @@ package mybar.dao;
 
 import org.springframework.stereotype.Repository;
 import mybar.OrderStatus;
-import mybar.Report;
+import mybar.History;
 import mybar.api.IDrink;
 import mybar.entity.Order;
 
@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Repository
-public class OrderDAO extends GenericDaoImpl<Order> {
+public class OrderDao extends GenericDaoImpl<Order> {
 
     public List<Order> selectByOrdersType(OrderStatus orderStatus) {
         List<Order> orders = null;
@@ -43,8 +43,8 @@ public class OrderDAO extends GenericDaoImpl<Order> {
         return false;
     }
 
-    public List<Report> getReportForPeriod(Date startDate, Date endDate) {
-        TypedQuery<Report> q = em.createQuery("SELECT new mybar.Report(d.name, o.amount) FROM Order o, Drink d WHERE o.drink.id = d.id AND o.sold >= :startDate AND o.sold <= :endDate", Report.class);
+    public List<History> getHistoryForPeriod(Date startDate, Date endDate) {
+        TypedQuery<History> q = em.createQuery("SELECT new mybar.History(d.name, o.amount) FROM Order o, Drink d WHERE o.drink.id = d.id AND o.sold >= :startDate AND o.sold <= :endDate", History.class);
         q.setParameter("startDate", startDate);
         q.setParameter("endDate", endDate);
         return q.getResultList();

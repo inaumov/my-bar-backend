@@ -7,7 +7,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class CategoryDAO extends GenericDaoImpl<Category> {
+public class CategoryDao extends GenericDaoImpl<Category> {
 
     public List<Category> findAll() {
         TypedQuery<Category> q = em.createQuery("SELECT c FROM Category c", Category.class);

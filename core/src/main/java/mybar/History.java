@@ -1,14 +1,14 @@
 package mybar;
 
-public class Report {
+public class History {
 
     private String name;
     private int amount;
 
-    public Report() {
+    public History() {
     }
 
-    public Report(String name, int amount) {
+    public History(String name, int amount) {
         this.setName(name);
         this.setAmount(amount);
     }
@@ -31,7 +31,7 @@ public class Report {
 
     @Override
     public String toString() {
-        return "Report [name=" + name + ", amount=" + amount + "]";
+        return "History [name=" + name + ", amount=" + amount + "]";
     }
 
 }

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class RoleDaoTest extends BaseDaoTest {
 
     @Autowired
-    private RoleDAOImpl roleDAO;
+    private RoleDaoImpl roleDAO;
 
     @Test
     public void testSelectAllRoles() throws Exception {

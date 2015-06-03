@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import mybar.ActiveStatus;
 import mybar.api.EntityFactory;
 import mybar.api.IDrink;
-import mybar.dao.CategoryDAO;
-import mybar.dao.DrinkDAO;
-import mybar.dao.OrderDAO;
+import mybar.dao.CategoryDao;
+import mybar.dao.DrinkDao;
+import mybar.dao.OrderDao;
 import mybar.entity.Category;
 import mybar.entity.Drink;
 
@@ -18,13 +18,13 @@ import java.util.List;
 public class MenuManagementService {
 
     @Autowired
-    private CategoryDAO categoryDao;
+    private CategoryDao categoryDao;
 
     @Autowired
-    private DrinkDAO drinkDao;
+    private DrinkDao drinkDao;
 
     @Autowired
-    private OrderDAO orderDao;
+    private OrderDao orderDao;
 
     // categories
 

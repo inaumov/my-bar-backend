@@ -1,22 +1,22 @@
 package mybar.web.rest;
 
-import mybar.Report;
-import mybar.service.ReportService;
+import mybar.History;
+import mybar.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;
 
-public class ReportController {
+public class HistoryController {
 
     private Date startDate, endDate;
 
-    private List<Report> report;
+    private List<History> history;
 
     @Autowired
-    private ReportService reportService;
+    private HistoryService historyService;
 
-    public ReportController() {
+    public HistoryController() {
     }
 
     public Date getStartDate() {
@@ -35,18 +35,18 @@ public class ReportController {
         this.endDate = endDate;
     }
 
-    public void generateReport() {
+    public void generateHistory() {
         if(startDate == null || endDate == null)
             return;
-        report = reportService.getOrderListFromPeriod(startDate, endDate);
+        history = historyService.getHistoryForPeriod(startDate, endDate);
     }
 
-    public List<Report> getReport() {
-        return report;
+    public List<History> getHistory() {
+        return history;
     }
 
     public boolean isNotEmpty() {
-        return report != null && !report.isEmpty();
+        return history != null && !history.isEmpty();
     }
 
 }

@@ -17,7 +17,7 @@
         <security:intercept-url pattern="/secured/manage/user/**" access="ROLE_SUPER"/>
         <security:intercept-url pattern="/secured/manage/menu/**" access="ROLE_ADMIN"/>
         <security:intercept-url pattern="/secured/kitchen/**" access="ROLE_KITCHEN_SERVICE"/>
-        <security:intercept-url pattern="/secured/report/**" access="ROLE_ANALYST"/>
+        <security:intercept-url pattern="/secured/history/**" access="ROLE_ANALYST"/>
         <security:intercept-url pattern="/secured/delivery/**" access="ROLE_DELIVERY"/>
         <!-- Custom login page -->
         <security:form-login login-page="/login.xhtml" default-target-url="/secured/welcome.xhtml"/>

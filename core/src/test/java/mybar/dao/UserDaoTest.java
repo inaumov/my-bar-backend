@@ -18,19 +18,19 @@ import static org.junit.Assert.assertNotNull;
 public class UserDaoTest extends BaseDaoTest {
 
     @Autowired
-    private UserDAO userDAO;
+    private UserDao userDao;
 
     @Test
     public void testReadUserById() throws Exception {
-        User client1 = userDAO.read(CLIENT1_ID);
-        User client2 = userDAO.read(CLIENT2_ID);
+        User client1 = userDao.read(CLIENT1_ID);
+        User client2 = userDao.read(CLIENT2_ID);
         assertEquals(CLIENT1_NAME, client1.getName());
         assertEquals(CLIENT2_NAME, client2.getName());
     }
 
     @Test
     public void testSelectAllUsers() throws Exception {
-        List<User> all = userDAO.findAll();
+        List<User> all = userDao.findAll();
         assertEquals(USERS_CNT, all.size());
         assertUsers(all);
     }
@@ -47,7 +47,7 @@ public class UserDaoTest extends BaseDaoTest {
         user.setActiveStatus(ActiveStatus.ENABLED);
         Role roleReference = em.getReference(Role.class, 6);
         user.setRoles(Arrays.asList(new Role[]{roleReference}));
-        User saved = userDAO.create(user);
+        User saved = userDao.create(user);
         assertFalse(saved.getId() == 0);
         TypedQuery<User> q = em.createQuery("SELECT u FROM User u", User.class);
         assertEquals(USERS_CNT + 1, q.getResultList().size());
@@ -55,7 +55,7 @@ public class UserDaoTest extends BaseDaoTest {
 
     @Test
     public void testUpdateUser() throws Exception {
-        User courier = userDAO.read(COURIER_ID);
+        User courier = userDao.read(COURIER_ID);
         assertEquals("courier", courier.getName());
         assertEquals("courier", courier.getSurname());
         assertEquals("courier@mybar.com", courier.getEmail());
@@ -64,7 +64,7 @@ public class UserDaoTest extends BaseDaoTest {
         courier.setSurname("Walker");
         courier.setEmail("mail@johndoe.com");
         courier.setAddress("Gustav Mahlerlaan 40, 1082 MC Amsterdam");
-        User updated = userDAO.update(courier);
+        User updated = userDao.update(courier);
         assertEquals("Johny", updated.getName());
         assertEquals("Walker", updated.getSurname());
         assertEquals("mail@johndoe.com", updated.getEmail());
@@ -73,26 +73,26 @@ public class UserDaoTest extends BaseDaoTest {
 
     @Test
     public void testDeleteUser() throws Exception {
-        userDAO.delete(CLIENT2_ID);
+        userDao.delete(CLIENT2_ID);
         assertEquals(USERS_CNT - 1, getAndAssertUsers().size());
     }
 
     @Ignore
     @Test
     public void testThrowUserHasOrdersExceptionWhenDelete() throws Exception {
-        userDAO.delete(CLIENT1_ID);
+        userDao.delete(CLIENT1_ID);
     }
 
     @Test
     public void testFindByUserName() throws Exception {
-        User user = userDAO.findByUsername(CLIENT1_NAME);
+        User user = userDao.findByUsername(CLIENT1_NAME);
         assertNotNull(user);
         assertEquals("client", user.getName());
     }
 
     @Test
     public void testFindByEmail() throws Exception {
-        User user = userDAO.findByEmail("super@mybar.com");
+        User user = userDao.findByEmail("super@mybar.com");
         assertNotNull(user);
         assertEquals("super", user.getName());
         assertEquals("super@mybar.com", user.getEmail());

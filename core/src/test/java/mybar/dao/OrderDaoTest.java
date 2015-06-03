@@ -4,7 +4,7 @@ import mybar.OrderStatus;
 import mybar.entity.Order;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import mybar.Report;
+import mybar.History;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,20 +20,20 @@ public class OrderDaoTest extends BaseDaoTest {
     private static final String startDateStr = "2013-08-25";
 
     @Autowired
-    private OrderDAO orderDAO;
+    private OrderDao orderDao;
 
     @Test
-    public void testGetReportForPeriod() throws Exception {
+    public void testGetHistoryForPeriod() throws Exception {
         Date startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDateStr);
         Date endDate = new Date(System.currentTimeMillis());
 
-        List<Report> result = orderDAO.getReportForPeriod(getSqlDate(startDate), getSqlDate(endDate));
+        List<History> result = orderDao.getHistoryForPeriod(getSqlDate(startDate), getSqlDate(endDate));
         assertFalse(result.isEmpty());
 
-        Iterator<Report> it = result.iterator();
-        assertReportUnit(it.next(), "Blow Job", 5);
-        assertReportUnit(it.next(), "Long Island Iced Tea", 2);
-        assertReportUnit(it.next(), "Tequila Sunrise", 1);
+        Iterator<History> it = result.iterator();
+        assertHistory(it.next(), "Blow Job", 5);
+        assertHistory(it.next(), "Long Island Iced Tea", 2);
+        assertHistory(it.next(), "Tequila Sunrise", 1);
     }
 
     private java.sql.Date getSqlDate(Date date) {
@@ -41,12 +41,12 @@ public class OrderDaoTest extends BaseDaoTest {
         return sqlDate;
     }
 
-    private void assertReportUnit(Report r, String name, int amount) {
+    private void assertHistory(History r, String name, int amount) {
         assertEquals(name, r.getName());
         assertEquals(amount, r.getAmount());
     }
 
-    private void assertOrder(Order o, int id, int drinkId, OrderStatus status, int amount) {
+    private void assertHistory(Order o, int id, int drinkId, OrderStatus status, int amount) {
 
     }
 

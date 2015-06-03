@@ -23,14 +23,14 @@ import static org.junit.Assert.assertEquals;
 public class UserToRoleRelationsTest extends BaseDaoTest {
 
     @Autowired
-    private RoleDAOImpl roleDAO;
+    private RoleDaoImpl roleDAO;
 
     @Autowired
-    private UserDAO userDAO;
+    private UserDao userDao;
 
     @Test
     public void testUserHasMoreThenOneRole() throws Exception {
-        User user = userDAO.read(CLIENT1_ID);
+        User user = userDao.read(CLIENT1_ID);
         Collection<Role> roles = user.getRoles();
         assertEquals(2, roles.size());
         for(Role role : roles) {
@@ -40,10 +40,10 @@ public class UserToRoleRelationsTest extends BaseDaoTest {
 
     @Test
     public void testAddRole() throws Exception {
-        User user = userDAO.read(CLIENT2_ID);
+        User user = userDao.read(CLIENT2_ID);
         Role role = roleDAO.getRole(2);
         user.getRoles().add(role);
-        userDAO.update(user);
+        userDao.update(user);
         em.flush();
         assertEquals(USERS_CNT, getAndAssertUsers().size());
         assertEquals(ROLES_CNT, getAndAssertRoles().size());
@@ -52,9 +52,9 @@ public class UserToRoleRelationsTest extends BaseDaoTest {
 
     @Test
     public void testRemoveRole() throws Exception {
-        User user = userDAO.read(CLIENT2_ID);
+        User user = userDao.read(CLIENT2_ID);
         user.getRoles().clear();
-        userDAO.update(user);
+        userDao.update(user);
         em.flush();
         assertEquals(USERS_CNT, getAndAssertUsers().size());
         assertEquals(ROLES_CNT, getAndAssertRoles().size());
@@ -63,9 +63,9 @@ public class UserToRoleRelationsTest extends BaseDaoTest {
 
     @Test
     public void testAddNullRole() throws Exception {
-        User user = userDAO.read(CLIENT2_ID);
+        User user = userDao.read(CLIENT2_ID);
         user.getRoles().add(null);
-        userDAO.update(user);
+        userDao.update(user);
         em.flush();
         assertEquals(USERS_CNT, getAndAssertUsers().size());
         assertEquals(ROLES_CNT, getAndAssertRoles().size());

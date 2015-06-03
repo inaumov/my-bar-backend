@@ -17,14 +17,14 @@ import static org.junit.Assert.assertNotNull;
 public class MenuTest extends BaseDaoTest {
 
     @Autowired
-    private CategoryDAO categoryDAO;
+    private CategoryDao categoryDao;
 
     @Autowired
-    private DrinkDAO drinkDAO;
+    private DrinkDao drinkDao;
 
     @Test
     public void testSelectAllCategories() throws Exception {
-        List<Category> list = categoryDAO.findAll();
+        List<Category> list = categoryDao.findAll();
         assertEquals(4, list.size());
         Iterator<Category> it = list.iterator();
         assertCategory(it.next(), 1, "Shooter");
@@ -40,7 +40,7 @@ public class MenuTest extends BaseDaoTest {
 
     @Test
     public void testGetDrinksForCategory() throws Exception {
-        List<Category> list = categoryDAO.findAll();
+        List<Category> list = categoryDao.findAll();
         Iterator<Category> it = list.iterator();
 
         // test first category
@@ -77,29 +77,29 @@ public class MenuTest extends BaseDaoTest {
 
     @Test
     public void testSaveDrink() throws Exception {
-        Category firstCategory = categoryDAO.findAll().iterator().next();
+        Category firstCategory = categoryDao.findAll().iterator().next();
         for (int i = 99; i < 109; i++) {
             Drink drink = new Drink();
             drink.setCategory(firstCategory);
             drink.setPreparation(Preparation.KITCHEN);
             drink.setName("Drink " + (char) i);
             drink.setActiveStatus(ActiveStatus.ENABLED);
-            drinkDAO.create(drink);
+            drinkDao.create(drink);
 
             // Now persists the category drink relationship
             Collection<Drink> drinks = firstCategory.getDrinks();
             if (drinks != null)
                 drinks.add(drink);
-            categoryDAO.update(firstCategory);
+            categoryDao.update(firstCategory);
         }
         assertEquals(14, getAndAssertDrinks().size());
     }
 
     @Test
     public void testRemoveDrinkWhenNoSales() throws Exception {
-        Category firstCategory = categoryDAO.findAll().iterator().next();
+        Category firstCategory = categoryDao.findAll().iterator().next();
         firstCategory.getDrinks().clear();
-        categoryDAO.update(firstCategory);
+        categoryDao.update(firstCategory);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class MenuTest extends BaseDaoTest {
     }
 
     protected Collection<Drink> getAndAssertDrinks() {
-        Category c = categoryDAO.findAll().iterator().next();
+        Category c = categoryDao.findAll().iterator().next();
         Collection<Drink> drinkList = c.getDrinks();
         assertDrinkList(drinkList);
         return drinkList;
