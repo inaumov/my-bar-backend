@@ -1,24 +1,27 @@
 package mybar.service;
 
+import mybar.api.IMenu;
+import mybar.entity.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.ActiveStatus;
 import mybar.api.EntityFactory;
 import mybar.api.IDrink;
-import mybar.dao.CategoryDao;
+import mybar.dao.MenuDao;
 import mybar.dao.DrinkDao;
 import mybar.dao.OrderDao;
-import mybar.entity.Category;
 import mybar.entity.Drink;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class MenuManagementService {
 
     @Autowired
-    private CategoryDao categoryDao;
+    private MenuDao menuDao;
 
     @Autowired
     private DrinkDao drinkDao;
@@ -26,24 +29,24 @@ public class MenuManagementService {
     @Autowired
     private OrderDao orderDao;
 
-    // categories
+    // menu
 
     @Transactional
-    public void saveOrUpdateCategory(Category c) {
-        if (c.getId() == 0) {
-            categoryDao.create(c);
+    public void saveOrUpdateMenu(Menu menu) {
+        if (menu.getId() == 0) {
+            menuDao.create(menu);
         } else {
-            categoryDao.update(c);
+            menuDao.update(menu);
         }
     }
 
     @Transactional
-    public void removeCategory(Category c) throws Exception {
+    public void removeMenu(Menu menu) throws Exception {
         try {
-            if (c.getDrinks().isEmpty())
-                categoryDao.delete(c);
+            if (menu.getDrinks().isEmpty())
+                menuDao.delete(menu);
             else
-                throw new Exception("The menu for this category " + c.getName() + " is not empty");
+                throw new Exception(MessageFormat.format("The menu {0} is not empty", menu.getName()));
         } finally {
         }
     }
@@ -78,17 +81,18 @@ public class MenuManagementService {
     }
 
     @Transactional
-    public void moveDrinkToCategory(Drink d, Category c) {
-        d.setCategory(c);
+    public void moveDrinkToMenu(Drink d, Menu c) {
+        d.setMenu(c);
         drinkDao.update(d);
     }
 
     @Transactional
-    public List<Category> getAllCategories() {
-        return categoryDao.findAll();
+    public List<IMenu> getMenus() {
+        return new ArrayList<IMenu>(menuDao.findAll());
     }
 
     public IDrink findDrink(int id) {
         return drinkDao.read(id);
     }
+
 }

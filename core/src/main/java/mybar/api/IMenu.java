@@ -2,7 +2,7 @@ package mybar.api;
 
 import java.util.Collection;
 
-public interface ICategory {
+public interface IMenu {
 
     int getId();
 

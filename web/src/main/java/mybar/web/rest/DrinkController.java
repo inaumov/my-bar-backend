@@ -1,8 +1,8 @@
 package mybar.web.rest;
 
 import mybar.api.IBasis;
+import mybar.api.IMenu;
 import mybar.api.IDrink;
-import mybar.entity.Category;
 import mybar.service.MenuManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +37,9 @@ public class DrinkController {
         }
     }
 
-    public List<Category> getCategories() {
-
-        List<Category> allCategories = menuService.getAllCategories();
+    public List<IMenu> getCategories() {
+        // TODO change to DTO
+        List<IMenu> allCategories = menuService.getMenus();
         return allCategories;
     }
 

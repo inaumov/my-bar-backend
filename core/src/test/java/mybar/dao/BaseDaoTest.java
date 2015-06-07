@@ -55,7 +55,7 @@ public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
     protected final int USERS_CNT = 7;
     protected final int USER_HAS_ROLES_CNT = 8;
 
-    protected final int CATEGORY_CNT = 4;
+    protected final int MENUS_CNT = 4;
     protected final int DRINKS_CNT = 17;
     protected final int ORDERS_CNT = 6;
 
@@ -92,13 +92,13 @@ public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
         int rolesCnt = loadedDataSet.getTable("roles").getRowCount();
         int usersCnt = loadedDataSet.getTable("users").getRowCount();
         int userRolesCnt = loadedDataSet.getTable("user_has_roles").getRowCount();
-        int categoryCnt = loadedDataSet.getTable("category").getRowCount();
+        int menuCnt = loadedDataSet.getTable("menu").getRowCount();
         int drinkCnt = loadedDataSet.getTable("drink").getRowCount();
         int ordersCnt = loadedDataSet.getTable("orders").getRowCount();
         assertEquals(ROLES_CNT, rolesCnt);
         assertEquals(USERS_CNT, usersCnt);
         assertEquals(USER_HAS_ROLES_CNT, userRolesCnt);
-        assertEquals(CATEGORY_CNT, categoryCnt);
+        assertEquals(MENUS_CNT, menuCnt);
         assertEquals(DRINKS_CNT, drinkCnt);
         assertEquals(ORDERS_CNT, ordersCnt);
     }

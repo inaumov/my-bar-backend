@@ -29,18 +29,18 @@ public class UserController {
     UserManagementService userManagementService;
 
     @Autowired
-    private Jaxb2Marshaller marshaller;
+    private Jaxb2Marshaller umMarshaller;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/user/{id}")
-    public ModelAndView getUser(@PathVariable("id") String id) {
-        IUser user = userManagementService.findByUsername(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/user/{username}")
+    public ModelAndView getUser(@PathVariable("username") String username) {
+        IUser user = userManagementService.findByUsername(username);
         return new ModelAndView(XML_VIEW_NAME, "user", BeanFactory.from(user));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}")
     public ModelAndView updateUser(@RequestParam String body) {
         Source source = new StreamSource(new StringReader(body));
-        UserBean userBean = (UserBean) marshaller.unmarshal(source);
+        UserBean userBean = (UserBean) umMarshaller.unmarshal(source);
         userManagementService.editUserInfo(userBean);
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }
@@ -48,7 +48,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, value = "/user")
     public ModelAndView addUser(@RequestBody String body) {
         Source source = new StreamSource(new StringReader(body));
-        UserBean userBean = (UserBean) marshaller.unmarshal(source);
+        UserBean userBean = (UserBean) umMarshaller.unmarshal(source);
         RoleBean role = new RoleBean();
         role.setWebRole(WebRole.ROLE_CLIENT);
         userBean.setRoles(Arrays.<RoleBean>asList(role));
@@ -56,9 +56,9 @@ public class UserController {
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/user/{id}")
-    public ModelAndView removeUser(@PathVariable String id) {
-        IUser user = userManagementService.findByUsername(id);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/user/{username}")
+    public ModelAndView removeUser(@PathVariable String username) {
+        IUser user = userManagementService.findByUsername(username);
         userManagementService.deactivateUser(user);
         List<IUser> users = userManagementService.getAllRegisteredUsers();
         return new ModelAndView(XML_VIEW_NAME, "users", new UserList(toBeans(users)));

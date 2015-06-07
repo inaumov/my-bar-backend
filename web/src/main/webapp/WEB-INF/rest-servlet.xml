@@ -13,7 +13,7 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+	<bean id="umMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="classesToBeBound">
 			<list>
 				<value>mybar.app.bean.um.RoleBean</value>
@@ -28,8 +28,22 @@
 		</property>
 	</bean>
 
+    <bean id="menuMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list>
+                <value>mybar.app.bean.MenuList</value>
+                <value>mybar.app.bean.MenuBean</value>
+                <value>mybar.app.bean.DrinkList</value>
+                <value>mybar.app.bean.DrinkBean</value>
+            </list>
+        </property>
+    </bean>
+
 	<bean id="users" class="org.springframework.web.servlet.view.xml.MarshallingView">
-		<constructor-arg ref="marshaller"/>
+		<constructor-arg ref="umMarshaller"/>
+	</bean>
+	<bean id="menu" class="org.springframework.web.servlet.view.xml.MarshallingView">
+		<constructor-arg ref="menuMarshaller"/>
 	</bean>
 
 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
@@ -45,8 +59,9 @@
 		</property>
 	</bean>
 
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+	<!--<bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>-->
 
 	<bean id="userController" class="mybar.web.rest.UserController"/>
+	<bean id="menuController" class="mybar.web.rest.MenuController"/>
 
 </beans>

@@ -14,7 +14,7 @@ public interface IDrink {
 
     Collection<? extends IBasis> getBasisList();
 
-    <T extends ICategory> T getCategory();
+    <T extends IMenu> T getMenu();
 
     String getDescription();
 

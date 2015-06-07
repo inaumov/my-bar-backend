@@ -25,27 +25,27 @@
     <user_has_roles USER_ID="7" ROLE_ID="6"></user_has_roles>
 
     <!-- menu -->
-    <category ID="1" NAME="Shooter"/>
-    <category ID="2" NAME="Long"/>
-    <category ID="3" NAME="Coffee"/>
-    <category ID="4" NAME="Tea"/>
-    <drink ID="1" CATEGORY_ID="1" NAME="B52" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="2" CATEGORY_ID="1" NAME="B53" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="3" CATEGORY_ID="1" NAME="Green Mexican" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="4" CATEGORY_ID="1" NAME="Blow Job" PREPARATION="KITCHEN" IS_ACTIVE="0"></drink>
-    <drink ID="5" CATEGORY_ID="2" NAME="Long Island Iced Tea" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="6" CATEGORY_ID="2" NAME="Tequila Sunrise" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="7" CATEGORY_ID="2" NAME="Black Russian" PREPARATION="KITCHEN" IS_ACTIVE="0"></drink>
-    <drink ID="8" CATEGORY_ID="2" NAME="Hurricane" PREPARATION="KITCHEN"  IS_ACTIVE="0"></drink>
-    <drink ID="9" CATEGORY_ID="2" NAME="Mai Tai" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="10" CATEGORY_ID="2" NAME="Margarita" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="11" CATEGORY_ID="2" NAME="Mojito" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="12" CATEGORY_ID="3" NAME="Americano" PREPARATION="NON_KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="13" CATEGORY_ID="3" NAME="Espresso" PREPARATION="NON_KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="14" CATEGORY_ID="4" NAME="Phu-Er" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="15" CATEGORY_ID="4" NAME="Roibush" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="16" CATEGORY_ID="4" NAME="Da Hong Pao" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
-    <drink ID="17" CATEGORY_ID="4" NAME="Yunnan Gold" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <menu ID="1" NAME="Shooter"/>
+    <menu ID="2" NAME="Long"/>
+    <menu ID="3" NAME="Coffee"/>
+    <menu ID="4" NAME="Tea"/>
+    <drink ID="1" MENU_ID="1" NAME="B52" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="2" MENU_ID="1" NAME="B53" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="3" MENU_ID="1" NAME="Green Mexican" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="4" MENU_ID="1" NAME="Blow Job" PREPARATION="KITCHEN" IS_ACTIVE="0"></drink>
+    <drink ID="5" MENU_ID="2" NAME="Long Island Iced Tea" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="6" MENU_ID="2" NAME="Tequila Sunrise" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="7" MENU_ID="2" NAME="Black Russian" PREPARATION="KITCHEN" IS_ACTIVE="0"></drink>
+    <drink ID="8" MENU_ID="2" NAME="Hurricane" PREPARATION="KITCHEN"  IS_ACTIVE="0"></drink>
+    <drink ID="9" MENU_ID="2" NAME="Mai Tai" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="10" MENU_ID="2" NAME="Margarita" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="11" MENU_ID="2" NAME="Mojito" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="12" MENU_ID="3" NAME="Americano" PREPARATION="NON_KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="13" MENU_ID="3" NAME="Espresso" PREPARATION="NON_KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="14" MENU_ID="4" NAME="Phu-Er" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="15" MENU_ID="4" NAME="Roibush" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="16" MENU_ID="4" NAME="Da Hong Pao" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
+    <drink ID="17" MENU_ID="4" NAME="Yunnan Gold" PREPARATION="KITCHEN" IS_ACTIVE="1"></drink>
     <ingredient ID="1" NAME="Vodka"></ingredient>
     <ingredient ID="2" NAME="Gin"></ingredient>
     <ingredient ID="3" NAME="Rum"></ingredient>

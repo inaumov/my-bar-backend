@@ -81,7 +81,7 @@ public class UserManagementService {
         IPredicate<User> isClient = new IPredicate<User>() {
             @Override
             public boolean apply(User type) {
-                return /*type.getRole().getWebRole() != WebRole.ROLE_SUPER*/ false;
+                return /*type.getRole().getWebRole() != WebRole.ROLE_SUPER*/ true;
             }
         };
         return filter(users, isClient);

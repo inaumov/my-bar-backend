@@ -1,47 +1,34 @@
-package mybar.entity;
+package mybar.app.bean;
 
 import mybar.ActiveStatus;
 import mybar.Preparation;
 import mybar.api.IDrink;
+import mybar.entity.Basis;
 
-import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.Blob;
 import java.util.Collection;
 
-@Entity
-@SequenceGenerator(name = "DRINK_SEQUENCE", sequenceName = "DRINK_SEQUENCE", allocationSize = 3, initialValue = 1)
-public class Drink implements IDrink {
+@XmlRootElement(name = "drink")
+public class DrinkBean implements IDrink {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DRINK_SEQUENCE")
     private int id;
 
-    @Column(name = "NAME")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "MENU_ID")
-    private Menu menu;
+    private MenuBean menu;
 
-    @OneToMany(mappedBy = "drink", fetch = FetchType.LAZY)
     private Collection<Basis> basisList;
 
-    @Column(name = "DESCRIPTION", nullable = true)
     private String description;
 
-    @Transient
     private double price;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "PREPARATION")
     private Preparation preparation;
 
-    @Column(name = "IS_ACTIVE")
-    @Enumerated(EnumType.ORDINAL)
     private ActiveStatus activeStatus;
 
-    @Lob
-    @Column(name = "IMAGE", nullable = true)
     private Blob picture;
 
     @Override
@@ -80,11 +67,11 @@ public class Drink implements IDrink {
     }
 
     @Override
-    public Menu getMenu() {
+    public MenuBean getMenu() {
         return menu;
     }
 
-    public void setMenu(Menu menu) {
+    public void setMenu(MenuBean menu) {
         this.menu = menu;
     }
 
@@ -114,6 +101,7 @@ public class Drink implements IDrink {
         this.activeStatus = activeStatus;
     }
 
+    @XmlTransient
     @Override
     public Blob getPicture() {
         return picture;
@@ -121,6 +109,11 @@ public class Drink implements IDrink {
 
     public void setPicture(Blob picture) {
         this.picture = picture;
+    }
+
+    public static DrinkBean from(IDrink d) {
+        DrinkBean bean = new DrinkBean();
+        return bean;
     }
 
 }

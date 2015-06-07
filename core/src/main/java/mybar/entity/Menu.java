@@ -1,12 +1,12 @@
 package mybar.entity;
 
-import mybar.api.ICategory;
+import mybar.api.IMenu;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-public class Category implements ICategory {
+public class Menu implements IMenu {
 
     @Id
     private int id;
@@ -14,7 +14,7 @@ public class Category implements ICategory {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
     private Collection<Drink> drinks;
 
     @Override

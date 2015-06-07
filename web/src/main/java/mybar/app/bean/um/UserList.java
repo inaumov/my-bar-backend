@@ -1,11 +1,12 @@
 package mybar.app.bean.um;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "users")
+@XmlRootElement(name = "user.list")
 public class UserList {
 
     private int count;
@@ -19,6 +20,7 @@ public class UserList {
         this.count = users.size();
     }
 
+    @XmlAttribute
     public int getCount() {
         return count;
     }

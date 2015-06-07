@@ -4,10 +4,10 @@ import mybar.entity.*;
 
 public class EntityFactory {
 
-    public static final Category from(final ICategory category) {
-        Category entity = new Category();
-        entity.setId(category.getId());
-        entity.setName(category.getName());
+    public static final Menu from(final IMenu menu) {
+        Menu entity = new Menu();
+        entity.setId(menu.getId());
+        entity.setName(menu.getName());
         return entity;
     }
 
@@ -26,7 +26,7 @@ public class EntityFactory {
         entity.setPreparation(drink.getPreparation());
         entity.setActiveStatus(drink.getActiveStatus());
         entity.setPicture(drink.getPicture());
-        entity.setCategory(from(drink.getCategory()));
+        entity.setMenu(from(drink.getMenu()));
         return entity;
     }
 
