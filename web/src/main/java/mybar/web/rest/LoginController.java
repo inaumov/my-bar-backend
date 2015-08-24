@@ -1,18 +1,31 @@
 package mybar.web.rest;
 
+import mybar.api.um.IUser;
+import mybar.app.bean.um.BeanFactory;
+import mybar.app.bean.um.LoginBean;
+import mybar.service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import mybar.app.AuthenticationService;
 import mybar.WebRole;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+@Controller
 public class LoginController implements Serializable {
-
-    private static final long serialVersionUID = 7765876811740798583L;
 
     private List<SimpleGrantedAuthority> authorities;
     private boolean loggedIn;
@@ -23,9 +36,9 @@ public class LoginController implements Serializable {
     /**
      * Login operation.
      *
-     * @return
      * @param username
      * @param password
+     * @return
      */
     public String doLogin(String username, String password) {
 
@@ -36,6 +49,51 @@ public class LoginController implements Serializable {
                     SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         }
         return "";
+    }
+
+    @RequestMapping(value = "/login1", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public
+    @ResponseBody
+    String authentication(@RequestParam("login") String userName,
+                          @RequestParam("password") String password, HttpServletRequest request) {
+
+        doLogin(userName, password);
+        try {
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+
+            return "success";
+        } catch (AuthenticationException ex) {
+            return "fail " + ex.getMessage();
+        }
+
+    }
+
+    @RequestMapping(value = "/login2", method = RequestMethod.POST, consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ModelAndView executeLogin(@RequestBody final LoginBean loginBean, HttpServletRequest request) {
+        ModelAndView model = null;
+        try {
+
+            doLogin(loginBean.getLogin(), loginBean.getPassword());
+            if (loggedIn) {
+                System.out.println("User Login Successful");
+                request.setAttribute("loggedInUser", loginBean.getLogin());
+                model = new ModelAndView("welcome");
+            } else {
+                model = new ModelAndView("login");
+                request.setAttribute("loggedInUser", loginBean.getLogin());
+                request.setAttribute("message", "Invalid credentials!!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return model;
     }
 
     /**
