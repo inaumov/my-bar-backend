@@ -2,7 +2,7 @@ package mybar.dao;
 
 import mybar.entity.um.Role;
 
-public interface IRoleDao {
+public interface IRoleDAO {
 
     public Role getRole(int id);
 

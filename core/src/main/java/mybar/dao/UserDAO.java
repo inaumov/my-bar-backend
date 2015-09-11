@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class UserDao extends GenericDaoImpl<User> {
+public class UserDAO extends GenericDaoImpl<User> {
 
     public User findByEmail(String email) {
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);

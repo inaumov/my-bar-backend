@@ -2,6 +2,8 @@ package mybar.api;
 
 import mybar.entity.*;
 
+
+// FIXME: casting is required to avoid compilation error "ambiguous method declaration"
 public class EntityFactory {
 
     public static final Menu from(final IMenu menu) {
@@ -26,7 +28,7 @@ public class EntityFactory {
         entity.setPreparation(drink.getPreparation());
         entity.setActiveStatus(drink.getActiveStatus());
         entity.setPicture(drink.getPicture());
-        entity.setMenu(from(drink.getMenu()));
+        entity.setMenu(from((Menu) drink.getMenu()));
         return entity;
     }
 
@@ -35,7 +37,7 @@ public class EntityFactory {
         entity.setId(basis.getId());
         entity.setValue(basis.getValue());
         entity.setVolume(basis.getVolume());
-        entity.setIngredient(from(basis.getIngredient()));
+        entity.setIngredient(from((Ingredient)basis.getIngredient()));
         return entity;
     }
 
@@ -44,7 +46,7 @@ public class EntityFactory {
         entity.setId(storage.getId());
         entity.setVolume(storage.getVolume());
         entity.setPrice(storage.getPrice());
-        entity.setIngredient(from(storage.getIngredient()));
+        entity.setIngredient(from((Ingredient)storage.getIngredient()));
         return entity;
     }
 

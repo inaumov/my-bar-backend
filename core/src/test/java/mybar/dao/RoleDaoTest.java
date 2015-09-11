@@ -1,19 +1,20 @@
 package mybar.dao;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import mybar.WebRole;
 import mybar.entity.um.Role;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class RoleDaoTest extends BaseDaoTest {
 
     @Autowired
-    private RoleDaoImpl roleDAO;
+    private RoleDAOImpl roleDAO;
 
     @Test
     public void testSelectAllRoles() throws Exception {
@@ -28,7 +29,7 @@ public class RoleDaoTest extends BaseDaoTest {
             Role role = roleDAO.getRole(i);
             assertNotNull(role);
             assertEquals(i, role.getId());
-            assertEquals(webRoles[i-1], role.getWebRole());
+            assertEquals(webRoles[i - 1], role.getWebRole());
         }
     }
 

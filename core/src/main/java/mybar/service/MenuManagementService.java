@@ -9,8 +9,8 @@ import mybar.ActiveStatus;
 import mybar.api.EntityFactory;
 import mybar.api.IDrink;
 import mybar.dao.MenuDao;
-import mybar.dao.DrinkDao;
-import mybar.dao.OrderDao;
+import mybar.dao.DrinkDAO;
+import mybar.dao.OrderDAO;
 import mybar.entity.Drink;
 
 import java.text.MessageFormat;
@@ -24,10 +24,10 @@ public class MenuManagementService {
     private MenuDao menuDao;
 
     @Autowired
-    private DrinkDao drinkDao;
+    private DrinkDAO drinkDao;
 
     @Autowired
-    private OrderDao orderDao;
+    private OrderDAO orderDao;
 
     // menu
 

@@ -51,7 +51,7 @@ public class UserController {
         UserBean userBean = (UserBean) umMarshaller.unmarshal(source);
         RoleBean role = new RoleBean();
         role.setWebRole(WebRole.ROLE_CLIENT);
-        userBean.setRoles(Arrays.<RoleBean>asList(role));
+        userBean.setRoles(Arrays.<RoleBean> asList(role));
         userManagementService.createUser(userBean);
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }

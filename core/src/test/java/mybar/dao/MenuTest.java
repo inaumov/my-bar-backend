@@ -20,7 +20,7 @@ public class MenuTest extends BaseDaoTest {
     private MenuDao menuDao;
 
     @Autowired
-    private DrinkDao drinkDao;
+    private DrinkDAO drinkDao;
 
     @Test
     public void testSelectAllMenus() throws Exception {

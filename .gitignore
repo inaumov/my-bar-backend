@@ -28,6 +28,7 @@
 *.settings
 *.project
 *.classpath
+*.springBeans
 
 # Intellij IDEA project #
 #########################

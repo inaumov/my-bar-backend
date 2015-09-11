@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Repository
-public class OrderDao extends GenericDaoImpl<Order> {
+public class OrderDAO extends GenericDaoImpl<Order> {
 
     public List<Order> selectByOrdersType(OrderStatus orderStatus) {
         List<Order> orders = null;
