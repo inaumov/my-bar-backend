@@ -1,10 +1,7 @@
 package mybar.dao;
 
-import mybar.OrderStatus;
-import mybar.entity.Order;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import mybar.Report;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,8 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import mybar.Report;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderDaoTest extends BaseDaoTest {
 
@@ -44,10 +43,6 @@ public class OrderDaoTest extends BaseDaoTest {
     private void assertReportUnit(Report r, String name, int amount) {
         assertEquals(name, r.getName());
         assertEquals(amount, r.getAmount());
-    }
-
-    private void assertOrder(Order o, int id, int dishId, OrderStatus status, int amount) {
-
     }
 
 }

@@ -1,0 +1,30 @@
+description = 'MyBar :: Modules :: Web :: REST'
+
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+eclipse {
+    project {
+        natures 'org.springframework.ide.eclipse.core.springnature'
+        natures 'org.eclipse.wst.common.project.facet.core.nature'
+        natures 'org.eclipse.wst.common.modulecore.ModuleCoreNature'
+        natures 'org.eclipse.jem.workbench.JavaEMFNature'
+
+        buildCommand 'org.eclipse.wst.common.project.facet.core.builder'
+        buildCommand 'org.eclipse.wst.validation.validationbuilder'
+        buildCommand 'org.springframework.ide.eclipse.core.springbuilder'
+    }
+}
+
+
+dependencies {
+    compile project(':core')
+    compile "org.springframework.security:spring-security-core:${springSecurityVersion}"
+    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
+    compile "org.springframework:spring-webmvc:${springVersion}"
+    compile "org.springframework:spring-oxm:${springVersion}"
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+    compile "org.apache.derby:derby:${derbyVersion}"
+    compile "org.apache.derby:derbyclient:${derbyVersion}"
+}

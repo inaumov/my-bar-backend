@@ -1,0 +1,6 @@
+rootProject.name = 'parent'
+include ':core'
+include ':web'
+
+project(':core').projectDir = "$rootDir/core" as File
+project(':web').projectDir = "$rootDir/web" as File

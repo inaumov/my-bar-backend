@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.inaumov.mybar</groupId>
+    <groupId>com.mybar</groupId>
     <artifactId>parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -13,24 +13,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.2.3.RELEASE</spring.version>
-        <spring.security.version>3.1.4.RELEASE</spring.security.version>
-        <hibernate.version>4.2.4.Final</hibernate.version>
-        <jsf.version>2.2.1</jsf.version>
-        <jstl.version>1.2</jstl.version>
-        <servlet-api.version>3.0.1</servlet-api.version>
-        <spring-test-dbunit.version>1.0.1</spring-test-dbunit.version>
-        <junit.version>4.11</junit.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.security.version>4.0.1.RELEASE</spring.security.version>
+        <hibernate.version>4.3.10.Final</hibernate.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
+        <junit.version>4.12</junit.version>
         <dbunit.version>2.4.9</dbunit.version>
-        <derby.version>10.10.1.1</derby.version>
-        <slf4j-api.version>1.5.6</slf4j-api.version>
+        <derby.version>10.11.1.1</derby.version>
+        <slf4j-api.version>1.7.12</slf4j-api.version>
         <jpa.version>2.1.0</jpa.version>
-        <mysql-connector.version>5.1.26</mysql-connector.version>
     </properties>
 
     <modules>
         <module>core</module>
-        <module>mybar</module>
+        <module>web</module>
     </modules>
 
     <dependencyManagement>
@@ -43,11 +40,6 @@
                 <version>${jpa.version}</version>
             </dependency>
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql-connector.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>${hibernate.version}</version>
@@ -58,7 +50,7 @@
                 <version>${hibernate.version}</version>
             </dependency>
 
-            <!-- Springframework -->
+            <!-- Spring framework -->
 
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -95,6 +87,16 @@
                 <artifactId>spring-web</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
 
             <!-- Spring Security -->
             <dependency>
@@ -114,22 +116,6 @@
             </dependency>
 
             <!-- front -->
-            <dependency>
-                <groupId>com.sun.faces</groupId>
-                <artifactId>jsf-api</artifactId>
-                <version>${jsf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.faces</groupId>
-                <artifactId>jsf-impl</artifactId>
-                <version>${jsf.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>${jstl.version}</version>
-            </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
@@ -196,8 +182,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.0.2</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>1.8</source>
+                        <target>1.8</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>

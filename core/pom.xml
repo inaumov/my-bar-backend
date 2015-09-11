@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>core</artifactId>
     <packaging>jar</packaging>
-    <name>MyBar :: Core</name>
+    <name>MyBar :: Modules :: Core</name>
 
     <parent>
-        <groupId>com.inaumov.mybar</groupId>
+        <groupId>com.mybar</groupId>
         <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
@@ -26,10 +26,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
         <dependency>
