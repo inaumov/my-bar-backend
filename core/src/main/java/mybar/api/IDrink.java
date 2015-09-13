@@ -1,7 +1,6 @@
 package mybar.api;
 
 import mybar.ActiveStatus;
-import mybar.Preparation;
 
 import java.sql.Blob;
 import java.util.Collection;
@@ -17,8 +16,6 @@ public interface IDrink {
     <T extends IMenu> T getMenu();
 
     String getDescription();
-
-    Preparation getPreparation();
 
     ActiveStatus getActiveStatus();
 

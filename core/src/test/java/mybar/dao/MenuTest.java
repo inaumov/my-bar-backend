@@ -1,7 +1,6 @@
 package mybar.dao;
 
 import mybar.ActiveStatus;
-import mybar.Preparation;
 import mybar.entity.Menu;
 import mybar.entity.Drink;
 import org.junit.Test;
@@ -47,10 +46,10 @@ public class MenuTest extends BaseDaoTest {
         Collection<Drink> drinks = it.next().getDrinks();
         assertEquals(4, drinks.size());
         Iterator<Drink> drink = drinks.iterator();
-        assertDrink(drink.next(), 1, 1, "B52", Preparation.KITCHEN, ActiveStatus.ENABLED);
-        assertDrink(drink.next(), 2, 1, "B53", Preparation.KITCHEN, ActiveStatus.ENABLED);
-        assertDrink(drink.next(), 3, 1, "Green Mexican", Preparation.KITCHEN, ActiveStatus.ENABLED);
-        assertDrink(drink.next(), 4, 1, "Blow Job", Preparation.KITCHEN, ActiveStatus.DISABLED);
+        assertDrink(drink.next(), 1, 1, "B52", ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 2, 1, "B53", ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 3, 1, "Green Mexican", ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 4, 1, "Blow Job", ActiveStatus.DISABLED);
 
         // second menu
         drinks = it.next().getDrinks();
@@ -60,18 +59,17 @@ public class MenuTest extends BaseDaoTest {
         drinks = it.next().getDrinks();
         assertEquals(2, drinks.size());
         drink = drinks.iterator();
-        assertDrink(drink.next(), 12, 3, "Americano", Preparation.NON_KITCHEN, ActiveStatus.ENABLED);
+        assertDrink(drink.next(), 12, 3, "Americano", ActiveStatus.ENABLED);
 
         // forth menu
         drinks = it.next().getDrinks();
         assertEquals(4, drinks.size());
     }
 
-    private void assertDrink(Drink drink, int id, int menuId, String name, Preparation preparation, ActiveStatus status) {
+    private void assertDrink(Drink drink, int id, int menuId, String name, ActiveStatus status) {
         assertEquals(id, drink.getId());
         assertEquals(menuId, drink.getMenu().getId());
         assertEquals(name, drink.getName());
-        assertEquals(preparation, drink.getPreparation());
         assertEquals(status, drink.getActiveStatus());
     }
 
@@ -81,7 +79,6 @@ public class MenuTest extends BaseDaoTest {
         for (int i = 99; i < 109; i++) {
             Drink drink = new Drink();
             drink.setMenu(firstMenu);
-            drink.setPreparation(Preparation.KITCHEN);
             drink.setName("Drink " + (char) i);
             drink.setActiveStatus(ActiveStatus.ENABLED);
             drinkDao.create(drink);
@@ -130,7 +127,6 @@ public class MenuTest extends BaseDaoTest {
             Drink drink = it.next();
             assertNotNull(drink.getId());
             assertNotNull(drink.getName());
-            assertNotNull(drink.getPreparation());
             assertNotNull(drink.getActiveStatus());
             assertEquals(1, drink.getMenu().getId());
         }

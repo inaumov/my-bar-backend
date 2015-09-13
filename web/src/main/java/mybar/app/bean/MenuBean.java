@@ -1,25 +1,22 @@
 package mybar.app.bean;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.IDrink;
 import mybar.api.IMenu;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "menu")
 public class MenuBean implements IMenu {
 
+    @JsonView(View.Menu.class)
     private int id;
 
+    @JsonView(View.Menu.class)
     private String name;
 
     private List<DrinkBean> drinks;
 
-    @XmlAttribute
-    @Override
     public int getId() {
         return id;
     }
@@ -37,8 +34,6 @@ public class MenuBean implements IMenu {
         this.name = name;
     }
 
-    @XmlTransient
-    @Override
     public List<DrinkBean> getDrinks() {
         return drinks;
     }

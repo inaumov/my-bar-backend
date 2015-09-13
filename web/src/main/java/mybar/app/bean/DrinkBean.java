@@ -1,35 +1,35 @@
 package mybar.app.bean;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import mybar.ActiveStatus;
-import mybar.Preparation;
 import mybar.api.IDrink;
 import mybar.entity.Basis;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.Blob;
 import java.util.Collection;
 
-@XmlRootElement(name = "drink")
 public class DrinkBean implements IDrink {
 
+    @JsonView(View.Drink.class)
     private int id;
 
+    @JsonView(View.Drink.class)
     private String name;
 
     private MenuBean menu;
 
-    private Collection<Basis> basisList;
-
-    private String description;
-
+    @JsonView(View.Drink.class)
     private double price;
-
-    private Preparation preparation;
 
     private ActiveStatus activeStatus;
 
     private Blob picture;
+
+    @JsonView(View.DrinkWithDetails.class)
+    private Collection<Basis> basisList;
+
+    @JsonView(View.DrinkWithDetails.class)
+    private String description;
 
     @Override
     public int getId() {
@@ -84,15 +84,6 @@ public class DrinkBean implements IDrink {
     }
 
     @Override
-    public Preparation getPreparation() {
-        return preparation;
-    }
-
-    public void setPreparation(Preparation preparation) {
-        this.preparation = preparation;
-    }
-
-    @Override
     public ActiveStatus getActiveStatus() {
         return activeStatus;
     }
@@ -101,7 +92,6 @@ public class DrinkBean implements IDrink {
         this.activeStatus = activeStatus;
     }
 
-    @XmlTransient
     @Override
     public Blob getPicture() {
         return picture;
@@ -113,6 +103,11 @@ public class DrinkBean implements IDrink {
 
     public static DrinkBean from(IDrink d) {
         DrinkBean bean = new DrinkBean();
+        bean.setId(d.getId());
+        bean.setName(d.getName());
+        bean.setPrice(d.getPrice());
+        bean.setDescription(d.getDescription());
+        //bean.setBasisList(d.getBasisList());
         return bean;
     }
 

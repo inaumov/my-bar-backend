@@ -1,96 +1,88 @@
 package mybar.web.rest;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.IMenu;
-import mybar.app.bean.MenuBean;
 import mybar.app.bean.DrinkBean;
-import mybar.app.bean.DrinkList;
-import mybar.app.bean.MenuList;
+import mybar.app.bean.MenuBean;
+import mybar.app.bean.View;
 import mybar.service.MenuManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/menu")
 public class MenuController {
 
     private Logger logger = LoggerFactory.getLogger(MenuController.class);
 
-    private static final String XML_VIEW_NAME = "menu";
-
     @Autowired
-    MenuManagementService menuManagementService;
-
-    @Autowired
-    private Jaxb2Marshaller menuMarshaller;
+    private MenuManagementService menuManagementService;
 
     private List<MenuBean> menus;
 
     // menus -> get all
-
-    @RequestMapping(method = RequestMethod.GET, value = "/menu")
-    public ModelAndView getMenus() {
+    @JsonView(View.Menu.class)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Collection<MenuBean> getAllMenuItems() {
         if (menus == null) {
             menus = toBeans(menuManagementService.getMenus());
         }
-        return new ModelAndView(XML_VIEW_NAME, "menu", new MenuList(menus));
-    }
-
-    // drink -> create
-
-    @RequestMapping(method = RequestMethod.POST, value = "/menu/{menuId}/drinks")
-    public ModelAndView addDrink(@PathVariable("menuId") String menuId, @RequestBody String body) {
-        Source source = new StreamSource(new StringReader(body));
-        DrinkBean drink = (DrinkBean) menuMarshaller.unmarshal(source);
-        MenuBean menu = menus.get(Integer.parseInt(menuId));
-        drink.setMenu(menu);
-        menuManagementService.saveOrUpdateDrink(drink);
-        return new ModelAndView(XML_VIEW_NAME, "drink", drink);
+        logger.info(MessageFormat.format("Loaded {0} menus: ", menus.size()));
+        return menus;
     }
 
     // drink -> read all
-
-    @RequestMapping(method = RequestMethod.GET, value = "/menu/{menuId}")
-    public ModelAndView getDrinks(@PathVariable("menuId") String id) {
-        int menuId = Integer.parseInt(id);
+    @JsonView(View.Drink.class)
+    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/drinks", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Collection<DrinkBean> getDrinks(@PathVariable("menuId") Integer menuId) {
         if (menuId < 0 || menuId > 5) {
             logger.error(MessageFormat.format("Bad request. Menu with id={0} does not exist", menuId));
         }
         Collection<DrinkBean> drinks = menus.get(menuId).getDrinks();
         logger.info(MessageFormat.format("Loaded drinks for menu with id={0}", menuId));
-        return new ModelAndView(XML_VIEW_NAME, "drinks", new DrinkList(drinks));
+        return drinks;
     }
 
     // drink -> read
-
-    @RequestMapping(method = RequestMethod.GET, value = "/menu/{menuId}/drink/{drinkId}")
-    public ModelAndView getDrink(@PathVariable("menuId") String firstId, @PathVariable("drinkId") String secondId) {
-        int menuId = Integer.parseInt(firstId);
+    @JsonView(View.DrinkWithDetails.class)
+    @RequestMapping(value = "/{menuId}/drinks/{drinkId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public DrinkBean getDrink(@PathVariable("menuId") Integer menuId, @PathVariable("drinkId") Integer drinkId) {
         if (menuId < 0 || menuId >= menus.size()) {
             logger.error(MessageFormat.format("Bad request. Menu with id={0} does not exist", menuId));
         }
         List<DrinkBean> drinks = menus.get(menuId).getDrinks();
-        int drinkId = Integer.parseInt(firstId);
         if (drinkId < 0 || drinkId >= drinks.size()) {
             logger.error(MessageFormat.format("Bad request. Drink with id={0} does not exist", drinkId));
         }
         DrinkBean drink = drinks.get(drinkId);
-        logger.info(MessageFormat.format("Loaded drink with id={0}", secondId));
-        return new ModelAndView(XML_VIEW_NAME, "drink", drink);
+        logger.info(MessageFormat.format("Loaded drink with id={0}", drinkId));
+        return drink;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{menuId}/drinks")
+    public ResponseEntity<?> addDrink(@PathVariable("menuId") String menuId, @RequestBody DrinkBean input) {
+        MenuBean menu = menus.get(Integer.parseInt(menuId));
+        input.setMenu(menu);
+        menuManagementService.saveOrUpdateDrink(input);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(input.getId()).toUri());
+
+        return new ResponseEntity<>(null, httpHeaders, HttpStatus.CREATED);
     }
 
     // menu -> update

@@ -1,93 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-4.1.xsd
+	   http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-<context:component-scan base-package="mybar.web.rest"/>
+    <context:component-scan base-package="mybar.web.rest"/>
     <mvc:annotation-driven/>
 
-	<!-- To enable @RequestMapping process on type level and method level -->
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+    <!-- To enable @RequestMapping process on type level and method level -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
 
-	<bean id="umMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-		<property name="classesToBeBound">
-			<list>
-				<value>mybar.app.bean.um.RoleBean</value>
-				<value>mybar.app.bean.um.UserBean</value>
-				<value>mybar.app.bean.um.UserList</value>
-			</list>
-		</property>
-		<property name="adapters">
-			<list>
-				<bean class="mybar.app.bean.um.RoleAdapter"/>
-			</list>
-		</property>
-	</bean>
-
-    <bean id="menuMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+    <bean id="umMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="classesToBeBound">
             <list>
-                <value>mybar.app.bean.MenuList</value>
-                <value>mybar.app.bean.MenuBean</value>
-                <value>mybar.app.bean.DrinkList</value>
-                <value>mybar.app.bean.DrinkBean</value>
+                <value>mybar.app.bean.um.RoleBean</value>
+                <value>mybar.app.bean.um.UserBean</value>
+                <value>mybar.app.bean.um.UserList</value>
+            </list>
+        </property>
+        <property name="adapters">
+            <list>
+                <bean class="mybar.app.bean.um.RoleAdapter"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="users" class="org.springframework.web.servlet.view.xml.MarshallingView">
+        <constructor-arg ref="umMarshaller"/>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="mediaTypes">
+            <map>
+                <entry key="xml" value="application/xml"/>
+            </map>
+        </property>
+        <property name="viewResolvers">
+            <list>
+                <ref bean="viewResolver"/>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <!-- JSON View -->
+<!--
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                    <property name="objectMapper">
+                        <ref bean="jacksonObjectMapper"/>
+                    </property>
+                </bean>
+-->
+                <ref bean="users"/>
             </list>
         </property>
     </bean>
 
-	<bean id="users" class="org.springframework.web.servlet.view.xml.MarshallingView">
-		<constructor-arg ref="umMarshaller"/>
-	</bean>
-	<bean id="menu" class="org.springframework.web.servlet.view.xml.MarshallingView">
-		<constructor-arg ref="menuMarshaller"/>
-	</bean>
 
-	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<property name="mediaTypes">
-			<map>
-                <entry key="json" value="application/json" />
-				<entry key="xml" value="application/xml"/>
-			</map>
-		</property>
-		<property name="viewResolvers">
-			<list>
-				<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
-			</list>
-		</property>
-        <property name="defaultViews">
-            <list>
-                <!-- JSON View -->
-                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
-                    <property name="objectMapper">
-                        <ref bean="jacksonObjectMapper" />
-                    </property>
-                </bean>
-                <ref bean="users"/>
-            </list>
-        </property>
-	</bean>
+    <bean id="loginController" class="mybar.web.rest.LoginController"/>
+    <bean id="userController" class="mybar.web.rest.UserController"/>
 
-	<!--<bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>-->
-
-	<bean id="loginController" class="mybar.web.rest.LoginController"/>
-	<bean id="userController" class="mybar.web.rest.UserController"/>
-	<bean id="menuController" class="mybar.web.rest.MenuController"/>
+    <bean id="menuController" class="mybar.web.rest.MenuController"/>
 
     <!-- Configure to plugin JSON as request and response in method handler -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <property name="messageConverters">
-            <list>
-                <ref bean="jsonMessageConverter"/>
-            </list>
-        </property>
+    <property name="messageConverters">
+    <list>
+    <ref bean="jsonMessageConverter"/>
+    </list>
+    </property>
     </bean>
 
     <!-- Configure bean to convert JSON to POJO and vice versa -->
     <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-        <property name="objectMapper" ref="jacksonObjectMapper" />
+    <property name="objectMapper" ref="jacksonObjectMapper"/>
     </bean>
-    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+    <!-- FactoryBean to create ObjectMapper -->
+    <bean id="jacksonObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+        <!-- by some convenient method -->
+        <property name="failOnEmptyBeans" value="true"/>
+    </bean>
 </beans>

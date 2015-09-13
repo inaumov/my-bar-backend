@@ -25,7 +25,6 @@ public class EntityFactory {
         entity.setId(drink.getId());
         entity.setName(drink.getName());
         entity.setDescription(drink.getDescription());
-        entity.setPreparation(drink.getPreparation());
         entity.setActiveStatus(drink.getActiveStatus());
         entity.setPicture(drink.getPicture());
         entity.setMenu(from((Menu) drink.getMenu()));

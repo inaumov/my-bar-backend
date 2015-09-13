@@ -1,7 +1,6 @@
 package mybar.entity;
 
 import mybar.ActiveStatus;
-import mybar.Preparation;
 import mybar.api.IDrink;
 
 import javax.persistence.*;
@@ -31,10 +30,6 @@ public class Drink implements IDrink {
 
     @Transient
     private double price;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "PREPARATION")
-    private Preparation preparation;
 
     @Column(name = "IS_ACTIVE")
     @Enumerated(EnumType.ORDINAL)
@@ -94,15 +89,6 @@ public class Drink implements IDrink {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    @Override
-    public Preparation getPreparation() {
-        return preparation;
-    }
-
-    public void setPreparation(Preparation preparation) {
-        this.preparation = preparation;
     }
 
     @Override
