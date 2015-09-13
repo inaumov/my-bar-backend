@@ -1,4 +1,4 @@
-package mybar.entity;
+package mybar.domain;
 
 import mybar.ActiveStatus;
 import mybar.api.IDrink;

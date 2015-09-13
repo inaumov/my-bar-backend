@@ -1,4 +1,4 @@
-package mybar.dao;
+package mybar.repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

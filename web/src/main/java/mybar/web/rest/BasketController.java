@@ -1,6 +1,6 @@
 package mybar.web.rest;
 
-import mybar.entity.Drink;
+import mybar.domain.Drink;
 import mybar.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package mybar.dao;
+package mybar.repository;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,8 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import mybar.entity.um.Role;
-import mybar.entity.um.User;
+import mybar.domain.um.Role;
+import mybar.domain.um.User;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

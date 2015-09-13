@@ -1,10 +1,10 @@
-package mybar.dao;
+package mybar.repository;
 
 import org.springframework.stereotype.Repository;
 import mybar.OrderStatus;
 import mybar.History;
 import mybar.api.IDrink;
-import mybar.entity.Order;
+import mybar.domain.Order;
 
 import javax.persistence.TypedQuery;
 import java.sql.Date;

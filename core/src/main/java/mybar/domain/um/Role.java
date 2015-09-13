@@ -1,4 +1,4 @@
-package mybar.entity.um;
+package mybar.domain.um;
 
 import mybar.WebRole;
 import mybar.api.um.IRole;

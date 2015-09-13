@@ -1,7 +1,7 @@
-package mybar.dao;
+package mybar.repository;
 
 import mybar.OrderStatus;
-import mybar.entity.Order;
+import mybar.domain.Order;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import mybar.History;

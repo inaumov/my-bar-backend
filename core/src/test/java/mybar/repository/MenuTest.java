@@ -1,8 +1,8 @@
-package mybar.dao;
+package mybar.repository;
 
 import mybar.ActiveStatus;
-import mybar.entity.Menu;
-import mybar.entity.Drink;
+import mybar.domain.Menu;
+import mybar.domain.Drink;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

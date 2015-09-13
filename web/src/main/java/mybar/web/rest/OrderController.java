@@ -1,7 +1,7 @@
 package mybar.web.rest;
 
 import mybar.OrderStatus;
-import mybar.entity.Order;
+import mybar.domain.Order;
 import mybar.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 

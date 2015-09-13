@@ -1,4 +1,4 @@
-package mybar.dao;
+package mybar.repository;
 
 public interface GenericDao<T> {
 

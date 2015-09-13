@@ -1,17 +1,17 @@
 package mybar.service;
 
 import mybar.api.IMenu;
-import mybar.entity.Menu;
+import mybar.domain.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.ActiveStatus;
-import mybar.api.EntityFactory;
+import mybar.domain.EntityFactory;
 import mybar.api.IDrink;
-import mybar.dao.MenuDao;
-import mybar.dao.DrinkDAO;
-import mybar.dao.OrderDAO;
-import mybar.entity.Drink;
+import mybar.repository.MenuDao;
+import mybar.repository.DrinkDAO;
+import mybar.repository.OrderDAO;
+import mybar.domain.Drink;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

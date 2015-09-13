@@ -1,4 +1,4 @@
-package mybar.dao;
+package mybar.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import mybar.WebRole;
-import mybar.entity.um.Role;
+import mybar.domain.um.Role;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

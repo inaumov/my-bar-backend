@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
-import mybar.dao.OrderDAO;
-import mybar.dao.UserDAO;
-import mybar.entity.Drink;
-import mybar.entity.Order;
+import mybar.repository.OrderDAO;
+import mybar.repository.UserDAO;
+import mybar.domain.Drink;
+import mybar.domain.Order;
 
 import java.util.*;
 

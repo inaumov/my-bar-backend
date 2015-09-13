@@ -1,7 +1,7 @@
-package mybar.dao;
+package mybar.repository;
 
 import org.springframework.stereotype.Repository;
-import mybar.entity.um.User;
+import mybar.domain.um.User;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;

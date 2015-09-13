@@ -1,8 +1,8 @@
-package mybar.dao;
+package mybar.repository;
 
-import mybar.entity.Menu;
+import mybar.domain.Menu;
 import org.springframework.stereotype.Repository;
-import mybar.entity.Drink;
+import mybar.domain.Drink;
 
 import javax.persistence.TypedQuery;
 import java.util.List;

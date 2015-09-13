@@ -1,7 +1,9 @@
-package mybar.api.um;
+package mybar.domain.um;
 
-import mybar.entity.um.Role;
-import mybar.entity.um.User;
+import mybar.api.um.IRole;
+import mybar.api.um.IUser;
+import mybar.domain.um.Role;
+import mybar.domain.um.User;
 
 import java.util.Collection;
 

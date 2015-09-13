@@ -1,6 +1,7 @@
-package mybar.api;
+package mybar.domain;
 
-import mybar.entity.*;
+import mybar.api.*;
+import mybar.domain.*;
 
 
 // FIXME: casting is required to avoid compilation error "ambiguous method declaration"

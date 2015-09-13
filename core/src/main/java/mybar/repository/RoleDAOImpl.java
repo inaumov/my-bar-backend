@@ -1,7 +1,7 @@
-package mybar.dao;
+package mybar.repository;
 
 import org.springframework.stereotype.Repository;
-import mybar.entity.um.Role;
+import mybar.domain.um.Role;
 
 @Repository
 public class RoleDAOImpl extends GenericDaoImpl<Role> implements IRoleDAO {

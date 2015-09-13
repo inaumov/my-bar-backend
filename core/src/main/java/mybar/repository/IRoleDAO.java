@@ -1,6 +1,6 @@
-package mybar.dao;
+package mybar.repository;
 
-import mybar.entity.um.Role;
+import mybar.domain.um.Role;
 
 public interface IRoleDAO {
 

@@ -1,8 +1,8 @@
-package mybar.entity.um;
+package mybar.domain.um;
 
 import mybar.ActiveStatus;
 import mybar.api.um.IUser;
-import mybar.entity.Order;
+import mybar.domain.Order;
 
 import javax.persistence.*;
 import java.util.Collection;

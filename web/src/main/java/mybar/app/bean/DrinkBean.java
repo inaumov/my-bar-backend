@@ -3,7 +3,7 @@ package mybar.app.bean;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.ActiveStatus;
 import mybar.api.IDrink;
-import mybar.entity.Basis;
+import mybar.domain.Basis;
 
 import java.sql.Blob;
 import java.util.Collection;

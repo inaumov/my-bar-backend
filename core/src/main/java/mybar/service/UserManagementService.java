@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.ActiveStatus;
 import mybar.WebRole;
-import mybar.api.um.UmEntityFactory;
+import mybar.domain.um.UmEntityFactory;
 import mybar.api.um.IUser;
-import mybar.dao.RoleDAOImpl;
-import mybar.dao.UserDAO;
-import mybar.entity.um.Role;
-import mybar.entity.um.User;
+import mybar.repository.RoleDAOImpl;
+import mybar.repository.UserDAO;
+import mybar.domain.um.Role;
+import mybar.domain.um.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
