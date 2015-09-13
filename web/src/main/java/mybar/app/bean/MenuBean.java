@@ -51,6 +51,7 @@ public class MenuBean implements IMenu {
             drinkBeans.add(DrinkBean.from(d));
         }
         bean.setDrinks(drinkBeans);
+
         return bean;
     }
 

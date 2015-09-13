@@ -31,7 +31,7 @@ public class User implements IUser {
     private String email;
     private String address;
 
-    @Column(name = "IS_ACTIVE")
+    @Column(name = "ACTIVE")
     @Enumerated(EnumType.ORDINAL)
     private ActiveStatus activeStatus;
 

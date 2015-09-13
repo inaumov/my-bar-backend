@@ -1,7 +1,6 @@
 package mybar.domain;
 
 import mybar.api.*;
-import mybar.domain.*;
 
 
 // FIXME: casting is required to avoid compilation error "ambiguous method declaration"
@@ -35,7 +34,7 @@ public class EntityFactory {
     public static final Basis from(final IBasis basis) {
         Basis entity = new Basis();
         entity.setId(basis.getId());
-        entity.setValue(basis.getValue());
+        entity.setValue(basis.getQuantity());
         entity.setVolume(basis.getVolume());
         entity.setIngredient(from((Ingredient)basis.getIngredient()));
         return entity;

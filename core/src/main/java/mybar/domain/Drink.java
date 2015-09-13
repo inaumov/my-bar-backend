@@ -22,7 +22,7 @@ public class Drink implements IDrink {
     @JoinColumn(name = "MENU_ID")
     private Menu menu;
 
-    @OneToMany(mappedBy = "drink", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "drink", fetch = FetchType.EAGER) // TODO: fetch lazily
     private Collection<Basis> basisList;
 
     @Column(name = "DESCRIPTION", nullable = true)
@@ -31,7 +31,7 @@ public class Drink implements IDrink {
     @Transient
     private double price;
 
-    @Column(name = "IS_ACTIVE")
+    @Column(name = "ACTIVE")
     @Enumerated(EnumType.ORDINAL)
     private ActiveStatus activeStatus;
 

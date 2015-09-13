@@ -23,6 +23,7 @@ public class Basis implements IBasis {
     private QuantityValue value;
 
     @ManyToOne
+    @JoinColumn(name = "DRINK_ID")
     private Drink drink;
 
     @Override
@@ -41,7 +42,7 @@ public class Basis implements IBasis {
     }
 
     @Override
-    public QuantityValue getValue() {
+    public QuantityValue getQuantity() {
         return value;
     }
 

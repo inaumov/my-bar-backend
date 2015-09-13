@@ -10,6 +10,6 @@ public interface IBasis {
 
     double getVolume();
 
-    QuantityValue getValue();
+    QuantityValue getQuantity();
 
 }

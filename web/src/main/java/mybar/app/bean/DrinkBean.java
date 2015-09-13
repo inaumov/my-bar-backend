@@ -1,12 +1,15 @@
 package mybar.app.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.ActiveStatus;
+import mybar.api.IBasis;
 import mybar.api.IDrink;
-import mybar.domain.Basis;
 
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class DrinkBean implements IDrink {
 
@@ -26,7 +29,8 @@ public class DrinkBean implements IDrink {
     private Blob picture;
 
     @JsonView(View.DrinkWithDetails.class)
-    private Collection<Basis> basisList;
+    @JsonProperty("ingredients")
+    private Collection<BasisBean> basisList;
 
     @JsonView(View.DrinkWithDetails.class)
     private String description;
@@ -49,11 +53,11 @@ public class DrinkBean implements IDrink {
         this.name = name;
     }
 
-    public Collection<Basis> getBasisList() {
+    public Collection<BasisBean> getBasisList() {
         return basisList;
     }
 
-    public void setBasisList(Collection<Basis> basisList) {
+    public void setBasisList(Collection<BasisBean> basisList) {
         this.basisList = basisList;
     }
 
@@ -101,13 +105,19 @@ public class DrinkBean implements IDrink {
         this.picture = picture;
     }
 
-    public static DrinkBean from(IDrink d) {
+    public static DrinkBean from(IDrink drink) {
         DrinkBean bean = new DrinkBean();
-        bean.setId(d.getId());
-        bean.setName(d.getName());
-        bean.setPrice(d.getPrice());
-        bean.setDescription(d.getDescription());
-        //bean.setBasisList(d.getBasisList());
+        bean.setId(drink.getId());
+        bean.setName(drink.getName());
+        bean.setPrice(drink.getPrice());
+        bean.setDescription(drink.getDescription());
+        List<BasisBean> basisBeans = new ArrayList<>();
+        for (IBasis basis : drink.getBasisList()) {
+            basisBeans.add(BasisBean.from(basis));
+        }
+        bean.setBasisList(basisBeans);
+        bean.setActiveStatus(drink.getActiveStatus());
+
         return bean;
     }
 

@@ -2,13 +2,13 @@
 <dataset>
 
     <!-- user management -->
-    <users ID="1" LOGIN="super" PASSWORD="super" NAME="super" SURNAME="super" ADDRESS="" EMAIL="super@mybar.com" IS_ACTIVE="1"></users>
-    <users ID="2" LOGIN="admin" PASSWORD="admin" NAME="admin" SURNAME="admin" ADDRESS="" EMAIL="admin@mybar.com" IS_ACTIVE="1"></users>
-    <users ID="3" LOGIN="analyst" PASSWORD="analyst" NAME="analyst" SURNAME="analyst" ADDRESS="" EMAIL="analyst@mybar.com" IS_ACTIVE="1"></users>
-    <users ID="4" LOGIN="cook" PASSWORD="cook" NAME="cook" SURNAME="cook" ADDRESS="" EMAIL="cook@mybar.com" IS_ACTIVE="1"></users>
-    <users ID="5" LOGIN="courier" PASSWORD="courier" NAME="courier" SURNAME="courier" ADDRESS="" EMAIL="courier@mybar.com" IS_ACTIVE="1"></users>
-    <users ID="6" LOGIN="client" PASSWORD="client" NAME="client" SURNAME="client" ADDRESS="" EMAIL="client@mybar.com" IS_ACTIVE="1"></users>
-    <users ID="7" LOGIN="JohnDoe" PASSWORD="JohnDoe" NAME="JohnDoe" SURNAME="JohnDoe" ADDRESS="" EMAIL="JohnDoe@mybar.com" IS_ACTIVE="1"></users>
+    <users ID="1" LOGIN="super" PASSWORD="super" NAME="super" SURNAME="super" ADDRESS="" EMAIL="super@mybar.com" ACTIVE="1"></users>
+    <users ID="2" LOGIN="admin" PASSWORD="admin" NAME="admin" SURNAME="admin" ADDRESS="" EMAIL="admin@mybar.com" ACTIVE="1"></users>
+    <users ID="3" LOGIN="analyst" PASSWORD="analyst" NAME="analyst" SURNAME="analyst" ADDRESS="" EMAIL="analyst@mybar.com" ACTIVE="1"></users>
+    <users ID="4" LOGIN="cook" PASSWORD="cook" NAME="cook" SURNAME="cook" ADDRESS="" EMAIL="cook@mybar.com" ACTIVE="1"></users>
+    <users ID="5" LOGIN="courier" PASSWORD="courier" NAME="courier" SURNAME="courier" ADDRESS="" EMAIL="courier@mybar.com" ACTIVE="1"></users>
+    <users ID="6" LOGIN="client" PASSWORD="client" NAME="client" SURNAME="client" ADDRESS="" EMAIL="client@mybar.com" ACTIVE="1"></users>
+    <users ID="7" LOGIN="JohnDoe" PASSWORD="JohnDoe" NAME="JohnDoe" SURNAME="JohnDoe" ADDRESS="" EMAIL="JohnDoe@mybar.com" ACTIVE="1"></users>
     <roles ID="1" ROLE="ROLE_SUPER"></roles>
     <roles ID="2" ROLE="ROLE_ADMIN"></roles>
     <roles ID="3" ROLE="ROLE_ANALYST"></roles>
@@ -29,23 +29,23 @@
     <menu ID="2" NAME="Long"/>
     <menu ID="3" NAME="Coffee"/>
     <menu ID="4" NAME="Tea"/>
-    <drink ID="1" MENU_ID="1" NAME="B52" IS_ACTIVE="1"></drink>
-    <drink ID="2" MENU_ID="1" NAME="B53" IS_ACTIVE="1"></drink>
-    <drink ID="3" MENU_ID="1" NAME="Green Mexican" IS_ACTIVE="1"></drink>
-    <drink ID="4" MENU_ID="1" NAME="Blow Job" IS_ACTIVE="0"></drink>
-    <drink ID="5" MENU_ID="2" NAME="Long Island Iced Tea" IS_ACTIVE="1"></drink>
-    <drink ID="6" MENU_ID="2" NAME="Tequila Sunrise" IS_ACTIVE="1"></drink>
-    <drink ID="7" MENU_ID="2" NAME="Black Russian" IS_ACTIVE="0"></drink>
-    <drink ID="8" MENU_ID="2" NAME="Hurricane"  IS_ACTIVE="0"></drink>
-    <drink ID="9" MENU_ID="2" NAME="Mai Tai" IS_ACTIVE="1"></drink>
-    <drink ID="10" MENU_ID="2" NAME="Margarita" IS_ACTIVE="1"></drink>
-    <drink ID="11" MENU_ID="2" NAME="Mojito" IS_ACTIVE="1"></drink>
-    <drink ID="12" MENU_ID="3" NAME="Americano" IS_ACTIVE="1"></drink>
-    <drink ID="13" MENU_ID="3" NAME="Espresso" IS_ACTIVE="1"></drink>
-    <drink ID="14" MENU_ID="4" NAME="Phu-Er" IS_ACTIVE="1"></drink>
-    <drink ID="15" MENU_ID="4" NAME="Roibush" IS_ACTIVE="1"></drink>
-    <drink ID="16" MENU_ID="4" NAME="Da Hong Pao" IS_ACTIVE="1"></drink>
-    <drink ID="17" MENU_ID="4" NAME="Yunnan Gold" IS_ACTIVE="1"></drink>
+    <drink ID="1" MENU_ID="1" NAME="B52" ACTIVE="1"></drink>
+    <drink ID="2" MENU_ID="1" NAME="B53" ACTIVE="1"></drink>
+    <drink ID="3" MENU_ID="1" NAME="Green Mexican" ACTIVE="1"></drink>
+    <drink ID="4" MENU_ID="1" NAME="Blow Job" ACTIVE="0"></drink>
+    <drink ID="5" MENU_ID="2" NAME="Long Island Iced Tea" ACTIVE="1"></drink>
+    <drink ID="6" MENU_ID="2" NAME="Tequila Sunrise" ACTIVE="1"></drink>
+    <drink ID="7" MENU_ID="2" NAME="Black Russian" ACTIVE="0"></drink>
+    <drink ID="8" MENU_ID="2" NAME="Hurricane"  ACTIVE="0"></drink>
+    <drink ID="9" MENU_ID="2" NAME="Mai Tai" ACTIVE="1"></drink>
+    <drink ID="10" MENU_ID="2" NAME="Margarita" ACTIVE="1"></drink>
+    <drink ID="11" MENU_ID="2" NAME="Mojito" ACTIVE="1"></drink>
+    <drink ID="12" MENU_ID="3" NAME="Americano" ACTIVE="1"></drink>
+    <drink ID="13" MENU_ID="3" NAME="Espresso" ACTIVE="1"></drink>
+    <drink ID="14" MENU_ID="4" NAME="Phu-Er" ACTIVE="1"></drink>
+    <drink ID="15" MENU_ID="4" NAME="Roibush" ACTIVE="1"></drink>
+    <drink ID="16" MENU_ID="4" NAME="Da Hong Pao" ACTIVE="1"></drink>
+    <drink ID="17" MENU_ID="4" NAME="Yunnan Gold" ACTIVE="1"></drink>
     <ingredient ID="1" NAME="Vodka"></ingredient>
     <ingredient ID="2" NAME="Gin"></ingredient>
     <ingredient ID="3" NAME="Rum"></ingredient>
@@ -63,15 +63,15 @@
     <ingredient ID="15" NAME="Sugar"></ingredient>
     <ingredient ID="16" NAME="Coffee liqueur"></ingredient>
     <ingredient ID="17" NAME="Coca Cola"></ingredient>
-    <basis ID="1" DRINK_ID="1" INGREDIENT_ID="8" VOLUME="0.02" VALUE="ml"></basis>
-    <basis ID="2" DRINK_ID="1" INGREDIENT_ID="11" VOLUME="0.02" VALUE="ml"></basis>
-    <basis ID="3" DRINK_ID="1" INGREDIENT_ID="16" VOLUME="0.02" VALUE="ml"></basis>
-    <basis ID="4" DRINK_ID="7" INGREDIENT_ID="16" VOLUME="0.05" VALUE="ml"></basis>
-    <basis ID="5" DRINK_ID="7" INGREDIENT_ID="17" VOLUME="0.15" VALUE="ml"></basis>
-    <basis ID="6" DRINK_ID="7" INGREDIENT_ID="14" VOLUME="5" VALUE="pcs"></basis>
-    <basis ID="7" DRINK_ID="6" INGREDIENT_ID="13" VOLUME="0.15" VALUE="ml"></basis>
-    <basis ID="8" DRINK_ID="6" INGREDIENT_ID="4" VOLUME="0.05" VALUE="pcs"></basis>
-    <basis ID="9" DRINK_ID="6" INGREDIENT_ID="14" VOLUME="5" VALUE="ml"></basis>
+    <basis ID="1" DRINK_ID="1" INGREDIENT_ID="8" VOLUME="0.02" VALUE="ML"></basis>
+    <basis ID="2" DRINK_ID="1" INGREDIENT_ID="11" VOLUME="0.02" VALUE="ML"></basis>
+    <basis ID="3" DRINK_ID="1" INGREDIENT_ID="16" VOLUME="0.02" VALUE="ML"></basis>
+    <basis ID="4" DRINK_ID="7" INGREDIENT_ID="16" VOLUME="0.05" VALUE="ML"></basis>
+    <basis ID="5" DRINK_ID="7" INGREDIENT_ID="17" VOLUME="0.15" VALUE="ML"></basis>
+    <basis ID="6" DRINK_ID="7" INGREDIENT_ID="14" VOLUME="5" VALUE="PCS"></basis>
+    <basis ID="7" DRINK_ID="6" INGREDIENT_ID="13" VOLUME="0.15" VALUE="ML"></basis>
+    <basis ID="8" DRINK_ID="6" INGREDIENT_ID="4" VOLUME="0.05" VALUE="PCS"></basis>
+    <basis ID="9" DRINK_ID="6" INGREDIENT_ID="14" VOLUME="5" VALUE="ML"></basis>
 
     <!-- killer feature -->
     <storage ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120"></storage>
