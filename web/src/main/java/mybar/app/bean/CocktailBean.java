@@ -3,7 +3,7 @@ package mybar.app.bean;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.ActiveStatus;
-import mybar.api.IBasis;
+import mybar.api.IIngredient;
 import mybar.api.ICocktail;
 
 import java.sql.Blob;
@@ -30,7 +30,7 @@ public class CocktailBean implements ICocktail {
 
     @JsonView(View.CocktailWithDetails.class)
     @JsonProperty("ingredients")
-    private Collection<BasisBean> basisList;
+    private Collection<IngredientBean> ingredients;
 
     @JsonView(View.CocktailWithDetails.class)
     private String description;
@@ -53,12 +53,12 @@ public class CocktailBean implements ICocktail {
         this.name = name;
     }
 
-    public Collection<BasisBean> getBasisList() {
-        return basisList;
+    public Collection<IngredientBean> getIngredients() {
+        return ingredients;
     }
 
-    public void setBasisList(Collection<BasisBean> basisList) {
-        this.basisList = basisList;
+    public void setIngredients(Collection<IngredientBean> ingredients) {
+        this.ingredients = ingredients;
     }
 
     @Override
@@ -111,11 +111,11 @@ public class CocktailBean implements ICocktail {
         bean.setName(cocktail.getName());
         bean.setPrice(cocktail.getPrice());
         bean.setDescription(cocktail.getDescription());
-        List<BasisBean> basisBeans = new ArrayList<>();
-        for (IBasis basis : cocktail.getBasisList()) {
-            basisBeans.add(BasisBean.from(basis));
+        List<IngredientBean> ingredientBeans = new ArrayList<>();
+        for (IIngredient ingredient : cocktail.getIngredients()) {
+            ingredientBeans.add(IngredientBean.from(ingredient));
         }
-        bean.setBasisList(basisBeans);
+        bean.setIngredients(ingredientBeans);
         bean.setActiveStatus(cocktail.getActiveStatus());
 
         return bean;

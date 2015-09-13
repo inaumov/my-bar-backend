@@ -2,7 +2,7 @@ package mybar.api;
 
 import mybar.QuantityValue;
 
-public interface IBasis {
+public interface IIngredient {
 
     int getId();
 

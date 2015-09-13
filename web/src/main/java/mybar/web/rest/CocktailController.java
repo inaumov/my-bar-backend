@@ -1,6 +1,6 @@
 package mybar.web.rest;
 
-import mybar.api.IBasis;
+import mybar.api.IIngredient;
 import mybar.api.ICocktail;
 import mybar.api.IMenu;
 import mybar.service.MenuManagementService;
@@ -76,7 +76,7 @@ public class CocktailController {
         this.uploadedImage = uploadedImage;
     }*/
 
-    public Collection<? extends IBasis> getBasisList() {
+    public Collection<? extends IIngredient> getBasisList() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

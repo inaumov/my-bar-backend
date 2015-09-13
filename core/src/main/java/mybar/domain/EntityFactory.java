@@ -31,12 +31,12 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Basis from(final IBasis basis) {
-        Basis entity = new Basis();
-        entity.setId(basis.getId());
-        entity.setValue(basis.getQuantity());
-        entity.setVolume(basis.getVolume());
-        entity.setDrink(from((Drink) basis.getDrink()));
+    public static final Ingredient from(final IIngredient ingredient) {
+        Ingredient entity = new Ingredient();
+        entity.setId(ingredient.getId());
+        entity.setValue(ingredient.getQuantity());
+        entity.setVolume(ingredient.getVolume());
+        entity.setDrink(from((Drink) ingredient.getDrink()));
         return entity;
     }
 
@@ -45,7 +45,7 @@ public class EntityFactory {
         entity.setId(storage.getId());
         entity.setVolume(storage.getVolume());
         entity.setPrice(storage.getPrice());
-        entity.setIngredient(from((Drink)storage.getIngredient()));
+        entity.setDrink(from((Drink) storage.getDrink()));
         return entity;
     }
 

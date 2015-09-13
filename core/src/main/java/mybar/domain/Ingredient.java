@@ -1,13 +1,13 @@
 package mybar.domain;
 
 import mybar.QuantityValue;
-import mybar.api.IBasis;
+import mybar.api.IIngredient;
 import mybar.api.IDrink;
 
 import javax.persistence.*;
 
 @Entity
-public class Basis implements IBasis {
+public class Ingredient implements IIngredient {
 
     @Id
     private int id;

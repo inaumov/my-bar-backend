@@ -63,15 +63,15 @@
     <drink ID="15" NAME="Sugar"></drink>
     <drink ID="16" NAME="Coffee liqueur"></drink>
     <drink ID="17" NAME="Coca Cola"></drink>
-    <basis ID="1" COCKTAIL_ID="1" DRINK_ID="8" VOLUME="0.02" VALUE="ML"></basis>
-    <basis ID="2" COCKTAIL_ID="1" DRINK_ID="11" VOLUME="0.02" VALUE="ML"></basis>
-    <basis ID="3" COCKTAIL_ID="1" DRINK_ID="16" VOLUME="0.02" VALUE="ML"></basis>
-    <basis ID="4" COCKTAIL_ID="7" DRINK_ID="16" VOLUME="0.05" VALUE="ML"></basis>
-    <basis ID="5" COCKTAIL_ID="7" DRINK_ID="17" VOLUME="0.15" VALUE="ML"></basis>
-    <basis ID="6" COCKTAIL_ID="7" DRINK_ID="14" VOLUME="5" VALUE="PCS"></basis>
-    <basis ID="7" COCKTAIL_ID="6" DRINK_ID="13" VOLUME="0.15" VALUE="ML"></basis>
-    <basis ID="8" COCKTAIL_ID="6" DRINK_ID="4" VOLUME="0.05" VALUE="PCS"></basis>
-    <basis ID="9" COCKTAIL_ID="6" DRINK_ID="14" VOLUME="5" VALUE="ML"></basis>
+    <ingredient ID="1" COCKTAIL_ID="1" DRINK_ID="8" VOLUME="0.02" VALUE="ML"></ingredient>
+    <ingredient ID="2" COCKTAIL_ID="1" DRINK_ID="11" VOLUME="0.02" VALUE="ML"></ingredient>
+    <ingredient ID="3" COCKTAIL_ID="1" DRINK_ID="16" VOLUME="0.02" VALUE="ML"></ingredient>
+    <ingredient ID="4" COCKTAIL_ID="7" DRINK_ID="16" VOLUME="0.05" VALUE="ML"></ingredient>
+    <ingredient ID="5" COCKTAIL_ID="7" DRINK_ID="17" VOLUME="0.15" VALUE="ML"></ingredient>
+    <ingredient ID="6" COCKTAIL_ID="7" DRINK_ID="14" VOLUME="5" VALUE="PCS"></ingredient>
+    <ingredient ID="7" COCKTAIL_ID="6" DRINK_ID="13" VOLUME="0.15" VALUE="ML"></ingredient>
+    <ingredient ID="8" COCKTAIL_ID="6" DRINK_ID="4" VOLUME="0.05" VALUE="PCS"></ingredient>
+    <ingredient ID="9" COCKTAIL_ID="6" DRINK_ID="14" VOLUME="5" VALUE="ML"></ingredient>
 
     <!-- killer feature -->
     <storage ID="1" DRINK_ID="1" VOLUME="0.7" PRICE="120"></storage>

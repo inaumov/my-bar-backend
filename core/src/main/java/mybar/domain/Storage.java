@@ -14,7 +14,7 @@ public class Storage implements IStorage {
 
     @ManyToOne
     @JoinColumn(name = "DRINK_ID")
-    public Drink ingredient;
+    public Drink drink;
 
     @Column(name = "VOLUME")
     private double volume;
@@ -30,12 +30,12 @@ public class Storage implements IStorage {
         this.id = id;
     }
 
-    public Drink getIngredient() {
-        return ingredient;
+    public Drink getDrink() {
+        return drink;
     }
 
-    public void setIngredient(Drink basis) {
-        this.ingredient = basis;
+    public void setDrink(Drink drink) {
+        this.drink = drink;
     }
 
     public double getVolume() {

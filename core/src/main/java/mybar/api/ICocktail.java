@@ -11,7 +11,7 @@ public interface ICocktail {
 
     String getName();
 
-    Collection<? extends IBasis> getBasisList();
+    Collection<? extends IIngredient> getIngredients();
 
     <T extends IMenu> T getMenu();
 

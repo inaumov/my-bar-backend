@@ -2,9 +2,9 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.QuantityValue;
-import mybar.api.IBasis;
+import mybar.api.IIngredient;
 
-public class BasisBean implements IBasis {
+public class IngredientBean implements IIngredient {
 
     private int id;
 
@@ -53,12 +53,12 @@ public class BasisBean implements IBasis {
         this.quantity = quantity;
     }
 
-    public static BasisBean from(IBasis basis) {
-        BasisBean bean = new BasisBean();
-        bean.setId(basis.getId());
-        bean.setDrink(DrinkBean.from(basis.getDrink()));
-        bean.setQuantity(basis.getQuantity());
-        bean.setVolume(basis.getVolume());
+    public static IngredientBean from(IIngredient ingredient) {
+        IngredientBean bean = new IngredientBean();
+        bean.setId(ingredient.getId());
+        bean.setDrink(DrinkBean.from(ingredient.getDrink()));
+        bean.setQuantity(ingredient.getQuantity());
+        bean.setVolume(ingredient.getVolume());
 
         return bean;
     }
