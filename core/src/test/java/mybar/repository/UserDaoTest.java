@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 public class UserDaoTest extends BaseDaoTest {
 
     @Autowired
-    private UserDAO userDao;
+    private UserDao userDao;
 
     @Test
     public void testReadUserById() throws Exception {

@@ -20,7 +20,7 @@ public class OrderDaoTest extends BaseDaoTest {
     private static final String startDateStr = "2013-08-25";
 
     @Autowired
-    private OrderDAO orderDao;
+    private OrderDao orderDao;
 
     @Test
     public void testGetHistoryForPeriod() throws Exception {

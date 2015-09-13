@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserToRoleRelationsTest extends BaseDaoTest {
 
     @Autowired
-    private RoleDAOImpl roleDAO;
+    private RoleDaoImpl roleDAO;
 
     @Autowired
-    private UserDAO userDao;
+    private UserDao userDao;
 
     @Test
     public void testUserHasMoreThenOneRole() throws Exception {

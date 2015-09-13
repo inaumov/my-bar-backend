@@ -1,10 +1,9 @@
 package mybar.app.bean;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.ActiveStatus;
-import mybar.api.IIngredient;
 import mybar.api.ICocktail;
+import mybar.api.IIngredient;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class CocktailBean implements ICocktail {
     private Blob picture;
 
     @JsonView(View.CocktailWithDetails.class)
-    @JsonProperty("ingredients")
     private Collection<IngredientBean> ingredients;
 
     @JsonView(View.CocktailWithDetails.class)

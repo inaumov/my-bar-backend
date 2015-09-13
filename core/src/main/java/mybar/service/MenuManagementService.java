@@ -11,7 +11,7 @@ import mybar.ActiveStatus;
 import mybar.domain.EntityFactory;
 import mybar.repository.MenuDao;
 import mybar.repository.CocktailDao;
-import mybar.repository.OrderDAO;
+import mybar.repository.OrderDao;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class MenuManagementService {
     private CocktailDao cocktailDao;
 
     @Autowired
-    private OrderDAO orderDao;
+    private OrderDao orderDao;
 
     // menu
 

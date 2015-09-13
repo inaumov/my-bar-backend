@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
-import mybar.repository.OrderDAO;
-import mybar.repository.UserDAO;
+import mybar.repository.OrderDao;
+import mybar.repository.UserDao;
 import mybar.domain.Order;
 
 import java.util.*;
@@ -17,10 +17,10 @@ import java.util.*;
 public class ClientService {
 
     @Autowired
-    private OrderDAO orderDao;
+    private OrderDao orderDao;
 
     @Autowired
-    private UserDAO user;
+    private UserDao user;
 
     private Map<Cocktail, Integer> basket;
 

@@ -7,8 +7,8 @@ import mybar.ActiveStatus;
 import mybar.WebRole;
 import mybar.domain.um.UmEntityFactory;
 import mybar.api.um.IUser;
-import mybar.repository.RoleDAOImpl;
-import mybar.repository.UserDAO;
+import mybar.repository.RoleDaoImpl;
+import mybar.repository.UserDao;
 import mybar.domain.um.Role;
 import mybar.domain.um.User;
 
@@ -20,10 +20,10 @@ import java.util.List;
 public class UserManagementService {
 
     @Autowired
-    private UserDAO userDao;
+    private UserDao userDao;
 
     @Autowired
-    private RoleDAOImpl roleDAO;
+    private RoleDaoImpl roleDAO;
 
     // basic functions
 

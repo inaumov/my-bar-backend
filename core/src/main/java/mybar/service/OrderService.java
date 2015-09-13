@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
-import mybar.repository.OrderDAO;
+import mybar.repository.OrderDao;
 import mybar.domain.Order;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 public class OrderService {
 
     @Autowired
-    private OrderDAO orderDao;
+    private OrderDao orderDao;
 
     @Transactional
     public List<Order> getOrderList(OrderStatus orderStatus) {

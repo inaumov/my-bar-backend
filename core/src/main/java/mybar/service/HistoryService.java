@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.History;
-import mybar.repository.OrderDAO;
+import mybar.repository.OrderDao;
 
 import java.util.Date;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 public class HistoryService {
 
     @Autowired
-    private OrderDAO orderDao;
+    private OrderDao orderDao;
 
     @Transactional
     public List<History> getHistoryForPeriod(Date startDate, Date endDate) {
