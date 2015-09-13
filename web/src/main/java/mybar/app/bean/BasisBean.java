@@ -9,7 +9,7 @@ public class BasisBean implements IBasis {
     private int id;
 
     @JsonView(View.CocktailWithDetails.class)
-    private IngredientBean ingredient;
+    private DrinkBean drink;
 
     @JsonView(View.CocktailWithDetails.class)
     private double volume;
@@ -27,12 +27,12 @@ public class BasisBean implements IBasis {
     }
 
     @Override
-    public IngredientBean getIngredient() {
-        return ingredient;
+    public DrinkBean getDrink() {
+        return drink;
     }
 
-    public void setIngredient(IngredientBean ingredient) {
-        this.ingredient = ingredient;
+    public void setDrink(DrinkBean drink) {
+        this.drink = drink;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class BasisBean implements IBasis {
     public static BasisBean from(IBasis basis) {
         BasisBean bean = new BasisBean();
         bean.setId(basis.getId());
-        bean.setIngredient(IngredientBean.from(basis.getIngredient()));
+        bean.setDrink(DrinkBean.from(basis.getDrink()));
         bean.setQuantity(basis.getQuantity());
         bean.setVolume(basis.getVolume());
 

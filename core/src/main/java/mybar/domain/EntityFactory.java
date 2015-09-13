@@ -13,8 +13,8 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Ingredient from(final IIngredient ingredient) {
-        Ingredient entity = new Ingredient();
+    public static final Drink from(final IDrink ingredient) {
+        Drink entity = new Drink();
         entity.setId(ingredient.getId());
         entity.setName(ingredient.getName());
         return entity;
@@ -36,7 +36,7 @@ public class EntityFactory {
         entity.setId(basis.getId());
         entity.setValue(basis.getQuantity());
         entity.setVolume(basis.getVolume());
-        entity.setIngredient(from((Ingredient)basis.getIngredient()));
+        entity.setDrink(from((Drink) basis.getDrink()));
         return entity;
     }
 
@@ -45,7 +45,7 @@ public class EntityFactory {
         entity.setId(storage.getId());
         entity.setVolume(storage.getVolume());
         entity.setPrice(storage.getPrice());
-        entity.setIngredient(from((Ingredient)storage.getIngredient()));
+        entity.setIngredient(from((Drink)storage.getIngredient()));
         return entity;
     }
 

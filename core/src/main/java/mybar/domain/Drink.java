@@ -1,11 +1,11 @@
 package mybar.domain;
 
-import mybar.api.IIngredient;
+import mybar.api.IDrink;
 
 import javax.persistence.*;
 
 @Entity
-public class Ingredient implements IIngredient {
+public class Drink implements IDrink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

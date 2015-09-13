@@ -2,7 +2,7 @@ package mybar.domain;
 
 import mybar.QuantityValue;
 import mybar.api.IBasis;
-import mybar.api.IIngredient;
+import mybar.api.IDrink;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ public class Basis implements IBasis {
     private int id;
 
     @ManyToOne
-    private Ingredient ingredient;
+    private Drink drink;
 
     @Column(name = "VOLUME")
     private double volume;
@@ -32,8 +32,8 @@ public class Basis implements IBasis {
     }
 
     @Override
-    public IIngredient getIngredient() {
-        return ingredient;
+    public IDrink getDrink() {
+        return drink;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class Basis implements IBasis {
         this.id = id;
     }
 
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
+    public void setDrink(Drink drink) {
+        this.drink = drink;
     }
 
     public void setVolume(double volume) {

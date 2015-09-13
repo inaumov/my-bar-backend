@@ -6,7 +6,7 @@ public interface IBasis {
 
     int getId();
 
-    <T extends IIngredient> T getIngredient();
+    <T extends IDrink> T getDrink();
 
     double getVolume();
 

@@ -1,6 +1,6 @@
 package mybar.api;
 
-public interface IIngredient {
+public interface IDrink {
 
     int getId();
 
