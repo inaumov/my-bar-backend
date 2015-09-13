@@ -1,7 +1,7 @@
 package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.api.IDrink;
+import mybar.api.ICocktail;
 import mybar.api.IMenu;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class MenuBean implements IMenu {
     @JsonView(View.Menu.class)
     private String name;
 
-    private List<DrinkBean> drinks;
+    private List<CocktailBean> cocktails;
 
     public int getId() {
         return id;
@@ -34,23 +34,23 @@ public class MenuBean implements IMenu {
         this.name = name;
     }
 
-    public List<DrinkBean> getDrinks() {
-        return drinks;
+    public List<CocktailBean> getCocktails() {
+        return cocktails;
     }
 
-    public void setDrinks(List<DrinkBean> drinks) {
-        this.drinks = drinks;
+    public void setCocktails(List<CocktailBean> cocktails) {
+        this.cocktails = cocktails;
     }
 
     public static MenuBean from(IMenu menu) {
         MenuBean bean = new MenuBean();
         bean.setId(menu.getId());
         bean.setName(menu.getName());
-        List<DrinkBean> drinkBeans = new ArrayList<>();
-        for (IDrink d : menu.getDrinks()) {
-            drinkBeans.add(DrinkBean.from(d));
+        List<CocktailBean> cocktailBeans = new ArrayList<>();
+        for (ICocktail d : menu.getCocktails()) {
+            cocktailBeans.add(CocktailBean.from(d));
         }
-        bean.setDrinks(drinkBeans);
+        bean.setCocktails(cocktailBeans);
 
         return bean;
     }

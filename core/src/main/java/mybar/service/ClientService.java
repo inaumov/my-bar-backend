@@ -1,5 +1,6 @@
 package mybar.service;
 
+import mybar.domain.Cocktail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
 import mybar.repository.OrderDAO;
 import mybar.repository.UserDAO;
-import mybar.domain.Drink;
 import mybar.domain.Order;
 
 import java.util.*;
@@ -22,38 +22,38 @@ public class ClientService {
     @Autowired
     private UserDAO user;
 
-    private Map<Drink, Integer> basket;
+    private Map<Cocktail, Integer> basket;
 
     {
-        Comparator<Drink> cmp = new Comparator<Drink>() {
+        Comparator<Cocktail> cmp = new Comparator<Cocktail>() {
             @Override
-            public int compare(Drink o1, Drink o2) {
+            public int compare(Cocktail o1, Cocktail o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         };
-        basket = new TreeMap<Drink, Integer>(cmp);
+        basket = new TreeMap<Cocktail, Integer>(cmp);
     }
 
-    public void addDrinkToBasket(Drink drink) {
-        Integer count = basket.get(drink);
-        basket.put(drink, (count == null) ? 1 : count + 1);
+    public void addCocktailToBasket(Cocktail cocktail) {
+        Integer count = basket.get(cocktail);
+        basket.put(cocktail, (count == null) ? 1 : count + 1);
     }
 
-    public void removeDrinkFromBasket(Drink drink) {
-        basket.remove(drink);
+    public void removeCocktailFromBasket(Cocktail cocktail) {
+        basket.remove(cocktail);
     }
 
-    public Map<Drink, Integer> getDrinks() {
+    public Map<Cocktail, Integer> getCocktails() {
         return basket;
     }
 
     public double getTotalPrice() {
         double total = 0.0;
-        Set<Map.Entry<Drink, Integer>> entries = basket.entrySet();
+        Set<Map.Entry<Cocktail, Integer>> entries = basket.entrySet();
         for (Map.Entry entry : entries) {
-            Drink drink = (Drink) entry.getKey();
+            Cocktail cocktail = (Cocktail) entry.getKey();
             int cnt = entry.getValue().hashCode();
-            total += drink.getPrice() * cnt;
+            total += cocktail.getPrice() * cnt;
         }
         return total;
     }
@@ -69,12 +69,12 @@ public class ClientService {
 
     @Transactional
     public void completeOrder() {
-        // todo: implement drinks quantity
-        Set<Drink> orders = basket.keySet();
-        for (Drink drink : orders) {
+        // todo: implement cocktails quantity
+        Set<Cocktail> orders = basket.keySet();
+        for (Cocktail cocktail : orders) {
             Order order = new Order();
-            order.setDrink(drink);
-            order.setAmount(basket.get(drink));
+            order.setCocktail(cocktail);
+            order.setAmount(basket.get(cocktail));
             order.setOrderStatus(OrderStatus.NON_PREPARED);
             order.setUser(user.read(6));
             orderDao.create(order);

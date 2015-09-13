@@ -23,8 +23,8 @@ public class Basis implements IBasis {
     private QuantityValue value;
 
     @ManyToOne
-    @JoinColumn(name = "DRINK_ID")
-    private Drink drink;
+    @JoinColumn(name = "COCKTAIL_ID")
+    private Cocktail cocktail;
 
     @Override
     public int getId() {

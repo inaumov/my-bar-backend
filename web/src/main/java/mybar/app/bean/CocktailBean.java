@@ -4,35 +4,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.ActiveStatus;
 import mybar.api.IBasis;
-import mybar.api.IDrink;
+import mybar.api.ICocktail;
 
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DrinkBean implements IDrink {
+public class CocktailBean implements ICocktail {
 
-    @JsonView(View.Drink.class)
+    @JsonView(View.Cocktail.class)
     private int id;
 
-    @JsonView(View.Drink.class)
+    @JsonView(View.Cocktail.class)
     private String name;
 
     private MenuBean menu;
 
-    @JsonView(View.Drink.class)
+    @JsonView(View.Cocktail.class)
     private double price;
 
     private ActiveStatus activeStatus;
 
     private Blob picture;
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     @JsonProperty("ingredients")
     private Collection<BasisBean> basisList;
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     private String description;
 
     @Override
@@ -105,18 +105,18 @@ public class DrinkBean implements IDrink {
         this.picture = picture;
     }
 
-    public static DrinkBean from(IDrink drink) {
-        DrinkBean bean = new DrinkBean();
-        bean.setId(drink.getId());
-        bean.setName(drink.getName());
-        bean.setPrice(drink.getPrice());
-        bean.setDescription(drink.getDescription());
+    public static CocktailBean from(ICocktail cocktail) {
+        CocktailBean bean = new CocktailBean();
+        bean.setId(cocktail.getId());
+        bean.setName(cocktail.getName());
+        bean.setPrice(cocktail.getPrice());
+        bean.setDescription(cocktail.getDescription());
         List<BasisBean> basisBeans = new ArrayList<>();
-        for (IBasis basis : drink.getBasisList()) {
+        for (IBasis basis : cocktail.getBasisList()) {
             basisBeans.add(BasisBean.from(basis));
         }
         bean.setBasisList(basisBeans);
-        bean.setActiveStatus(drink.getActiveStatus());
+        bean.setActiveStatus(cocktail.getActiveStatus());
 
         return bean;
     }

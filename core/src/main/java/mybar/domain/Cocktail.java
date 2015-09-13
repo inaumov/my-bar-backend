@@ -1,18 +1,18 @@
 package mybar.domain;
 
 import mybar.ActiveStatus;
-import mybar.api.IDrink;
+import mybar.api.ICocktail;
 
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.Collection;
 
 @Entity
-@SequenceGenerator(name = "DRINK_SEQUENCE", sequenceName = "DRINK_SEQUENCE", allocationSize = 3, initialValue = 1)
-public class Drink implements IDrink {
+@SequenceGenerator(name = "COCKTAIL_SEQUENCE", sequenceName = "COCKTAIL_SEQUENCE", allocationSize = 3, initialValue = 1)
+public class Cocktail implements ICocktail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DRINK_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COCKTAIL_SEQUENCE")
     private int id;
 
     @Column(name = "NAME")
@@ -22,7 +22,7 @@ public class Drink implements IDrink {
     @JoinColumn(name = "MENU_ID")
     private Menu menu;
 
-    @OneToMany(mappedBy = "drink", fetch = FetchType.EAGER) // TODO: fetch lazily
+    @OneToMany(mappedBy = "cocktail", fetch = FetchType.EAGER) // TODO: fetch lazily
     private Collection<Basis> basisList;
 
     @Column(name = "DESCRIPTION", nullable = true)

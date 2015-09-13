@@ -2,7 +2,7 @@ package mybar.web.rest;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.IMenu;
-import mybar.app.bean.DrinkBean;
+import mybar.app.bean.CocktailBean;
 import mybar.app.bean.MenuBean;
 import mybar.app.bean.View;
 import mybar.service.MenuManagementService;
@@ -49,41 +49,41 @@ public class MenuController {
         return menus;
     }
 
-    // drinks -> read all
-    @JsonView(View.Drink.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/drinks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<DrinkBean> getDrinks(@PathVariable("menuId") Integer menuId) {
+    // cocktails -> read all
+    @JsonView(View.Cocktail.class)
+    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/cocktails", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Collection<CocktailBean> getCocktails(@PathVariable("menuId") Integer menuId) {
         if (menuId < 0 || menuId > 5) {
             logger.error(MessageFormat.format("Bad request. Menu with id={0} does not exist", menuId));
         }
-        Collection<DrinkBean> drinks = getMenus().get(menuId).getDrinks();
-        logger.info(MessageFormat.format("Loaded drinks for menu with id={0}", menuId));
-        return drinks;
+        Collection<CocktailBean> cocktails = getMenus().get(menuId).getCocktails();
+        logger.info(MessageFormat.format("Loaded cocktails for menu with id={0}", menuId));
+        return cocktails;
     }
 
-    // drinks -> read one by id with details
-    //@JsonView(View.DrinkWithDetails.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/drinks/{drinkId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public MappingJacksonValue getDrink(@PathVariable("menuId") Integer menuId, @PathVariable("drinkId") Integer drinkId) {
+    // cocktails -> read one by id with details
+    //@JsonView(View.CocktailWithDetails.class)
+    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/cocktails/{cocktailId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public MappingJacksonValue getCocktail(@PathVariable("menuId") Integer menuId, @PathVariable("cocktailId") Integer cocktailId) {
         if (menuId < 0 || menuId >= getMenus().size()) {
             logger.error(MessageFormat.format("Bad request. Menu with id={0} does not exist", menuId));
         }
-        List<DrinkBean> drinks = getMenus().get(menuId).getDrinks();
-        if (drinkId < 0 || drinkId >= drinks.size()) {
-            logger.error(MessageFormat.format("Bad request. Drink with id={0} does not exist", drinkId));
+        List<CocktailBean> cocktails = getMenus().get(menuId).getCocktails();
+        if (cocktailId < 0 || cocktailId >= cocktails.size()) {
+            logger.error(MessageFormat.format("Bad request. Cocktail with id={0} does not exist", cocktailId));
         }
-        DrinkBean drink = drinks.get(drinkId);
-        MappingJacksonValue wrapper = new MappingJacksonValue(drink);
-        wrapper.setSerializationView(View.DrinkWithDetails.class);
-        logger.info(MessageFormat.format("Loaded drink with id={0}", drinkId));
+        CocktailBean cocktail = cocktails.get(cocktailId);
+        MappingJacksonValue wrapper = new MappingJacksonValue(cocktail);
+        wrapper.setSerializationView(View.CocktailWithDetails.class);
+        logger.info(MessageFormat.format("Loaded cocktail with id={0}", cocktailId));
         return wrapper;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{menuId}/drinks")
-    public ResponseEntity<?> addDrink(@PathVariable("menuId") String menuId, @RequestBody DrinkBean input) {
+    @RequestMapping(method = RequestMethod.POST, value = "/{menuId}/cocktails")
+    public ResponseEntity<?> addCocktail(@PathVariable("menuId") String menuId, @RequestBody CocktailBean input) {
         MenuBean menu = getMenus().get(Integer.parseInt(menuId));
         input.setMenu(menu);
-        menuManagementService.saveOrUpdateDrink(input);
+        menuManagementService.saveOrUpdateCocktail(input);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(ServletUriComponentsBuilder

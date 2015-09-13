@@ -15,7 +15,7 @@ public class Menu implements IMenu {
     private String name;
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
-    private Collection<Drink> drinks;
+    private Collection<Cocktail> cocktails;
 
     @Override
     public int getId() {
@@ -35,12 +35,12 @@ public class Menu implements IMenu {
         this.name = name;
     }
 
-    public Collection<Drink> getDrinks() {
-        return drinks;
+    public Collection<Cocktail> getCocktails() {
+        return cocktails;
     }
 
-    public void setDrinks(Collection<Drink> drinks) {
-        this.drinks = drinks;
+    public void setCocktails(Collection<Cocktail> cocktails) {
+        this.cocktails = cocktails;
     }
 
 }

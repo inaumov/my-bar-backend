@@ -5,9 +5,9 @@ public class View {
     public interface Menu {
     }
 
-    public interface Drink {
+    public interface Cocktail {
     }
 
-    public interface DrinkWithDetails extends Drink {
+    public interface CocktailWithDetails extends Cocktail {
     }
 }

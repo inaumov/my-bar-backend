@@ -29,23 +29,23 @@
     <menu ID="2" NAME="Long"/>
     <menu ID="3" NAME="Coffee"/>
     <menu ID="4" NAME="Tea"/>
-    <drink ID="1" MENU_ID="1" NAME="B52" ACTIVE="1"></drink>
-    <drink ID="2" MENU_ID="1" NAME="B53" ACTIVE="1"></drink>
-    <drink ID="3" MENU_ID="1" NAME="Green Mexican" ACTIVE="1"></drink>
-    <drink ID="4" MENU_ID="1" NAME="Blow Job" ACTIVE="0"></drink>
-    <drink ID="5" MENU_ID="2" NAME="Long Island Iced Tea" ACTIVE="1"></drink>
-    <drink ID="6" MENU_ID="2" NAME="Tequila Sunrise" ACTIVE="1"></drink>
-    <drink ID="7" MENU_ID="2" NAME="Black Russian" ACTIVE="0"></drink>
-    <drink ID="8" MENU_ID="2" NAME="Hurricane"  ACTIVE="0"></drink>
-    <drink ID="9" MENU_ID="2" NAME="Mai Tai" ACTIVE="1"></drink>
-    <drink ID="10" MENU_ID="2" NAME="Margarita" ACTIVE="1"></drink>
-    <drink ID="11" MENU_ID="2" NAME="Mojito" ACTIVE="1"></drink>
-    <drink ID="12" MENU_ID="3" NAME="Americano" ACTIVE="1"></drink>
-    <drink ID="13" MENU_ID="3" NAME="Espresso" ACTIVE="1"></drink>
-    <drink ID="14" MENU_ID="4" NAME="Phu-Er" ACTIVE="1"></drink>
-    <drink ID="15" MENU_ID="4" NAME="Roibush" ACTIVE="1"></drink>
-    <drink ID="16" MENU_ID="4" NAME="Da Hong Pao" ACTIVE="1"></drink>
-    <drink ID="17" MENU_ID="4" NAME="Yunnan Gold" ACTIVE="1"></drink>
+    <cocktail ID="1" MENU_ID="1" NAME="B52" ACTIVE="1"></cocktail>
+    <cocktail ID="2" MENU_ID="1" NAME="B53" ACTIVE="1"></cocktail>
+    <cocktail ID="3" MENU_ID="1" NAME="Green Mexican" ACTIVE="1"></cocktail>
+    <cocktail ID="4" MENU_ID="1" NAME="Blow Job" ACTIVE="0"></cocktail>
+    <cocktail ID="5" MENU_ID="2" NAME="Long Island Iced Tea" ACTIVE="1"></cocktail>
+    <cocktail ID="6" MENU_ID="2" NAME="Tequila Sunrise" ACTIVE="1"></cocktail>
+    <cocktail ID="7" MENU_ID="2" NAME="Black Russian" ACTIVE="0"></cocktail>
+    <cocktail ID="8" MENU_ID="2" NAME="Hurricane"  ACTIVE="0"></cocktail>
+    <cocktail ID="9" MENU_ID="2" NAME="Mai Tai" ACTIVE="1"></cocktail>
+    <cocktail ID="10" MENU_ID="2" NAME="Margarita" ACTIVE="1"></cocktail>
+    <cocktail ID="11" MENU_ID="2" NAME="Mojito" ACTIVE="1"></cocktail>
+    <cocktail ID="12" MENU_ID="3" NAME="Americano" ACTIVE="1"></cocktail>
+    <cocktail ID="13" MENU_ID="3" NAME="Espresso" ACTIVE="1"></cocktail>
+    <cocktail ID="14" MENU_ID="4" NAME="Phu-Er" ACTIVE="1"></cocktail>
+    <cocktail ID="15" MENU_ID="4" NAME="Roibush" ACTIVE="1"></cocktail>
+    <cocktail ID="16" MENU_ID="4" NAME="Da Hong Pao" ACTIVE="1"></cocktail>
+    <cocktail ID="17" MENU_ID="4" NAME="Yunnan Gold" ACTIVE="1"></cocktail>
     <ingredient ID="1" NAME="Vodka"></ingredient>
     <ingredient ID="2" NAME="Gin"></ingredient>
     <ingredient ID="3" NAME="Rum"></ingredient>
@@ -63,15 +63,15 @@
     <ingredient ID="15" NAME="Sugar"></ingredient>
     <ingredient ID="16" NAME="Coffee liqueur"></ingredient>
     <ingredient ID="17" NAME="Coca Cola"></ingredient>
-    <basis ID="1" DRINK_ID="1" INGREDIENT_ID="8" VOLUME="0.02" VALUE="ML"></basis>
-    <basis ID="2" DRINK_ID="1" INGREDIENT_ID="11" VOLUME="0.02" VALUE="ML"></basis>
-    <basis ID="3" DRINK_ID="1" INGREDIENT_ID="16" VOLUME="0.02" VALUE="ML"></basis>
-    <basis ID="4" DRINK_ID="7" INGREDIENT_ID="16" VOLUME="0.05" VALUE="ML"></basis>
-    <basis ID="5" DRINK_ID="7" INGREDIENT_ID="17" VOLUME="0.15" VALUE="ML"></basis>
-    <basis ID="6" DRINK_ID="7" INGREDIENT_ID="14" VOLUME="5" VALUE="PCS"></basis>
-    <basis ID="7" DRINK_ID="6" INGREDIENT_ID="13" VOLUME="0.15" VALUE="ML"></basis>
-    <basis ID="8" DRINK_ID="6" INGREDIENT_ID="4" VOLUME="0.05" VALUE="PCS"></basis>
-    <basis ID="9" DRINK_ID="6" INGREDIENT_ID="14" VOLUME="5" VALUE="ML"></basis>
+    <basis ID="1" COCKTAIL_ID="1" INGREDIENT_ID="8" VOLUME="0.02" VALUE="ML"></basis>
+    <basis ID="2" COCKTAIL_ID="1" INGREDIENT_ID="11" VOLUME="0.02" VALUE="ML"></basis>
+    <basis ID="3" COCKTAIL_ID="1" INGREDIENT_ID="16" VOLUME="0.02" VALUE="ML"></basis>
+    <basis ID="4" COCKTAIL_ID="7" INGREDIENT_ID="16" VOLUME="0.05" VALUE="ML"></basis>
+    <basis ID="5" COCKTAIL_ID="7" INGREDIENT_ID="17" VOLUME="0.15" VALUE="ML"></basis>
+    <basis ID="6" COCKTAIL_ID="7" INGREDIENT_ID="14" VOLUME="5" VALUE="PCS"></basis>
+    <basis ID="7" COCKTAIL_ID="6" INGREDIENT_ID="13" VOLUME="0.15" VALUE="ML"></basis>
+    <basis ID="8" COCKTAIL_ID="6" INGREDIENT_ID="4" VOLUME="0.05" VALUE="PCS"></basis>
+    <basis ID="9" COCKTAIL_ID="6" INGREDIENT_ID="14" VOLUME="5" VALUE="ML"></basis>
 
     <!-- killer feature -->
     <storage ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120"></storage>
@@ -83,10 +83,10 @@
     <storage ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119"></storage>
 
     <!-- what is done -->
-    <orders ID="1" USER_ID="6" DRINK_ID="1" SOLD="2013-08-16" IS_DONE="PREPARED" AMOUNT="3"></orders>
-    <orders ID="2" USER_ID="6" DRINK_ID="2" SOLD="2013-08-17" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
-    <orders ID="3" USER_ID="6" DRINK_ID="3" SOLD="2013-08-17" IS_DONE="PREPARED" AMOUNT="1"></orders>
-    <orders ID="4" USER_ID="6" DRINK_ID="4" SOLD="2013-08-25" IS_DONE="PREPARED" AMOUNT="5"></orders>
-    <orders ID="5" USER_ID="6" DRINK_ID="5" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="2"></orders>
-    <orders ID="6" USER_ID="6" DRINK_ID="6" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
+    <orders ID="1" USER_ID="6" COCKTAIL_ID="1" SOLD="2013-08-16" IS_DONE="PREPARED" AMOUNT="3"></orders>
+    <orders ID="2" USER_ID="6" COCKTAIL_ID="2" SOLD="2013-08-17" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
+    <orders ID="3" USER_ID="6" COCKTAIL_ID="3" SOLD="2013-08-17" IS_DONE="PREPARED" AMOUNT="1"></orders>
+    <orders ID="4" USER_ID="6" COCKTAIL_ID="4" SOLD="2013-08-25" IS_DONE="PREPARED" AMOUNT="5"></orders>
+    <orders ID="5" USER_ID="6" COCKTAIL_ID="5" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="2"></orders>
+    <orders ID="6" USER_ID="6" COCKTAIL_ID="6" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
 </dataset>

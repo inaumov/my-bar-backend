@@ -1,6 +1,6 @@
 package mybar.web.rest;
 
-import mybar.domain.Drink;
+import mybar.domain.Cocktail;
 import mybar.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +15,12 @@ public class BasketController {
     @Autowired
     private ClientService clientService;
 
-    public void add(Drink drink) {
-        clientService.addDrinkToBasket(drink);
+    public void add(Cocktail cocktail) {
+        clientService.addCocktailToBasket(cocktail);
     }
 
-    public void remove(Drink drink) {
-        clientService.removeDrinkFromBasket(drink);
+    public void remove(Cocktail cocktail) {
+        clientService.removeCocktailFromBasket(cocktail);
     }
 
     public double getTotalPrice() {
@@ -31,30 +31,30 @@ public class BasketController {
         return clientService.totalItems();
     }
 
-    public int count(Drink drink) {
+    public int count(Cocktail cocktail) {
         int cnt = 0;
         try {
-            cnt = getDrinks().get(drink);
+            cnt = getCocktails().get(cocktail);
         } catch (NullPointerException e) {
             return cnt;
         }
-        logger.info("Found drinks in basket = " + drink.getMenu().getName() + "|" + drink.getName() + " :: " + cnt);
+        logger.info("Found cocktails in basket = " + cocktail.getMenu().getName() + "|" + cocktail.getName() + " :: " + cnt);
         return cnt;
     }
 
-    public double totalPerDrink(Drink drink) {
+    public double totalPerCocktail(Cocktail cocktail) {
         double sum = 0;
         try {
-            sum = count(drink) * drink.getPrice();
+            sum = count(cocktail) * cocktail.getPrice();
         } catch (NullPointerException e) {
             return sum;
         }
         return sum;
     }
 
-    public Map<Drink, Integer> getDrinks() {
-        Map<Drink, Integer> drinks = clientService.getDrinks();
-        return drinks;
+    public Map<Cocktail, Integer> getCocktails() {
+        Map<Cocktail, Integer> cocktails = clientService.getCocktails();
+        return cocktails;
     }
 
     public String complete() {

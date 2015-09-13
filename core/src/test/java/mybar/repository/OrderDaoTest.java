@@ -46,7 +46,7 @@ public class OrderDaoTest extends BaseDaoTest {
         assertEquals(amount, r.getAmount());
     }
 
-    private void assertHistory(Order o, int id, int drinkId, OrderStatus status, int amount) {
+    private void assertHistory(Order o, int id, int cocktailId, OrderStatus status, int amount) {
 
     }
 

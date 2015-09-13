@@ -8,13 +8,13 @@ public class BasisBean implements IBasis {
 
     private int id;
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     private IngredientBean ingredient;
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     private double volume;
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     private QuantityValue quantity;
 
     @Override

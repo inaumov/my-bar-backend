@@ -20,14 +20,14 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Drink from (final IDrink drink) {
-        Drink entity = new Drink();
-        entity.setId(drink.getId());
-        entity.setName(drink.getName());
-        entity.setDescription(drink.getDescription());
-        entity.setActiveStatus(drink.getActiveStatus());
-        entity.setPicture(drink.getPicture());
-        entity.setMenu(from((Menu) drink.getMenu()));
+    public static final Cocktail from (final ICocktail cocktail) {
+        Cocktail entity = new Cocktail();
+        entity.setId(cocktail.getId());
+        entity.setName(cocktail.getName());
+        entity.setDescription(cocktail.getDescription());
+        entity.setActiveStatus(cocktail.getActiveStatus());
+        entity.setPicture(cocktail.getPicture());
+        entity.setMenu(from((Menu) cocktail.getMenu()));
         return entity;
     }
 

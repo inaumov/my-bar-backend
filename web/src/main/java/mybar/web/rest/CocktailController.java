@@ -1,8 +1,8 @@
 package mybar.web.rest;
 
 import mybar.api.IBasis;
+import mybar.api.ICocktail;
 import mybar.api.IMenu;
-import mybar.api.IDrink;
 import mybar.service.MenuManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,26 +12,27 @@ import java.sql.Blob;
 import java.util.Collection;
 import java.util.List;
 
-public class DrinkController {
-    Logger logger = LoggerFactory.getLogger(DrinkController.class);
+public class CocktailController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CocktailController.class);
 
     @Autowired
     private MenuManagementService menuService;
 
     public void get(int id) {
-        IDrink drink = menuService.findDrink(id);
-        logger.info("init: " + drink.getName());
+        ICocktail cocktail = menuService.findCocktail(id);
+        logger.info("init: " + cocktail.getName());
         getCategories();
     }
 
     public void save() {
 
-        //menuService.saveOrUpdateDrink(new Drink());
+        //menuService.saveOrUpdateCocktail(new Cocktail());
     }
 
     public void remove() {
         try {
-            //menuService.removeDrink(drink);
+            //menuService.removeCocktail(cocktail);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,9 +44,9 @@ public class DrinkController {
         return allCategories;
     }
 
-    public boolean drinkIsInHistory() {
+    public boolean cocktailIsInHistory() {
         //if(id != 0)
-            //return menuService.drinkIsInHistory(this);
+            //return menuService.cocktailIsInHistory(this);
         return false;
     }
 

@@ -1,8 +1,8 @@
 package mybar.repository;
 
 import mybar.ActiveStatus;
+import mybar.domain.Cocktail;
 import mybar.domain.Menu;
-import mybar.domain.Drink;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +19,7 @@ public class MenuTest extends BaseDaoTest {
     private MenuDao menuDao;
 
     @Autowired
-    private DrinkDAO drinkDao;
+    private CocktailDao cocktailDao;
 
     @Test
     public void testSelectAllMenus() throws Exception {
@@ -38,64 +38,64 @@ public class MenuTest extends BaseDaoTest {
     }
 
     @Test
-    public void testGetDrinksForMenu() throws Exception {
+    public void testGetCocktailsForMenu() throws Exception {
         List<Menu> list = menuDao.findAll();
         Iterator<Menu> it = list.iterator();
 
         // test first menu
-        Collection<Drink> drinks = it.next().getDrinks();
-        assertEquals(4, drinks.size());
-        Iterator<Drink> drink = drinks.iterator();
-        assertDrink(drink.next(), 1, 1, "B52", ActiveStatus.ENABLED);
-        assertDrink(drink.next(), 2, 1, "B53", ActiveStatus.ENABLED);
-        assertDrink(drink.next(), 3, 1, "Green Mexican", ActiveStatus.ENABLED);
-        assertDrink(drink.next(), 4, 1, "Blow Job", ActiveStatus.DISABLED);
+        Collection<Cocktail> cocktails = it.next().getCocktails();
+        assertEquals(4, cocktails.size());
+        Iterator<Cocktail> cocktail = cocktails.iterator();
+        assertCocktail(cocktail.next(), 1, 1, "B52", ActiveStatus.ENABLED);
+        assertCocktail(cocktail.next(), 2, 1, "B53", ActiveStatus.ENABLED);
+        assertCocktail(cocktail.next(), 3, 1, "Green Mexican", ActiveStatus.ENABLED);
+        assertCocktail(cocktail.next(), 4, 1, "Blow Job", ActiveStatus.DISABLED);
 
         // second menu
-        drinks = it.next().getDrinks();
-        assertEquals(7, drinks.size());
+        cocktails = it.next().getCocktails();
+        assertEquals(7, cocktails.size());
 
         // third menu
-        drinks = it.next().getDrinks();
-        assertEquals(2, drinks.size());
-        drink = drinks.iterator();
-        assertDrink(drink.next(), 12, 3, "Americano", ActiveStatus.ENABLED);
+        cocktails = it.next().getCocktails();
+        assertEquals(2, cocktails.size());
+        cocktail = cocktails.iterator();
+        assertCocktail(cocktail.next(), 12, 3, "Americano", ActiveStatus.ENABLED);
 
         // forth menu
-        drinks = it.next().getDrinks();
-        assertEquals(4, drinks.size());
+        cocktails = it.next().getCocktails();
+        assertEquals(4, cocktails.size());
     }
 
-    private void assertDrink(Drink drink, int id, int menuId, String name, ActiveStatus status) {
-        assertEquals(id, drink.getId());
-        assertEquals(menuId, drink.getMenu().getId());
-        assertEquals(name, drink.getName());
-        assertEquals(status, drink.getActiveStatus());
+    private void assertCocktail(Cocktail cocktail, int id, int menuId, String name, ActiveStatus status) {
+        assertEquals(id, cocktail.getId());
+        assertEquals(menuId, cocktail.getMenu().getId());
+        assertEquals(name, cocktail.getName());
+        assertEquals(status, cocktail.getActiveStatus());
     }
 
     @Test
-    public void testSaveDrink() throws Exception {
+    public void testSaveCocktail() throws Exception {
         Menu firstMenu = menuDao.findAll().iterator().next();
         for (int i = 99; i < 109; i++) {
-            Drink drink = new Drink();
-            drink.setMenu(firstMenu);
-            drink.setName("Drink " + (char) i);
-            drink.setActiveStatus(ActiveStatus.ENABLED);
-            drinkDao.create(drink);
+            Cocktail cocktail = new Cocktail();
+            cocktail.setMenu(firstMenu);
+            cocktail.setName("Cocktail " + (char) i);
+            cocktail.setActiveStatus(ActiveStatus.ENABLED);
+            cocktailDao.create(cocktail);
 
-            // Now persists the menu drink relationship
-            Collection<Drink> drinks = firstMenu.getDrinks();
-            if (drinks != null)
-                drinks.add(drink);
+            // Now persists the menu cocktail relationship
+            Collection<Cocktail> cocktails = firstMenu.getCocktails();
+            if (cocktails != null)
+                cocktails.add(cocktail);
             menuDao.update(firstMenu);
         }
-        assertEquals(14, getAndAssertDrinks().size());
+        assertEquals(14, getAndAssertCocktails().size());
     }
 
     @Test
-    public void testRemoveDrinkWhenNoSales() throws Exception {
+    public void testRemoveCocktailWhenNoSales() throws Exception {
         Menu firstMenu = menuDao.findAll().iterator().next();
-        firstMenu.getDrinks().clear();
+        firstMenu.getCocktails().clear();
         menuDao.update(firstMenu);
     }
 
@@ -105,30 +105,30 @@ public class MenuTest extends BaseDaoTest {
     }
 
     @Test
-    public void testEditDrink() throws Exception {
+    public void testEditCocktail() throws Exception {
 
     }
 
     @Test
-    public void testGetBasisForDrink() throws Exception {
+    public void testGetBasisForCocktail() throws Exception {
 
     }
 
-    protected Collection<Drink> getAndAssertDrinks() {
+    protected Collection<Cocktail> getAndAssertCocktails() {
         Menu c = menuDao.findAll().iterator().next();
-        Collection<Drink> drinkList = c.getDrinks();
-        assertDrinkList(drinkList);
-        return drinkList;
+        Collection<Cocktail> cocktailList = c.getCocktails();
+        assertCocktailList(cocktailList);
+        return cocktailList;
     }
 
-    protected void assertDrinkList(Collection<Drink> all) {
-        Iterator<Drink> it = all.iterator();
+    protected void assertCocktailList(Collection<Cocktail> all) {
+        Iterator<Cocktail> it = all.iterator();
         for (int id = 1; id <= all.size(); id++) {
-            Drink drink = it.next();
-            assertNotNull(drink.getId());
-            assertNotNull(drink.getName());
-            assertNotNull(drink.getActiveStatus());
-            assertEquals(1, drink.getMenu().getId());
+            Cocktail cocktail = it.next();
+            assertNotNull(cocktail.getId());
+            assertNotNull(cocktail.getName());
+            assertNotNull(cocktail.getActiveStatus());
+            assertEquals(1, cocktail.getMenu().getId());
         }
     }
 

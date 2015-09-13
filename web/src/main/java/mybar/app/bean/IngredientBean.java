@@ -5,10 +5,10 @@ import mybar.api.IIngredient;
 
 public class IngredientBean implements IIngredient {
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     private int id;
 
-    @JsonView(View.DrinkWithDetails.class)
+    @JsonView(View.CocktailWithDetails.class)
     private String name;
 
     @Override

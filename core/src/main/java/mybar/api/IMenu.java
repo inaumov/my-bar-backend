@@ -8,6 +8,6 @@ public interface IMenu {
 
     String getName();
 
-    Collection<? extends IDrink> getDrinks();
+    Collection<? extends ICocktail> getCocktails();
 
 }

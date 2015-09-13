@@ -52,7 +52,7 @@ public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
     protected final int USER_HAS_ROLES_CNT = 8;
 
     protected final int MENUS_CNT = 4;
-    protected final int DRINKS_CNT = 17;
+    protected final int COCKTAILS_CNT = 17;
     protected final int ORDERS_CNT = 6;
 
     @Test

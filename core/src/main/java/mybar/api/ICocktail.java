@@ -5,7 +5,7 @@ import mybar.ActiveStatus;
 import java.sql.Blob;
 import java.util.Collection;
 
-public interface IDrink {
+public interface ICocktail {
 
     int getId();
 
