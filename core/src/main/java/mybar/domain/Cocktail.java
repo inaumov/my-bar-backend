@@ -35,6 +35,9 @@ public class Cocktail implements ICocktail {
     @Enumerated(EnumType.ORDINAL)
     private State state;
 
+    @Column(name = "COVER", nullable = true)
+    private String cover;
+
     @Lob
     @Column(name = "IMAGE", nullable = true)
     private Blob picture;
@@ -98,6 +101,15 @@ public class Cocktail implements ICocktail {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    @Override
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     @Override

@@ -26,6 +26,9 @@ public class CocktailBean implements ICocktail {
     @JsonView(View.Cocktail.class)
     private State state;
 
+    @JsonView(View.Cocktail.class)
+    private String coverUrl;
+
     private Blob picture;
 
     @JsonView(View.CocktailWithDetails.class)
@@ -96,6 +99,15 @@ public class CocktailBean implements ICocktail {
     }
 
     @Override
+    public String getCover() {
+        return coverUrl;
+    }
+
+    public void setCover(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    @Override
     public Blob getPicture() {
         return picture;
     }
@@ -116,6 +128,7 @@ public class CocktailBean implements ICocktail {
         }
         bean.setIngredients(ingredientBeans);
         bean.setState(cocktail.getState());
+        bean.setCover(cocktail.getCover());
 
         return bean;
     }

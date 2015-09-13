@@ -27,25 +27,19 @@
     <!-- menu -->
     <menu ID="1" NAME="Shooter"/>
     <menu ID="2" NAME="Long"/>
-    <menu ID="3" NAME="Coffee"/>
-    <menu ID="4" NAME="Tea"/>
-    <cocktail ID="1" MENU_ID="1" NAME="B52" AVAILABLE="1"></cocktail>
+    <menu ID="3" NAME="Smoothie"/>
+    <cocktail ID="1" MENU_ID="1" NAME="B52" AVAILABLE="1" DESCRIPTION="The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers." COVER="http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png"></cocktail>
     <cocktail ID="2" MENU_ID="1" NAME="B53" AVAILABLE="1"></cocktail>
     <cocktail ID="3" MENU_ID="1" NAME="Green Mexican" AVAILABLE="1"></cocktail>
     <cocktail ID="4" MENU_ID="1" NAME="Blow Job" AVAILABLE="0"></cocktail>
-    <cocktail ID="5" MENU_ID="2" NAME="Long Island Iced Tea" AVAILABLE="1"></cocktail>
+    <cocktail ID="5" MENU_ID="2" NAME="Long Island Iced Tea" AVAILABLE="1" DESCRIPTION="A Long Island Iced Tea is a type of alcoholic mixed drink typically made with, among other ingredients, tequila, vodka, light rum, triple sec, and gin. It is so named because of the resemblance to the color and taste of iced tea." COVER="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/07/Long-Island-Iced-Tea.jpg"></cocktail>
     <cocktail ID="6" MENU_ID="2" NAME="Tequila Sunrise" AVAILABLE="1"></cocktail>
     <cocktail ID="7" MENU_ID="2" NAME="Black Russian" AVAILABLE="0"></cocktail>
     <cocktail ID="8" MENU_ID="2" NAME="Hurricane"  AVAILABLE="0"></cocktail>
     <cocktail ID="9" MENU_ID="2" NAME="Mai Tai" AVAILABLE="1"></cocktail>
-    <cocktail ID="10" MENU_ID="2" NAME="Margarita" AVAILABLE="1"></cocktail>
-    <cocktail ID="11" MENU_ID="2" NAME="Mojito" AVAILABLE="1"></cocktail>
-    <cocktail ID="12" MENU_ID="3" NAME="Americano" AVAILABLE="1"></cocktail>
-    <cocktail ID="13" MENU_ID="3" NAME="Espresso" AVAILABLE="1"></cocktail>
-    <cocktail ID="14" MENU_ID="4" NAME="Phu-Er" AVAILABLE="1"></cocktail>
-    <cocktail ID="15" MENU_ID="4" NAME="Roibush" AVAILABLE="1"></cocktail>
-    <cocktail ID="16" MENU_ID="4" NAME="Da Hong Pao" AVAILABLE="1"></cocktail>
-    <cocktail ID="17" MENU_ID="4" NAME="Yunnan Gold" AVAILABLE="1"></cocktail>
+    <cocktail ID="10" MENU_ID="2" NAME="Margarita" AVAILABLE="1" DESCRIPTION="The margarita is a cocktail consisting of tequila, triple sec and lime or lemon juice, often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice." COVER="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"></cocktail>
+    <cocktail ID="11" MENU_ID="2" NAME="Sex on the beach" AVAILABLE="1"></cocktail>
+    <cocktail ID="12" MENU_ID="3" NAME="Banana Blast II" AVAILABLE="1"></cocktail>
     <drink ID="1" NAME="Vodka"></drink>
     <drink ID="2" NAME="Gin"></drink>
     <drink ID="3" NAME="Rum"></drink>
@@ -55,7 +49,7 @@
     <drink ID="7" NAME="Brandy"></drink>
     <drink ID="8" NAME="Triple Sec"></drink>
     <drink ID="9" NAME="Maraschino liqueur"></drink>
-    <drink ID="10" NAME="Campari"></drink>
+    <drink ID="10" NAME="Banana liqueur"></drink>
     <drink ID="11" NAME="Sugar syrup"></drink>
     <drink ID="12" NAME="Grenadine"></drink>
     <drink ID="13" NAME="Juice"></drink>
@@ -63,15 +57,15 @@
     <drink ID="15" NAME="Sugar"></drink>
     <drink ID="16" NAME="Coffee liqueur"></drink>
     <drink ID="17" NAME="Coca Cola"></drink>
-    <ingredient ID="1" COCKTAIL_ID="1" DRINK_ID="8" VOLUME="0.02" VALUE="ML"></ingredient>
-    <ingredient ID="2" COCKTAIL_ID="1" DRINK_ID="11" VOLUME="0.02" VALUE="ML"></ingredient>
-    <ingredient ID="3" COCKTAIL_ID="1" DRINK_ID="16" VOLUME="0.02" VALUE="ML"></ingredient>
-    <ingredient ID="4" COCKTAIL_ID="7" DRINK_ID="16" VOLUME="0.05" VALUE="ML"></ingredient>
-    <ingredient ID="5" COCKTAIL_ID="7" DRINK_ID="17" VOLUME="0.15" VALUE="ML"></ingredient>
+    <ingredient ID="1" COCKTAIL_ID="1" DRINK_ID="8" VOLUME="20" VALUE="ML"></ingredient>
+    <ingredient ID="2" COCKTAIL_ID="1" DRINK_ID="11" VOLUME="20" VALUE="ML"></ingredient>
+    <ingredient ID="3" COCKTAIL_ID="1" DRINK_ID="16" VOLUME="20" VALUE="ML"></ingredient>
+    <ingredient ID="4" COCKTAIL_ID="7" DRINK_ID="16" VOLUME="50" VALUE="ML"></ingredient>
+    <ingredient ID="5" COCKTAIL_ID="7" DRINK_ID="17" VOLUME="150" VALUE="ML"></ingredient>
     <ingredient ID="6" COCKTAIL_ID="7" DRINK_ID="14" VOLUME="5" VALUE="PCS"></ingredient>
-    <ingredient ID="7" COCKTAIL_ID="6" DRINK_ID="13" VOLUME="0.15" VALUE="ML"></ingredient>
-    <ingredient ID="8" COCKTAIL_ID="6" DRINK_ID="4" VOLUME="0.05" VALUE="PCS"></ingredient>
-    <ingredient ID="9" COCKTAIL_ID="6" DRINK_ID="14" VOLUME="5" VALUE="ML"></ingredient>
+    <ingredient ID="7" COCKTAIL_ID="6" DRINK_ID="13" VOLUME="150" VALUE="ML"></ingredient>
+    <ingredient ID="8" COCKTAIL_ID="6" DRINK_ID="4" VOLUME="50" VALUE="ML"></ingredient>
+    <ingredient ID="9" COCKTAIL_ID="6" DRINK_ID="14" VOLUME="5" VALUE="PCS"></ingredient>
 
     <!-- killer feature -->
     <storage ID="1" DRINK_ID="1" VOLUME="0.7" PRICE="120"></storage>

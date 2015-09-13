@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class MenuTest extends BaseDaoTest {
 
@@ -24,12 +25,11 @@ public class MenuTest extends BaseDaoTest {
     @Test
     public void testSelectAllMenus() throws Exception {
         List<Menu> list = menuDao.findAll();
-        assertEquals(4, list.size());
+        assertEquals(3, list.size());
         Iterator<Menu> it = list.iterator();
         assertMenu(it.next(), 1, "Shooter");
         assertMenu(it.next(), 2, "Long");
-        assertMenu(it.next(), 3, "Coffee");
-        assertMenu(it.next(), 4, "Tea");
+        assertMenu(it.next(), 3, "Smoothie");
     }
 
     private void assertMenu(Menu c, int id, String name) {
@@ -57,13 +57,9 @@ public class MenuTest extends BaseDaoTest {
 
         // third menu
         cocktails = it.next().getCocktails();
-        assertEquals(2, cocktails.size());
+        assertEquals(1, cocktails.size());
         cocktail = cocktails.iterator();
-        assertCocktail(cocktail.next(), 12, 3, "Americano", State.AVAILABLE);
-
-        // forth menu
-        cocktails = it.next().getCocktails();
-        assertEquals(4, cocktails.size());
+        assertCocktail(cocktail.next(), 12, 3, "Banana Blast II", State.AVAILABLE);
     }
 
     private void assertCocktail(Cocktail cocktail, int id, int menuId, String name, State status) {
