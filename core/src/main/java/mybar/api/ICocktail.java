@@ -1,6 +1,6 @@
 package mybar.api;
 
-import mybar.ActiveStatus;
+import mybar.State;
 
 import java.sql.Blob;
 import java.util.Collection;
@@ -17,7 +17,7 @@ public interface ICocktail {
 
     String getDescription();
 
-    ActiveStatus getActiveStatus();
+    State getState();
 
     Blob getPicture();
 

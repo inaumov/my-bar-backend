@@ -24,7 +24,7 @@ public class BeanFactory {
         for (IRole r : user.getRoles()) {
             bean.getRoles().add(from(r));
         }
-        bean.setActiveStatus(user.getActiveStatus());
+        bean.setState(user.getState());
         return bean;
     }
 

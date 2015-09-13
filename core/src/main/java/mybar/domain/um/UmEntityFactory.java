@@ -2,8 +2,6 @@ package mybar.domain.um;
 
 import mybar.api.um.IRole;
 import mybar.api.um.IUser;
-import mybar.domain.um.Role;
-import mybar.domain.um.User;
 
 import java.util.Collection;
 
@@ -29,7 +27,7 @@ public class UmEntityFactory {
         for(IRole r : roles) {
             entity.addRole(from(r));
         }
-        entity.setActiveStatus(user.getActiveStatus());
+        entity.setState(user.getState());
         return entity;
     }
 

@@ -3,7 +3,7 @@ package mybar.repository;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.domain.um.Role;
 import mybar.domain.um.User;
 
@@ -44,7 +44,7 @@ public class UserDaoTest extends BaseDaoTest {
         user.setSurname("Prescott");
         user.setEmail("mail@prescott.com");
         user.setAddress("46 Kildare Street, Dublin");
-        user.setActiveStatus(ActiveStatus.ENABLED);
+        user.setState(State.AVAILABLE);
         Role roleReference = em.getReference(Role.class, 6);
         user.setRoles(Arrays.asList(new Role[]{roleReference}));
         User saved = userDao.create(user);

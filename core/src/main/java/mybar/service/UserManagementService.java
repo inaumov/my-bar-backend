@@ -3,7 +3,7 @@ package mybar.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.WebRole;
 import mybar.domain.um.UmEntityFactory;
 import mybar.api.um.IUser;
@@ -30,7 +30,7 @@ public class UserManagementService {
     @Transactional
     public boolean createUser(IUser user) {
         User u = UmEntityFactory.from(user);
-        u.setActiveStatus(ActiveStatus.ENABLED);
+        u.setState(State.AVAILABLE);
         Role role = roleDAO.getRole(6);
         u.addRole(role);
         return userDao.create(u).getId() != 0;
@@ -54,13 +54,13 @@ public class UserManagementService {
 
     public void activateUser(IUser user) {
         User u = UmEntityFactory.from(user);
-        u.setActiveStatus(ActiveStatus.ENABLED);
+        u.setState(State.AVAILABLE);
         userDao.update(u);
     }
 
     public void deactivateUser(IUser user) {
         User u = UmEntityFactory.from(user);
-        u.setActiveStatus(ActiveStatus.DISABLED);
+        u.setState(State.NOT_AVAILABLE);
         userDao.update(u);
     }
 

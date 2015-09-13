@@ -1,9 +1,9 @@
 package mybar.api.um;
 
-import mybar.ActiveStatus;
+import mybar.State;
 
 public interface IUser extends IBasicUser {
 
-    ActiveStatus getActiveStatus();
+    State getState();
 
 }

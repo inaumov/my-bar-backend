@@ -7,7 +7,7 @@ import mybar.domain.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.domain.EntityFactory;
 import mybar.repository.MenuDao;
 import mybar.repository.CocktailDao;
@@ -68,7 +68,7 @@ public class MenuManagementService {
         boolean hasRef = orderDao.findCocktailInHistory(d);
         if (hasRef) {
             Cocktail cocktail = EntityFactory.from(d);
-            cocktail.setActiveStatus(ActiveStatus.DISABLED);
+            cocktail.setState(State.NOT_AVAILABLE);
             cocktailDao.update(cocktail);
         } else {
             cocktailDao.delete(d);

@@ -23,7 +23,7 @@ public class EntityFactory {
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
         entity.setDescription(cocktail.getDescription());
-        entity.setActiveStatus(cocktail.getActiveStatus());
+        entity.setState(cocktail.getState());
         entity.setPicture(cocktail.getPicture());
         entity.setMenu(from(cocktail.getMenu()));
         return entity;

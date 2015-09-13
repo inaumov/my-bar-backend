@@ -1,6 +1,6 @@
 package mybar.domain;
 
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.api.ICocktail;
 
 import javax.persistence.*;
@@ -31,9 +31,9 @@ public class Cocktail implements ICocktail {
     @Transient
     private double price;
 
-    @Column(name = "ACTIVE")
+    @Column(name = "AVAILABLE")
     @Enumerated(EnumType.ORDINAL)
-    private ActiveStatus activeStatus;
+    private State state;
 
     @Lob
     @Column(name = "IMAGE", nullable = true)
@@ -92,12 +92,12 @@ public class Cocktail implements ICocktail {
     }
 
     @Override
-    public ActiveStatus getActiveStatus() {
-        return activeStatus;
+    public State getState() {
+        return state;
     }
 
-    public void setActiveStatus(ActiveStatus activeStatus) {
-        this.activeStatus = activeStatus;
+    public void setState(State state) {
+        this.state = state;
     }
 
     @Override

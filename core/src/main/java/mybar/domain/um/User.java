@@ -1,6 +1,6 @@
 package mybar.domain.um;
 
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.api.um.IUser;
 import mybar.domain.Order;
 
@@ -33,7 +33,7 @@ public class User implements IUser {
 
     @Column(name = "ACTIVE")
     @Enumerated(EnumType.ORDINAL)
-    private ActiveStatus activeStatus;
+    private State state;
 
     @OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
     private Collection<Order> orders;
@@ -111,12 +111,12 @@ public class User implements IUser {
     }
 
     @Override
-    public ActiveStatus getActiveStatus() {
-        return activeStatus;
+    public State getState() {
+        return state;
     }
 
-    public void setActiveStatus(ActiveStatus activeStatus) {
-        this.activeStatus = activeStatus;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Collection<Order> getOrders() {

@@ -1,6 +1,6 @@
 package mybar.app.bean.um;
 
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.api.um.IUser;
 
 import javax.xml.bind.annotation.*;
@@ -19,7 +19,7 @@ public class UserBean implements IUser {
     private String email;
     private String address;
     private List<RoleBean> roles = new ArrayList<>();
-    private ActiveStatus activeStatus;
+    private State state;
 
     @Override
     @XmlTransient
@@ -100,12 +100,12 @@ public class UserBean implements IUser {
 
     @Override
     @XmlAttribute(name = "active")
-    public ActiveStatus getActiveStatus() {
-        return activeStatus;
+    public State getState() {
+        return state;
     }
 
-    public void setActiveStatus(ActiveStatus activeStatus) {
-        this.activeStatus = activeStatus;
+    public void setState(State state) {
+        this.state = state;
     }
 
 }

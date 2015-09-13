@@ -1,7 +1,7 @@
 package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.api.ICocktail;
 import mybar.api.IIngredient;
 
@@ -23,7 +23,8 @@ public class CocktailBean implements ICocktail {
     @JsonView(View.Cocktail.class)
     private double price;
 
-    private ActiveStatus activeStatus;
+    @JsonView(View.Cocktail.class)
+    private State state;
 
     private Blob picture;
 
@@ -86,12 +87,12 @@ public class CocktailBean implements ICocktail {
     }
 
     @Override
-    public ActiveStatus getActiveStatus() {
-        return activeStatus;
+    public State getState() {
+        return state;
     }
 
-    public void setActiveStatus(ActiveStatus activeStatus) {
-        this.activeStatus = activeStatus;
+    public void setState(State state) {
+        this.state = state;
     }
 
     @Override
@@ -114,7 +115,7 @@ public class CocktailBean implements ICocktail {
             ingredientBeans.add(IngredientBean.from(ingredient));
         }
         bean.setIngredients(ingredientBeans);
-        bean.setActiveStatus(cocktail.getActiveStatus());
+        bean.setState(cocktail.getState());
 
         return bean;
     }

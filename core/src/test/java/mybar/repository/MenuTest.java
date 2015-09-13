@@ -1,6 +1,6 @@
 package mybar.repository;
 
-import mybar.ActiveStatus;
+import mybar.State;
 import mybar.domain.Cocktail;
 import mybar.domain.Menu;
 import org.junit.Test;
@@ -46,10 +46,10 @@ public class MenuTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = it.next().getCocktails();
         assertEquals(4, cocktails.size());
         Iterator<Cocktail> cocktail = cocktails.iterator();
-        assertCocktail(cocktail.next(), 1, 1, "B52", ActiveStatus.ENABLED);
-        assertCocktail(cocktail.next(), 2, 1, "B53", ActiveStatus.ENABLED);
-        assertCocktail(cocktail.next(), 3, 1, "Green Mexican", ActiveStatus.ENABLED);
-        assertCocktail(cocktail.next(), 4, 1, "Blow Job", ActiveStatus.DISABLED);
+        assertCocktail(cocktail.next(), 1, 1, "B52", State.AVAILABLE);
+        assertCocktail(cocktail.next(), 2, 1, "B53", State.AVAILABLE);
+        assertCocktail(cocktail.next(), 3, 1, "Green Mexican", State.AVAILABLE);
+        assertCocktail(cocktail.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
 
         // second menu
         cocktails = it.next().getCocktails();
@@ -59,18 +59,18 @@ public class MenuTest extends BaseDaoTest {
         cocktails = it.next().getCocktails();
         assertEquals(2, cocktails.size());
         cocktail = cocktails.iterator();
-        assertCocktail(cocktail.next(), 12, 3, "Americano", ActiveStatus.ENABLED);
+        assertCocktail(cocktail.next(), 12, 3, "Americano", State.AVAILABLE);
 
         // forth menu
         cocktails = it.next().getCocktails();
         assertEquals(4, cocktails.size());
     }
 
-    private void assertCocktail(Cocktail cocktail, int id, int menuId, String name, ActiveStatus status) {
+    private void assertCocktail(Cocktail cocktail, int id, int menuId, String name, State status) {
         assertEquals(id, cocktail.getId());
         assertEquals(menuId, cocktail.getMenu().getId());
         assertEquals(name, cocktail.getName());
-        assertEquals(status, cocktail.getActiveStatus());
+        assertEquals(status, cocktail.getState());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class MenuTest extends BaseDaoTest {
             Cocktail cocktail = new Cocktail();
             cocktail.setMenu(firstMenu);
             cocktail.setName("Cocktail " + (char) i);
-            cocktail.setActiveStatus(ActiveStatus.ENABLED);
+            cocktail.setState(State.AVAILABLE);
             cocktailDao.create(cocktail);
 
             // Now persists the menu cocktail relationship
@@ -127,7 +127,7 @@ public class MenuTest extends BaseDaoTest {
             Cocktail cocktail = it.next();
             assertNotNull(cocktail.getId());
             assertNotNull(cocktail.getName());
-            assertNotNull(cocktail.getActiveStatus());
+            assertNotNull(cocktail.getState());
             assertEquals(1, cocktail.getMenu().getId());
         }
     }
