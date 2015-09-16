@@ -1,8 +1,8 @@
 package mybar.domain;
 
 import mybar.QuantityValue;
+import mybar.api.IIngredient;
 import mybar.api.IInside;
-import mybar.api.IDrink;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ public class Inside implements IInside {
     private int id;
 
     @ManyToOne
-    private Drink drink;
+    private Ingredient ingredient;
 
     @Column(name = "VOLUME")
     private double volume;
@@ -32,8 +32,8 @@ public class Inside implements IInside {
     }
 
     @Override
-    public IDrink getDrink() {
-        return drink;
+    public IIngredient getIngredient() {
+        return ingredient;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class Inside implements IInside {
         this.id = id;
     }
 
-    public void setDrink(Drink drink) {
-        this.drink = drink;
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     public void setVolume(double volume) {

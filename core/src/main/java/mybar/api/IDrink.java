@@ -1,12 +1,9 @@
 package mybar.api;
 
-import mybar.BeverageType;
+import mybar.DrinkType;
 
-public interface IDrink {
+public interface IDrink extends IIngredient {
 
-    int getId();
+    DrinkType getDrinkType();
 
-    String getKind();
-
-    BeverageType getBeverageType();
 }

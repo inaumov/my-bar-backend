@@ -4,7 +4,7 @@ public interface IProduct {
 
     int getId();
 
-    <T extends IDrink> T getDrink();
+    <T extends IIngredient> T getIngredient();
 
     String getBrandName();
 

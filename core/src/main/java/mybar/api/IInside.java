@@ -6,7 +6,7 @@ public interface IInside {
 
     int getId();
 
-    <T extends IDrink> T getDrink();
+    <T extends IIngredient> T getIngredient();
 
     double getVolume();
 

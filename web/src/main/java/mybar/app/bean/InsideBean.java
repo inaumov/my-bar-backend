@@ -9,7 +9,7 @@ public class InsideBean implements IInside {
     private int id;
 
     @JsonView(View.CocktailWithDetails.class)
-    private DrinkBean drink;
+    private BeverageBean drink;
 
     @JsonView(View.CocktailWithDetails.class)
     private double volume;
@@ -27,11 +27,11 @@ public class InsideBean implements IInside {
     }
 
     @Override
-    public DrinkBean getDrink() {
+    public BeverageBean getIngredient() {
         return drink;
     }
 
-    public void setDrink(DrinkBean drink) {
+    public void setDrink(BeverageBean drink) {
         this.drink = drink;
     }
 
@@ -56,7 +56,7 @@ public class InsideBean implements IInside {
     public static InsideBean from(IInside ingredient) {
         InsideBean bean = new InsideBean();
         bean.setId(ingredient.getId());
-        bean.setDrink(DrinkBean.from(ingredient.getDrink()));
+        bean.setDrink(BeverageBean.from(ingredient.getIngredient()));
         bean.setQuantityValue(ingredient.getQuantityValue());
         bean.setVolume(ingredient.getVolume());
 

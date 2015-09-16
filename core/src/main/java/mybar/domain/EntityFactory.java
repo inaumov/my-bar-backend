@@ -11,15 +11,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Drink from(final IDrink drink) {
-        Drink entity = new Drink();
-        entity.setId(drink.getId());
-        entity.setKind(drink.getKind());
-        entity.setBeverageType(drink.getBeverageType());
-        return entity;
-    }
-
-    public static final Cocktail from (final ICocktail cocktail) {
+    public static final Cocktail from(final ICocktail cocktail) {
         Cocktail entity = new Cocktail();
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
@@ -30,22 +22,48 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Inside from(final IInside ingredient) {
+    public static final Inside from(final IInside inside) {
         Inside entity = new Inside();
-        entity.setId(ingredient.getId());
-        entity.setValue(ingredient.getQuantityValue());
-        entity.setVolume(ingredient.getVolume());
-        entity.setDrink(from(ingredient.getDrink()));
+        entity.setId(inside.getId());
+        entity.setValue(inside.getQuantityValue());
+        entity.setVolume(inside.getVolume());
+        IIngredient ingredient = inside.getIngredient();
+        if (ingredient instanceof IDrink) {
+            entity.setIngredient(from((IDrink) ingredient));
+        } else if (ingredient instanceof IBeverage) {
+            entity.setIngredient(from((IBeverage) ingredient));
+        }
         return entity;
     }
 
-    public static final Product from(final IProduct storage) {
+    public static final Ingredient from(final IBeverage beverage) {
+        Beverage entity = new Beverage();
+        entity.setId(beverage.getId());
+        entity.setKind(beverage.getKind());
+        entity.setBeverageType(beverage.getBeverageType());
+        return entity;
+    }
+
+    public static final Ingredient from(final IDrink drink) {
+        Drink entity = new Drink();
+        entity.setId(drink.getId());
+        entity.setKind(drink.getKind());
+        entity.setDrinkType(drink.getDrinkType());
+        return entity;
+    }
+
+    public static final Product from(final IProduct product) {
         Product entity = new Product();
-        entity.setId(storage.getId());
-        entity.setVolume(storage.getVolume());
-        entity.setPrice(storage.getPrice());
-        entity.setBrandName(storage.getBrandName());
-        entity.setDrink(from(storage.getDrink()));
+        entity.setId(product.getId());
+        entity.setVolume(product.getVolume());
+        entity.setPrice(product.getPrice());
+        entity.setBrandName(product.getBrandName());
+        IIngredient ingredient = product.getIngredient();
+        if (ingredient instanceof IDrink) {
+            entity.setIngredient(from((IDrink) ingredient));
+        } else if (ingredient instanceof IBeverage) {
+            entity.setIngredient(from((IBeverage) ingredient));
+        }
         return entity;
     }
 

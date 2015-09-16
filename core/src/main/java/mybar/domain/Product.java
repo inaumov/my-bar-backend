@@ -13,8 +13,8 @@ public class Product implements IProduct {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "DRINK_ID")
-    public Drink drink;
+    @JoinColumn(name = "INGREDIENT_ID")
+    public Ingredient ingredient;
 
     @Column(name = "BRAND_NAME")
     private String brandName;
@@ -33,12 +33,12 @@ public class Product implements IProduct {
         this.id = id;
     }
 
-    public Drink getDrink() {
-        return drink;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
-    public void setDrink(Drink drink) {
-        this.drink = drink;
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     public String getBrandName() {

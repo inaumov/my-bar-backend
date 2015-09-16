@@ -1,12 +1,13 @@
 package mybar.app.bean;
 
+import mybar.api.IBeverage;
+import mybar.api.IIngredient;
 import mybar.api.IProduct;
-import mybar.domain.Product;
 
 public class ProductBean implements IProduct {
 
     private int id;
-    private DrinkBean drink;
+    private IIngredient ingredient;
     private String brandName;
     private double volume;
     private double price;
@@ -21,12 +22,12 @@ public class ProductBean implements IProduct {
     }
 
     @Override
-    public DrinkBean getDrink() {
-        return drink;
+    public IIngredient getIngredient() {
+        return ingredient;
     }
 
-    public void setDrink(DrinkBean drink) {
-        this.drink = drink;
+    public void setIngredient(IIngredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override
@@ -59,7 +60,10 @@ public class ProductBean implements IProduct {
     public static ProductBean from(IProduct product) {
         ProductBean bean = new ProductBean();
         bean.setId(product.getId());
-        bean.setDrink(DrinkBean.from(product.getDrink()));
+        IIngredient ingredient = product.getIngredient();
+        if (ingredient instanceof BeverageBean) {
+            bean.setIngredient(BeverageBean.from((IBeverage) ingredient));
+        }
         bean.setBrandName(product.getBrandName());
         bean.setVolume(product.getVolume());
         bean.setPrice(product.getPrice());

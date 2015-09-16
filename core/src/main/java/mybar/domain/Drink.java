@@ -1,48 +1,25 @@
 package mybar.domain;
 
-import mybar.BeverageType;
+import mybar.DrinkType;
 import mybar.api.IDrink;
 
 import javax.persistence.*;
 
 @Entity
-public class Drink implements IDrink {
+@Table(name = "ingredient")
+public class Drink extends Ingredient implements IDrink {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "KIND")
-    private String name;
-
-    @Column(name = "BEVERAGE_TYPE")
-    @Enumerated(EnumType.ORDINAL)
-    private BeverageType beverageType;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    @Column(name = "INGREDIENT_TYPE")
+    @Enumerated(EnumType.STRING)
+    private DrinkType drinkType;
 
     @Override
-    public String getKind() {
-        return name;
+    public DrinkType getDrinkType() {
+        return drinkType;
     }
 
-    public void setKind(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public BeverageType getBeverageType() {
-        return beverageType;
-    }
-
-    public void setBeverageType(BeverageType beverageType) {
-        this.beverageType = beverageType;
+    public void setDrinkType(DrinkType drinkType) {
+        this.drinkType = drinkType;
     }
 
 }
