@@ -3,7 +3,7 @@ package mybar.app.bean;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.State;
 import mybar.api.ICocktail;
-import mybar.api.IIngredient;
+import mybar.api.IInside;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class CocktailBean implements ICocktail {
     private Blob picture;
 
     @JsonView(View.CocktailWithDetails.class)
-    private Collection<IngredientBean> ingredients;
+    private Collection<InsideBean> ingredients;
 
     @JsonView(View.CocktailWithDetails.class)
     private String description;
@@ -55,11 +55,11 @@ public class CocktailBean implements ICocktail {
         this.name = name;
     }
 
-    public Collection<IngredientBean> getIngredients() {
+    public Collection<InsideBean> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Collection<IngredientBean> ingredients) {
+    public void setIngredients(Collection<InsideBean> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -122,9 +122,9 @@ public class CocktailBean implements ICocktail {
         bean.setName(cocktail.getName());
         bean.setPrice(cocktail.getPrice());
         bean.setDescription(cocktail.getDescription());
-        List<IngredientBean> ingredientBeans = new ArrayList<>();
-        for (IIngredient ingredient : cocktail.getIngredients()) {
-            ingredientBeans.add(IngredientBean.from(ingredient));
+        List<InsideBean> ingredientBeans = new ArrayList<>();
+        for (IInside ingredient : cocktail.getIngredients()) {
+            ingredientBeans.add(InsideBean.from(ingredient));
         }
         bean.setIngredients(ingredientBeans);
         bean.setState(cocktail.getState());

@@ -1,9 +1,12 @@
 package mybar.api;
 
+import mybar.BeverageType;
+
 public interface IDrink {
 
     int getId();
 
-    String getName();
+    String getKind();
 
+    BeverageType getBeverageType();
 }

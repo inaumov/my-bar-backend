@@ -11,10 +11,11 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Drink from(final IDrink ingredient) {
+    public static final Drink from(final IDrink drink) {
         Drink entity = new Drink();
-        entity.setId(ingredient.getId());
-        entity.setName(ingredient.getName());
+        entity.setId(drink.getId());
+        entity.setKind(drink.getKind());
+        entity.setBeverageType(drink.getBeverageType());
         return entity;
     }
 
@@ -29,20 +30,21 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Ingredient from(final IIngredient ingredient) {
-        Ingredient entity = new Ingredient();
+    public static final Inside from(final IInside ingredient) {
+        Inside entity = new Inside();
         entity.setId(ingredient.getId());
-        entity.setValue(ingredient.getQuantity());
+        entity.setValue(ingredient.getQuantityValue());
         entity.setVolume(ingredient.getVolume());
         entity.setDrink(from(ingredient.getDrink()));
         return entity;
     }
 
-    public static final Storage from(final IStorage storage) {
-        Storage entity = new Storage();
+    public static final Product from(final IProduct storage) {
+        Product entity = new Product();
         entity.setId(storage.getId());
         entity.setVolume(storage.getVolume());
         entity.setPrice(storage.getPrice());
+        entity.setBrandName(storage.getBrandName());
         entity.setDrink(from(storage.getDrink()));
         return entity;
     }

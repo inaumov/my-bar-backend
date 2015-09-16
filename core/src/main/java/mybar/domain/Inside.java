@@ -1,13 +1,13 @@
 package mybar.domain;
 
 import mybar.QuantityValue;
-import mybar.api.IIngredient;
+import mybar.api.IInside;
 import mybar.api.IDrink;
 
 import javax.persistence.*;
 
 @Entity
-public class Ingredient implements IIngredient {
+public class Inside implements IInside {
 
     @Id
     private int id;
@@ -18,7 +18,7 @@ public class Ingredient implements IIngredient {
     @Column(name = "VOLUME")
     private double volume;
 
-    @Column(name = "VALUE")
+    @Column(name = "QUANTITY_VALUE")
     @Enumerated(EnumType.STRING)
     private QuantityValue value;
 
@@ -42,7 +42,7 @@ public class Ingredient implements IIngredient {
     }
 
     @Override
-    public QuantityValue getQuantity() {
+    public QuantityValue getQuantityValue() {
         return value;
     }
 

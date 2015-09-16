@@ -1,6 +1,8 @@
 package mybar.api;
 
-public interface IStorage {
+import mybar.QuantityValue;
+
+public interface IInside {
 
     int getId();
 
@@ -8,6 +10,6 @@ public interface IStorage {
 
     double getVolume();
 
-    double getPrice();
+    QuantityValue getQuantityValue();
 
 }

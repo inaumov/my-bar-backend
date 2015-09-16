@@ -1,15 +1,15 @@
 package mybar.api;
 
-import mybar.QuantityValue;
-
-public interface IIngredient {
+public interface IProduct {
 
     int getId();
 
     <T extends IDrink> T getDrink();
 
+    String getBrandName();
+
     double getVolume();
 
-    QuantityValue getQuantity();
+    double getPrice();
 
 }

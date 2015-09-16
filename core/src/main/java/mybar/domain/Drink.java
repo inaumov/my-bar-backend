@@ -1,5 +1,6 @@
 package mybar.domain;
 
+import mybar.BeverageType;
 import mybar.api.IDrink;
 
 import javax.persistence.*;
@@ -11,8 +12,12 @@ public class Drink implements IDrink {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "NAME")
+    @Column(name = "KIND")
     private String name;
+
+    @Column(name = "BEVERAGE_TYPE")
+    @Enumerated(EnumType.ORDINAL)
+    private BeverageType beverageType;
 
     public int getId() {
         return id;
@@ -23,12 +28,21 @@ public class Drink implements IDrink {
     }
 
     @Override
-    public String getName() {
+    public String getKind() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setKind(String name) {
         this.name = name;
+    }
+
+    @Override
+    public BeverageType getBeverageType() {
+        return beverageType;
+    }
+
+    public void setBeverageType(BeverageType beverageType) {
+        this.beverageType = beverageType;
     }
 
 }

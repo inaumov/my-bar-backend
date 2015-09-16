@@ -1,12 +1,12 @@
 package mybar.domain;
 
-import mybar.api.IStorage;
+import mybar.api.IProduct;
 
 import javax.persistence.*;
 
 @Entity
 @SequenceGenerator(name = "STORAGE_SEQUENCE", sequenceName = "STORAGE_SEQUENCE", allocationSize = 3, initialValue = 1)
-public class Storage implements IStorage {
+public class Product implements IProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORAGE_SEQUENCE")
@@ -15,6 +15,9 @@ public class Storage implements IStorage {
     @ManyToOne
     @JoinColumn(name = "DRINK_ID")
     public Drink drink;
+
+    @Column(name = "BRAND_NAME")
+    private String brandName;
 
     @Column(name = "VOLUME")
     private double volume;
@@ -36,6 +39,14 @@ public class Storage implements IStorage {
 
     public void setDrink(Drink drink) {
         this.drink = drink;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public double getVolume() {

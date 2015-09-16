@@ -23,7 +23,7 @@ public class Cocktail implements ICocktail {
     private Menu menu;
 
     @OneToMany(mappedBy = "cocktail", fetch = FetchType.EAGER) // TODO: fetch lazily
-    private Collection<Ingredient> ingredients;
+    private Collection<Inside> ingredients;
 
     @Column(name = "DESCRIPTION", nullable = true)
     private String description;
@@ -60,11 +60,11 @@ public class Cocktail implements ICocktail {
         this.name = name;
     }
 
-    public Collection<Ingredient> getIngredients() {
+    public Collection<Inside> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Collection<Ingredient> ingredients) {
+    public void setIngredients(Collection<Inside> ingredients) {
         this.ingredients = ingredients;
     }
 

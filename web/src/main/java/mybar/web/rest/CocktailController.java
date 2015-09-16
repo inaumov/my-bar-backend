@@ -1,6 +1,6 @@
 package mybar.web.rest;
 
-import mybar.api.IIngredient;
+import mybar.api.IInside;
 import mybar.api.ICocktail;
 import mybar.api.IMenu;
 import mybar.service.MenuManagementService;
@@ -55,8 +55,8 @@ public class CocktailController {
     public void upload(){
         logger.info("call upload...");
         logger.info("content-type:{0}" + uploadedImage.getContentType());
-        logger.info("filename:{0}" + uploadedImage.getName());
-        logger.info("submitted filename:{0}" + uploadedImage.getName());
+        logger.info("filename:{0}" + uploadedImage.getKind());
+        logger.info("submitted filename:{0}" + uploadedImage.getKind());
         logger.info("size:{0}" + uploadedImage.getSize());
         try {
             byte[] results=new byte[(int) uploadedImage.getSize()];
@@ -76,7 +76,7 @@ public class CocktailController {
         this.uploadedImage = uploadedImage;
     }*/
 
-    public Collection<? extends IIngredient> getBasisList() {
+    public Collection<? extends IInside> getBasisList() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

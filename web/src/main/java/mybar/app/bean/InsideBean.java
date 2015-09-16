@@ -2,9 +2,9 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.QuantityValue;
-import mybar.api.IIngredient;
+import mybar.api.IInside;
 
-public class IngredientBean implements IIngredient {
+public class InsideBean implements IInside {
 
     private int id;
 
@@ -15,7 +15,7 @@ public class IngredientBean implements IIngredient {
     private double volume;
 
     @JsonView(View.CocktailWithDetails.class)
-    private QuantityValue quantity;
+    private QuantityValue quantityValue;
 
     @Override
     public int getId() {
@@ -45,19 +45,19 @@ public class IngredientBean implements IIngredient {
     }
 
     @Override
-    public QuantityValue getQuantity() {
-        return quantity;
+    public QuantityValue getQuantityValue() {
+        return quantityValue;
     }
 
-    public void setQuantity(QuantityValue quantity) {
-        this.quantity = quantity;
+    public void setQuantityValue(QuantityValue quantityValue) {
+        this.quantityValue = quantityValue;
     }
 
-    public static IngredientBean from(IIngredient ingredient) {
-        IngredientBean bean = new IngredientBean();
+    public static InsideBean from(IInside ingredient) {
+        InsideBean bean = new InsideBean();
         bean.setId(ingredient.getId());
         bean.setDrink(DrinkBean.from(ingredient.getDrink()));
-        bean.setQuantity(ingredient.getQuantity());
+        bean.setQuantityValue(ingredient.getQuantityValue());
         bean.setVolume(ingredient.getVolume());
 
         return bean;
