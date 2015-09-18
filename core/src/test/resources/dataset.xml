@@ -40,32 +40,32 @@
     <cocktail ID="10" MENU_ID="2" NAME="Margarita" AVAILABLE="1" DESCRIPTION="The margarita is a cocktail consisting of tequila, triple sec and lime or lemon juice, often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice." COVER="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"></cocktail>
     <cocktail ID="11" MENU_ID="2" NAME="Sex on the beach" AVAILABLE="1"></cocktail>
     <cocktail ID="12" MENU_ID="3" NAME="Banana Blast II" AVAILABLE="1"></cocktail>
-    <ingredient ID="1" KIND="Vodka" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="2" KIND="Gin" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="3" KIND="Rum" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="4" KIND="Tequila" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="5" KIND="Bourbon" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="6" KIND="Whisky" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="7" KIND="Brandy" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="8" KIND="Triple Sec" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="9" KIND="Maraschino liqueur" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="10" KIND="Banana liqueur" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="11" KIND="Sugar syrup" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="12" KIND="Grenadine" INGREDIENT_TYPE="1"></ingredient>
-    <ingredient ID="13" KIND="Orange Juice" INGREDIENT_TYPE="JUICE"></ingredient>
-    <ingredient ID="14" KIND="Ice" INGREDIENT_TYPE="1"></ingredient>
-    <ingredient ID="15" KIND="Sugar" INGREDIENT_TYPE="1"></ingredient>
-    <ingredient ID="16" KIND="Coffee liqueur" INGREDIENT_TYPE="DISTILLED"></ingredient>
-    <ingredient ID="17" KIND="Coca Cola" INGREDIENT_TYPE="SODA"></ingredient>
+    <ingredient ID="1" ENTITY="Beverage" KIND="Vodka" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="2" ENTITY="Beverage" KIND="Gin" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="3" ENTITY="Beverage" KIND="Rum" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="4" ENTITY="Beverage" KIND="Tequila" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="5" ENTITY="Beverage" KIND="Bourbon" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="6" ENTITY="Beverage" KIND="Whisky" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="7" ENTITY="Beverage" KIND="Brandy" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="8" ENTITY="Beverage" KIND="Triple Sec" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="9" ENTITY="Beverage" KIND="Maraschino liqueur" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="10" ENTITY="Beverage" KIND="Banana liqueur" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="11" ENTITY="Beverage" KIND="Sugar syrup" TYPE="DISTILLED"></ingredient>
+    <!--<ingredient ID="12" ENTITY="Addition" KIND="Grenadine" TYPE="1"></ingredient>-->
+    <ingredient ID="13" ENTITY="Drink" KIND="Orange Juice" TYPE="JUICE"></ingredient>
+    <!--<ingredient ID="14" ENTITY="Beverage" KIND="Ice" TYPE="1"></ingredient>
+    <ingredient ID="15" ENTITY="Addition" KIND="Sugar" TYPE="1"></ingredient>-->
+    <ingredient ID="16" ENTITY="Beverage" KIND="Coffee liqueur" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="17" ENTITY="Drink" KIND="Coca Cola" TYPE="SODA"></ingredient>
     <inside ID="1" COCKTAIL_ID="1" INGREDIENT_ID="8" VOLUME="20" QUANTITY_VALUE="ML"></inside>
     <inside ID="2" COCKTAIL_ID="1" INGREDIENT_ID="11" VOLUME="20" QUANTITY_VALUE="ML"></inside>
     <inside ID="3" COCKTAIL_ID="1" INGREDIENT_ID="16" VOLUME="20" QUANTITY_VALUE="ML"></inside>
     <inside ID="4" COCKTAIL_ID="7" INGREDIENT_ID="16" VOLUME="50" QUANTITY_VALUE="ML"></inside>
     <inside ID="5" COCKTAIL_ID="7" INGREDIENT_ID="17" VOLUME="150" QUANTITY_VALUE="ML"></inside>
-    <inside ID="6" COCKTAIL_ID="7" INGREDIENT_ID="14" VOLUME="5" QUANTITY_VALUE="PCS"></inside>
+    <!--<inside ID="6" COCKTAIL_ID="7" INGREDIENT_ID="14" VOLUME="5" QUANTITY_VALUE="PCS"></inside>-->
     <inside ID="7" COCKTAIL_ID="6" INGREDIENT_ID="13" VOLUME="150" QUANTITY_VALUE="ML"></inside>
     <inside ID="8" COCKTAIL_ID="6" INGREDIENT_ID="4" VOLUME="50" QUANTITY_VALUE="ML"></inside>
-    <inside ID="9" COCKTAIL_ID="6" INGREDIENT_ID="14" VOLUME="5" QUANTITY_VALUE="PCS"></inside>
+    <!--<inside ID="9" COCKTAIL_ID="6" INGREDIENT_ID="14" VOLUME="5" QUANTITY_VALUE="PCS"></inside>-->
 
     <!-- killer feature -->
     <product ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120"></product>

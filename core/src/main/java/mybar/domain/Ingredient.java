@@ -8,7 +8,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "ingredient")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "ENTITY")
 public class Ingredient implements IIngredient {
 
     @Id

@@ -6,10 +6,10 @@ import mybar.api.IBeverage;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ingredient")
+@DiscriminatorValue(value = "Beverage")
 public class Beverage extends Ingredient implements IBeverage {
 
-    @Column(name = "INGREDIENT_TYPE")
+    @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
     private BeverageType beverageType;
 
