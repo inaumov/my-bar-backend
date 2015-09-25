@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 
-import mybar.domain.um.Role;
-import mybar.domain.um.User;
+import mybar.domain.users.Role;
+import mybar.domain.users.User;
 
+import mybar.repository.users.RoleDaoImpl;
+import mybar.repository.users.UserDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

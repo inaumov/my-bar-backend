@@ -1,6 +1,4 @@
-package mybar.api.um;
-
-import mybar.WebRole;
+package mybar.api.users;
 
 public interface IRole {
 

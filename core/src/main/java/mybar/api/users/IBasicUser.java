@@ -1,4 +1,4 @@
-package mybar.api.um;
+package mybar.api.users;
 
 import java.util.Collection;
 

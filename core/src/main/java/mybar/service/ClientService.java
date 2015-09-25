@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
 import mybar.repository.OrderDao;
-import mybar.repository.UserDao;
+import mybar.repository.users.UserDao;
 import mybar.domain.Order;
 
 import java.util.*;

@@ -1,16 +1,16 @@
-package mybar.service;
+package mybar.service.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.State;
-import mybar.WebRole;
-import mybar.domain.um.UmEntityFactory;
-import mybar.api.um.IUser;
-import mybar.repository.RoleDaoImpl;
-import mybar.repository.UserDao;
-import mybar.domain.um.Role;
-import mybar.domain.um.User;
+import mybar.api.users.WebRole;
+import mybar.domain.users.UmEntityFactory;
+import mybar.api.users.IUser;
+import mybar.repository.users.RoleDaoImpl;
+import mybar.repository.users.UserDao;
+import mybar.domain.users.Role;
+import mybar.domain.users.User;
 
 import java.util.ArrayList;
 import java.util.Collection;

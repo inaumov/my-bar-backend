@@ -1,6 +1,6 @@
-package mybar.repository;
+package mybar.repository.users;
 
-import mybar.domain.um.Role;
+import mybar.domain.users.Role;
 
 public interface IRoleDao {
 

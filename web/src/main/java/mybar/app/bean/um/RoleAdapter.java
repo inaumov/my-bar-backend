@@ -1,6 +1,6 @@
 package mybar.app.bean.um;
 
-import mybar.WebRole;
+import mybar.api.users.WebRole;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 

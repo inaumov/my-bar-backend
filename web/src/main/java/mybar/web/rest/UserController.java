@@ -1,12 +1,12 @@
 package mybar.web.rest;
 
-import mybar.WebRole;
-import mybar.api.um.IUser;
+import mybar.api.users.WebRole;
+import mybar.api.users.IUser;
 import mybar.app.bean.um.BeanFactory;
 import mybar.app.bean.um.RoleBean;
 import mybar.app.bean.um.UserBean;
 import mybar.app.bean.um.UserList;
-import mybar.service.UserManagementService;
+import mybar.service.users.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Controller;

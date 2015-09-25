@@ -1,7 +1,7 @@
 package mybar.app.bean.um;
 
 import mybar.State;
-import mybar.api.um.IUser;
+import mybar.api.users.IUser;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;

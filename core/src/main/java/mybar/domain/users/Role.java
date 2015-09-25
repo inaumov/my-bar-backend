@@ -1,7 +1,7 @@
-package mybar.domain.um;
+package mybar.domain.users;
 
-import mybar.WebRole;
-import mybar.api.um.IRole;
+import mybar.api.users.WebRole;
+import mybar.api.users.IRole;
 
 import javax.persistence.*;
 

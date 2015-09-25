@@ -1,6 +1,6 @@
 package mybar.app.impl;
 
-import mybar.api.um.IRole;
+import mybar.api.users.IRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import mybar.api.um.IBasicUser;
-import mybar.service.UserManagementService;
+import mybar.api.users.IBasicUser;
+import mybar.service.users.UserManagementService;
 
 import java.util.ArrayList;
 import java.util.Collection;

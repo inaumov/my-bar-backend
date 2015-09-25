@@ -1,11 +1,12 @@
 package mybar.repository;
 
+import mybar.repository.users.UserDao;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import mybar.State;
-import mybar.domain.um.Role;
-import mybar.domain.um.User;
+import mybar.domain.users.Role;
+import mybar.domain.users.User;
 
 import javax.persistence.TypedQuery;
 import java.util.Arrays;

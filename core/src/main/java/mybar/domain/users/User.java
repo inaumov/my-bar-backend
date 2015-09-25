@@ -1,7 +1,7 @@
-package mybar.domain.um;
+package mybar.domain.users;
 
 import mybar.State;
-import mybar.api.um.IUser;
+import mybar.api.users.IUser;
 import mybar.domain.Order;
 
 import javax.persistence.*;

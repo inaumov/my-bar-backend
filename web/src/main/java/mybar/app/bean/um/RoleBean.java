@@ -1,7 +1,7 @@
 package mybar.app.bean.um;
 
-import mybar.WebRole;
-import mybar.api.um.IRole;
+import mybar.api.users.WebRole;
+import mybar.api.users.IRole;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;

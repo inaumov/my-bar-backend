@@ -1,7 +1,7 @@
-package mybar.domain.um;
+package mybar.domain.users;
 
-import mybar.api.um.IRole;
-import mybar.api.um.IUser;
+import mybar.api.users.IRole;
+import mybar.api.users.IUser;
 
 import java.util.Collection;
 

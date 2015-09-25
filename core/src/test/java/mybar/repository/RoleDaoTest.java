@@ -5,9 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import mybar.WebRole;
-import mybar.domain.um.Role;
+import mybar.api.users.WebRole;
+import mybar.domain.users.Role;
 
+import mybar.repository.users.RoleDaoImpl;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,4 +1,4 @@
-package mybar;
+package mybar.api.users;
 
 public enum WebRole {
 

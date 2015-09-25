@@ -2,7 +2,7 @@ package mybar.domain;
 
 import mybar.OrderStatus;
 import mybar.api.IOrder;
-import mybar.domain.um.User;
+import mybar.domain.users.User;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package mybar.app.bean.um;
 
-import mybar.api.um.IRole;
-import mybar.api.um.IUser;
+import mybar.api.users.IRole;
+import mybar.api.users.IUser;
 
 public class BeanFactory {
 
