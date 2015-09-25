@@ -16,6 +16,9 @@ public class EntityFactory {
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
         entity.setDescription(cocktail.getDescription());
+        for (IInside ingredient : cocktail.getIngredients()) {
+            entity.getIngredients().add(from(ingredient));
+        }
         entity.setState(cocktail.getState());
         entity.setPicture(cocktail.getPicture());
         entity.setMenu(from(cocktail.getMenu()));
@@ -28,10 +31,12 @@ public class EntityFactory {
         entity.setValue(inside.getQuantityValue());
         entity.setVolume(inside.getVolume());
         IIngredient ingredient = inside.getIngredient();
-        if (ingredient instanceof IDrink) {
-            entity.setIngredient(from((IDrink) ingredient));
-        } else if (ingredient instanceof IBeverage) {
+        if (ingredient instanceof IBeverage) {
             entity.setIngredient(from((IBeverage) ingredient));
+        } else if (ingredient instanceof IDrink) {
+            entity.setIngredient(from((IDrink) ingredient));
+        } else if (ingredient instanceof IAdditional) {
+            entity.setIngredient(from((IAdditional) ingredient));
         }
         return entity;
     }
@@ -52,6 +57,13 @@ public class EntityFactory {
         return entity;
     }
 
+    public static final Ingredient from(final IAdditional additional) {
+        Additional entity = new Additional();
+        entity.setId(additional.getId());
+        entity.setKind(additional.getKind());
+        return entity;
+    }
+
     public static final Product from(final IProduct product) {
         Product entity = new Product();
         entity.setId(product.getId());
@@ -59,10 +71,12 @@ public class EntityFactory {
         entity.setPrice(product.getPrice());
         entity.setBrandName(product.getBrandName());
         IIngredient ingredient = product.getIngredient();
-        if (ingredient instanceof IDrink) {
-            entity.setIngredient(from((IDrink) ingredient));
-        } else if (ingredient instanceof IBeverage) {
+        if (ingredient instanceof IBeverage) {
             entity.setIngredient(from((IBeverage) ingredient));
+        } else if (ingredient instanceof IDrink) {
+            entity.setIngredient(from((IDrink) ingredient));
+        } else if (ingredient instanceof IAdditional) {
+            entity.setIngredient(from((IAdditional) ingredient));
         }
         return entity;
     }

@@ -1,10 +1,9 @@
 package mybar.domain;
 
-import mybar.BeverageType;
-import mybar.api.IBeverage;
 import mybar.api.IIngredient;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "ingredient")
@@ -18,6 +17,10 @@ public class Ingredient implements IIngredient {
 
     @Column(name = "KIND")
     private String name;
+
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="INGREDIENT_ID")
+    private List<Inside> insides;
 
     public int getId() {
         return id;

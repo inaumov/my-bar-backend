@@ -12,7 +12,7 @@ public class Inside implements IInside {
     @Id
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     private Ingredient ingredient;
 
     @Column(name = "VOLUME")

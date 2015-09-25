@@ -2,13 +2,10 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.State;
-import mybar.api.ICocktail;
-import mybar.api.IInside;
+import mybar.api.*;
 
 import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class CocktailBean implements ICocktail {
 
@@ -32,7 +29,7 @@ public class CocktailBean implements ICocktail {
     private Blob picture;
 
     @JsonView(View.CocktailWithDetails.class)
-    private Collection<InsideBean> ingredients;
+    private Map<String, List<InsideBean>> insides = new HashMap<>();
 
     @JsonView(View.CocktailWithDetails.class)
     private String description;
@@ -56,11 +53,16 @@ public class CocktailBean implements ICocktail {
     }
 
     public Collection<InsideBean> getIngredients() {
-        return ingredients;
+        Collection<List<InsideBean>> lists = insides.values();
+        List<InsideBean> beans = new ArrayList<>();
+        for (List<InsideBean> insides : lists) {
+            beans.addAll(insides);
+        }
+        return beans;
     }
 
     public void setIngredients(Collection<InsideBean> ingredients) {
-        this.ingredients = ingredients;
+        //this.ingredients = ingredients; TODO
     }
 
     @Override
@@ -122,15 +124,38 @@ public class CocktailBean implements ICocktail {
         bean.setName(cocktail.getName());
         bean.setPrice(cocktail.getPrice());
         bean.setDescription(cocktail.getDescription());
-        List<InsideBean> ingredientBeans = new ArrayList<>();
-        for (IInside ingredient : cocktail.getIngredients()) {
-            ingredientBeans.add(InsideBean.from(ingredient));
+        for (IInside inside : cocktail.getIngredients()) {
+            InsideBean insideBean = InsideBean.from(inside);
+            if (inside.getIngredient() instanceof IBeverage) {
+                bean.addBeverage(insideBean);
+            } else if (inside.getIngredient() instanceof IDrink) {
+                bean.addDrink(insideBean);
+            } else if (inside.getIngredient() instanceof IAdditional) {
+                bean.addAdditional(insideBean);
+            }
         }
-        bean.setIngredients(ingredientBeans);
         bean.setState(cocktail.getState());
         bean.setCover(cocktail.getCover());
-
         return bean;
+    }
+
+    private void addBeverage(InsideBean inside) {
+        addInside("beverages", inside);
+    }
+
+    private void addDrink(InsideBean inside) {
+        addInside("drinks", inside);
+    }
+
+    private void addAdditional(InsideBean inside) {
+        addInside("additional", inside);
+    }
+
+    private void addInside(String key, InsideBean inside) {
+        if (!insides.containsKey(key)) {
+            insides.put(key, new ArrayList<InsideBean>());
+        }
+        insides.get(key).add(inside);
     }
 
 }

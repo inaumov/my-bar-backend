@@ -2,14 +2,14 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.QuantityValue;
-import mybar.api.IInside;
+import mybar.api.*;
 
 public class InsideBean implements IInside {
 
     private int id;
 
     @JsonView(View.CocktailWithDetails.class)
-    private BeverageBean drink;
+    private IIngredient ingredient;
 
     @JsonView(View.CocktailWithDetails.class)
     private double volume;
@@ -27,12 +27,12 @@ public class InsideBean implements IInside {
     }
 
     @Override
-    public BeverageBean getIngredient() {
-        return drink;
+    public IIngredient getIngredient() {
+        return ingredient;
     }
 
-    public void setDrink(BeverageBean drink) {
-        this.drink = drink;
+    public void setIngredient(IIngredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override
@@ -53,13 +53,19 @@ public class InsideBean implements IInside {
         this.quantityValue = quantityValue;
     }
 
-    public static InsideBean from(IInside ingredient) {
+    public static InsideBean from(IInside inside) {
         InsideBean bean = new InsideBean();
-        bean.setId(ingredient.getId());
-        bean.setDrink(BeverageBean.from(ingredient.getIngredient()));
-        bean.setQuantityValue(ingredient.getQuantityValue());
-        bean.setVolume(ingredient.getVolume());
-
+        bean.setId(inside.getId());
+        IIngredient ingredient = inside.getIngredient();
+        if (ingredient instanceof IBeverage) {
+            bean.setIngredient(BeverageBean.from((IBeverage) ingredient));
+        } else if (ingredient instanceof IDrink) {
+            bean.setIngredient(DrinkBean.from((IDrink) ingredient));
+        } else if (ingredient instanceof IAdditional) {
+            bean.setIngredient(AdditionalBean.from((IAdditional) ingredient));
+        }
+        bean.setQuantityValue(inside.getQuantityValue());
+        bean.setVolume(inside.getVolume());
         return bean;
     }
 
