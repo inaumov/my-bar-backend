@@ -9,12 +9,14 @@
     <users ID="5" LOGIN="courier" PASSWORD="courier" NAME="courier" SURNAME="courier" ADDRESS="" EMAIL="courier@mybar.com" ACTIVE="1"></users>
     <users ID="6" LOGIN="client" PASSWORD="client" NAME="client" SURNAME="client" ADDRESS="" EMAIL="client@mybar.com" ACTIVE="1"></users>
     <users ID="7" LOGIN="JohnDoe" PASSWORD="JohnDoe" NAME="JohnDoe" SURNAME="JohnDoe" ADDRESS="" EMAIL="JohnDoe@mybar.com" ACTIVE="1"></users>
+
     <roles ID="1" ROLE="ROLE_SUPER"></roles>
     <roles ID="2" ROLE="ROLE_ADMIN"></roles>
     <roles ID="3" ROLE="ROLE_ANALYST"></roles>
     <roles ID="4" ROLE="ROLE_KITCHEN_SERVICE"></roles>
     <roles ID="5" ROLE="ROLE_DELIVERY"></roles>
     <roles ID="6" ROLE="ROLE_CLIENT"></roles>
+
     <user_has_roles USER_ID="1" ROLE_ID="1"></user_has_roles>
     <user_has_roles USER_ID="2" ROLE_ID="2"></user_has_roles>
     <user_has_roles USER_ID="3" ROLE_ID="3"></user_has_roles>
@@ -24,10 +26,11 @@
     <user_has_roles USER_ID="6" ROLE_ID="6"></user_has_roles>
     <user_has_roles USER_ID="7" ROLE_ID="6"></user_has_roles>
 
-    <!-- menu -->
+    <!-- bar management -->
     <menu ID="1" NAME="Shooter"/>
     <menu ID="2" NAME="Long"/>
     <menu ID="3" NAME="Smoothie"/>
+
     <cocktail ID="1" MENU_ID="1" NAME="B52" AVAILABLE="1" DESCRIPTION="The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers." COVER="http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png"></cocktail>
     <cocktail ID="2" MENU_ID="1" NAME="B53" AVAILABLE="1"></cocktail>
     <cocktail ID="3" MENU_ID="1" NAME="Green Mexican" AVAILABLE="1"></cocktail>
@@ -40,6 +43,7 @@
     <cocktail ID="10" MENU_ID="2" NAME="Margarita" AVAILABLE="1" DESCRIPTION="The margarita is a cocktail consisting of tequila, triple sec and lime or lemon juice, often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice." COVER="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"></cocktail>
     <cocktail ID="11" MENU_ID="2" NAME="Sex on the beach" AVAILABLE="1"></cocktail>
     <cocktail ID="12" MENU_ID="3" NAME="Banana Blast II" AVAILABLE="1"></cocktail>
+
     <ingredient ID="1" ENTITY="Beverage" KIND="Vodka" TYPE="DISTILLED"></ingredient>
     <ingredient ID="2" ENTITY="Beverage" KIND="Gin" TYPE="DISTILLED"></ingredient>
     <ingredient ID="3" ENTITY="Beverage" KIND="Rum" TYPE="DISTILLED"></ingredient>
@@ -58,6 +62,7 @@
     <ingredient ID="16" ENTITY="Beverage" KIND="Coffee liqueur" TYPE="DISTILLED"></ingredient>
     <ingredient ID="17" ENTITY="Drink" KIND="Coca Cola" TYPE="SODA"></ingredient>
     <ingredient ID="18" ENTITY="Additional" KIND="Lime" TYPE="2"></ingredient>
+
     <inside ID="1" COCKTAIL_ID="1" INGREDIENT_ID="8" VOLUME="20" QUANTITY_VALUE="ML"></inside>
     <inside ID="2" COCKTAIL_ID="1" INGREDIENT_ID="11" VOLUME="20" QUANTITY_VALUE="ML"></inside>
     <inside ID="3" COCKTAIL_ID="1" INGREDIENT_ID="16" VOLUME="20" QUANTITY_VALUE="ML"></inside>
@@ -75,7 +80,7 @@
     <inside ID="15" COCKTAIL_ID="5" INGREDIENT_ID="17" VOLUME="150" QUANTITY_VALUE="ML"></inside>
     <inside ID="16" COCKTAIL_ID="5" INGREDIENT_ID="14" VOLUME="5" QUANTITY_VALUE="PCS"></inside>
     <inside ID="17" COCKTAIL_ID="5" INGREDIENT_ID="15" VOLUME="5" QUANTITY_VALUE="PCS"></inside>
-    <!-- killer feature -->
+
     <product ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120"></product>
     <product ID="2" INGREDIENT_ID="2" VOLUME="0.75" PRICE="140"></product>
     <product ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5"></product>
@@ -84,11 +89,12 @@
     <product ID="6" INGREDIENT_ID="6" VOLUME="1" PRICE="254"></product>
     <product ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119"></product>
 
-    <!-- what is done -->
+    <!-- history -->
     <orders ID="1" USER_ID="6" COCKTAIL_ID="1" SOLD="2013-08-16" IS_DONE="PREPARED" AMOUNT="3"></orders>
     <orders ID="2" USER_ID="6" COCKTAIL_ID="2" SOLD="2013-08-17" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
     <orders ID="3" USER_ID="6" COCKTAIL_ID="3" SOLD="2013-08-17" IS_DONE="PREPARED" AMOUNT="1"></orders>
     <orders ID="4" USER_ID="6" COCKTAIL_ID="4" SOLD="2013-08-25" IS_DONE="PREPARED" AMOUNT="5"></orders>
     <orders ID="5" USER_ID="6" COCKTAIL_ID="5" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="2"></orders>
     <orders ID="6" USER_ID="6" COCKTAIL_ID="6" SOLD="2013-08-27" IS_DONE="NON_PREPARED" AMOUNT="1"></orders>
+
 </dataset>

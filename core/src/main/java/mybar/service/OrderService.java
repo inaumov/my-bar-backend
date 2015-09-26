@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
-import mybar.repository.OrderDao;
-import mybar.domain.Order;
+import mybar.repository.history.OrderDao;
+import mybar.domain.history.Order;
 
 import java.util.List;
 

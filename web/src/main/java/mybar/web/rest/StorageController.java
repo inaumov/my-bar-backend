@@ -1,8 +1,8 @@
 package mybar.web.rest;
 
-import mybar.api.IProduct;
+import mybar.api.bar.IProduct;
 import mybar.app.bean.ProductBean;
-import mybar.service.StorageService;
+import mybar.service.bar.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -38,11 +38,11 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 @DatabaseSetup("/dataset.xml")
 public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
-    static final int COURIER_ID = 5;
-    static final int CLIENT1_ID = 6; // with orders
-    static final int CLIENT2_ID = 7; // to remove
-    static final String CLIENT1_NAME = "client";
-    static final String CLIENT2_NAME = "JohnDoe";
+    public static final int COURIER_ID = 5;
+    public static final int CLIENT1_ID = 6; // with orders
+    public static final int CLIENT2_ID = 7; // to remove
+    public static final String CLIENT1_NAME = "client";
+    public static final String CLIENT2_NAME = "JohnDoe";
 
     @PersistenceContext
     protected EntityManager em;

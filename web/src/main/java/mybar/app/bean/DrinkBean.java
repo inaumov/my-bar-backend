@@ -2,7 +2,7 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.DrinkType;
-import mybar.api.IDrink;
+import mybar.api.bar.IDrink;
 
 public class DrinkBean implements IDrink {
 

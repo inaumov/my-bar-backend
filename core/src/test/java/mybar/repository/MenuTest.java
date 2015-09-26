@@ -1,8 +1,11 @@
 package mybar.repository;
 
 import mybar.State;
-import mybar.domain.Cocktail;
-import mybar.domain.Menu;
+import mybar.domain.bar.Cocktail;
+import mybar.domain.bar.Menu;
+import mybar.repository.bar.CocktailDao;
+import mybar.repository.bar.MenuDao;
+import mybar.repository.users.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

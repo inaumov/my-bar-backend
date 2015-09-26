@@ -1,8 +1,8 @@
 package mybar.app.bean;
 
-import mybar.api.IBeverage;
-import mybar.api.IIngredient;
-import mybar.api.IProduct;
+import mybar.api.bar.IBeverage;
+import mybar.api.bar.IIngredient;
+import mybar.api.bar.IProduct;
 
 public class ProductBean implements IProduct {
 

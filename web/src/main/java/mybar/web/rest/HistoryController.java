@@ -1,7 +1,7 @@
 package mybar.web.rest;
 
 import mybar.History;
-import mybar.service.HistoryService;
+import mybar.service.history.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;

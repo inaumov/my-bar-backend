@@ -1,7 +1,7 @@
 package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.api.IAdditional;
+import mybar.api.bar.IAdditional;
 
 public class AdditionalBean implements IAdditional {
 

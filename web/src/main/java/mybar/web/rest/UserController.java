@@ -6,7 +6,7 @@ import mybar.app.bean.um.BeanFactory;
 import mybar.app.bean.um.RoleBean;
 import mybar.app.bean.um.UserBean;
 import mybar.app.bean.um.UserList;
-import mybar.service.users.UserManagementService;
+import mybar.service.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Controller;
@@ -26,14 +26,14 @@ public class UserController {
     private static final String XML_VIEW_NAME = "users";
 
     @Autowired
-    UserManagementService userManagementService;
+    UserService userService;
 
     @Autowired
     private Jaxb2Marshaller umMarshaller;
 
     @RequestMapping(method = RequestMethod.GET, value = "/user/{username}")
     public ModelAndView getUser(@PathVariable("username") String username) {
-        IUser user = userManagementService.findByUsername(username);
+        IUser user = userService.findByUsername(username);
         return new ModelAndView(XML_VIEW_NAME, "user", BeanFactory.from(user));
     }
 
@@ -41,7 +41,7 @@ public class UserController {
     public ModelAndView updateUser(@RequestParam String body) {
         Source source = new StreamSource(new StringReader(body));
         UserBean userBean = (UserBean) umMarshaller.unmarshal(source);
-        userManagementService.editUserInfo(userBean);
+        userService.editUserInfo(userBean);
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }
 
@@ -52,26 +52,26 @@ public class UserController {
         RoleBean role = new RoleBean();
         role.setWebRole(WebRole.ROLE_CLIENT);
         userBean.setRoles(Arrays.<RoleBean> asList(role));
-        userManagementService.createUser(userBean);
+        userService.createUser(userBean);
         return new ModelAndView(XML_VIEW_NAME, "user", userBean);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/{username}")
     public ModelAndView removeUser(@PathVariable String username) {
-        IUser user = userManagementService.findByUsername(username);
-        userManagementService.deactivateUser(user);
-        List<IUser> users = userManagementService.getAllRegisteredUsers();
+        IUser user = userService.findByUsername(username);
+        userService.deactivateUser(user);
+        List<IUser> users = userService.getAllRegisteredUsers();
         return new ModelAndView(XML_VIEW_NAME, "users", new UserList(toBeans(users)));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/users")
     public ModelAndView getUsers() {
-        List<IUser> users = userManagementService.getAllRegisteredUsers();
+        List<IUser> users = userService.getAllRegisteredUsers();
         return new ModelAndView(XML_VIEW_NAME, "users", new UserList(toBeans(users)));
     }
 
     public boolean isEmailDuplicated(String email) {
-        return userManagementService.isEmailDuplicated(email);
+        return userService.isEmailDuplicated(email);
     }
 
     private static List<UserBean> toBeans(List<IUser> users) {

@@ -1,8 +1,8 @@
 package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.api.ICocktail;
-import mybar.api.IMenu;
+import mybar.api.bar.ICocktail;
+import mybar.api.bar.IMenu;
 
 import java.util.ArrayList;
 import java.util.List;

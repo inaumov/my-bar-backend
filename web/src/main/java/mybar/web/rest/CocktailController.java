@@ -1,9 +1,9 @@
 package mybar.web.rest;
 
-import mybar.api.IInside;
-import mybar.api.ICocktail;
-import mybar.api.IMenu;
-import mybar.service.MenuManagementService;
+import mybar.api.bar.IInside;
+import mybar.api.bar.ICocktail;
+import mybar.api.bar.IMenu;
+import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CocktailController {
     private static final Logger logger = LoggerFactory.getLogger(CocktailController.class);
 
     @Autowired
-    private MenuManagementService menuService;
+    private CocktailsService menuService;
 
     public void get(int id) {
         ICocktail cocktail = menuService.findCocktail(id);

@@ -2,7 +2,7 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.State;
-import mybar.api.*;
+import mybar.api.bar.*;
 
 import java.sql.Blob;
 import java.util.*;

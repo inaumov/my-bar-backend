@@ -2,7 +2,7 @@ package mybar.app.bean;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.QuantityValue;
-import mybar.api.*;
+import mybar.api.bar.*;
 
 public class InsideBean implements IInside {
 

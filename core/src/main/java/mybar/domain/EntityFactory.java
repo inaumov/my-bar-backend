@@ -1,6 +1,9 @@
 package mybar.domain;
 
-import mybar.api.*;
+import mybar.api.bar.*;
+import mybar.api.history.IOrder;
+import mybar.domain.bar.*;
+import mybar.domain.history.Order;
 
 public class EntityFactory {
 

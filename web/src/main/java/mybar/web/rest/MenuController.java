@@ -1,11 +1,11 @@
 package mybar.web.rest;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.api.IMenu;
+import mybar.api.bar.IMenu;
 import mybar.app.bean.CocktailBean;
 import mybar.app.bean.MenuBean;
 import mybar.app.bean.View;
-import mybar.service.MenuManagementService;
+import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class MenuController {
     private Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
-    private MenuManagementService menuManagementService;
+    private CocktailsService cocktailsService;
 
     private List<MenuBean> menus;
 
@@ -44,7 +44,7 @@ public class MenuController {
 
     private List<MenuBean> getMenus() {
         if (menus == null) {
-            menus = toBeans(menuManagementService.getMenus());
+            menus = toBeans(cocktailsService.getMenus());
         }
         return menus;
     }
@@ -83,7 +83,7 @@ public class MenuController {
     public ResponseEntity<?> addCocktail(@PathVariable("menuId") String menuId, @RequestBody CocktailBean input) {
         MenuBean menu = getMenus().get(Integer.parseInt(menuId));
         input.setMenu(menu);
-        menuManagementService.saveOrUpdateCocktail(input);
+        cocktailsService.saveOrUpdateCocktail(input);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(ServletUriComponentsBuilder

@@ -2,7 +2,7 @@ package mybar.domain.users;
 
 import mybar.State;
 import mybar.api.users.IUser;
-import mybar.domain.Order;
+import mybar.domain.history.Order;
 
 import javax.persistence.*;
 import java.util.Collection;

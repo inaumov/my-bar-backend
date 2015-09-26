@@ -1,14 +1,14 @@
 package mybar.service;
 
-import mybar.domain.Cocktail;
+import mybar.domain.bar.Cocktail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mybar.OrderStatus;
-import mybar.repository.OrderDao;
+import mybar.repository.history.OrderDao;
 import mybar.repository.users.UserDao;
-import mybar.domain.Order;
+import mybar.domain.history.Order;
 
 import java.util.*;
 
