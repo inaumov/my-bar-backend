@@ -13,7 +13,7 @@ import mybar.domain.history.Order;
 import java.util.*;
 
 @Service
-@Scope("session")
+// TODO: obsolete logic - not for the first version.
 public class ClientService {
 
     @Autowired

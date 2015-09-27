@@ -7,14 +7,14 @@ import mybar.api.bar.IProduct;
 public class ProductBean implements IProduct {
 
     private int id;
-    private IIngredient ingredient;
+    private String beverageKind;
     private String brandName;
     private double volume;
     private double price;
 
     @Override
     public int getId() {
-        return 0;
+        return id;
     }
 
     public void setId(int id) {
@@ -61,7 +61,7 @@ public class ProductBean implements IProduct {
         ProductBean bean = new ProductBean();
         bean.setId(product.getId());
         IIngredient ingredient = product.getIngredient();
-        if (ingredient instanceof BeverageBean) {
+        if (ingredient instanceof IBeverage) {
             bean.setIngredient(BeverageBean.from((IBeverage) ingredient));
         }
         bean.setBrandName(product.getBrandName());
@@ -70,4 +70,5 @@ public class ProductBean implements IProduct {
 
         return bean;
     }
+
 }

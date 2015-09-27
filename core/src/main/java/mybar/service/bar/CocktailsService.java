@@ -32,6 +32,11 @@ public class CocktailsService {
     // menu
 
     @Transactional
+    public List<IMenu> getMenus() {
+        return new ArrayList<IMenu>(menuDao.findAll());
+    }
+
+    @Transactional
     public void saveOrUpdateMenu(Menu menu) {
         if (menu.getId() == 0) {
             menuDao.create(menu);
@@ -54,8 +59,8 @@ public class CocktailsService {
     // cocktails
 
     @Transactional
-    public void saveOrUpdateCocktail(ICocktail d) {
-        Cocktail cocktail = EntityFactory.from(d);
+    public void saveOrUpdateCocktail(ICocktail c) {
+        Cocktail cocktail = EntityFactory.from(c);
         if (cocktail.getId() == 0) {
             cocktailDao.create(cocktail);
         } else {
@@ -63,9 +68,11 @@ public class CocktailsService {
         }
     }
 
+    // todo : not for the first version.
+
     @Transactional
     public void removeCocktail(ICocktail d) throws Exception {
-        boolean hasRef = orderDao.findCocktailInHistory(d);
+        boolean hasRef = isCocktailInHistory(d);
         if (hasRef) {
             Cocktail cocktail = EntityFactory.from(d);
             cocktail.setState(State.NOT_AVAILABLE);
@@ -75,24 +82,18 @@ public class CocktailsService {
         }
     }
 
-    public boolean cocktailIsInHistory(ICocktail cocktail) {
-        boolean hasRef = orderDao.findCocktailInHistory(cocktail);
-        return hasRef;
+    public ICocktail findCocktail(int id) {
+        return cocktailDao.read(id);
+    }
+
+    public boolean isCocktailInHistory(ICocktail cocktail) {
+        return orderDao.findCocktailInHistory(cocktail);
     }
 
     @Transactional
     public void moveCocktailToMenu(Cocktail d, Menu c) {
         d.setMenu(c);
         cocktailDao.update(d);
-    }
-
-    @Transactional
-    public List<IMenu> getMenus() {
-        return new ArrayList<IMenu>(menuDao.findAll());
-    }
-
-    public ICocktail findCocktail(int id) {
-        return cocktailDao.read(id);
     }
 
 }

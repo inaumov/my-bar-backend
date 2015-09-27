@@ -5,7 +5,6 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.bar.MenuDao;
-import mybar.repository.users.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,9 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class MenuTest extends BaseDaoTest {
 

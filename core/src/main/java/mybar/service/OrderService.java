@@ -10,6 +10,7 @@ import mybar.domain.history.Order;
 import java.util.List;
 
 @Service
+// TODO: obsolete logic - not for the first version.
 public class OrderService {
 
     @Autowired

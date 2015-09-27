@@ -3,6 +3,7 @@ package mybar.domain.bar;
 import mybar.api.bar.IIngredient;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -18,9 +19,8 @@ public class Ingredient implements IIngredient {
     @Column(name = "KIND")
     private String name;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name="INGREDIENT_ID")
-    private List<Inside> insides;
+/*    @OneToMany(mappedBy = "ingredient", fetch = FetchType.EAGER)
+    private List<Product> products;*/
 
     public int getId() {
         return id;

@@ -26,19 +26,19 @@ public class StorageController {
     private StorageService storageService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
+    public
+    @ResponseBody
     Collection<ProductBean> getAllProducts() {
         return toBeans(storageService.getAllBottles());
     }
 
     private static List<ProductBean> toBeans(List<IProduct> products) {
-        List<ProductBean> menuBeans = new ArrayList<>();
+        List<ProductBean> beans = new ArrayList<>();
         for (IProduct product : products) {
-            menuBeans.add(ProductBean.from(product));
+            beans.add(ProductBean.from(product));
         }
-        return menuBeans;
+        return beans;
     }
-
 
 
 }
