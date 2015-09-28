@@ -11,24 +11,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class StorageService {
 
     @Autowired
     private StorageDao storageDao;
 
-    @Transactional
-    public List<IProduct> getAllBottles() {
-        return new ArrayList<IProduct>(storageDao.findAll());
+    public IProduct findById(int id) {
+        return storageDao.read(id);
     }
 
-    @Transactional
-    public void addBottle(IProduct product) {
+    public IProduct findByName(String name) {
+        return null;
+    }
+
+    public void saveBottle(IProduct product) {
         storageDao.create(EntityFactory.from(product));
     }
 
-    @Transactional
     public void updateBottle(IProduct product) {
         storageDao.update(EntityFactory.from(product));
+    }
+
+    public void deleteBottleById(int id) {
+
+    }
+
+    public List<IProduct> findAllBottles() {
+        return new ArrayList<IProduct>(storageDao.findAll());
+    }
+
+    public void deleteAllBottles() {
+
+    }
+
+    public boolean isBottleExist(IProduct product) {
+        return false;
     }
 
 }

@@ -68,6 +68,7 @@
     <bean id="userController" class="mybar.web.rest.UserController"/>
 
     <bean id="menuController" class="mybar.web.rest.MenuController"/>
+    <bean id="shelfController" class="mybar.web.rest.ShelfController"/>
 
     <!-- Configure to plugin JSON as request and response in method handler -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">

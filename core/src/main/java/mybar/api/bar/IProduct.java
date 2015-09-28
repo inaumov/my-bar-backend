@@ -12,4 +12,5 @@ public interface IProduct {
 
     double getPrice();
 
+
 }
