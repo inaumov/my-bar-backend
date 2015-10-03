@@ -1,10 +1,10 @@
-package mybar.app.bean;
+package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.BeverageType;
-import mybar.api.bar.IBeverage;
+import mybar.DrinkType;
+import mybar.api.bar.IDrink;
 
-public class BeverageBean implements IBeverage {
+public class DrinkBean implements IDrink {
 
     @JsonView(View.CocktailWithDetails.class)
     private int id;
@@ -12,7 +12,7 @@ public class BeverageBean implements IBeverage {
     @JsonView(View.CocktailWithDetails.class)
     private String name;
 
-    private BeverageType beverageType;
+    private DrinkType drinkType;
 
     @Override
     public int getId() {
@@ -33,19 +33,19 @@ public class BeverageBean implements IBeverage {
     }
 
     @Override
-    public BeverageType getBeverageType() {
-        return beverageType;
+    public DrinkType getDrinkType() {
+        return drinkType;
     }
 
-    public void setBeverageType(BeverageType beverageType) {
-        this.beverageType = beverageType;
+    public void setDrinkType(DrinkType drinkType) {
+        this.drinkType = drinkType;
     }
 
-    public static BeverageBean from(IBeverage drink) {
-        BeverageBean bean = new BeverageBean();
+    public static DrinkBean from(IDrink drink) {
+        DrinkBean bean = new DrinkBean();
         bean.setId(drink.getId());
         bean.setKind(drink.getKind());
-        bean.setBeverageType(drink.getBeverageType());
+        bean.setDrinkType(drink.getDrinkType());
         return bean;
     }
 

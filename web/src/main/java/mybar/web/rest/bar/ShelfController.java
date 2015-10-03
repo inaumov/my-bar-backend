@@ -1,7 +1,7 @@
-package mybar.web.rest;
+package mybar.web.rest.bar;
 
 import mybar.api.bar.IProduct;
-import mybar.app.bean.Bottle;
+import mybar.app.bean.bar.Bottle;
 import mybar.service.bar.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

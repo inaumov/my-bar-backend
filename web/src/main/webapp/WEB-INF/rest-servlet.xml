@@ -20,14 +20,14 @@
     <bean id="umMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="classesToBeBound">
             <list>
-                <value>mybar.app.bean.um.RoleBean</value>
-                <value>mybar.app.bean.um.UserBean</value>
-                <value>mybar.app.bean.um.UserList</value>
+                <value>mybar.app.bean.users.RoleBean</value>
+                <value>mybar.app.bean.users.UserBean</value>
+                <value>mybar.app.bean.users.UserList</value>
             </list>
         </property>
         <property name="adapters">
             <list>
-                <bean class="mybar.app.bean.um.RoleAdapter"/>
+                <bean class="mybar.app.bean.users.RoleAdapter"/>
             </list>
         </property>
     </bean>
@@ -64,11 +64,11 @@
     </bean>
 
 
-    <bean id="loginController" class="mybar.web.rest.LoginController"/>
-    <bean id="userController" class="mybar.web.rest.UserController"/>
+    <bean id="loginController" class="mybar.web.rest.users.LoginController"/>
+    <bean id="userController" class="mybar.web.rest.users.UserController"/>
 
-    <bean id="menuController" class="mybar.web.rest.MenuController"/>
-    <bean id="shelfController" class="mybar.web.rest.ShelfController"/>
+    <bean id="menuController" class="mybar.web.rest.bar.MenuController"/>
+    <bean id="shelfController" class="mybar.web.rest.bar.ShelfController"/>
 
     <!-- Configure to plugin JSON as request and response in method handler -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">

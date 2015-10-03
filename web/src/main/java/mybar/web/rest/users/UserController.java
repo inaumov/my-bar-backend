@@ -1,11 +1,11 @@
-package mybar.web.rest;
+package mybar.web.rest.users;
 
 import mybar.api.users.WebRole;
 import mybar.api.users.IUser;
-import mybar.app.bean.um.BeanFactory;
-import mybar.app.bean.um.RoleBean;
-import mybar.app.bean.um.UserBean;
-import mybar.app.bean.um.UserList;
+import mybar.app.bean.users.BeanFactory;
+import mybar.app.bean.users.RoleBean;
+import mybar.app.bean.users.UserBean;
+import mybar.app.bean.users.UserList;
 import mybar.service.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;

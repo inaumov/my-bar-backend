@@ -1,4 +1,4 @@
-package mybar.app.bean;
+package mybar.app.bean.bar;
 
 public class View {
 

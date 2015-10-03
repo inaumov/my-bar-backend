@@ -1,4 +1,4 @@
-package mybar.web.rest;
+package mybar.web.rest.users;
 
 import mybar.History;
 import mybar.service.history.HistoryService;

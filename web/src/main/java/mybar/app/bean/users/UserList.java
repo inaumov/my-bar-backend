@@ -1,4 +1,4 @@
-package mybar.app.bean.um;
+package mybar.app.bean.users;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;

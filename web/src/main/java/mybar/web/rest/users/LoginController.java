@@ -1,6 +1,6 @@
-package mybar.web.rest;
+package mybar.web.rest.users;
 
-import mybar.app.bean.um.LoginBean;
+import mybar.app.bean.users.LoginBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;

@@ -1,10 +1,10 @@
-package mybar.web.rest;
+package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.bar.IMenu;
-import mybar.app.bean.CocktailBean;
-import mybar.app.bean.MenuBean;
-import mybar.app.bean.View;
+import mybar.app.bean.bar.CocktailBean;
+import mybar.app.bean.bar.MenuBean;
+import mybar.app.bean.bar.View;
 import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

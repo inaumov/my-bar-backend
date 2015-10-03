@@ -1,4 +1,4 @@
-package mybar.app.bean;
+package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.State;

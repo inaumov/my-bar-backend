@@ -1,4 +1,4 @@
-package mybar.app.bean.um;
+package mybar.app.bean.users;
 
 import mybar.api.users.WebRole;
 

@@ -1,4 +1,4 @@
-package mybar.app.bean.um;
+package mybar.app.bean.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

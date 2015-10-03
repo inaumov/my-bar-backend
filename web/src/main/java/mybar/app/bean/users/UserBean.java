@@ -1,4 +1,4 @@
-package mybar.app.bean.um;
+package mybar.app.bean.users;
 
 import mybar.State;
 import mybar.api.users.IUser;
