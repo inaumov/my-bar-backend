@@ -7,7 +7,7 @@ import mybar.api.bar.IMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuBean implements IMenu {
+public class Menu implements IMenu {
 
     @JsonView(View.Menu.class)
     private int id;
@@ -42,15 +42,17 @@ public class MenuBean implements IMenu {
         this.cocktails = cocktails;
     }
 
-    public static MenuBean from(IMenu menu) {
-        MenuBean bean = new MenuBean();
+    public static Menu from(IMenu menu) {
+        Menu bean = new Menu();
         bean.setId(menu.getId());
         bean.setName(menu.getName());
+/*
         List<CocktailBean> cocktailBeans = new ArrayList<>();
         for (ICocktail d : menu.getCocktails()) {
             cocktailBeans.add(CocktailBean.from(d));
         }
         bean.setCocktails(cocktailBeans);
+*/
 
         return bean;
     }

@@ -1,9 +1,10 @@
 package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.app.bean.bar.CocktailBean;
-import mybar.app.bean.bar.MenuBean;
+import mybar.app.bean.bar.Menu;
 import mybar.app.bean.bar.View;
 import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
@@ -13,13 +14,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -31,79 +30,75 @@ public class MenuController {
     @Autowired
     private CocktailsService cocktailsService;
 
-    private List<MenuBean> menus;
+    //-------------------Retrieve Menu List--------------------------------------------------------
 
-    // menu -> get all
     @JsonView(View.Menu.class)
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Collection<MenuBean> getAllMenuItems() {
-        List<MenuBean> list = getMenus();
-        logger.info(MessageFormat.format("Loaded {0} menus: ", list.size()));
-        return list;
-    }
-
-    private List<MenuBean> getMenus() {
-        if (menus == null) {
-            menus = toBeans(cocktailsService.getMenus());
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<List<Menu>> listAllMenuItems() {
+        logger.info("Fetching Menu items list...");
+        List<IMenu> menuList = cocktailsService.getAllMenuItems();
+        if (menuList.isEmpty()) {
+            logger.info("Menu not found");
+            return new ResponseEntity<List<Menu>>(HttpStatus.NOT_FOUND);
         }
-        return menus;
+        logger.info(MessageFormat.format("Found {0} items in menu list", menuList.size()));
+        List<Menu> converted = new ArrayList<>();
+        for (IMenu menu : menuList) {
+            converted.add(Menu.from(menu));
+        }
+        return new ResponseEntity<List<Menu>>(converted, HttpStatus.OK);
     }
 
-    // cocktails -> read all
+    //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
+
     @JsonView(View.Cocktail.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/cocktails", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<CocktailBean> getCocktails(@PathVariable("menuId") Integer menuId) {
-        if (menuId < 0 || menuId > 5) {
-            logger.error(MessageFormat.format("Bad request. Menu with id={0} does not exist", menuId));
+    @RequestMapping(value = "/{menuId}/cocktails", method = RequestMethod.GET)
+    public ResponseEntity<List<CocktailBean>> findCocktailsForMenu(@PathVariable("menuId") Integer menuId) {
+        logger.info("Fetching Cocktails For Menu with id {0}...", menuId);
+        List<ICocktail> cocktails = cocktailsService.getAllCocktailsForMenu(menuId);
+        if (cocktails.isEmpty()) {
+            logger.error(MessageFormat.format("Cocktails list for Menu with id={0} does not exist", menuId));
+            return new ResponseEntity<List<CocktailBean>>(HttpStatus.NOT_FOUND);
         }
-        Collection<CocktailBean> cocktails = getMenus().get(menuId).getCocktails();
-        logger.info(MessageFormat.format("Loaded cocktails for menu with id={0}", menuId));
-        return cocktails;
+        List<CocktailBean> cocktailBeans = new ArrayList<>();
+        for (ICocktail cocktail : cocktailBeans) {
+            cocktailBeans.add(CocktailBean.from(cocktail));
+        }
+        logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", cocktails.size(), menuId));
+        return new ResponseEntity<List<CocktailBean>>(cocktailBeans, HttpStatus.OK);
     }
 
-    // cocktails -> read one by id with details
-    //@JsonView(View.CocktailWithDetails.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/{menuId}/cocktails/{cocktailId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public MappingJacksonValue getCocktail(@PathVariable("menuId") Integer menuId, @PathVariable("cocktailId") Integer cocktailId) {
-        if (menuId < 0 || menuId >= getMenus().size()) {
-            logger.error(MessageFormat.format("Bad request. Menu with id={0} does not exist", menuId));
+    //-------------------Retrieve a cocktail with details--------------------------------------------------------
+
+    @JsonView(View.CocktailWithDetails.class)
+    @RequestMapping(value = "/{menuId}/cocktails/{cocktailId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CocktailBean> getCocktail(@PathVariable("menuId") Integer menuId, @PathVariable("cocktailId") Integer cocktailId) {
+        logger.info("Fetching Cocktail with id " + cocktailId);
+        ICocktail cocktail = cocktailsService.findCocktailById(cocktailId);
+        if (cocktail == null) {
+            logger.info("Cocktail with id " + cocktailId + " not found");
+            return new ResponseEntity<CocktailBean>(HttpStatus.NOT_FOUND);
         }
-        List<CocktailBean> cocktails = getMenus().get(menuId).getCocktails();
-        if (cocktailId < 0 || cocktailId >= cocktails.size()) {
-            logger.error(MessageFormat.format("Bad request. Cocktail with id={0} does not exist", cocktailId));
-        }
-        CocktailBean cocktail = cocktails.get(cocktailId);
-        MappingJacksonValue wrapper = new MappingJacksonValue(cocktail);
-        wrapper.setSerializationView(View.CocktailWithDetails.class);
         logger.info(MessageFormat.format("Loaded cocktail with id={0}", cocktailId));
-        return wrapper;
+        return new ResponseEntity<CocktailBean>(CocktailBean.from(cocktail), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{menuId}/cocktails")
-    public ResponseEntity<?> addCocktail(@PathVariable("menuId") String menuId, @RequestBody CocktailBean input) {
-        MenuBean menu = getMenus().get(Integer.parseInt(menuId));
-        input.setMenu(menu);
-        cocktailsService.saveOrUpdateCocktail(input);
+    //-------------------Create a Cocktail--------------------------------------------------------
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(input.getId()).toUri());
-
-        return new ResponseEntity<>(null, httpHeaders, HttpStatus.CREATED);
-    }
-
-    // menu -> update
-    // TODO
-    // menu -> delete
-    // TODO
-
-    private static List<MenuBean> toBeans(List<IMenu> menus) {
-        List<MenuBean> menuBeans = new ArrayList<>();
-        for (IMenu menu : menus) {
-            menuBeans.add(MenuBean.from(menu));
+    @RequestMapping(value = "/{menuId}/cocktails", method = RequestMethod.POST)
+    public ResponseEntity<Void> addCocktail(@PathVariable("menuId") Integer menuId, @RequestBody CocktailBean cocktailBean, UriComponentsBuilder ucBuilder) {
+        logger.info("Creating a new Cocktail item " + cocktailBean.getName());
+// TODO check if ID 0 and we not update
+        if (cocktailsService.isCocktailExist(cocktailBean)) {
+            logger.info("A Bottle " + cocktailBean.getName() + " already exists");
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
-        return menuBeans;
+
+        cocktailsService.saveOrUpdateCocktail(cocktailBean);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/bottle/{id}").buildAndExpand(cocktailBean.getId()).toUri());
+        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
 }

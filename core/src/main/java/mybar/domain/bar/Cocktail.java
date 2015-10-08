@@ -69,6 +69,11 @@ public class Cocktail implements ICocktail {
     }
 
     @Override
+    public int getMenuId() {
+        return menu.getId();
+    }
+
+    @Override
     public String getDescription() {
         return description;
     }
@@ -77,7 +82,6 @@ public class Cocktail implements ICocktail {
         this.description = description;
     }
 
-    @Override
     public Menu getMenu() {
         return menu;
     }

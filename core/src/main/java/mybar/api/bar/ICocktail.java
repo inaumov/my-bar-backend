@@ -13,7 +13,7 @@ public interface ICocktail {
 
     Collection<? extends IInside> getIngredients();
 
-    <T extends IMenu> T getMenu();
+    int getMenuId();
 
     String getDescription();
 

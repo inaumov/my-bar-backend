@@ -15,7 +15,7 @@ public class CocktailBean implements ICocktail {
     @JsonView(View.Cocktail.class)
     private String name;
 
-    private MenuBean menu;
+    private Menu menu;
 
     @JsonView(View.Cocktail.class)
     private double price;
@@ -75,11 +75,11 @@ public class CocktailBean implements ICocktail {
     }
 
     @Override
-    public MenuBean getMenu() {
+    public Menu getMenu() {
         return menu;
     }
 
-    public void setMenu(MenuBean menu) {
+    public void setMenu(Menu menu) {
         this.menu = menu;
     }
 
