@@ -33,7 +33,11 @@ public class ShelfController {
         if (allBottles.isEmpty()) {
             return new ResponseEntity<List<Bottle>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Bottle>>(toBeans(allBottles), HttpStatus.OK);
+        List<Bottle> beans = new ArrayList<>();
+        for (IProduct product : allBottles) {
+            beans.add(Bottle.from(product));
+        }
+        return new ResponseEntity<List<Bottle>>(beans, HttpStatus.OK);
     }
 
     //-------------------Retrieve a Bottle--------------------------------------------------------
@@ -55,12 +59,11 @@ public class ShelfController {
     public ResponseEntity<Void> createBottle(@RequestBody Bottle bottle, UriComponentsBuilder ucBuilder) {
         logger.info("Creating a Bottle " + bottle.getBeverageKind());
 
-        if (storageService.isBottleExist(bottle)) {
+        boolean saved = storageService.saveBottle(bottle);
+        if (!saved) {
             logger.info("A Bottle " + bottle.getBeverageKind() + " already exists");
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
-
-        storageService.saveBottle(bottle);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/bottle/{id}").buildAndExpand(bottle.getId()).toUri());
@@ -111,16 +114,9 @@ public class ShelfController {
     public ResponseEntity<Bottle> deleteAllBottles() {
         logger.info("Deleting All Bottles");
 
-        storageService.deleteAllBottles();
+        int numberOfBottles = storageService.deleteAllBottles();
+        // todo return number
         return new ResponseEntity<Bottle>(HttpStatus.NO_CONTENT);
-    }
-
-    private static List<Bottle> toBeans(List<IProduct> products) {
-        List<Bottle> beans = new ArrayList<>();
-        for (IProduct product : products) {
-            beans.add(Bottle.from(product));
-        }
-        return beans;
     }
 
 }

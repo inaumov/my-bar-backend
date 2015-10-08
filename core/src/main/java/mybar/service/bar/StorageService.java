@@ -2,11 +2,13 @@ package mybar.service.bar;
 
 import mybar.api.bar.IProduct;
 import mybar.domain.EntityFactory;
+import mybar.domain.bar.Product;
 import mybar.repository.bar.StorageDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,36 +19,58 @@ public class StorageService {
     @Autowired
     private StorageDao storageDao;
 
+    // kind of caching :)
+    private List<Product> all;
+    private boolean shouldUpdate;
+
     public IProduct findById(int id) {
+        if (all != null) {
+            for (Product p : all) {
+                if (p.getId() == id) {
+                    return p;
+                }
+            }
+        }
         return storageDao.read(id);
     }
 
-    public IProduct findByName(String name) {
-        return null;
-    }
-
-    public void saveBottle(IProduct product) {
-        storageDao.create(EntityFactory.from(product));
+    public boolean saveBottle(IProduct product) {
+        Product entity = null;
+        try {
+            entity = storageDao.create(EntityFactory.from(product));
+        } catch (EntityExistsException e) {
+            return false;
+        }
+        all.add(entity);
+        return true;
     }
 
     public void updateBottle(IProduct product) {
-        storageDao.update(EntityFactory.from(product));
+        Product entity = storageDao.update(EntityFactory.from(product));
+        if (entity.getId() != 0) {
+            shouldUpdate = true;
+        }
     }
 
     public void deleteBottleById(int id) {
-
+        storageDao.delete(id);
+        for (Product p : all) {
+            if (p.getId() == id) {
+                all.remove(p);
+                break;
+            }
+        }
     }
 
     public List<IProduct> findAllBottles() {
-        return new ArrayList<IProduct>(storageDao.findAll());
+        if (all == null || shouldUpdate) {
+            all = storageDao.findAll();
+        }
+        return new ArrayList<IProduct>(all);
     }
 
-    public void deleteAllBottles() {
-
-    }
-
-    public boolean isBottleExist(IProduct product) {
-        return false;
+    public int deleteAllBottles() {
+        return storageDao.destroyAll();
     }
 
 }

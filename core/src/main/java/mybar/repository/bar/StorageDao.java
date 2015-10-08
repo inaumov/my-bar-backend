@@ -16,4 +16,8 @@ public class StorageDao extends GenericDaoImpl<Product> {
         return products;
     }
 
+    public int destroyAll() {
+        int deletedCount = em.createQuery("DELETE FROM Country").executeUpdate();
+        return deletedCount;
+    }
 }
