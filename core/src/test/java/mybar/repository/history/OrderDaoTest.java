@@ -1,9 +1,9 @@
-package mybar.repository;
+package mybar.repository.history;
 
 import mybar.History;
 import mybar.OrderStatus;
 import mybar.domain.history.Order;
-import mybar.repository.history.OrderDao;
+import mybar.repository.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
