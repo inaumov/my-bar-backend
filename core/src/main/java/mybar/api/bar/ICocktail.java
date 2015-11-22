@@ -19,10 +19,6 @@ public interface ICocktail {
 
     State getState();
 
-    String getCover();
-
-    Blob getPicture();
-
-    double getPrice();
+    String getImageUrl();
 
 }

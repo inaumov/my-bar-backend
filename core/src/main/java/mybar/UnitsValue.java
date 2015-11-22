@@ -1,6 +1,6 @@
 package mybar;
 
-public enum QuantityValue {
+public enum UnitsValue {
 
     PCS,
     ML

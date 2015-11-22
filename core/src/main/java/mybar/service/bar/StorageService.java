@@ -60,7 +60,7 @@ public class StorageService {
                 break;
             }
         }
-    }
+}
 
     public List<IProduct> findAllBottles() {
         if (all == null || shouldUpdate) {

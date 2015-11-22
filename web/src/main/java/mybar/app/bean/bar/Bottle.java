@@ -12,7 +12,7 @@ public class Bottle implements IProduct {
     private String brandName;
     private double volume;
     private double price;
-    private boolean active;
+    private boolean inShelf;
 
     @JsonIgnore
     private IIngredient ingredient;
@@ -61,12 +61,12 @@ public class Bottle implements IProduct {
         this.price = price;
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean isInShelf() {
+        return inShelf;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setInShelf(boolean inShelf) {
+        this.inShelf = inShelf;
     }
 
     @Override

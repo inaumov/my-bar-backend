@@ -4,7 +4,6 @@ import mybar.State;
 import mybar.api.bar.ICocktail;
 
 import javax.persistence.*;
-import java.sql.Blob;
 import java.util.Collection;
 
 @Entity
@@ -28,19 +27,12 @@ public class Cocktail implements ICocktail {
     @Column(name = "DESCRIPTION", nullable = true)
     private String description;
 
-    @Transient
-    private double price;
-
     @Column(name = "AVAILABLE")
     @Enumerated(EnumType.ORDINAL)
     private State state;
 
-    @Column(name = "COVER", nullable = true)
-    private String cover;
-
-    @Lob
-    @Column(name = "IMAGE", nullable = true)
-    private Blob picture;
+    @Column(name = "IMAGE_URL", nullable = true)
+    private String imageUrl;
 
     @Override
     public int getId() {
@@ -90,14 +82,6 @@ public class Cocktail implements ICocktail {
         this.menu = menu;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     @Override
     public State getState() {
         return state;
@@ -108,21 +92,12 @@ public class Cocktail implements ICocktail {
     }
 
     @Override
-    public String getCover() {
-        return cover;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    @Override
-    public Blob getPicture() {
-        return picture;
-    }
-
-    public void setPicture(Blob picture) {
-        this.picture = picture;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

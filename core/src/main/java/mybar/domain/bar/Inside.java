@@ -1,6 +1,6 @@
 package mybar.domain.bar;
 
-import mybar.QuantityValue;
+import mybar.UnitsValue;
 import mybar.api.bar.IIngredient;
 import mybar.api.bar.IInside;
 
@@ -18,9 +18,9 @@ public class Inside implements IInside {
     @Column(name = "VOLUME")
     private double volume;
 
-    @Column(name = "QUANTITY_VALUE")
+    @Column(name = "UNITS")
     @Enumerated(EnumType.STRING)
-    private QuantityValue value;
+    private UnitsValue unitsValue;
 
     @ManyToOne
     @JoinColumn(name = "COCKTAIL_ID")
@@ -42,8 +42,8 @@ public class Inside implements IInside {
     }
 
     @Override
-    public QuantityValue getQuantityValue() {
-        return value;
+    public UnitsValue getUnitsValue() {
+        return unitsValue;
     }
 
     public void setId(int id) {
@@ -58,8 +58,8 @@ public class Inside implements IInside {
         this.volume = volume;
     }
 
-    public void setValue(QuantityValue value) {
-        this.value = value;
+    public void setUnitsValue(UnitsValue unitsValue) {
+        this.unitsValue = unitsValue;
     }
 
 }

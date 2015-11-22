@@ -23,7 +23,6 @@ public class EntityFactory {
             entity.getIngredients().add(from(ingredient));
         }
         entity.setState(cocktail.getState());
-        entity.setPicture(cocktail.getPicture());
         entity.setMenu(from(cocktail.getMenu()));
         return entity;
     }
@@ -31,7 +30,7 @@ public class EntityFactory {
     public static final Inside from(final IInside inside) {
         Inside entity = new Inside();
         entity.setId(inside.getId());
-        entity.setValue(inside.getQuantityValue());
+        entity.setUnitsValue(inside.getUnitsValue());
         entity.setVolume(inside.getVolume());
         IIngredient ingredient = inside.getIngredient();
         if (ingredient instanceof IBeverage) {

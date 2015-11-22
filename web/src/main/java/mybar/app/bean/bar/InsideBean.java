@@ -1,7 +1,7 @@
 package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.QuantityValue;
+import mybar.UnitsValue;
 import mybar.api.bar.*;
 
 public class InsideBean implements IInside {
@@ -15,7 +15,9 @@ public class InsideBean implements IInside {
     private double volume;
 
     @JsonView(View.CocktailWithDetails.class)
-    private QuantityValue quantityValue;
+    private UnitsValue unitsValue;
+
+    private boolean missing;
 
     @Override
     public int getId() {
@@ -45,12 +47,12 @@ public class InsideBean implements IInside {
     }
 
     @Override
-    public QuantityValue getQuantityValue() {
-        return quantityValue;
+    public UnitsValue getUnitsValue() {
+        return unitsValue;
     }
 
-    public void setQuantityValue(QuantityValue quantityValue) {
-        this.quantityValue = quantityValue;
+    public void setUnitsValue(UnitsValue unitsValue) {
+        this.unitsValue = unitsValue;
     }
 
     public static InsideBean from(IInside inside) {
@@ -64,7 +66,7 @@ public class InsideBean implements IInside {
         } else if (ingredient instanceof IAdditional) {
             bean.setIngredient(AdditionalBean.from((IAdditional) ingredient));
         }
-        bean.setQuantityValue(inside.getQuantityValue());
+        bean.setUnitsValue(inside.getUnitsValue());
         bean.setVolume(inside.getVolume());
         return bean;
     }

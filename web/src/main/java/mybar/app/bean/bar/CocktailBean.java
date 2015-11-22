@@ -18,15 +18,10 @@ public class CocktailBean implements ICocktail {
     private Menu menu;
 
     @JsonView(View.Cocktail.class)
-    private double price;
-
-    @JsonView(View.Cocktail.class)
     private State state;
 
     @JsonView(View.Cocktail.class)
-    private String coverUrl;
-
-    private Blob picture;
+    private String imageUrl;
 
     @JsonView(View.CocktailWithDetails.class)
     private Map<String, List<InsideBean>> insides = new HashMap<>();
@@ -83,14 +78,6 @@ public class CocktailBean implements ICocktail {
         this.menu = menu;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     @Override
     public State getState() {
         return state;
@@ -101,28 +88,18 @@ public class CocktailBean implements ICocktail {
     }
 
     @Override
-    public String getCover() {
-        return coverUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public void setCover(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    @Override
-    public Blob getPicture() {
-        return picture;
-    }
-
-    public void setPicture(Blob picture) {
-        this.picture = picture;
+        this.imageUrl = coverUrl;
     }
 
     public static CocktailBean from(ICocktail cocktail) {
         CocktailBean bean = new CocktailBean();
         bean.setId(cocktail.getId());
         bean.setName(cocktail.getName());
-        bean.setPrice(cocktail.getPrice());
         bean.setDescription(cocktail.getDescription());
         for (IInside inside : cocktail.getIngredients()) {
             InsideBean insideBean = InsideBean.from(inside);
@@ -135,7 +112,7 @@ public class CocktailBean implements ICocktail {
             }
         }
         bean.setState(cocktail.getState());
-        bean.setCover(cocktail.getCover());
+        bean.setCover(cocktail.getImageUrl());
         return bean;
     }
 

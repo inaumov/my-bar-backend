@@ -61,7 +61,7 @@ public class MenuController {
             return new ResponseEntity<List<CocktailBean>>(HttpStatus.NOT_FOUND);
         }
         List<CocktailBean> cocktailBeans = new ArrayList<>();
-        for (ICocktail cocktail : cocktailBeans) {
+        for (ICocktail cocktail : cocktails) {
             cocktailBeans.add(CocktailBean.from(cocktail));
         }
         logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", cocktails.size(), menuId));

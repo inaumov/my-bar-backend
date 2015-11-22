@@ -1,6 +1,6 @@
 package mybar.api.bar;
 
-import mybar.QuantityValue;
+import mybar.UnitsValue;
 
 public interface IInside {
 
@@ -10,6 +10,6 @@ public interface IInside {
 
     double getVolume();
 
-    QuantityValue getQuantityValue();
+    UnitsValue getUnitsValue();
 
 }
