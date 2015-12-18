@@ -1,5 +1,6 @@
 package mybar.domain;
 
+import mybar.State;
 import mybar.api.bar.*;
 import mybar.api.history.IOrder;
 import mybar.domain.bar.*;
@@ -23,7 +24,7 @@ public class EntityFactory {
             entity.getIngredients().add(from(ingredient));
         }
         entity.setState(cocktail.getState());
-        entity.setMenu(from(cocktail.getMenu()));
+        //entity.setMenu(from(cocktail.getMenu()));
         return entity;
     }
 
@@ -66,20 +67,15 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Product from(final IProduct product) {
-        Product entity = new Product();
-        entity.setId(product.getId());
-        entity.setVolume(product.getVolume());
-        entity.setPrice(product.getPrice());
-        entity.setBrandName(product.getBrandName());
-        IIngredient ingredient = product.getIngredient();
-        if (ingredient instanceof IBeverage) {
-            entity.setIngredient(from((IBeverage) ingredient));
-        } else if (ingredient instanceof IDrink) {
-            entity.setIngredient(from((IDrink) ingredient));
-        } else if (ingredient instanceof IAdditional) {
-            entity.setIngredient(from((IAdditional) ingredient));
-        }
+    public static final Bottle from(final IBottle bottle) {
+        Bottle entity = new Bottle();
+        entity.setId(bottle.getId());
+        entity.setVolume(bottle.getVolume());
+        entity.setPrice(bottle.getPrice());
+        entity.setBrandName(bottle.getBrandName());
+        entity.setIngredient(new Beverage(bottle.getBeverageId()));
+        entity.setState(bottle.isInShelf() ? State.AVAILABLE : State.NOT_AVAILABLE);
+        entity.setImageUrl(bottle.getImageUrl());
         return entity;
     }
 

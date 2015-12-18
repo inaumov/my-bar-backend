@@ -69,9 +69,9 @@ public class CocktailBean implements ICocktail {
         this.description = description;
     }
 
-    @Override
-    public Menu getMenu() {
-        return menu;
+    //@Override
+    public int getMenuId() {
+        return menu.getId();
     }
 
     public void setMenu(Menu menu) {

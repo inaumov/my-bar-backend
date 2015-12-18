@@ -1,15 +1,18 @@
 package mybar.domain.bar;
 
-import mybar.api.bar.IProduct;
+import mybar.State;
+import mybar.api.bar.IBottle;
+import mybar.dto.bar.BottleDto;
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
 
 @Entity
-@SequenceGenerator(name = "STORAGE_SEQUENCE", sequenceName = "STORAGE_SEQUENCE", allocationSize = 3, initialValue = 1)
-public class Product implements IProduct {
+@SequenceGenerator(name = "BOTTLE_SEQUENCE", sequenceName = "BOTTLE_SEQUENCE", allocationSize = 3, initialValue = 1)
+public class Bottle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORAGE_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOTTLE_SEQUENCE")
     private int id;
 
     @ManyToOne
@@ -24,6 +27,13 @@ public class Product implements IProduct {
 
     @Column(name = "PRICE")
     private double price;
+
+    @Column(name = "AVAILABLE")
+    @Enumerated(EnumType.ORDINAL)
+    private State state;
+
+    @Column(name = "IMAGE_URL", nullable = true)
+    private String imageUrl;
 
     public int getId() {
         return id;
@@ -63,6 +73,27 @@ public class Product implements IProduct {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public IBottle toDto() {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, BottleDto.class);
     }
 
 }

@@ -53,7 +53,7 @@ public class ClientService {
         for (Map.Entry entry : entries) {
             Cocktail cocktail = (Cocktail) entry.getKey();
             int cnt = entry.getValue().hashCode();
-            total += cocktail.getPrice() * cnt;
+            //total += cocktail.getPrice() * cnt;
         }
         return total;
     }

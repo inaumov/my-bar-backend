@@ -4,12 +4,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.inaumov.mybar</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>MyBar-server</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>MyBar :: Parent</name>
-    <url>http://maven.apache.org</url>
+    <name>MyBar Server -- Project</name>
+
+    <inceptionYear>2013</inceptionYear>
+
+    <organization>
+        <name>Igor Naumov</name>
+        <url>http://inaumov.com</url>
+    </organization>
+
+    <issueManagement>
+        <url>https://github.com/inaumov/MyBar-web/issues</url>
+    </issueManagement>
+
+    <prerequisites>
+        <maven>3.3.3</maven>
+    </prerequisites>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

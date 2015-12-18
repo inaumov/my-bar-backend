@@ -13,6 +13,13 @@ public class Beverage extends Ingredient implements IBeverage {
     @Enumerated(EnumType.STRING)
     private BeverageType beverageType;
 
+    public Beverage() {
+    }
+
+    public Beverage(int beverageId) {
+        setId(beverageId);
+    }
+
     @Override
     public BeverageType getBeverageType() {
         return beverageType;

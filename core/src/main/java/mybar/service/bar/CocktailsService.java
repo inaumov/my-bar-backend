@@ -3,7 +3,6 @@ package mybar.service.bar;
 import mybar.State;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
-import mybar.api.bar.IProduct;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;

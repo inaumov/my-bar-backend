@@ -81,13 +81,13 @@
     <inside ID="16" COCKTAIL_ID="5" INGREDIENT_ID="14" VOLUME="5" UNITS="PCS"></inside>
     <inside ID="17" COCKTAIL_ID="5" INGREDIENT_ID="15" VOLUME="5" UNITS="PCS"></inside>
 
-    <product ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120" BRAND_NAME=""></product>
-    <product ID="2" INGREDIENT_ID="2" VOLUME="0.75" PRICE="140" BRAND_NAME=""></product>
-    <product ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5" BRAND_NAME=""></product>
-    <product ID="4" INGREDIENT_ID="4" VOLUME="1" PRICE="178" BRAND_NAME=""></product>
-    <product ID="5" INGREDIENT_ID="8" VOLUME="0.5" PRICE="172.35" BRAND_NAME=""></product>
-    <product ID="6" INGREDIENT_ID="6" VOLUME="1" PRICE="254" BRAND_NAME=""></product>
-    <product ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119" BRAND_NAME=""></product>
+    <bottle ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120" BRAND_NAME="" AVAILABLE="1" IMAGE_URL="http://vodka.first.jpg"></bottle>
+    <bottle ID="2" INGREDIENT_ID="2" VOLUME="0.75" PRICE="140" BRAND_NAME="" AVAILABLE="1"></bottle>
+    <bottle ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5" BRAND_NAME="" AVAILABLE="1"></bottle>
+    <bottle ID="4" INGREDIENT_ID="4" VOLUME="1" PRICE="178" BRAND_NAME="" AVAILABLE="1"></bottle>
+    <bottle ID="5" INGREDIENT_ID="8" VOLUME="0.5" PRICE="172.35" BRAND_NAME="" AVAILABLE="1"></bottle>
+    <bottle ID="6" INGREDIENT_ID="6" VOLUME="1" PRICE="254" BRAND_NAME="" AVAILABLE="1"></bottle>
+    <bottle ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119" BRAND_NAME="Havana Club" AVAILABLE="0" IMAGE_URL="http://rum.last.jpg"></bottle>
 
     <!-- history -->
     <orders ID="1" USER_ID="6" COCKTAIL_ID="1" SOLD="2013-08-16" IS_DONE="PREPARED" AMOUNT="3"></orders>

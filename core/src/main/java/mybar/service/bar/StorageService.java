@@ -1,15 +1,16 @@
 package mybar.service.bar;
 
-import mybar.api.bar.IProduct;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import mybar.api.bar.IBottle;
 import mybar.domain.EntityFactory;
-import mybar.domain.bar.Product;
-import mybar.repository.bar.StorageDao;
+import mybar.domain.bar.Bottle;
+import mybar.repository.bar.BottleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,27 +18,27 @@ import java.util.List;
 public class StorageService {
 
     @Autowired
-    private StorageDao storageDao;
+    private BottleDao bottleDao;
 
     // kind of caching :)
-    private List<Product> all;
+    private List<Bottle> all;
     private boolean shouldUpdate;
 
-    public IProduct findById(int id) {
+    public IBottle findById(int id) {
         if (all != null) {
-            for (Product p : all) {
+            for (Bottle p : all) {
                 if (p.getId() == id) {
-                    return p;
+                    return p.toDto();
                 }
             }
         }
-        return storageDao.read(id);
+        return bottleDao.read(id).toDto();
     }
 
-    public boolean saveBottle(IProduct product) {
-        Product entity = null;
+    public boolean saveBottle(IBottle bottle) {
+        Bottle entity = null;
         try {
-            entity = storageDao.create(EntityFactory.from(product));
+            entity = bottleDao.create(EntityFactory.from(bottle));
         } catch (EntityExistsException e) {
             return false;
         }
@@ -45,32 +46,37 @@ public class StorageService {
         return true;
     }
 
-    public void updateBottle(IProduct product) {
-        Product entity = storageDao.update(EntityFactory.from(product));
+    public void updateBottle(IBottle bottle) {
+        Bottle entity = bottleDao.update(EntityFactory.from(bottle));
         if (entity.getId() != 0) {
             shouldUpdate = true;
         }
     }
 
     public void deleteBottleById(int id) {
-        storageDao.delete(id);
-        for (Product p : all) {
+        bottleDao.delete(id);
+        for (Bottle p : all) {
             if (p.getId() == id) {
                 all.remove(p);
                 break;
             }
         }
-}
+    }
 
-    public List<IProduct> findAllBottles() {
+    public List<IBottle> findAllBottles() {
         if (all == null || shouldUpdate) {
-            all = storageDao.findAll();
+            all = bottleDao.findAll();
         }
-        return new ArrayList<IProduct>(all);
+        return Lists.transform(all, new Function<Bottle, IBottle>() {
+            @Override
+            public IBottle apply(Bottle bottle) {
+                return bottle.toDto();
+            }
+        });
     }
 
     public int deleteAllBottles() {
-        return storageDao.destroyAll();
+        return bottleDao.destroyAll();
     }
 
 }

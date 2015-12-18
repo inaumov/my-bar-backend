@@ -1,10 +1,10 @@
 package mybar.api.bar;
 
-public interface IProduct {
+public interface IBottle {
 
     int getId();
 
-    <T extends IIngredient> T getIngredient();
+    IBeverage getBeverage();
 
     String getBrandName();
 
@@ -12,5 +12,8 @@ public interface IProduct {
 
     double getPrice();
 
+    boolean isInShelf();
+
+    String getImageUrl();
 
 }

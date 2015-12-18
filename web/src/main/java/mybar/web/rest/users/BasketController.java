@@ -45,7 +45,7 @@ public class BasketController {
     public double totalPerCocktail(Cocktail cocktail) {
         double sum = 0;
         try {
-            sum = count(cocktail) * cocktail.getPrice();
+            //sum = count(cocktail) * cocktail.getPrice();
         } catch (NullPointerException e) {
             return sum;
         }
