@@ -2,6 +2,7 @@ package mybar.domain.bar;
 
 import mybar.State;
 import mybar.api.bar.IBottle;
+import mybar.domain.bar.ingredient.Beverage;
 import mybar.dto.bar.BottleDto;
 import mybar.util.ModelMapperConverters;
 import org.modelmapper.ModelMapper;

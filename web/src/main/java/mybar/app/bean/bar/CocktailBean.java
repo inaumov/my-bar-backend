@@ -3,6 +3,9 @@ package mybar.app.bean.bar;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.State;
 import mybar.api.bar.*;
+import mybar.api.bar.ingredient.IAdditive;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.api.bar.ingredient.IDrink;
 
 import java.util.*;
 

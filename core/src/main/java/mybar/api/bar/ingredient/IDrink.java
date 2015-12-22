@@ -1,4 +1,4 @@
-package mybar.api.bar;
+package mybar.api.bar.ingredient;
 
 import mybar.DrinkType;
 

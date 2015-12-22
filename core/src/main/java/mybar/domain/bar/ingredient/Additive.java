@@ -1,6 +1,6 @@
-package mybar.domain.bar;
+package mybar.domain.bar.ingredient;
 
-import mybar.api.bar.IAdditive;
+import mybar.api.bar.ingredient.IAdditive;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

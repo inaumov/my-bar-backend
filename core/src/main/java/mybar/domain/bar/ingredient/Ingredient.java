@@ -1,6 +1,6 @@
-package mybar.domain.bar;
+package mybar.domain.bar.ingredient;
 
-import mybar.api.bar.IIngredient;
+import mybar.api.bar.ingredient.IIngredient;
 
 import javax.persistence.*;
 

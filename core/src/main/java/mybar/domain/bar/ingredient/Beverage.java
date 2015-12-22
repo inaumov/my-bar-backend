@@ -1,7 +1,8 @@
-package mybar.domain.bar;
+package mybar.domain.bar.ingredient;
 
 import mybar.BeverageType;
-import mybar.api.bar.IBeverage;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.domain.bar.Bottle;
 
 import javax.persistence.*;
 import java.util.List;

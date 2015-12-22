@@ -1,7 +1,7 @@
 package mybar.dto.bar;
 
 import mybar.BeverageType;
-import mybar.api.bar.IBeverage;
+import mybar.api.bar.ingredient.IBeverage;
 
 public class BeverageDto implements IBeverage {
 

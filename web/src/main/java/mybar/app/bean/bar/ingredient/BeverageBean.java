@@ -1,8 +1,9 @@
-package mybar.app.bean.bar;
+package mybar.app.bean.bar.ingredient;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.BeverageType;
-import mybar.api.bar.IBeverage;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.app.bean.bar.View;
 
 public class BeverageBean implements IBeverage {
 

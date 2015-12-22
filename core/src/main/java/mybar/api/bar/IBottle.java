@@ -1,5 +1,7 @@
 package mybar.api.bar;
 
+import mybar.api.bar.ingredient.IBeverage;
+
 public interface IBottle {
 
     int getId();

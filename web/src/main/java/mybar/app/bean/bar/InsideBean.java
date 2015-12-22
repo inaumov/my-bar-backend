@@ -3,6 +3,13 @@ package mybar.app.bean.bar;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.UnitsValue;
 import mybar.api.bar.*;
+import mybar.api.bar.ingredient.IAdditive;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.api.bar.ingredient.IDrink;
+import mybar.api.bar.ingredient.IIngredient;
+import mybar.app.bean.bar.ingredient.AdditiveBean;
+import mybar.app.bean.bar.ingredient.BeverageBean;
+import mybar.app.bean.bar.ingredient.DrinkBean;
 
 public class InsideBean implements IInside {
 

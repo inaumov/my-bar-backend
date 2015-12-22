@@ -2,6 +2,7 @@ package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.bar.IBottle;
+import mybar.app.bean.bar.ingredient.BeverageBean;
 import org.modelmapper.ModelMapper;
 
 public class BottleBean implements IBottle {

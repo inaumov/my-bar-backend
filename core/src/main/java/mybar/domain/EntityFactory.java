@@ -2,8 +2,16 @@ package mybar.domain;
 
 import mybar.State;
 import mybar.api.bar.*;
+import mybar.api.bar.ingredient.IAdditive;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.api.bar.ingredient.IDrink;
+import mybar.api.bar.ingredient.IIngredient;
 import mybar.api.history.IOrder;
 import mybar.domain.bar.*;
+import mybar.domain.bar.ingredient.Additive;
+import mybar.domain.bar.ingredient.Beverage;
+import mybar.domain.bar.ingredient.Drink;
+import mybar.domain.bar.ingredient.Ingredient;
 import mybar.domain.history.Order;
 
 public class EntityFactory {

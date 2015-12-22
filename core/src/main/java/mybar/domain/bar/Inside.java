@@ -1,8 +1,9 @@
 package mybar.domain.bar;
 
 import mybar.UnitsValue;
-import mybar.api.bar.IIngredient;
+import mybar.api.bar.ingredient.IIngredient;
 import mybar.api.bar.IInside;
+import mybar.domain.bar.ingredient.Ingredient;
 
 import javax.persistence.*;
 

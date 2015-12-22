@@ -1,8 +1,9 @@
-package mybar.app.bean.bar;
+package mybar.app.bean.bar.ingredient;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.DrinkType;
-import mybar.api.bar.IDrink;
+import mybar.api.bar.ingredient.IDrink;
+import mybar.app.bean.bar.View;
 
 public class DrinkBean implements IDrink {
 
