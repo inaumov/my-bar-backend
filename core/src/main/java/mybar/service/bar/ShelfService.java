@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class StorageService {
+public class ShelfService {
 
     @Autowired
     private BottleDao bottleDao;

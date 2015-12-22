@@ -5,20 +5,16 @@ import mybar.api.bar.IIngredient;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ingredient")
+@Table(name = "INGREDIENT")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "ENTITY")
+@DiscriminatorColumn(name = "GROUP_NAME")
 public class Ingredient implements IIngredient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "KIND")
-    private String name;
-
-/*    @OneToMany(mappedBy = "ingredient", fetch = FetchType.EAGER)
-    private List<Bottle> products;*/
+    private String kind;
 
     public int getId() {
         return id;
@@ -30,11 +26,11 @@ public class Ingredient implements IIngredient {
 
     @Override
     public String getKind() {
-        return name;
+        return kind;
     }
 
-    public void setKind(String name) {
-        this.name = name;
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
 }

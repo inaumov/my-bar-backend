@@ -44,24 +44,24 @@
     <cocktail ID="11" MENU_ID="2" NAME="Sex on the beach" AVAILABLE="1"></cocktail>
     <cocktail ID="12" MENU_ID="3" NAME="Banana Blast II" AVAILABLE="1"></cocktail>
 
-    <ingredient ID="1" ENTITY="Beverage" KIND="Vodka" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="2" ENTITY="Beverage" KIND="Gin" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="3" ENTITY="Beverage" KIND="Rum" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="4" ENTITY="Beverage" KIND="Tequila" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="5" ENTITY="Beverage" KIND="Bourbon" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="6" ENTITY="Beverage" KIND="Whisky" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="7" ENTITY="Beverage" KIND="Brandy" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="8" ENTITY="Beverage" KIND="Triple Sec" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="9" ENTITY="Beverage" KIND="Maraschino liqueur" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="10" ENTITY="Beverage" KIND="Banana liqueur" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="11" ENTITY="Beverage" KIND="Irish cream" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="12" ENTITY="Additional" KIND="Grenadine" TYPE="1"></ingredient>
-    <ingredient ID="13" ENTITY="Drink" KIND="Orange Juice" TYPE="JUICE"></ingredient>
-    <ingredient ID="14" ENTITY="Additional" KIND="Ice" TYPE="1"></ingredient>
-    <ingredient ID="15" ENTITY="Additional" KIND="Sugar" TYPE="1"></ingredient>
-    <ingredient ID="16" ENTITY="Beverage" KIND="Coffee liqueur" TYPE="DISTILLED"></ingredient>
-    <ingredient ID="17" ENTITY="Drink" KIND="Coca Cola" TYPE="SODA"></ingredient>
-    <ingredient ID="18" ENTITY="Additional" KIND="Lime" TYPE="2"></ingredient>
+    <ingredient ID="1" GROUP_NAME="Beverage" KIND="Vodka" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="2" GROUP_NAME="Beverage" KIND="Gin" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="3" GROUP_NAME="Beverage" KIND="Rum" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="4" GROUP_NAME="Beverage" KIND="Tequila" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="5" GROUP_NAME="Beverage" KIND="Bourbon" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="6" GROUP_NAME="Beverage" KIND="Whisky" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="7" GROUP_NAME="Beverage" KIND="Brandy" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="8" GROUP_NAME="Beverage" KIND="Triple Sec" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="9" GROUP_NAME="Beverage" KIND="Maraschino liqueur" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="10" GROUP_NAME="Beverage" KIND="Banana liqueur" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="11" GROUP_NAME="Beverage" KIND="Irish cream" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="12" GROUP_NAME="Additive" KIND="Grenadine" TYPE="1"></ingredient>
+    <ingredient ID="13" GROUP_NAME="Drink" KIND="Orange Juice" TYPE="JUICE"></ingredient>
+    <ingredient ID="14" GROUP_NAME="Additive" KIND="Ice" TYPE="1"></ingredient>
+    <ingredient ID="15" GROUP_NAME="Additive" KIND="Sugar" TYPE="1"></ingredient>
+    <ingredient ID="16" GROUP_NAME="Beverage" KIND="Coffee liqueur" TYPE="DISTILLED"></ingredient>
+    <ingredient ID="17" GROUP_NAME="Drink" KIND="Coca Cola" TYPE="SODA"></ingredient>
+    <ingredient ID="18" GROUP_NAME="Additive" KIND="Lime" TYPE="2"></ingredient>
 
     <inside ID="1" COCKTAIL_ID="1" INGREDIENT_ID="8" VOLUME="20" UNITS="ML"></inside>
     <inside ID="2" COCKTAIL_ID="1" INGREDIENT_ID="11" VOLUME="20" UNITS="ML"></inside>
@@ -81,9 +81,9 @@
     <inside ID="16" COCKTAIL_ID="5" INGREDIENT_ID="14" VOLUME="5" UNITS="PCS"></inside>
     <inside ID="17" COCKTAIL_ID="5" INGREDIENT_ID="15" VOLUME="5" UNITS="PCS"></inside>
 
-    <bottle ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120" BRAND_NAME="" AVAILABLE="1" IMAGE_URL="http://vodka.first.jpg"></bottle>
+    <bottle ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120" BRAND_NAME="Absolute" AVAILABLE="1" IMAGE_URL="http://vodka.first.jpg"></bottle>
     <bottle ID="2" INGREDIENT_ID="2" VOLUME="0.75" PRICE="140" BRAND_NAME="" AVAILABLE="1"></bottle>
-    <bottle ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5" BRAND_NAME="" AVAILABLE="1"></bottle>
+    <bottle ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5" BRAND_NAME="Bacardi" AVAILABLE="1"></bottle>
     <bottle ID="4" INGREDIENT_ID="4" VOLUME="1" PRICE="178" BRAND_NAME="" AVAILABLE="1"></bottle>
     <bottle ID="5" INGREDIENT_ID="8" VOLUME="0.5" PRICE="172.35" BRAND_NAME="" AVAILABLE="1"></bottle>
     <bottle ID="6" INGREDIENT_ID="6" VOLUME="1" PRICE="254" BRAND_NAME="" AVAILABLE="1"></bottle>

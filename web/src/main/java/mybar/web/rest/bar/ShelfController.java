@@ -1,8 +1,11 @@
 package mybar.web.rest.bar;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import mybar.api.bar.IBottle;
 import mybar.app.bean.bar.BottleBean;
-import mybar.service.bar.StorageService;
+import mybar.app.bean.bar.View;
+import mybar.service.bar.ShelfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +13,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,21 +26,28 @@ public class ShelfController {
     private Logger logger = LoggerFactory.getLogger(ShelfController.class);
 
     @Autowired
-    private StorageService storageService;
+    private ShelfService shelfService;
 
     //-------------------Retrieve All Bottles--------------------------------------------------------
 
     @RequestMapping(value = "/bottles", method = RequestMethod.GET)
     public ResponseEntity<List<BottleBean>> listAllBottles() {
-        List<IBottle> allBottles = storageService.findAllBottles();
+
+        List<IBottle> allBottles = shelfService.findAllBottles();
         if (allBottles.isEmpty()) {
             return new ResponseEntity<List<BottleBean>>(HttpStatus.NOT_FOUND);
         }
-        List<BottleBean> beans = new ArrayList<>();
-        for (IBottle bottle : allBottles) {
-            beans.add(BottleBean.from(bottle));
-        }
-        return new ResponseEntity<List<BottleBean>>(beans, HttpStatus.OK);
+
+        List<BottleBean> beans = Lists.transform(allBottles, new Function<IBottle, BottleBean>() {
+            @Override
+            public BottleBean apply(IBottle bottle) {
+                return BottleBean.from(bottle);
+            }
+        });
+
+        MappingJacksonValue wrapper = new MappingJacksonValue(beans);
+        wrapper.setSerializationView(View.Shelf.class);
+        return new ResponseEntity(wrapper, HttpStatus.OK);
     }
 
     //-------------------Retrieve a Bottle--------------------------------------------------------
@@ -45,7 +55,7 @@ public class ShelfController {
     @RequestMapping(value = "/bottles/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BottleBean> getBottle(@PathVariable("id") int id) {
         logger.info("Fetching Bottle with id " + id);
-        IBottle bottle = storageService.findById(id);
+        IBottle bottle = shelfService.findById(id);
         if (bottle == null) {
             logger.info("Bottle with id " + id + " not found");
             return new ResponseEntity<BottleBean>(HttpStatus.NOT_FOUND);
@@ -57,11 +67,11 @@ public class ShelfController {
 
     @RequestMapping(value = "/bottles", method = RequestMethod.POST)
     public ResponseEntity<Void> createBottle(@RequestBody BottleBean bottleBean, UriComponentsBuilder ucBuilder) {
-        logger.info("Creating a Bottle " + bottleBean.getBeverageId());
-
-        boolean saved = storageService.saveBottle(bottleBean);
+        logger.info("Creating a Bottle " + bottleBean.getBeverage().getId());
+        // TODO check this
+        boolean saved = shelfService.saveBottle(bottleBean);
         if (!saved) {
-            logger.info("A Bottle " + bottleBean.getBeverageId() + " already exists");
+            logger.info("A Bottle " + bottleBean.getBeverage().getId() + " already exists");
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
 
@@ -75,15 +85,16 @@ public class ShelfController {
     @RequestMapping(value = "/bottles/{id}", method = RequestMethod.PUT)
     public ResponseEntity<BottleBean> updateBottle(@PathVariable("id") int id, @RequestBody BottleBean bottleBean) {
         logger.info("Updating Bottle " + id);
+        // TODO check this
 
-        IBottle bottle = storageService.findById(id);
+        IBottle bottle = shelfService.findById(id);
 
         if (bottle == null) {
             logger.info("Bottle with id " + id + " not found");
             return new ResponseEntity<BottleBean>(HttpStatus.NOT_FOUND);
         }
 
-        storageService.updateBottle(bottleBean);
+        shelfService.updateBottle(bottleBean);
         return new ResponseEntity<BottleBean>(bottleBean, HttpStatus.OK);
     }
 
@@ -93,13 +104,13 @@ public class ShelfController {
     public ResponseEntity<BottleBean> deleteBottle(@PathVariable("id") int id) {
         logger.info("Fetching & Deleting Bottle with id " + id);
 
-        IBottle bottle = storageService.findById(id);
+        IBottle bottle = shelfService.findById(id);
         if (bottle == null) {
             logger.info("Unable to delete. Bottle with id " + id + " not found");
             return new ResponseEntity<BottleBean>(HttpStatus.NOT_FOUND);
         }
 
-        storageService.deleteBottleById(id);
+        shelfService.deleteBottleById(id);
         return new ResponseEntity<BottleBean>(HttpStatus.NO_CONTENT);
     }
 
@@ -109,8 +120,7 @@ public class ShelfController {
     public ResponseEntity<BottleBean> deleteAllBottles() {
         logger.info("Deleting All Bottles");
 
-        int numberOfBottles = storageService.deleteAllBottles();
-        // todo return number
+        shelfService.deleteAllBottles();
         return new ResponseEntity<BottleBean>(HttpStatus.NO_CONTENT);
     }
 

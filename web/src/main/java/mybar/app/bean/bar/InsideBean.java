@@ -63,8 +63,8 @@ public class InsideBean implements IInside {
             bean.setIngredient(BeverageBean.from((IBeverage) ingredient));
         } else if (ingredient instanceof IDrink) {
             bean.setIngredient(DrinkBean.from((IDrink) ingredient));
-        } else if (ingredient instanceof IAdditional) {
-            bean.setIngredient(AdditionalBean.from((IAdditional) ingredient));
+        } else if (ingredient instanceof IAdditive) {
+            bean.setIngredient(AdditiveBean.from((IAdditive) ingredient));
         }
         bean.setUnitsValue(inside.getUnitsValue());
         bean.setVolume(inside.getVolume());

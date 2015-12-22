@@ -1,12 +1,11 @@
 package mybar.dto.bar;
 
-import mybar.api.bar.IBeverage;
 import mybar.api.bar.IBottle;
 
 public class BottleDto implements IBottle {
 
     private int id;
-    private IBeverage beverage;
+    private BeverageDto beverage;
     private String brandName;
     private double volume;
     private double price;
@@ -23,12 +22,12 @@ public class BottleDto implements IBottle {
     }
 
     @Override
-    public IBeverage getBeverage() {
+    public BeverageDto getBeverage() {
         return beverage;
     }
 
-    public void setBeverage(IBeverage ingredient) {
-        this.beverage = ingredient;
+    public void setBeverage(BeverageDto beverage) {
+        this.beverage = beverage;
     }
 
     @Override

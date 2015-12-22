@@ -1,8 +1,11 @@
 package mybar.repository.bar;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import mybar.BeverageType;
 import mybar.State;
+import mybar.domain.bar.Beverage;
 import mybar.domain.bar.Bottle;
-import mybar.domain.bar.Ingredient;
 import mybar.repository.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,42 @@ public class BottleDaoTest extends BaseDaoTest {
     @Test
     public void testReadById() {
         Bottle bottle = bottleDao.read(1);
-        assertTrue(bottle.getBrandName().equals(""));
+        assertTrue(bottle.getBrandName().equals("Absolute"));
+    }
+
+    @Test
+    public void testBeverageRelatedToBottle() {
+        Bottle bottle = bottleDao.read(1);
+        assertEquals(bottle.getBeverage().getId(), 1);
+        assertEquals(bottle.getBeverage().getKind(), "Vodka");
+        assertEquals(bottle.getBeverage().getBeverageType(), BeverageType.DISTILLED);
+    }
+
+    @Test
+    public void testGetBottlesByBeverage() {
+
+        Bottle bottle = bottleDao.read(3);
+        assertEquals(bottle.getBeverage().getId(), 3);
+        assertEquals(bottle.getBeverage().getKind(), "Rum");
+        assertEquals(bottle.getBeverage().getBeverageType(), BeverageType.DISTILLED);
+
+        List<Bottle> bottlesByBeverage = bottle.getBeverage().getBottles();
+        assertEquals(2, bottlesByBeverage.size());
+
+        Bottle first = Iterables.find(bottlesByBeverage, new Predicate<Bottle>() {
+            @Override
+            public boolean apply(Bottle bottle) {
+                return bottle.getBrandName().equals("Bacardi");
+            }
+        });
+        assertNotNull(first);
+        Bottle second = Iterables.find(bottlesByBeverage, new Predicate<Bottle>() {
+            @Override
+            public boolean apply(Bottle bottle) {
+                return bottle.getBrandName().equals("Havana Club");
+            }
+        });
+        assertNotNull(second);
     }
 
     @Test
@@ -43,8 +81,8 @@ public class BottleDaoTest extends BaseDaoTest {
         bottle.setPrice(289);
         bottle.setState(State.AVAILABLE);
         bottle.setImageUrl("http://whiskey.last.jpg");
-        Ingredient ingredientRef = em.getReference(Ingredient.class, 6);
-        bottle.setIngredient(ingredientRef);
+        Beverage beverageRef = em.getReference(Beverage.class, 6);
+        bottle.setBeverage(beverageRef);
 
         Bottle saved = bottleDao.create(bottle);
         assertFalse(saved.getId() == 0);
@@ -61,9 +99,9 @@ public class BottleDaoTest extends BaseDaoTest {
         assertLast(bottle);
 
         // update retrieved bottle
-        Ingredient ingredient = new Ingredient();
-        ingredient.setId(6);
-        bottle.setIngredient(ingredient);
+        Beverage beverage = new Beverage();
+        beverage.setId(6);
+        bottle.setBeverage(beverage);
         bottle.setBrandName("Johny Walker");
         bottle.setPrice(289);
         bottle.setState(State.AVAILABLE);
@@ -72,7 +110,7 @@ public class BottleDaoTest extends BaseDaoTest {
         // assert updated bottle
         Bottle updated = bottleDao.update(bottle);
         assertEquals("Johny Walker", updated.getBrandName());
-        assertEquals(6, updated.getIngredient().getId());
+        assertEquals(6, updated.getBeverage().getId());
         assertEquals(State.AVAILABLE, updated.getState());
         assertTrue(updated.getImageUrl().contains("whiskey"));
     }
@@ -94,7 +132,7 @@ public class BottleDaoTest extends BaseDaoTest {
 
     private void assertLast(Bottle bottle) {
         assertEquals(7, bottle.getId());
-        assertEquals(3, bottle.getIngredient().getId());
+        assertEquals(3, bottle.getBeverage().getId());
         assertEquals("Havana Club", bottle.getBrandName());
         assertEquals(0.5, bottle.getVolume(), 0);
         assertEquals(119, bottle.getPrice(), 0);

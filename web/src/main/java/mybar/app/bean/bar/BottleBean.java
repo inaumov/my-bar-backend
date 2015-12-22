@@ -1,15 +1,30 @@
 package mybar.app.bean.bar;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.bar.IBottle;
+import org.modelmapper.ModelMapper;
 
 public class BottleBean implements IBottle {
 
+    @JsonView(View.Shelf.class)
     private int id;
+
+    @JsonView(View.Shelf.class)
     private BeverageBean beverage;
+
+    @JsonView(View.Shelf.class)
     private String brandName;
+
+    @JsonView(View.Shelf.class)
     private double volume;
+
+    @JsonView(View.Shelf.class)
     private double price;
+
+    @JsonView(View.Shelf.class)
     private boolean inShelf;
+
+    @JsonView(View.Shelf.class)
     private String imageUrl;
 
     @Override
@@ -76,15 +91,8 @@ public class BottleBean implements IBottle {
     }
 
     public static BottleBean from(IBottle bottle) {
-        BottleBean bean = new BottleBean();
-        bean.setId(bottle.getId());
-        bean.setBeverage(bottle.getBeverage());
-        bean.setBrandName(bottle.getBrandName());
-        bean.setVolume(bottle.getVolume());
-        bean.setPrice(bottle.getPrice());
-        bean.setInShelf(bottle.isInShelf());
-        bean.setImageUrl(bottle.getImageUrl());
-        return bean;
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(bottle, BottleBean.class);
     }
 
 }

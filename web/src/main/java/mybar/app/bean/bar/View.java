@@ -10,4 +10,8 @@ public class View {
 
     public interface CocktailWithDetails extends Cocktail {
     }
+
+    public interface Shelf {
+    }
+
 }

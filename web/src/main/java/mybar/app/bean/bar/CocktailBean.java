@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import mybar.State;
 import mybar.api.bar.*;
 
-import java.sql.Blob;
 import java.util.*;
 
 public class CocktailBean implements ICocktail {
@@ -107,7 +106,7 @@ public class CocktailBean implements ICocktail {
                 bean.addBeverage(insideBean);
             } else if (inside.getIngredient() instanceof IDrink) {
                 bean.addDrink(insideBean);
-            } else if (inside.getIngredient() instanceof IAdditional) {
+            } else if (inside.getIngredient() instanceof IAdditive) {
                 bean.addAdditional(insideBean);
             }
         }
@@ -125,7 +124,7 @@ public class CocktailBean implements ICocktail {
     }
 
     private void addAdditional(InsideBean inside) {
-        addInside("additional", inside);
+        addInside("additive", inside);
     }
 
     private void addInside(String key, InsideBean inside) {

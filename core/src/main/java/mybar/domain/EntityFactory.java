@@ -38,8 +38,8 @@ public class EntityFactory {
             entity.setIngredient(from((IBeverage) ingredient));
         } else if (ingredient instanceof IDrink) {
             entity.setIngredient(from((IDrink) ingredient));
-        } else if (ingredient instanceof IAdditional) {
-            entity.setIngredient(from((IAdditional) ingredient));
+        } else if (ingredient instanceof IAdditive) {
+            entity.setIngredient(from((IAdditive) ingredient));
         }
         return entity;
     }
@@ -60,10 +60,10 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Ingredient from(final IAdditional additional) {
-        Additional entity = new Additional();
-        entity.setId(additional.getId());
-        entity.setKind(additional.getKind());
+    public static final Ingredient from(final IAdditive additive) {
+        Additive entity = new Additive();
+        entity.setId(additive.getId());
+        entity.setKind(additive.getKind());
         return entity;
     }
 
@@ -73,7 +73,7 @@ public class EntityFactory {
         entity.setVolume(bottle.getVolume());
         entity.setPrice(bottle.getPrice());
         entity.setBrandName(bottle.getBrandName());
-        entity.setIngredient(new Beverage(bottle.getBeverageId()));
+        entity.setBeverage(new Beverage(bottle.getBeverage().getId()));
         entity.setState(bottle.isInShelf() ? State.AVAILABLE : State.NOT_AVAILABLE);
         entity.setImageUrl(bottle.getImageUrl());
         return entity;

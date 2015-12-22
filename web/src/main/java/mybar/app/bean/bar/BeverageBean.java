@@ -6,11 +6,11 @@ import mybar.api.bar.IBeverage;
 
 public class BeverageBean implements IBeverage {
 
-    @JsonView(View.CocktailWithDetails.class)
+    @JsonView({View.CocktailWithDetails.class, View.Shelf.class})
     private int id;
 
     @JsonView(View.CocktailWithDetails.class)
-    private String name;
+    private String kind;
 
     private BeverageType beverageType;
 
@@ -25,11 +25,11 @@ public class BeverageBean implements IBeverage {
 
     @Override
     public String getKind() {
-        return name;
+        return kind;
     }
 
-    public void setKind(String name) {
-        this.name = name;
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     @Override

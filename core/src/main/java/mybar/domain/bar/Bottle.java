@@ -3,11 +3,14 @@ package mybar.domain.bar;
 import mybar.State;
 import mybar.api.bar.IBottle;
 import mybar.dto.bar.BottleDto;
+import mybar.util.ModelMapperConverters;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "BOTTLE")
 @SequenceGenerator(name = "BOTTLE_SEQUENCE", sequenceName = "BOTTLE_SEQUENCE", allocationSize = 3, initialValue = 1)
 public class Bottle {
 
@@ -17,7 +20,7 @@ public class Bottle {
 
     @ManyToOne
     @JoinColumn(name = "INGREDIENT_ID")
-    public Ingredient ingredient;
+    public Beverage beverage;
 
     @Column(name = "BRAND_NAME")
     private String brandName;
@@ -43,12 +46,12 @@ public class Bottle {
         this.id = id;
     }
 
-    public Ingredient getIngredient() {
-        return ingredient;
+    public Beverage getBeverage() {
+        return beverage;
     }
 
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
+    public void setBeverage(Beverage beverage) {
+        this.beverage = beverage;
     }
 
     public String getBrandName() {
@@ -92,7 +95,17 @@ public class Bottle {
     }
 
     public IBottle toDto() {
+
+        PropertyMap<Bottle, BottleDto> inShelfMap = new PropertyMap<Bottle, BottleDto>() {
+            @Override
+            protected void configure() {
+                using(ModelMapperConverters.STATE_CONVERTER).map().setInShelf(source.getState() == State.AVAILABLE);
+            }
+        };
+
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(inShelfMap);
+
         return modelMapper.map(this, BottleDto.class);
     }
 
