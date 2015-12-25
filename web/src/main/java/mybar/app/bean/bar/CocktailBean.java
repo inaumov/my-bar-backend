@@ -6,6 +6,7 @@ import mybar.api.bar.*;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
+import org.modelmapper.ModelMapper;
 
 import java.util.*;
 
@@ -45,17 +46,22 @@ public class CocktailBean implements ICocktail {
         return name;
     }
 
+    @Override
+    public Map<String, ? extends Collection<? extends IInside>> getInsides() {
+        return insides;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public Collection<InsideBean> getIngredients() {
+    public Map getInsideList() {
         Collection<List<InsideBean>> lists = insides.values();
         List<InsideBean> beans = new ArrayList<>();
         for (List<InsideBean> insides : lists) {
             beans.addAll(insides);
         }
-        return beans;
+        return (Map) beans;
     }
 
     public void setIngredients(Collection<InsideBean> ingredients) {
@@ -99,11 +105,11 @@ public class CocktailBean implements ICocktail {
     }
 
     public static CocktailBean from(ICocktail cocktail) {
-        CocktailBean bean = new CocktailBean();
+/*        CocktailBean bean = new CocktailBean();
         bean.setId(cocktail.getId());
         bean.setName(cocktail.getName());
         bean.setDescription(cocktail.getDescription());
-        for (IInside inside : cocktail.getIngredients()) {
+        for (IInside inside : cocktail.getInsideList()) {
             InsideBean insideBean = InsideBean.from(inside);
             if (inside.getIngredient() instanceof IBeverage) {
                 bean.addBeverage(insideBean);
@@ -115,7 +121,9 @@ public class CocktailBean implements ICocktail {
         }
         bean.setState(cocktail.getState());
         bean.setCover(cocktail.getImageUrl());
-        return bean;
+        return bean;*/
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(cocktail, CocktailBean.class);
     }
 
     private void addBeverage(InsideBean inside) {

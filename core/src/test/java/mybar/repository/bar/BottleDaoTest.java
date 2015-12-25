@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import mybar.BeverageType;
 import mybar.State;
-import mybar.domain.bar.Beverage;
+import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.Bottle;
 import mybar.repository.BaseDaoTest;
 import org.junit.Test;

@@ -28,9 +28,11 @@ public class EntityFactory {
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
         entity.setDescription(cocktail.getDescription());
-        for (IInside ingredient : cocktail.getIngredients()) {
-            entity.getIngredients().add(from(ingredient));
+/*
+        for (IInside ingredient : cocktail.getInsideList()) {
+            entity.getInsideList().add(from(ingredient));
         }
+*/
         entity.setState(cocktail.getState());
         //entity.setMenu(from(cocktail.getMenu()));
         return entity;
@@ -38,17 +40,17 @@ public class EntityFactory {
 
     public static final Inside from(final IInside inside) {
         Inside entity = new Inside();
-        entity.setId(inside.getId());
+        //entity.setId(inside.getId());
         entity.setUnitsValue(inside.getUnitsValue());
         entity.setVolume(inside.getVolume());
-        IIngredient ingredient = inside.getIngredient();
+/*        IIngredient ingredient = inside.getIngredient();
         if (ingredient instanceof IBeverage) {
             entity.setIngredient(from((IBeverage) ingredient));
         } else if (ingredient instanceof IDrink) {
             entity.setIngredient(from((IDrink) ingredient));
         } else if (ingredient instanceof IAdditive) {
             entity.setIngredient(from((IAdditive) ingredient));
-        }
+        }*/
         return entity;
     }
 

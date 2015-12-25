@@ -1,6 +1,7 @@
 package mybar.dto.bar;
 
 import mybar.api.bar.IBottle;
+import mybar.dto.bar.ingredient.BeverageDto;
 
 public class BottleDto implements IBottle {
 
@@ -9,7 +10,7 @@ public class BottleDto implements IBottle {
     private String brandName;
     private double volume;
     private double price;
-    private boolean inShelf;
+    private Boolean inShelf;
     private String imageUrl;
 
     @Override
@@ -62,7 +63,7 @@ public class BottleDto implements IBottle {
         return inShelf;
     }
 
-    public void setInShelf(boolean inShelf) {
+    public void setInShelf(Boolean inShelf) {
         this.inShelf = inShelf;
     }
 

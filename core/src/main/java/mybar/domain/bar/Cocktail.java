@@ -2,13 +2,22 @@ package mybar.domain.bar;
 
 import mybar.State;
 import mybar.api.bar.ICocktail;
+import mybar.api.bar.IInside;
+import mybar.domain.bar.ingredient.Additive;
+import mybar.domain.bar.ingredient.Beverage;
+import mybar.domain.bar.ingredient.Drink;
+import mybar.dto.bar.CocktailDto;
+import mybar.dto.bar.InsideDto;
+import mybar.util.ModelMapperConverters;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.*;
 
 @Entity
 @SequenceGenerator(name = "COCKTAIL_SEQUENCE", sequenceName = "COCKTAIL_SEQUENCE", allocationSize = 3, initialValue = 1)
-public class Cocktail implements ICocktail {
+public class Cocktail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COCKTAIL_SEQUENCE")
@@ -22,7 +31,7 @@ public class Cocktail implements ICocktail {
     private Menu menu;
 
     @OneToMany(mappedBy = "cocktail", fetch = FetchType.EAGER) // TODO: fetch lazily
-    private Collection<Inside> ingredients;
+    private Collection<Inside> insideList;
 
     @Column(name = "DESCRIPTION", nullable = true)
     private String description;
@@ -34,7 +43,6 @@ public class Cocktail implements ICocktail {
     @Column(name = "IMAGE_URL", nullable = true)
     private String imageUrl;
 
-    @Override
     public int getId() {
         return id;
     }
@@ -43,7 +51,6 @@ public class Cocktail implements ICocktail {
         this.id = id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -52,20 +59,14 @@ public class Cocktail implements ICocktail {
         this.name = name;
     }
 
-    public Collection<Inside> getIngredients() {
-        return ingredients;
+    public Collection<Inside> getInsideList() {
+        return insideList;
     }
 
-    public void setIngredients(Collection<Inside> ingredients) {
-        this.ingredients = ingredients;
+    public void setInsideList(Collection<Inside> insideList) {
+        this.insideList = insideList;
     }
 
-    @Override
-    public int getMenuId() {
-        return menu.getId();
-    }
-
-    @Override
     public String getDescription() {
         return description;
     }
@@ -82,7 +83,6 @@ public class Cocktail implements ICocktail {
         this.menu = menu;
     }
 
-    @Override
     public State getState() {
         return state;
     }
@@ -91,13 +91,61 @@ public class Cocktail implements ICocktail {
         this.state = state;
     }
 
-    @Override
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public ICocktail toDto() {
+
+        PropertyMap<Cocktail, CocktailDto> insidesMap = new PropertyMap<Cocktail, CocktailDto>() {
+
+            final Map<String, List<InsideDto>> insides = new HashMap<>();
+
+            @Override
+            protected void configure() {
+/*                for (Inside inside : source.getInsideList()) {
+                    InsideDto dto = new ModelMapper().map(inside, InsideDto.class);
+                    if (inside.getIngredient() instanceof Beverage) {
+                        this.addBeverage(dto);
+                    } else if (inside.getIngredient() instanceof Drink) {
+                        this.addDrink(dto);
+                    } else if (inside.getIngredient() instanceof Additive) {
+                        this.addAdditional(dto);
+                    }
+                }*/
+
+                using(ModelMapperConverters.INSIDES_CONVERTER).map(source.getInsideList()).setInsides(null);
+                map().setMenuId(source.getMenu().getId());
+            }
+
+            private void addBeverage(InsideDto inside) {
+                addInside("beverages", inside);
+            }
+
+            private void addDrink(InsideDto inside) {
+                addInside("drinks", inside);
+            }
+
+            private void addAdditional(InsideDto inside) {
+                addInside("additives", inside);
+            }
+
+            private void addInside(String key, InsideDto inside) {
+                if (!insides.containsKey(key)) {
+                    insides.put(key, new ArrayList<InsideDto>());
+                }
+                insides.get(key).add(inside);
+            }
+
+        };
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(insidesMap);
+
+        return modelMapper.map(this, CocktailDto.class);
     }
 
 }

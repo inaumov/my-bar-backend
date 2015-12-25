@@ -100,7 +100,7 @@ public class Bottle {
         PropertyMap<Bottle, BottleDto> inShelfMap = new PropertyMap<Bottle, BottleDto>() {
             @Override
             protected void configure() {
-                using(ModelMapperConverters.STATE_CONVERTER).map().setInShelf(source.getState() == State.AVAILABLE);
+                using(ModelMapperConverters.STATE_CONVERTER).map(source.getState()).setInShelf(null);
             }
         };
 

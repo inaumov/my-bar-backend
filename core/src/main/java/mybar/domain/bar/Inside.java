@@ -1,14 +1,12 @@
 package mybar.domain.bar;
 
 import mybar.UnitsValue;
-import mybar.api.bar.ingredient.IIngredient;
-import mybar.api.bar.IInside;
 import mybar.domain.bar.ingredient.Ingredient;
 
 import javax.persistence.*;
 
 @Entity
-public class Inside implements IInside {
+public class Inside {
 
     @Id
     private int id;
@@ -27,22 +25,18 @@ public class Inside implements IInside {
     @JoinColumn(name = "COCKTAIL_ID")
     private Cocktail cocktail;
 
-    @Override
     public int getId() {
         return id;
     }
 
-    @Override
-    public IIngredient getIngredient() {
+    public Ingredient getIngredient() {
         return ingredient;
     }
 
-    @Override
     public double getVolume() {
         return volume;
     }
 
-    @Override
     public UnitsValue getUnitsValue() {
         return unitsValue;
     }

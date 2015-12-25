@@ -5,12 +5,12 @@ import mybar.api.bar.ingredient.IIngredient;
 
 public interface IInside {
 
-    int getId();
-
-    <T extends IIngredient> T getIngredient();
+    int getIngredientId();
 
     double getVolume();
 
     UnitsValue getUnitsValue();
+
+    boolean isMissing();
 
 }

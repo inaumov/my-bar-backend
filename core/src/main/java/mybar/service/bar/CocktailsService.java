@@ -1,5 +1,7 @@
 package mybar.service.bar;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import mybar.State;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,7 +83,13 @@ public class CocktailsService {
         List<Menu> menuList = getAllMenus();
         for (Menu menu : menuList) {
             if (menu.getId() == menuId) {
-                return new ArrayList<ICocktail>(menu.getCocktails());
+                List<Cocktail> cocktails = new ArrayList<>(menu.getCocktails());
+                return Lists.transform(cocktails, new Function<Cocktail, ICocktail>() {
+                    @Override
+                    public ICocktail apply(Cocktail cocktail) {
+                        return cocktail.toDto();
+                    }
+                });
             }
         }
         return Collections.emptyList();
@@ -112,7 +121,7 @@ public class CocktailsService {
     }
 
     public ICocktail findCocktailById(int id) {
-        return cocktailDao.read(id);
+        return cocktailDao.read(id).toDto();
     }
 
     public boolean isCocktailInHistory(ICocktail cocktail) {

@@ -2,7 +2,7 @@ package mybar.dto.bar;
 
 import mybar.State;
 import mybar.api.bar.IBottle;
-import mybar.domain.bar.Beverage;
+import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.Bottle;
 import org.junit.Test;
 
