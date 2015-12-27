@@ -67,11 +67,11 @@ public class ShelfController {
 
     @RequestMapping(value = "/bottles", method = RequestMethod.POST)
     public ResponseEntity<Void> createBottle(@RequestBody BottleBean bottleBean, UriComponentsBuilder ucBuilder) {
-        logger.info("Creating a Bottle " + bottleBean.getBeverage().getId());
+        logger.info("Creating a Bottle " + bottleBean.getBeverage().getKind());
         // TODO check this
         boolean saved = shelfService.saveBottle(bottleBean);
         if (!saved) {
-            logger.info("A Bottle " + bottleBean.getBeverage().getId() + " already exists");
+            logger.info("A Bottle " + bottleBean.getBeverage().getKind() + " already exists");
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
 

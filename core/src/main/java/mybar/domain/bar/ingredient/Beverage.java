@@ -15,7 +15,7 @@ public class Beverage extends Ingredient implements IBeverage {
     @Enumerated(EnumType.STRING)
     private BeverageType beverageType;
 
-    @OneToMany(mappedBy = "beverage", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "beverage", fetch = FetchType.LAZY)
     private List<Bottle> bottles;
 
     public Beverage() {

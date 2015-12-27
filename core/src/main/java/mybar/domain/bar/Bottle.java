@@ -20,7 +20,7 @@ public class Bottle {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "INGREDIENT_ID")
+    @JoinColumn(name = "INGREDIENT_ID", nullable = false)
     public Beverage beverage;
 
     @Column(name = "BRAND_NAME")

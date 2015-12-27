@@ -8,6 +8,9 @@ import javax.persistence.*;
 @Table(name = "INGREDIENT")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "GROUP_NAME")
+@AttributeOverride(name = "groupName",
+        column = @Column(name = "GROUP_NAME", nullable = false, length = 8,
+                insertable = false, updatable = false))
 public class Ingredient implements IIngredient {
 
     @Id
@@ -15,6 +18,8 @@ public class Ingredient implements IIngredient {
 
     @Column(name = "KIND")
     private String kind;
+
+    private String groupName;
 
     public int getId() {
         return id;
@@ -31,6 +36,10 @@ public class Ingredient implements IIngredient {
 
     public void setKind(String kind) {
         this.kind = kind;
+    }
+
+    public String getGroupName() {
+        return groupName;
     }
 
 }
