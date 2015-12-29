@@ -2,18 +2,13 @@ package mybar.domain.bar;
 
 import mybar.State;
 import mybar.api.bar.ICocktail;
-import mybar.api.bar.IInside;
-import mybar.domain.bar.ingredient.Additive;
-import mybar.domain.bar.ingredient.Beverage;
-import mybar.domain.bar.ingredient.Drink;
 import mybar.dto.bar.CocktailDto;
-import mybar.dto.bar.InsideDto;
 import mybar.util.ModelMapperConverters;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
 
 @Entity
 @SequenceGenerator(name = "COCKTAIL_SEQUENCE", sequenceName = "COCKTAIL_SEQUENCE", allocationSize = 3, initialValue = 1)
@@ -59,11 +54,11 @@ public class Cocktail {
         this.name = name;
     }
 
-    public Collection<Inside> getInsideList() {
+    public Collection<Inside> getInsideItems() {
         return insideList;
     }
 
-    public void setInsideList(Collection<Inside> insideList) {
+    public void setInsideItems(Collection<Inside> insideList) {
         this.insideList = insideList;
     }
 
@@ -99,48 +94,14 @@ public class Cocktail {
         this.imageUrl = imageUrl;
     }
 
-    public ICocktail toDto() {
+    public CocktailDto toDto() {
 
         PropertyMap<Cocktail, CocktailDto> insidesMap = new PropertyMap<Cocktail, CocktailDto>() {
-
-            final Map<String, List<InsideDto>> insides = new HashMap<>();
-
             @Override
             protected void configure() {
-/*                for (Inside inside : source.getInsideList()) {
-                    InsideDto dto = new ModelMapper().map(inside, InsideDto.class);
-                    if (inside.getIngredient() instanceof Beverage) {
-                        this.addBeverage(dto);
-                    } else if (inside.getIngredient() instanceof Drink) {
-                        this.addDrink(dto);
-                    } else if (inside.getIngredient() instanceof Additive) {
-                        this.addAdditional(dto);
-                    }
-                }*/
-
-                using(ModelMapperConverters.INSIDES_CONVERTER).map(source.getInsideList()).setInsides(null);
+                using(ModelMapperConverters.INSIDES_CONVERTER).map(source.getInsideItems()).setInsideItems(null);
                 map().setMenuId(source.getMenu().getId());
             }
-
-            private void addBeverage(InsideDto inside) {
-                addInside("beverages", inside);
-            }
-
-            private void addDrink(InsideDto inside) {
-                addInside("drinks", inside);
-            }
-
-            private void addAdditional(InsideDto inside) {
-                addInside("additives", inside);
-            }
-
-            private void addInside(String key, InsideDto inside) {
-                if (!insides.containsKey(key)) {
-                    insides.put(key, new ArrayList<InsideDto>());
-                }
-                insides.get(key).add(inside);
-            }
-
         };
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.addMappings(insidesMap);

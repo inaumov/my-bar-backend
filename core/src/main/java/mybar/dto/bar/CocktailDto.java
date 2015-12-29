@@ -3,14 +3,14 @@ package mybar.dto.bar;
 import mybar.State;
 import mybar.api.bar.ICocktail;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 public class CocktailDto implements ICocktail {
 
     private int id;
     private String name;
-    private Map<String, List<InsideDto>> insides;
+    private Map<String, Collection<InsideDto>> insideItems;
     private int menuId;
     private String description;
     private State state;
@@ -35,12 +35,12 @@ public class CocktailDto implements ICocktail {
     }
 
     @Override
-    public Map<String, List<InsideDto>> getInsides() {
-        return insides;
+    public Map<String, Collection<InsideDto>> getInsideItems() {
+        return insideItems;
     }
 
-    public void setInsides(Map<String, List<InsideDto>> insides) {
-        this.insides = insides;
+    public void setInsideItems(Map<String, Collection<InsideDto>> insideItems) {
+        this.insideItems = insideItems;
     }
 
     @Override

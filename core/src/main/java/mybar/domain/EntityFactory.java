@@ -29,8 +29,8 @@ public class EntityFactory {
         entity.setName(cocktail.getName());
         entity.setDescription(cocktail.getDescription());
 /*
-        for (IInside ingredient : cocktail.getInsideList()) {
-            entity.getInsideList().add(from(ingredient));
+        for (IInside ingredient : cocktail.getInsideItems()) {
+            entity.getInsideItems().add(from(ingredient));
         }
 */
         entity.setState(cocktail.getState());

@@ -29,7 +29,7 @@ public class BottleTest {
         bottleEntity.setVolume(VOLUME);
         bottleEntity.setImageUrl(IMAGE_URL);
 
-        IBottle dto = bottleEntity.toDto();
+        BottleDto dto = bottleEntity.toDto();
         assertEquals(TEST_ID, dto.getId());
         assertEquals(TEST_ID, dto.getBeverage().getId());
         assertEquals(BRAND_NAME, dto.getBrandName());

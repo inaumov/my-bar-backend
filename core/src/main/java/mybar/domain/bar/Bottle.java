@@ -95,7 +95,7 @@ public class Bottle {
         this.imageUrl = imageUrl;
     }
 
-    public IBottle toDto() {
+    public BottleDto toDto() {
 
         PropertyMap<Bottle, BottleDto> inShelfMap = new PropertyMap<Bottle, BottleDto>() {
             @Override

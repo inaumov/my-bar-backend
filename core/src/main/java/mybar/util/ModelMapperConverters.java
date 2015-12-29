@@ -1,5 +1,7 @@
 package mybar.util;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import mybar.State;
 import mybar.api.bar.IInside;
 import mybar.domain.bar.Inside;
@@ -9,9 +11,7 @@ import mybar.domain.bar.ingredient.Drink;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 public class ModelMapperConverters {
@@ -26,47 +26,25 @@ public class ModelMapperConverters {
 
     };
 
-    public static final Converter<List<Inside>, Map<String, List<Inside>>> INSIDES_CONVERTER = new Converter<List<Inside>, Map<String, List<Inside>>>() {
-
-        private Map<String, List<Inside>> insides = new HashMap<>();
+    public static final Converter<Collection<Inside>, Map<String, Collection<IInside>>> INSIDES_CONVERTER = new Converter<Collection<Inside>, Map<String, Collection<IInside>>>() {
 
         @Override
-        public Map<String, List<Inside>> convert(MappingContext<List<Inside>, Map<String, List<Inside>>> context) {
+        public Map<String, Collection<IInside>> convert(MappingContext<Collection<Inside>, Map<String, Collection<IInside>>> mappingContext) {
 
-            List<Inside> source = context.getSource();
+            ListMultimap<String, IInside> insidesMultimap = ArrayListMultimap.create();
 
+            Collection<Inside> source = mappingContext.getSource();
             for (Inside inside : source) {
                 if (inside.getIngredient() instanceof Beverage) {
-                    this.addBeverage(inside);
+                    insidesMultimap.put("beverages", inside.toDto());
                 } else if (inside.getIngredient() instanceof Drink) {
-                    this.addDrink(inside);
+                    insidesMultimap.put("drinks", inside.toDto());
                 } else if (inside.getIngredient() instanceof Additive) {
-                    this.addAdditional(inside);
+                    insidesMultimap.put("additives", inside.toDto());
                 }
             }
-
-            return insides;
+            return insidesMultimap.asMap();
         }
-
-        private void addBeverage(Inside inside) {
-            addInside("beverages", inside);
-        }
-
-        private void addDrink(Inside inside) {
-            addInside("drinks", inside);
-        }
-
-        private void addAdditional(Inside inside) {
-            addInside("additives", inside);
-        }
-
-        private void addInside(String key, Inside inside) {
-            if (!insides.containsKey(key)) {
-                insides.put(key, new ArrayList<Inside>());
-            }
-            insides.get(key).add(inside);
-        }
-
     };
 
 }

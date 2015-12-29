@@ -1,7 +1,11 @@
 package mybar.domain.bar;
 
 import mybar.UnitsValue;
+import mybar.api.bar.IInside;
 import mybar.domain.bar.ingredient.Ingredient;
+import mybar.dto.bar.InsideDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
 
@@ -11,7 +15,7 @@ public class Inside {
     @Id
     private int id;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Ingredient ingredient;
 
     @Column(name = "VOLUME")
@@ -55,6 +59,20 @@ public class Inside {
 
     public void setUnitsValue(UnitsValue unitsValue) {
         this.unitsValue = unitsValue;
+    }
+
+    public InsideDto toDto() {
+        PropertyMap<Inside, InsideDto> insideMap = new PropertyMap<Inside, InsideDto>() {
+            @Override
+            protected void configure() {
+                map().setIngredientId(source.getIngredient().getId());
+                skip().setMissing(false);
+            }
+        };
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(insideMap);
+
+        return modelMapper.map(this, InsideDto.class);
     }
 
 }

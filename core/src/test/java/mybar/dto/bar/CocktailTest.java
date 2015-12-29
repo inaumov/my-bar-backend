@@ -1,11 +1,8 @@
 package mybar.dto.bar;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import mybar.State;
 import mybar.UnitsValue;
-import mybar.api.bar.ICocktail;
 import mybar.api.bar.IInside;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Inside;
@@ -15,10 +12,10 @@ import mybar.domain.bar.ingredient.Drink;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CocktailTest {
 
@@ -48,7 +45,7 @@ public class CocktailTest {
         juice.setVolume(150);
         juice.setUnitsValue(UnitsValue.ML);
 
-        cocktail.setInsideList(Lists.newArrayList(beverage, juice));
+        cocktail.setInsideItems(Lists.newArrayList(beverage, juice));
 
         Menu menu = new Menu();
         menu.setId(MENU_ID);
@@ -58,36 +55,33 @@ public class CocktailTest {
         cocktail.setState(State.AVAILABLE);
         cocktail.setImageUrl(IMAGE_URL);
 
-        ICocktail dto = cocktail.toDto();
+        CocktailDto dto = cocktail.toDto();
         assertEquals(TEST_ID, dto.getId());
         assertEquals(IMAGE_URL, dto.getImageUrl());
         assertEquals(MENU_ID, dto.getMenuId());
         assertEquals(NAME, dto.getName());
+        assertEquals(DESCRIPTION, dto.getDescription());
 
-        //Map<String, Collection<? extends IInside>> insideList = dto.getInsideList();
-        Map<String, ? extends Collection<? extends IInside>> insides = dto.getInsides();
+        Map<String, Collection<InsideDto>> insideList = dto.getInsideItems();
+        assertEquals(2, insideList.size());
+        assertTrue(insideList.containsKey("beverages"));
+        assertTrue(insideList.containsKey("drinks"));
 
-/*
-        IInside beverageDto = Iterables.find(insideList, new Predicate<IInside>() {
-            @Override
-            public boolean apply(IInside iInside) {
-                return iInside.getIngredientId() == 1;
-            }
-        });
+        Collection<InsideDto> beverages = insideList.get("beverages");
+        assertEquals(1, beverages.size());
+
+        IInside beverageDto = beverages.iterator().next();
         assertEquals(1, beverageDto.getIngredientId());
         assertEquals(50, beverageDto.getVolume(), 0);
         assertEquals(UnitsValue.ML, beverageDto.getUnitsValue());
 
-        IInside juiceDto = Iterables.find(insideList, new Predicate<IInside>() {
-            @Override
-            public boolean apply(IInside iInside) {
-                return iInside.getIngredientId() == 25;
-            }
-        });
+        Collection<InsideDto> drinks = insideList.get("drinks");
+        assertEquals(1, drinks.size());
+
+        IInside juiceDto = drinks.iterator().next();
         assertEquals(25, juiceDto.getIngredientId());
         assertEquals(150, juice.getVolume(), 0);
         assertEquals(UnitsValue.ML, beverageDto.getUnitsValue());
-*/
     }
 
 }

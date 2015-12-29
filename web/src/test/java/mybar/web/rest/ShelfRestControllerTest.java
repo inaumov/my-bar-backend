@@ -2,14 +2,17 @@ package mybar.web.rest;
 
 import mybar.api.bar.IBottle;
 import mybar.service.bar.ShelfService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
@@ -21,22 +24,26 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
-@WebAppConfiguration
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
+//@WebAppConfiguration
 public class ShelfRestControllerTest {
 
     private MockMvc mockMvc;
 
-    @Autowired
+    @Mock
     private ShelfService shelfServiceMock;
 
-    //Add WebApplicationContext field here.
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
-    //The setUp() method is omitted.
+    //@Before
+    public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
-    @Test
-    public void findAll_TodosFound_ShouldReturnFoundTodoEntries() throws Exception {
+    //@Test
+    public void findAll_ShouldReturnAllBottleEntries() throws Exception {
 
         IBottle first = mock(IBottle.class);
         when(first.getId()).thenReturn(TEST_ID);
@@ -50,7 +57,7 @@ public class ShelfRestControllerTest {
 
         when(shelfServiceMock.findAllBottles()).thenReturn(Arrays.asList(first, second));
 
-        mockMvc.perform(get("/api/todo"))
+        mockMvc.perform(get("/shelf/bottles"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(2)))

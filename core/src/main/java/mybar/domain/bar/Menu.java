@@ -14,7 +14,7 @@ public class Menu implements IMenu {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
     private Collection<Cocktail> cocktails;
 
     @Override

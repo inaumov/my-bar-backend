@@ -55,7 +55,7 @@ public class IngredientDaoTest extends BaseDaoTest {
                 int expectedBottles = 2;
 
                 assertEquals("Ingredient kind name should be " + kind + ".", kind, ingredient.getKind());
-                //assertEquals("Ingredient group name should be " + groupName + ".", groupName, ingredient.getGroupName());
+                assertEquals("Ingredient group name should be " + groupName + ".", groupName, ingredient.getGroupName());
 
                 assertTrue("Ingredient should be an instance of beverage.", (ingredient instanceof Beverage));
                 Beverage beverage = (Beverage) ingredient;
@@ -94,7 +94,7 @@ public class IngredientDaoTest extends BaseDaoTest {
                 int expectedBottles = 0;
 
                 assertEquals("Ingredient kind name should be " + kind + ".", kind, ingredient.getKind());
-                //assertEquals("Ingredient group name should be " + groupName + ".", groupName, ingredient.getGroupName());
+                assertEquals("Ingredient group name should be " + groupName + ".", groupName, ingredient.getGroupName());
 
                 assertTrue("Ingredient should be an instance of beverage.", (ingredient instanceof Beverage));
                 Beverage beverage = (Beverage) ingredient;

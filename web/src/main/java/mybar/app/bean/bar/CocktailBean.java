@@ -1,12 +1,14 @@
 package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Maps;
 import mybar.State;
-import mybar.api.bar.*;
-import mybar.api.bar.ingredient.IAdditive;
-import mybar.api.bar.ingredient.IBeverage;
-import mybar.api.bar.ingredient.IDrink;
-import org.modelmapper.ModelMapper;
+import mybar.api.bar.ICocktail;
+import mybar.api.bar.IInside;
+import org.modelmapper.*;
+import org.modelmapper.spi.MappingContext;
 
 import java.util.*;
 
@@ -18,7 +20,8 @@ public class CocktailBean implements ICocktail {
     @JsonView(View.Cocktail.class)
     private String name;
 
-    private Menu menu;
+    @JsonView(View.CocktailWithDetails.class)
+    private int menuId;
 
     @JsonView(View.Cocktail.class)
     private State state;
@@ -27,7 +30,7 @@ public class CocktailBean implements ICocktail {
     private String imageUrl;
 
     @JsonView(View.CocktailWithDetails.class)
-    private Map<String, List<InsideBean>> insides = new HashMap<>();
+    private Map<String, Collection<InsideBean>> insideItems = new HashMap<>();
 
     @JsonView(View.CocktailWithDetails.class)
     private String description;
@@ -46,44 +49,17 @@ public class CocktailBean implements ICocktail {
         return name;
     }
 
-    @Override
-    public Map<String, ? extends Collection<? extends IInside>> getInsides() {
-        return insides;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public Map getInsideList() {
-        Collection<List<InsideBean>> lists = insides.values();
-        List<InsideBean> beans = new ArrayList<>();
-        for (List<InsideBean> insides : lists) {
-            beans.addAll(insides);
-        }
-        return (Map) beans;
-    }
-
-    public void setIngredients(Collection<InsideBean> ingredients) {
-        //this.ingredients = ingredients; TODO
-    }
-
     @Override
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    //@Override
     public int getMenuId() {
-        return menu.getId();
+        return menuId;
     }
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
+    public void setMenuId(int menuId) {
+        this.menuId = menuId;
     }
 
     @Override
@@ -100,49 +76,91 @@ public class CocktailBean implements ICocktail {
         return imageUrl;
     }
 
-    public void setCover(String coverUrl) {
-        this.imageUrl = coverUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public static CocktailBean from(ICocktail cocktail) {
-/*        CocktailBean bean = new CocktailBean();
-        bean.setId(cocktail.getId());
-        bean.setName(cocktail.getName());
-        bean.setDescription(cocktail.getDescription());
-        for (IInside inside : cocktail.getInsideList()) {
-            InsideBean insideBean = InsideBean.from(inside);
-            if (inside.getIngredient() instanceof IBeverage) {
-                bean.addBeverage(insideBean);
-            } else if (inside.getIngredient() instanceof IDrink) {
-                bean.addDrink(insideBean);
-            } else if (inside.getIngredient() instanceof IAdditive) {
-                bean.addAdditional(insideBean);
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public Map<String, Collection<InsideBean>> getInsideItems() {
+        return insideItems;
+    }
+
+    public void setInsideItems(Map<String, Collection<InsideBean>> insides) {
+        this.insideItems = insides;
+    }
+
+    public static CocktailBean from(final ICocktail cocktail) {
+
+        PropertyMap<ICocktail, CocktailBean> propertyMap = new PropertyMap<ICocktail, CocktailBean>() {
+            @Override
+            protected void configure() {
+                using(CONVERTER).map(source.getInsideItems()).setInsideItems(null);
+                //map().setInsideItems(convert(source.getInsideItems()));
             }
-        }
-        bean.setState(cocktail.getState());
-        bean.setCover(cocktail.getImageUrl());
-        return bean;*/
+        };
+
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(cocktail, CocktailBean.class);
+        //modelMapper.addMappings(propertyMap);
+
+        CocktailBean cocktailBean = modelMapper.map(cocktail, CocktailBean.class);
+        cocktailBean.setInsideItems(convert(cocktail.getInsideItems()));
+        return cocktailBean;
     }
 
-    private void addBeverage(InsideBean inside) {
-        addInside("beverages", inside);
-    }
+    public static final Converter<Map<String, Collection<IInside>>, Map<String, Collection<InsideBean>>> CONVERTER =
+            new Converter<Map<String, Collection<IInside>>, Map<String, Collection<InsideBean>>>() {
 
-    private void addDrink(InsideBean inside) {
-        addInside("drinks", inside);
-    }
+                @Override
+                public Map<String, Collection<InsideBean>> convert(MappingContext<Map<String, Collection<IInside>>, Map<String, Collection<InsideBean>>> context) {
 
-    private void addAdditional(InsideBean inside) {
-        addInside("additive", inside);
-    }
+                    Map<String, Collection<IInside>> source = context.getSource();
+                    Map<String, Collection<InsideBean>> stringListMap = Maps.transformValues(source, new Function<Collection<IInside>, Collection<InsideBean>>() {
+                        @Override
+                        public Collection<InsideBean> apply(Collection<IInside> list) {
+                            return Collections2.transform(list, new Function<IInside, InsideBean>() {
+                                @Override
+                                public InsideBean apply(IInside iInside) {
+                                    return InsideBean.from(iInside);
+                                }
+                            });
+/*
+                    ModelMapper modelMapper = new ModelMapper();
+                    List<InsideBean> map = modelMapper.map(list, new TypeToken<List<InsideBean>>() {
+                    }.getType());
+                    return map;
+*/
+                        }
+                    });
+                    return stringListMap;
+                }
+            };
 
-    private void addInside(String key, InsideBean inside) {
-        if (!insides.containsKey(key)) {
-            insides.put(key, new ArrayList<InsideBean>());
-        }
-        insides.get(key).add(inside);
+    private static Map<String, Collection<InsideBean>> convert(Map<String, ? extends Collection<? extends IInside>> map) {
+
+        return Maps.transformValues(map, new Function<Collection<? extends IInside>, Collection<InsideBean>>() {
+
+            @Override
+            public Collection<InsideBean> apply(Collection<? extends IInside> insideItems) {
+
+                return Collections2.transform(insideItems, new Function<IInside, InsideBean>() {
+                    @Override
+                    public InsideBean apply(IInside inside) {
+                        return InsideBean.from(inside);
+                    }
+                });
+            }
+
+        });
+
     }
 
 }
