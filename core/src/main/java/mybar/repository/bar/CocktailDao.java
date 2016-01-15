@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public class CocktailDao extends GenericDaoImpl<Cocktail> {
 
+    @Deprecated
     public List<Cocktail> findAllFor(Menu menu) {
         TypedQuery<Cocktail> q = em.createQuery("SELECT m FROM Menu m WHERE m.menuId = :menuId", Cocktail.class);
         q.setParameter("menuId", menu.getId());

@@ -1,7 +1,7 @@
 package mybar.domain.bar;
 
+import com.google.common.base.MoreObjects;
 import mybar.State;
-import mybar.api.bar.ICocktail;
 import mybar.dto.bar.CocktailDto;
 import mybar.util.ModelMapperConverters;
 import org.modelmapper.ModelMapper;
@@ -107,6 +107,15 @@ public class Cocktail {
         modelMapper.addMappings(insidesMap);
 
         return modelMapper.map(this, CocktailDto.class);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("id", id)
+                .add("name", name)
+                .add("state", state)
+                .toString();
     }
 
 }

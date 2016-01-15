@@ -23,6 +23,7 @@ public class IngredientDao {
             case "Beverage":
             case "Drink":
             case "Additive": {
+                // TODO use TYPE(e) IN Entity query
                 TypedQuery<Ingredient> q = em.createQuery("SELECT i FROM Ingredient i WHERE i.groupName = :groupName ORDER BY i.groupName, i.kind", Ingredient.class);
                 q.setParameter("groupName", groupName);
                 ingredients = q.getResultList();
@@ -33,7 +34,7 @@ public class IngredientDao {
     }
 
     /**
-     * Find all ingredients order by group name, kind.
+     * Find all ingredients ordered by group name, kind.
      */
     public List<Ingredient> findAll() {
         TypedQuery<Ingredient> q = em.createQuery("SELECT i FROM Ingredient i order by i.groupName, i.kind", Ingredient.class);

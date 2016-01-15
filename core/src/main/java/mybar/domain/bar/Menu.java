@@ -1,12 +1,16 @@
 package mybar.domain.bar;
 
-import mybar.api.bar.IMenu;
+import com.google.common.base.MoreObjects;
+import mybar.dto.bar.MenuDto;
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
-public class Menu implements IMenu {
+public class Menu {
 
     @Id
     private int id;
@@ -17,7 +21,10 @@ public class Menu implements IMenu {
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
     private Collection<Cocktail> cocktails;
 
-    @Override
+    public Menu() {
+        cocktails = new ArrayList<>();
+    }
+
     public int getId() {
         return id;
     }
@@ -26,7 +33,6 @@ public class Menu implements IMenu {
         this.id = id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -39,8 +45,25 @@ public class Menu implements IMenu {
         return cocktails;
     }
 
-    public void setCocktails(Collection<Cocktail> cocktails) {
-        this.cocktails = cocktails;
+    public void addCocktail(Cocktail cocktail) {
+        if (!getCocktails().contains(cocktail)) {
+            getCocktails().add(cocktail);
+            cocktail.setMenu(this);
+        }
+    }
+
+    public MenuDto toDto() {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(this, MenuDto.class);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("id", id)
+                .add("name", name)
+                .toString();
+
     }
 
 }

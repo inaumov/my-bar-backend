@@ -15,6 +15,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests Bottle DAO.
+ */
 public class BottleDaoTest extends BaseDaoTest {
 
     @Autowired

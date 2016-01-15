@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public class MenuDao extends GenericDaoImpl<Menu> {
 
+    /**
+     * Find all menus.
+     */
     public List<Menu> findAll() {
         TypedQuery<Menu> q = em.createQuery("SELECT m FROM Menu m", Menu.class);
         List<Menu> menus = q.getResultList();

@@ -1,6 +1,8 @@
 package mybar.service.bar;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import mybar.State;
 import mybar.api.bar.ICocktail;
@@ -15,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,60 +38,41 @@ public class CocktailsService {
     // menu
 
     public List<IMenu> getAllMenuItems() {
-        return new ArrayList<IMenu>(getAllMenus());
+        return Lists.transform(allMenus(), new Function<Menu, IMenu>() {
+            @Override
+            public IMenu apply(Menu menu) {
+                return menu.toDto();
+            }
+        });
     }
 
-    private List<Menu> getAllMenus() {
+    private List<Menu> allMenus() {
         if (allMenusCached == null) {
             allMenusCached = menuDao.findAll();
         }
         return allMenusCached;
     }
 
-    private Menu findMenuById(int menuId) {
-        for (Menu menu : getAllMenus()) {
-            if (menu.getId() == menuId) {
-                return menu;
+    private Menu findMenuById(final int menuId) {
+        return Iterables.find(allMenus(), new Predicate<Menu>() {
+            @Override
+            public boolean apply(Menu menu) {
+                return menu.getId() == menuId;
             }
-        }
-        return null;
-    }
-
-    private void saveOrUpdateMenu(IMenu menu) {
-        Menu entity = EntityFactory.from(menu);
-        if (menu.getId() == 0) {
-            menuDao.create(entity);
-        } else {
-            menuDao.update(entity);
-        }
-    }
-
-    private void removeMenu(Menu menu) throws Exception {
-        try {
-            if (menu.getCocktails().isEmpty())
-                menuDao.delete(menu);
-            else
-                throw new Exception(MessageFormat.format("The menu {0} is not empty", menu.getName()));
-        } finally {
-        }
+        });
     }
 
     // cocktails
 
-    public List<ICocktail> getAllCocktailsForMenu(Integer menuId) {
-        List<Menu> menuList = getAllMenus();
-        for (Menu menu : menuList) {
-            if (menu.getId() == menuId) {
-                List<Cocktail> cocktails = new ArrayList<>(menu.getCocktails());
-                return Lists.transform(cocktails, new Function<Cocktail, ICocktail>() {
-                    @Override
-                    public ICocktail apply(Cocktail cocktail) {
-                        return cocktail.toDto();
-                    }
-                });
+    public List<ICocktail> getAllCocktailsForMenu(final Integer menuId) {
+        Menu menu = findMenuById(menuId);
+        List<Cocktail> cocktails = new ArrayList<>(menu.getCocktails());
+        return Lists.transform(cocktails, new Function<Cocktail, ICocktail>() {
+            @Override
+            public ICocktail apply(Cocktail cocktail) {
+                return cocktail.toDto();
             }
-        }
-        return Collections.emptyList();
+        });
     }
 
     public void saveOrUpdateCocktail(ICocktail cocktail) {
