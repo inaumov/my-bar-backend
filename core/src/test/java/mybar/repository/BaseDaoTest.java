@@ -29,13 +29,20 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext-test-hsqldb.xml")
-@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class,
-        TransactionDbUnitTestExecutionListener.class},
+@TestExecutionListeners(
+        listeners = {
+                DependencyInjectionTestExecutionListener.class,
+                DirtiesContextTestExecutionListener.class,
+                TransactionDbUnitTestExecutionListener.class
+        },
         inheritListeners = false)
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
-@DatabaseSetup(value = "classpath:dataSet.xml", type = DatabaseOperation.CLEAN_INSERT)
-@DatabaseTearDown(value = "classpath:dataSet.xml", type = DatabaseOperation.TRUNCATE_TABLE)
+@DatabaseSetups(
+        {
+                @DatabaseSetup("classpath:dataSet.xml"),
+                @DatabaseSetup("classpath:umDataSet.xml")
+        }
+)
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
 public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
