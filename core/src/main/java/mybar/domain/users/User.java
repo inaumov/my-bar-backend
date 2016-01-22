@@ -9,11 +9,12 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "USERS")
-@SequenceGenerator(name="USER_SEQUENCE", sequenceName="USER_SEQUENCE", allocationSize=3, initialValue = 1)
+//@SequenceGenerator(name="USER_SEQUENCE", sequenceName="USER_SEQUENCE", allocationSize=3, initialValue = 1)
 public class User implements IUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_SEQUENCE")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="USER_SEQUENCE")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
     private String login;

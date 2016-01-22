@@ -91,7 +91,7 @@ public class BottleDaoTest extends BaseDaoTest {
         assertFalse(saved.getId() == 0);
         List<Bottle> all = bottleDao.findAll();
         assertEquals(8, all.size());
-        //assertBottles(1, all); // TODO until switch to HSQLDB because derby doesn't work with identity generated value for ID columns.
+        assertBottles(1, all); // TODO until switch to HSQLDB because derby doesn't work with identity generated value for ID columns.
     }
 
     @Test

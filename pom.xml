@@ -175,16 +175,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derby</artifactId>
-                <version>${derby.version}</version>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>2.3.3</version>
+                <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derbyclient</artifactId>
-                <version>${derby.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 

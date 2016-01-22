@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.github.springtestdbunit.annotation.*;
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
 
@@ -24,18 +25,18 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:mybar/spring-test-config.xml")
+@ContextConfiguration(locations = "classpath:applicationContext-test-hsqldb.xml")
 @TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionDbUnitTestExecutionListener.class},
         inheritListeners = false)
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
-@DatabaseSetup("/dataset.xml")
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+@DatabaseSetup(value = "classpath:dataSet.xml", type = DatabaseOperation.CLEAN_INSERT)
+@DatabaseTearDown(value = "classpath:dataSet.xml", type = DatabaseOperation.TRUNCATE_TABLE)
+@DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
 public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     public static final int COURIER_ID = 5;
@@ -56,7 +57,7 @@ public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
     protected final int ORDERS_CNT = 6;
 
     @Test
-    @ExpectedDatabase(value = "/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+    @ExpectedDatabase(value = "classpath:dataSet.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
     public void testPreconditions() throws Exception {
         // do nothing, just load and check dataset
     }
@@ -77,7 +78,7 @@ public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     protected int countRelationsSize() {
         Query result = em.createNativeQuery("select count(ALL user_id) from user_has_roles");
-        return (Integer) result.getSingleResult();
+        return ((Number) result.getSingleResult()).intValue();
     }
 
     protected void assertUsers(List<User> all) {

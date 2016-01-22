@@ -89,7 +89,7 @@ public class MenuDaoTest extends BaseDaoTest {
         assertCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
         assertCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
         assertCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 5, 1, "New Cocktail", State.AVAILABLE);
+        assertCocktail(cocktailIterator.next(), 13, 1, "New Cocktail", State.AVAILABLE);
 
         // second menu
         cocktails = it.next().getCocktails();

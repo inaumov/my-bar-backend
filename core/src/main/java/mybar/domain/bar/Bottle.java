@@ -12,11 +12,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "BOTTLE")
-@SequenceGenerator(name = "BOTTLE_SEQUENCE", sequenceName = "BOTTLE_SEQUENCE", allocationSize = 3, initialValue = 1)
+//@SequenceGenerator(name = "BOTTLE_SEQUENCE", sequenceName = "BOTTLE_SEQUENCE", allocationSize = 3, initialValue = 1)
 public class Bottle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOTTLE_SEQUENCE")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOTTLE_SEQUENCE")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
