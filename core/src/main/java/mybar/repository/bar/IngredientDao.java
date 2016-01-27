@@ -1,6 +1,8 @@
 package mybar.repository.bar;
 
 import mybar.domain.bar.ingredient.Ingredient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -11,33 +13,36 @@ import java.util.List;
 @Repository
 public class IngredientDao {
 
+    public static Logger log = LoggerFactory.getLogger(IngredientDao.class);
+
     @PersistenceContext
     protected EntityManager em;
 
     /**
-     * Find ingredients by group name.
+     * Find ingredients by group name ordered by group name, kind.
      */
     public List<Ingredient> findByGroupName(String groupName) {
-        List<Ingredient> ingredients = null;
         switch (groupName) {
             case "Beverage":
             case "Drink":
             case "Additive": {
-                // TODO use TYPE(e) IN Entity query
-                TypedQuery<Ingredient> q = em.createQuery("SELECT i FROM Ingredient i WHERE i.groupName = :groupName ORDER BY i.groupName, i.kind", Ingredient.class);
-                q.setParameter("groupName", groupName);
-                ingredients = q.getResultList();
-                break;
+                try {
+                    TypedQuery<Ingredient> q = em.createQuery("SELECT i FROM Ingredient i WHERE TYPE(i) = :type order by i.kind", Ingredient.class);
+                    q.setParameter("type", Class.forName(groupName));
+                    return q.getResultList();
+                } catch (ClassNotFoundException e) {
+                    log.error("Class for {} entity not found in classpath", groupName);
+                }
             }
         }
-        return ingredients;
+        return null;
     }
 
     /**
      * Find all ingredients ordered by group name, kind.
      */
     public List<Ingredient> findAll() {
-        TypedQuery<Ingredient> q = em.createQuery("SELECT i FROM Ingredient i order by i.groupName, i.kind", Ingredient.class);
+        TypedQuery<Ingredient> q = em.createQuery("SELECT i FROM Ingredient i order by i.class, i.kind", Ingredient.class);
         List<Ingredient> resultList = q.getResultList();
         return resultList;
     }
