@@ -1,7 +1,6 @@
 package mybar.repository.bar;
 
 import com.google.common.base.Function;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import mybar.BeverageType;
 import mybar.State;
@@ -9,13 +8,13 @@ import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Ingredient;
 import mybar.repository.BaseDaoTest;
-import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -23,13 +22,35 @@ import static org.junit.Assert.*;
  */
 public class IngredientDaoTest extends BaseDaoTest {
 
-    private static List<String> items = Splitter.on(";").splitToList("");
+    private static String[] INGREDIENTS_BY_GROUP_NAME_AND_KIND = {
+            // Additives
+            "Grenadine",
+            "Ice",
+            "Lime",
+            "Sugar",
+            // Beverages
+            "Banana liqueur",
+            "Bourbon",
+            "Brandy",
+            "Coffee liqueur",
+            "Gin",
+            "Irish cream",
+            "Maraschino liqueur",
+            "Rum",
+            "Tequila",
+            "Triple Sec",
+            "Vodka",
+            "Whisky",
+            // Drinks
+            "Coca Cola",
+            "Orange Juice"
+    };
 
     @Autowired
     private IngredientDao ingredientDao;
 
     @Test
-    public void testFindAll() throws Exception {
+    public void testFindAllInCorrectOrder() throws Exception {
         assertNotNull("Ingredient DAO is null.", ingredientDao);
 
         List<Ingredient> all = ingredientDao.findAll();
@@ -42,7 +63,26 @@ public class IngredientDaoTest extends BaseDaoTest {
                 return ingredient.getKind();
             }
         });
-        assertThat("All ingredients should be sorted by groupName and kind.", ingredientsByKind, IsIterableContainingInOrder.contains(items)));
+        assertThat("All ingredients should be sorted by group name and kind.", ingredientsByKind, contains(INGREDIENTS_BY_GROUP_NAME_AND_KIND));
+    }
+
+    @Test
+    public void testFindAllInWrongOrder() throws Exception {
+        assertNotNull("Ingredient DAO is null.", ingredientDao);
+
+        List<Ingredient> all = ingredientDao.findAll();
+
+        // assert ordering
+        List<String> ingredientsByKind = Lists.transform(all, new Function<Ingredient, String>() {
+            @Override
+            public String apply(Ingredient ingredient) {
+                return ingredient.getKind();
+            }
+        });
+        // make it sorted alphabetically so it is wrong
+        String[] items = INGREDIENTS_BY_GROUP_NAME_AND_KIND.clone();
+        Arrays.sort(items);
+        assertThat("All ingredients should be sorted by group name and kind.", ingredientsByKind, not(contains(items)));
     }
 
     @Test
