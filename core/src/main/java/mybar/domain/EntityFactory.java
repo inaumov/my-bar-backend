@@ -5,7 +5,6 @@ import mybar.api.bar.*;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
-import mybar.api.bar.ingredient.IIngredient;
 import mybar.api.history.IOrder;
 import mybar.domain.bar.*;
 import mybar.domain.bar.ingredient.Additive;
@@ -38,8 +37,8 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Inside from(final IInside inside) {
-        Inside entity = new Inside();
+    public static final CocktailToIngredient from(final IInside inside) {
+        CocktailToIngredient entity = new CocktailToIngredient();
         //entity.setId(inside.getId());
         entity.setUnitsValue(inside.getUnitsValue());
         entity.setVolume(inside.getVolume());

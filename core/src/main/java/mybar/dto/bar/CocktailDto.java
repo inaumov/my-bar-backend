@@ -10,7 +10,7 @@ public class CocktailDto implements ICocktail {
 
     private int id;
     private String name;
-    private Map<String, Collection<InsideDto>> insideItems;
+    private Map<String, Collection<CocktailToIngredientDto>> insideItems;
     private int menuId;
     private String description;
     private State state;
@@ -35,11 +35,11 @@ public class CocktailDto implements ICocktail {
     }
 
     @Override
-    public Map<String, Collection<InsideDto>> getInsideItems() {
+    public Map<String, Collection<CocktailToIngredientDto>> getInsideItems() {
         return insideItems;
     }
 
-    public void setInsideItems(Map<String, Collection<InsideDto>> insideItems) {
+    public void setInsideItems(Map<String, Collection<CocktailToIngredientDto>> insideItems) {
         this.insideItems = insideItems;
     }
 

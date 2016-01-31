@@ -3,7 +3,7 @@ package mybar.dto.bar;
 import mybar.UnitsValue;
 import mybar.api.bar.IInside;
 
-public class InsideDto implements IInside {
+public class CocktailToIngredientDto implements IInside {
 
     private int ingredientId;
     private double volume;

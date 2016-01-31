@@ -4,30 +4,40 @@ import com.google.common.base.MoreObjects;
 import mybar.State;
 import mybar.dto.bar.CocktailDto;
 import mybar.util.ModelMapperConverters;
+import org.hibernate.annotations.Cascade;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
-//@SequenceGenerator(name = "COCKTAIL_SEQUENCE", sequenceName = "COCKTAIL_SEQUENCE", allocationSize = 3, initialValue = 1)
+@Table(name = "COCKTAIL")
 public class Cocktail {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COCKTAIL_SEQUENCE")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "NAME")
     private String name;
 
+    /**
+     * Here is the annotation to add in order to
+     * Hibernate to automatically insert and update
+     * CocktailToIngredientList (if any)
+     */
+    @OneToMany(mappedBy = "pk.cocktail", fetch = FetchType.LAZY,
+            orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private List<CocktailToIngredient> cocktailToIngredientList = new LinkedList<>();
+
     @ManyToOne
     @JoinColumn(name = "MENU_ID")
     private Menu menu;
-
-    @OneToMany(mappedBy = "cocktail", fetch = FetchType.EAGER) // TODO: fetch lazily
-    private Collection<Inside> insideList;
 
     @Column(name = "DESCRIPTION", nullable = true)
     private String description;
@@ -55,12 +65,12 @@ public class Cocktail {
         this.name = name;
     }
 
-    public Collection<Inside> getInsideItems() {
-        return insideList;
+    public List<CocktailToIngredient> getCocktailToIngredientList() {
+        return cocktailToIngredientList;
     }
 
-    public void setInsideItems(Collection<Inside> insideList) {
-        this.insideList = insideList;
+    public void setCocktailToIngredientList(List<CocktailToIngredient> cocktailToIngredientList) {
+        this.cocktailToIngredientList = cocktailToIngredientList;
     }
 
     public String getDescription() {
@@ -100,7 +110,7 @@ public class Cocktail {
         PropertyMap<Cocktail, CocktailDto> insidesMap = new PropertyMap<Cocktail, CocktailDto>() {
             @Override
             protected void configure() {
-                using(ModelMapperConverters.INSIDES_CONVERTER).map(source.getInsideItems()).setInsideItems(null);
+                using(ModelMapperConverters.INSIDES_CONVERTER).map(source.getCocktailToIngredientList()).setInsideItems(null);
                 map().setMenuId(source.getMenu().getId());
             }
         };
