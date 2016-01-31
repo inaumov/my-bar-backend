@@ -20,23 +20,24 @@ public class IngredientDao {
     /**
      * Find ingredients by one group name ordered by group name, kind.
      */
-    public List<Ingredient> findByGroupName(String groupName) {
+    public List<Ingredient> findByGroupName(String groupName) throws Exception {
         Class<? extends Ingredient> clazz;
         switch (groupName) {
-            case "Beverage": {
+            case "beverages": {
                 clazz = Beverage.class;
                 break;
             }
-            case "Drink": {
+            case "drinks": {
                 clazz = Drink.class;
                 break;
             }
-            case "Additive": {
+            case "additives": {
                 clazz = Additive.class;
                 break;
             }
             default: {
-                return null;
+                // TODO maybe throw some other exception
+                throw new Exception("Type " + groupName + " not present");
             }
         }
         TypedQuery<Ingredient> q = em.createNamedQuery("findByGroupName", Ingredient.class);
