@@ -10,7 +10,7 @@ public class AdditiveBean implements IAdditive {
     private int id;
 
     @JsonView(View.CocktailWithDetails.class)
-    private String name;
+    private String kind;
 
     @Override
     public int getId() {
@@ -23,11 +23,11 @@ public class AdditiveBean implements IAdditive {
 
     @Override
     public String getKind() {
-        return name;
+        return kind;
     }
 
-    public void setKind(String name) {
-        this.name = name;
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     public static AdditiveBean from(IAdditive ingredient) {
