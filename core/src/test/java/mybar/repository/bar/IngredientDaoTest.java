@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import mybar.BeverageType;
 import mybar.State;
+import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Ingredient;
@@ -89,7 +90,7 @@ public class IngredientDaoTest extends BaseDaoTest {
     public void testFindBeverages() throws Exception {
         assertNotNull("Ingredient DAO is null.", ingredientDao);
 
-        List<Ingredient> beverages = ingredientDao.findByGroupName("Beverage");
+        List<Ingredient> beverages = ingredientDao.findByGroupName(IBeverage.GROUP_NAME);
 
         int expected = 12;
 

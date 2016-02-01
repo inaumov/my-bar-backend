@@ -4,6 +4,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import mybar.State;
 import mybar.api.bar.IInside;
+import mybar.api.bar.ingredient.IAdditive;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.api.bar.ingredient.IDrink;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
@@ -36,11 +39,11 @@ public class ModelMapperConverters {
             Collection<CocktailToIngredient> source = mappingContext.getSource();
             for (CocktailToIngredient cocktailToIngredient : source) {
                 if (cocktailToIngredient.getIngredient() instanceof Beverage) {
-                    insidesMultimap.put("beverages", cocktailToIngredient.toDto());
+                    insidesMultimap.put(IBeverage.GROUP_NAME, cocktailToIngredient.toDto());
                 } else if (cocktailToIngredient.getIngredient() instanceof Drink) {
-                    insidesMultimap.put("drinks", cocktailToIngredient.toDto());
+                    insidesMultimap.put(IDrink.GROUP_NAME, cocktailToIngredient.toDto());
                 } else if (cocktailToIngredient.getIngredient() instanceof Additive) {
-                    insidesMultimap.put("additives", cocktailToIngredient.toDto());
+                    insidesMultimap.put(IAdditive.GROUP_NAME, cocktailToIngredient.toDto());
                 }
             }
             return insidesMultimap.asMap();
