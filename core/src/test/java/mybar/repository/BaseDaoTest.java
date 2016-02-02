@@ -64,7 +64,7 @@ public class BaseDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
     protected final int ORDERS_CNT = 6;
 
     @Test
-    @ExpectedDatabase(value = "classpath:dataSet.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+    @ExpectedDatabase(value = "classpath:dataSet.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
     public void testPreconditions() throws Exception {
         // do nothing, just load and check dataset
     }
