@@ -15,6 +15,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.Query;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
@@ -59,6 +60,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         assertCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
         assertCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
         assertCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
+        assertEquals("Number of CocktailToIngredient rows should be same.", 14, getCocktailToIngredientCount());
 
         // test second menu
         cocktails = it.next().getCocktails();
@@ -76,7 +78,10 @@ public class CocktailDaoTest extends BaseDaoTest {
 
     @Test
     public void testUpdateCocktail() throws Exception {
-
+        Cocktail cocktail = cocktailDao.read(1);
+        assertNotNull(cocktail);
+        cocktail.setName("TEST");
+        cocktailDao.update(cocktail);
     }
 
     @Test
@@ -127,6 +132,13 @@ public class CocktailDaoTest extends BaseDaoTest {
         });
         assertNotNull(MessageFormat.format("Cocktail to ingredient should be present for ingredientName = {0}.", ingredientName), cocktailToIngredient);
         return cocktailToIngredient;
+    }
+
+    private int getCocktailToIngredientCount() {
+        String sql = "SELECT count(cti) FROM CocktailToIngredient cti";
+        Query q = em.createQuery(sql);
+        Long count = (Long) q.getSingleResult();
+        return count.intValue();
     }
 
 }
