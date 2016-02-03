@@ -33,7 +33,7 @@ public class CocktailDto implements ICocktail {
     public void setName(String name) {
         this.name = name;
     }
-
+    // TODO Rename
     @Override
     public Map<String, Collection<CocktailToIngredientDto>> getInsideItems() {
         return insideItems;

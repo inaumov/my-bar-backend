@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,6 +66,13 @@ public class Cocktail {
 
     public List<CocktailToIngredient> getCocktailToIngredientList() {
         return cocktailToIngredientList;
+    }
+
+    public void addCocktailToIngredient(CocktailToIngredient cocktailToIngredient) {
+        if (!getCocktailToIngredientList().contains(cocktailToIngredient)) {
+            getCocktailToIngredientList().add(cocktailToIngredient);
+            cocktailToIngredient.setCocktail(this);
+        }
     }
 
     public void setCocktailToIngredientList(List<CocktailToIngredient> cocktailToIngredientList) {

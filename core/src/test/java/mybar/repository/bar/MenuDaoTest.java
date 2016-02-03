@@ -48,10 +48,10 @@ public class MenuDaoTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = menuIterator.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 4, cocktails.size());
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertCocktail(cocktailIterator.next(), 1, 1, "B52", State.AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 1, 1, "B52", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
 
         // second menu
         cocktails = menuIterator.next().getCocktails();
@@ -61,7 +61,7 @@ public class MenuDaoTest extends BaseDaoTest {
         cocktails = menuIterator.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()), 1, cocktails.size());
         cocktailIterator = cocktails.iterator();
-        assertCocktail(cocktailIterator.next(), 12, 3, "Banana Blast II", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 12, 3, "Banana Blast II", State.AVAILABLE);
     }
 
     @Test
@@ -84,11 +84,11 @@ public class MenuDaoTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = it.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 5, cocktails.size());
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertCocktail(cocktailIterator.next(), 1, 1, "B52", State.AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
-        assertCocktail(cocktailIterator.next(), 13, 1, "New Cocktail", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 1, 1, "B52", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 13, 1, "New Cocktail", State.AVAILABLE);
 
         // second menu
         cocktails = it.next().getCocktails();
@@ -98,14 +98,14 @@ public class MenuDaoTest extends BaseDaoTest {
         cocktails = it.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()), 1, cocktails.size());
         cocktailIterator = cocktails.iterator();
-        assertCocktail(cocktailIterator.next(), 12, 3, "Banana Blast II", State.AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 12, 3, "Banana Blast II", State.AVAILABLE);
     }
 
-    public static void assertCocktail(Cocktail cocktail, int id, int menuId, String name, State status) {
+    public static void assertExistedCocktail(Cocktail cocktail, int id, int menuId, String name, State state) {
         assertEquals("Cocktail ID should be same.", id, cocktail.getId());
         assertEquals("Menu ID related to cocktail should be same.", menuId, cocktail.getMenu().getId());
         assertEquals("Cocktail name should same.", name, cocktail.getName());
-        assertEquals("Cocktail status should be same.", status, cocktail.getState());
+        assertEquals("Cocktail state should be same.", state, cocktail.getState());
     }
 
 }
