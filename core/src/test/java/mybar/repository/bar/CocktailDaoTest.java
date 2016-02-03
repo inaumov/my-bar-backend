@@ -30,7 +30,9 @@ import static org.junit.Assert.*;
  */
 public class CocktailDaoTest extends BaseDaoTest {
 
-    public static final int TEST_ID = 9;
+    public static final int TEST_ID_OF_COCKTAIL_WITH_INGREDIENTS = 1;
+    public static final int TEST_ID_OF_COCKTAIL_WITH_NO_INGREDIENTS = 9;
+
     @Autowired
     private MenuDao menuDao;
     @Autowired
@@ -80,7 +82,7 @@ public class CocktailDaoTest extends BaseDaoTest {
 
     @Test
     public void testUpdateCocktailAndAddNewIngredients() throws Exception {
-        Cocktail cocktail = cocktailDao.read(TEST_ID); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
+        Cocktail cocktail = cocktailDao.read(TEST_ID_OF_COCKTAIL_WITH_NO_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
         assertNotNull(cocktail);
 
         cocktail.setName("Random smoothie name");
@@ -115,10 +117,10 @@ public class CocktailDaoTest extends BaseDaoTest {
 
         // check saved cocktail
         assertEquals("Number of CocktailToIngredient rows should be increased by two ingredients.", 19, getCocktailToIngredientCount());
-        Cocktail updatedCocktail = findCocktailById(TEST_ID);
+        Cocktail updatedCocktail = findCocktailById(TEST_ID_OF_COCKTAIL_WITH_NO_INGREDIENTS);
         em.refresh(updatedCocktail); // TODO (temp solution) check potential issue with refreshing of related ingredients and menu
         List<CocktailToIngredient> cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
-        assertEquals("Number of ingredient in cocktail should be same.", 2, cocktailToIngredientList.size());
+        assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
 
         assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, UnitsValue.ML, Drink.class);
         assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, UnitsValue.ML, Additive.class);
@@ -129,11 +131,61 @@ public class CocktailDaoTest extends BaseDaoTest {
         assertEquals("Cocktail state should be same.", State.NOT_AVAILABLE, updatedCocktail.getState());
         assertEquals("Cocktail description should be same.", "Random smoothie description", updatedCocktail.getDescription());
         assertEquals("Cocktail image url should be same.", "http://test-url.image.jpg", updatedCocktail.getImageUrl());
+
+        // TODO check that ingredients are all remain same
     }
 
     @Test
     public void testUpdateCocktailWhenChangeIngredients() throws Exception {
+        Cocktail cocktail = cocktailDao.read(TEST_ID_OF_COCKTAIL_WITH_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
+        assertNotNull(cocktail);
+        List<CocktailToIngredient> cocktailToIngredientList = cocktail.getCocktailToIngredientList();
+        assertEquals("Number of ingredients in cocktail should be same.", 3, cocktailToIngredientList.size());
 
+        assertCocktailToIngredient(cocktailToIngredientList, "Triple Sec", 8, 20, UnitsValue.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Irish cream", 11, 20, UnitsValue.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Coffee liqueur", 16, 20, UnitsValue.ML, Beverage.class);
+
+        Cocktail cocktailForUpdate = new Cocktail();
+        cocktailForUpdate.setId(cocktail.getId());
+        cocktailForUpdate.setName(cocktail.getName());
+        cocktailForUpdate.setDescription(cocktail.getDescription());
+        cocktailForUpdate.setState(cocktail.getState());
+        cocktailForUpdate.setImageUrl(cocktail.getImageUrl());
+        cocktailForUpdate.setMenu(cocktail.getMenu());
+
+        // add cocktail to ingredients relation
+        CocktailToIngredient juice = new CocktailToIngredient();
+        Drink ingredient1 = new Drink();
+        ingredient1.setId(13);
+        ingredient1.setKind("Orange Juice");
+        juice.setIngredient(ingredient1);
+        juice.setVolume(250);
+        juice.setUnitsValue(UnitsValue.ML);
+
+        CocktailToIngredient grenadine = new CocktailToIngredient();
+        Additive ingredient2 = new Additive();
+        ingredient2.setId(12);
+        ingredient2.setKind("Grenadine");
+        grenadine.setIngredient(ingredient2);
+        grenadine.setVolume(10);
+        grenadine.setUnitsValue(UnitsValue.ML);
+
+        cocktailForUpdate.addCocktailToIngredient(juice);
+        cocktailForUpdate.addCocktailToIngredient(grenadine);
+
+        cocktailDao.update(cocktailForUpdate);
+
+        // check saved cocktail
+        assertEquals("Number of CocktailToIngredient rows should be decrease by 1 ingredient [3 removed, 2 new added].", 16, getCocktailToIngredientCount());
+        Cocktail updatedCocktail = findCocktailById(TEST_ID_OF_COCKTAIL_WITH_INGREDIENTS);
+        cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
+        assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
+
+        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, UnitsValue.ML, Drink.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, UnitsValue.ML, Additive.class);
+
+        // TODO check that ingredients are all remain same
     }
 
     @Test
@@ -148,7 +200,7 @@ public class CocktailDaoTest extends BaseDaoTest {
             }
         });
         List<CocktailToIngredient> cocktailToIngredientList = longIsland.getCocktailToIngredientList();
-        assertEquals("Number of ingredient in cocktail should be same.", 8, cocktailToIngredientList.size());
+        assertEquals("Number of ingredients in cocktail should be same.", 8, cocktailToIngredientList.size());
 
         assertCocktailToIngredient(cocktailToIngredientList, "Vodka", 1, 20, UnitsValue.ML, Beverage.class);
         assertCocktailToIngredient(cocktailToIngredientList, "Gin", 2, 20, UnitsValue.ML, Beverage.class);
