@@ -1,6 +1,51 @@
+# Compiled source #
+###################
 *.class
 
 # Package Files #
+###################
 *.jar
 *.war
 *.ear
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs #
+########
+*.log
+
+# Eclipse project #
+###################
+*.settings
+*.project
+*.classpath
+*.springBeans
+
+# Intellij IDEA project #
+#########################
+*.idea
+*.iml
+*.ipr
+*.iws
+
+# Build dirs #
+##############
+target
+bin
+build
+out
+
+# Images #
+*.jpg
+*.jpeg
+*.png
+*.gif
