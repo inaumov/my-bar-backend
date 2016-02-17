@@ -14,7 +14,7 @@
 
 ####Show Ingredients
 
-  Returns json data about known ingredients (Alcoholic Beverages, Non-Alcoholic Drinks and Additives).
+Returns json data about known ingredients (Alcoholic Beverages, Non-Alcoholic Drinks and Additives).
 
 * **URL**
 
@@ -30,11 +30,11 @@
  
   `filter=[text]`
 
-    Ingredients can be filtered. Three filter values exist in the current implementation: _beverages_, _drinks_ and _additives_.
+  Ingredients can be filtered. Three filter values exist in the current implementation: _beverages_, _drinks_ and _additives_.
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 200 <br/>
   * **Content:**
   ```
     {
@@ -61,15 +61,25 @@
     }
   ```
 
+* **Error Response:**
+  
+  * **Code:** 404 NOT FOUND <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Ingredients list has not been found."
+    }
+  ```
+
 ###Shelf/Bottles API
 
 ####Show all bottles
 
-  Returns json data about bottles of alcoholic beverages that you own in your cupboard, fridge, shelf etc.
+Returns json data about bottles of alcoholic beverages that you own in your cupboard, fridge, shelf etc.
 
 * **URL**
 
-  /shelf/bottles/
+  /shelf/bottles
 
 * **Method:**
 
@@ -77,15 +87,27 @@
   
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 200 <br/>
   * **Content:**
   ```
-  {}
+    [
+      {
+        "id": 15,
+        "ingredient": {
+          "id": 42
+        },
+        "brandName": "Grand Marnier",
+        "volume": 0.7,
+        "price": 699,
+        "inShelf": true,
+        "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2011/03/grand-orange-collins.jpg"
+      }  
+    ]
   ```
 
 ####Show selected bottle
 
-  Returns json data about selected bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
+Returns json data about selected bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
 
 * **URL**
 
@@ -119,35 +141,73 @@
     }
   ```
 
+* **Error Response:**
+  
+  * **Code:** 404 NOT FOUND <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Bottle doesn't exist"
+    }
+  ```
+
 ####Add a new bottle
 
-  Posts json data about new bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
+Posts json data about new bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
 
 * **URL**
 
-  /shelf/bottles/
+  /shelf/bottles
 
 * **Method:**
 
   `POST`
   
 * **Data Params**
-
   ```
-  {}
+    {
+      "ingredient": {
+      	"id": 42
+      },
+      "brandName": "Grand Marnier",
+      "volume": 0.7,
+      "price": 699,
+      "inShelf": true,
+      "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2011/03/grand-orange-collins.jpg"
+    }
   ```
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 201 CREATED <br/>
   * **Content:**
   ```
-  {}
+    {
+      "id": 98,
+      "ingredient": {
+        "id": 42
+      },
+      "brandName": "Grand Marnier",
+      "volume": 0.7,
+      "price": 699,
+      "inShelf": false,
+      "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2011/03/grand-orange-collins.jpg"
+    }
+  ```
+
+* **Error Response:**
+  
+  * **Code:** 422 ENTITY ALREADY EXISTS <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Bottle already exists"
+    }
   ```
 
 ####Update selected bottle
 
-  Updates json data about selected bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
+Updates json data about selected bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
 
 * **URL**
 
@@ -164,22 +224,51 @@
   `id=[integer]`
 
 * **Data Params**
-
   ```
-  {}
+    {
+      "id": 15,
+    	"ingredient": {
+    		"id": 47
+    	},
+    	"brandName": "Merry Widows Muskat Ottonel 2008",
+    	"volume": 0.75,
+    	"price": 275,
+    	"inShelf": false,
+    	"imageUrl": "https://quentinsadler.files.wordpress.com/2010/06/8wines-043043.jpg"
+    }
   ```
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 200 <br/>
   * **Content:**
   ```
-  {}
+    {
+    	"id": 15,
+    	"ingredient": {
+    		"id": 47
+    	},
+    	"brandName": "Merry Widows Muskat Ottonel 2008",
+    	"volume": 0.75,
+    	"price": 275,
+    	"inShelf": false,
+    	"imageUrl": "https://quentinsadler.files.wordpress.com/2010/06/8wines-043043.jpg"
+    }
+  ```
+  
+* **Error Response:**
+  
+  * **Code:** 404 NOT FOUND <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Bottle doesn't exist"
+    }
   ```
 
 ####Delete selected bottle
 
-  Deletes selected bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
+Deletes selected bottle of alcoholic beverage that you own in your cupboard, fridge, shelf etc.
 
 * **URL**
 
@@ -197,11 +286,7 @@
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
-  * **Content:**
-  ```
-  {}
-  ```
+  * **Code:** 204 NO CONTENT <br/>
 
 ####Delete all bottles
 
@@ -209,7 +294,7 @@
 
 * **URL**
 
-  /shelf/bottles/
+  /shelf/bottles
 
 * **Method:**
 
@@ -217,11 +302,7 @@
   
 * **Success Response:**
 
-  * **Code:** 200 <br />
-  * **Content:**
-  ```
-  {}
-  ```
+  * **Code:** 204 NO CONTENT <br/>
 
 ###Menu API
 
@@ -258,15 +339,25 @@
     ]
   ```
   
+  * **Error Response:**
+    
+    * **Code:** 404 NOT FOUND <br/> 
+    * **Content:**
+  ```
+    {
+      "error" : "Menu list is empty"
+    }
+  ```
+     
 ###Cocktails API
 
 ####Show cocktails for menu
 
-  Returns json data about cocktail list in chosen menu.
+Returns json data about cocktail list in chosen menu.
 
 * **URL**
 
-  /menu/:id/cocktails/
+  /menu/:id/cocktails
 
 * **Method:**
 
@@ -277,31 +368,31 @@
   * **Code:** 200 <br />
   * **Content:**
   ```
-  [
-    {
-        "id": 5,
-        "name": "Long Island Iced Tea",
-        "state": "AVAILABLE",
-        "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2013/07/Long-Island-Iced-Tea.jpg"
-    },
-    {
-        "id": 10,
-        "name": "Margarita",
-        "state": "AVAILABLE",
-        "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"
-    },
-    {
-        "id": 20,
-        "name": "Sex on the beach",
-        "state": "AVAILABLE",
-        "imageUrl": null
-    }
-  ]
+    [
+      {
+          "id": 5,
+          "name": "Long Island Iced Tea",
+          "state": "AVAILABLE",
+          "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2013/07/Long-Island-Iced-Tea.jpg"
+      },
+      {
+          "id": 10,
+          "name": "Margarita",
+          "state": "AVAILABLE",
+          "imageUrl": "http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"
+      },
+      {
+          "id": 20,
+          "name": "Sex on the beach",
+          "state": "AVAILABLE",
+          "imageUrl": null
+      }
+    ]
   ```
 
 ####Show selected cocktail
 
-  Returns json data with recipe details about selected cocktails.
+Returns json data with recipe details about selected cocktails.
 
 * **URL**
 
@@ -322,7 +413,7 @@
   * **Code:** 200 <br />
   * **Content:**
   ```
-  {
+    {
       "id": 5,
       "name": "Long Island Iced Tea",
       "menuId": 2,
@@ -333,27 +424,32 @@
               {
                   "ingredientId": 1,
                   "volume": 20,
-                  "unitsValue": "ML"
+                  "unitsValue": "ML",
+                  "missing": false
               },
               {
                   "ingredientId": 2,
                   "volume": 20,
-                  "unitsValue": "ML"
+                  "unitsValue": "ML",
+                  "missing": false
               },
               {
                   "ingredientId": 3,
                   "volume": 20,
-                  "unitsValue": "ML"
+                  "unitsValue": "ML",
+                  "missing": false
               },
               {
                   "ingredientId": 4,
                   "volume": 20,
-                  "unitsValue": "ML"
+                  "unitsValue": "ML",
+                  "missing": false
               },
               {
                   "ingredientId": 6,
                   "volume": 20,
-                  "unitsValue": "ML"
+                  "unitsValue": "ML",
+                  "missing": false
               }
           ],
           "additives": [
@@ -377,12 +473,22 @@
           ]
       },
       "description": "A Long Island Iced Tea is a type of alcoholic mixed drink typically made with, among other ingredients, tequila, vodka, light rum, triple sec, and gin. It is so named because of the resemblance to the color and taste of iced tea."
-  }
+    }
+  ```
+
+* **Error Response:**
+  
+  * **Code:** 404 NOT FOUND <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Cocktail doesn't exist"
+    }
   ```
 
 ####Update selected cocktail
 
-  Updates json data about selected cocktail with receipe details.
+Updates json data about selected cocktail with recipe details.
 
 * **URL**
 
@@ -399,9 +505,30 @@
   `id=[integer]`
 
 * **Data Params**
-
   ```
-  {}
+    {
+      "id": 1,
+      "name": "B52",
+      "menuId": 1,
+      "imageUrl": "http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png",
+      "insideItems": {
+        "beverages": [
+          {
+            "ingredientId": 8,
+            "volume": 20
+          },
+          {
+            "ingredientId": 11,
+            "volume": 20
+          },
+          {
+            "ingredientId": 16,
+            "volume": 20
+          }
+        ]
+      },
+      "description": "The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers."
+    }  
   ```
 
 * **Success Response:**
@@ -409,12 +536,51 @@
   * **Code:** 200 <br />
   * **Content:**
   ```
-  {}
+    {
+      "id": 1,
+      "name": "B52",
+      "menuId": 1,
+      "state": "NOT_AVAILABLE",
+      "imageUrl": "http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png",
+      "insideItems": {
+        "beverages": [
+          {
+            "ingredientId": 8,
+            "volume": 20,
+            "unitsValue": "ML",
+            "missing": true
+          },
+          {
+            "ingredientId": 11,
+            "volume": 20,
+            "unitsValue": "ML",
+            "missing": false
+          },
+          {
+            "ingredientId": 16,
+            "volume": 20,
+            "unitsValue": "ML",
+            "missing": true
+          }
+        ]
+      },
+      "description": "The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers."
+    }
+  ```
+
+* **Error Response:**
+
+  * **Code:** 404 NOT FOUND <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Cocktail doesn't exist"
+    }
   ```
 
 ####Delete selected cocktail
 
-  Deletes selected coctail and related data.
+Deletes selected cocktail and related data.
 
 * **URL**
 
@@ -432,5 +598,89 @@
 
 * **Success Response:**
 
-  * **Code:** 204 <br />
+  * **Code:** 204 NO CONTENT <br/>
+
+####Add a new cocktail
+
+Posts json data about selected cocktail with recipe details.
+
+* **URL**
+
+  /menu/cocktails
+
+* **Method:**
+
+  `POST`
+  
+* **Data Params**
+  ```
+    {
+      "name": "B52",
+      "menuId": 1,
+      "imageUrl": "http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png",
+      "insideItems": {
+        "beverages": [
+          {
+            "ingredientId": 8,
+            "volume": 20
+          },
+          {
+            "ingredientId": 11,
+            "volume": 20
+          },
+          {
+            "ingredientId": 16,
+            "volume": 20
+          }
+        ]
+      },
+      "description": "The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers."
+    }  
+  ```
+
+* **Success Response:**
+
+  * **Code:** 201 CREATED <br/>
   * **Content:**
+  ```
+    {
+      "id": 1,
+      "name": "B52",
+      "menuId": 1,
+      "state": "NOT_AVAILABLE",
+      "imageUrl": "http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png",
+      "insideItems": {
+        "beverages": [
+          {
+            "ingredientId": 8,
+            "volume": 20,
+            "unitsValue": "ML",
+            "missing": false
+          },
+          {
+            "ingredientId": 11,
+            "volume": 20,
+            "unitsValue": "ML",
+            "missing": true
+          },
+          {
+            "ingredientId": 16,
+            "volume": 20,
+            "unitsValue": "ML",
+            "missing": true
+          }
+        ]
+      },
+      "description": "The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers."
+    }
+  ```
+
+* **Error Response:**
+  
+  * **Code:** 422 ENTITY ALREADY EXISTS <br/> 
+  * **Content:**
+  ```
+    {
+      "error" : "Cocktail already exists"
+    }
+  ```
