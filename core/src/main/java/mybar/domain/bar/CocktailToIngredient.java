@@ -1,6 +1,8 @@
 package mybar.domain.bar;
 
 import mybar.UnitsValue;
+import mybar.domain.bar.ingredient.Beverage;
+import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
 import mybar.dto.bar.CocktailToIngredientDto;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,15 @@ public class CocktailToIngredient {
     private CocktailToIngredientPk pk = new CocktailToIngredientPk();
     private double volume;
     private UnitsValue unitsValue;
+
+    @PrePersist
+    @PreUpdate
+    public void setDefaults() {
+        if (unitsValue == null) {
+            boolean isLiquid = pk.getIngredient() instanceof Beverage || pk.getIngredient() instanceof Drink;
+            unitsValue = isLiquid ? UnitsValue.ML : UnitsValue.PCS;
+        }
+    }
 
     @EmbeddedId
     private CocktailToIngredientPk getPk() {

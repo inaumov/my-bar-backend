@@ -18,15 +18,15 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
         type = (Class) pt.getActualTypeArguments()[0];
     }
 
+    //    crud
+
     public T create(final T t) {
         em.persist(t);
-        em.flush();
-        em.refresh(t);
         return t;
     }
 
     public T read(final Object id) {
-        return (T) em.find(type, id);
+        return em.find(type, id);
     }
 
     public T update(final T t) {
@@ -34,7 +34,8 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     public void delete(final Object id) {
-        em.remove(em.getReference(type, id));
+        T reference = em.getReference(type, id);
+        em.remove(reference);
     }
 
 }
