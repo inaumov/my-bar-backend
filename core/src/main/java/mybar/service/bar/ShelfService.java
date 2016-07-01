@@ -17,7 +17,7 @@ import java.util.List;
 @Transactional
 public class ShelfService {
 
-    @Autowired
+    @Autowired(required = false)
     private BottleDao bottleDao;
 
     // kind of caching :)

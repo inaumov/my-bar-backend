@@ -1,5 +1,6 @@
 package mybar.app.bean.bar;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.bar.IBottle;
 import mybar.app.bean.bar.ingredient.BeverageBean;
@@ -11,6 +12,7 @@ public class BottleBean implements IBottle {
     private int id;
 
     @JsonView(View.Shelf.class)
+    @JsonProperty("ingredient")
     private BeverageBean beverage;
 
     @JsonView(View.Shelf.class)
