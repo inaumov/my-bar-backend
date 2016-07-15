@@ -23,7 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class IngredientService {
 
-    @Autowired
+    @Autowired(required = false)
     private IngredientDao ingredientDao;
 
     public <T extends IIngredient> List<T> findByGroupName(String groupName) {
