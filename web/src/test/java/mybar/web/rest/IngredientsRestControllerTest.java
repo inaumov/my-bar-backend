@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -24,7 +25,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
+import java.util.Collections;
 
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -59,7 +62,7 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void findAll_Should_ReturnAllIngredients() throws Exception {
+    public void test_Should_ReturnAllIngredients() throws Exception {
 
         AdditiveDto additive = new AdditiveDto();
         DrinkDto drink = new DrinkDto();
@@ -194,14 +197,16 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void test_FindByGroupName_Should_ThrowException_When_FilterUnknown() throws Exception {
+    public void test_FindByGroupName_Should_ReturnNothing_When_FilterUnknown() throws Exception {
 
-        when(ingredientService.findByGroupName(UNKNOWN)).thenThrow(new Exception("Type not present"));
+        when(ingredientService.findByGroupName(UNKNOWN)).thenReturn(Collections.<IIngredient>emptyList());
 
-        mockMvc.perform(get("/ingredients?filter=unknown").accept("application/json"))
+        mockMvc.perform(get("/ingredients?filter=unknown"))
 
-                .andExpect(status().isNotAcceptable())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
+                .andExpect(status().isNoContent())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+
+                .andExpect(jsonPath("$", empty()));
 
         verify(ingredientService, times(1)).findByGroupName("unknown");
         verifyNoMoreInteractions(ingredientService);

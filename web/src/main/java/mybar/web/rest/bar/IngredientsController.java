@@ -28,7 +28,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class IngredientsController<DTO extends IIngredient, BEAN extends IIngredient> {
@@ -41,7 +40,7 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
     //-------------------Retrieve Ingredients--------------------------------------------------------
 
     @RequestMapping(value = "/ingredients", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Collection<BEAN>>> listIngredients(
+    public ResponseEntity listIngredients(
             @RequestParam(value = "filter", required = false) String groupName) {
 
         List<DTO> ingredients;
@@ -53,22 +52,22 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
         }
 
         if (ingredients.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ingredients, HttpStatus.NO_CONTENT);
         }
 
         Collection<DTO> beverages = filter(ingredients, IBeverage.class);
         Collection<DTO> drinks = filter(ingredients, IDrink.class);
         Collection<DTO> additives = filter(ingredients, IAdditive.class);
 
-        ImmutableMap.Builder<Object, Object> builder = ImmutableMap.builder();
-        putIfPresent(builder, IBeverage.GROUP_NAME, new IngredientsMapper<BeverageBean>(BeverageBean.class).map(beverages));
-        putIfPresent(builder, IDrink.GROUP_NAME, new IngredientsMapper<DrinkBean>(DrinkBean.class).map(drinks));
-        putIfPresent(builder, IAdditive.GROUP_NAME, new IngredientsMapper<AdditiveBean>(AdditiveBean.class).map(additives));
+        ImmutableMap.Builder<String, Collection<BEAN>> builder = ImmutableMap.builder();
+        putIfPresent(builder, IBeverage.GROUP_NAME, new IngredientsMapper<>(BeverageBean.class).map(beverages));
+        putIfPresent(builder, IDrink.GROUP_NAME, new IngredientsMapper<>(DrinkBean.class).map(drinks));
+        putIfPresent(builder, IAdditive.GROUP_NAME, new IngredientsMapper<>(AdditiveBean.class).map(additives));
 
-        return new ResponseEntity(builder.build(), HttpStatus.OK);
+        return new ResponseEntity<>(builder.build(), HttpStatus.OK);
     }
 
-    private void putIfPresent(ImmutableMap.Builder<Object, Object> builder, String groupName, Collection beans) {
+    private void putIfPresent(ImmutableMap.Builder<String, Collection<BEAN>> builder, String groupName, Collection beans) {
         if (beans.isEmpty()) {
             return;
         }

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,13 +28,12 @@ public class IngredientService {
     private IngredientDao ingredientDao;
 
     public <T extends IIngredient> List<T> findByGroupName(String groupName) {
-        List<Ingredient> ingredients = null;
         try {
-            ingredients = ingredientDao.findByGroupName(groupName);
+            List<Ingredient> ingredients = ingredientDao.findByGroupName(groupName);
+            return transformToDto(ingredients);
         } catch (Exception e) {
-            Throwables.propagate(e);
+            return Collections.emptyList();
         }
-        return transformToDto(ingredients);
     }
 
     public <T extends IIngredient> List<T> findAll() {
