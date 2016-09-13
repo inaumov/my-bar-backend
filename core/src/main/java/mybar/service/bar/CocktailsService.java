@@ -27,13 +27,13 @@ import java.util.List;
 @Transactional
 public class CocktailsService {
 
-    @Autowired
+    @Autowired(required = false)
     private MenuDao menuDao;
 
-    @Autowired
+    @Autowired(required = false)
     private CocktailDao cocktailDao;
 
-    @Autowired
+    @Autowired(required = false)
     private OrderDao orderDao;
 
     private List<Menu> allMenusCached;

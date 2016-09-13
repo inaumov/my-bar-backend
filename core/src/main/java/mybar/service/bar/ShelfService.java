@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import mybar.api.bar.IBottle;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Bottle;
+import mybar.exception.BottleNotFoundException;
 import mybar.repository.bar.BottleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,25 +36,26 @@ public class ShelfService {
         return bottleDao.read(id).toDto();
     }
 
-    public boolean saveBottle(IBottle bottle) {
+    public IBottle saveBottle(IBottle bottle) {
         Bottle entity = null;
         try {
             entity = bottleDao.create(EntityFactory.from(bottle));
         } catch (EntityExistsException e) {
-            return false;
+            return entity.toDto();
         }
         all.add(entity);
-        return true;
+        return entity.toDto();
     }
 
-    public void updateBottle(IBottle bottle) {
+    public IBottle updateBottle(IBottle bottle) throws BottleNotFoundException {
         Bottle entity = bottleDao.update(EntityFactory.from(bottle));
         if (entity.getId() != 0) {
             shouldUpdate = true;
         }
+        return entity.toDto();
     }
 
-    public void deleteBottleById(int id) {
+    public void deleteBottleById(int id) throws BottleNotFoundException {
         bottleDao.delete(id);
         for (Bottle p : all) {
             if (p.getId() == id) {

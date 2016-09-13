@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/ingredients")
 public class IngredientsController<DTO extends IIngredient, BEAN extends IIngredient> {
 
     private Logger logger = LoggerFactory.getLogger(IngredientsController.class);
@@ -39,7 +40,7 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
 
     //-------------------Retrieve Ingredients--------------------------------------------------------
 
-    @RequestMapping(value = "/ingredients", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity listIngredients(
             @RequestParam(value = "filter", required = false) String groupName) {
 

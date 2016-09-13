@@ -10,7 +10,7 @@ public class BottleDto implements IBottle {
     private String brandName;
     private double volume;
     private double price;
-    private Boolean inShelf;
+    private Boolean inShelf = Boolean.FALSE;
     private String imageUrl;
 
     @Override

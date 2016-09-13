@@ -84,14 +84,6 @@
 
         <!-- testing -->
         <dependency>
-            <groupId>com.inaumov.mybar</groupId>
-            <artifactId>mybar-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -158,34 +150,6 @@
                             <server>tomServer</server>
                             <path>/${project.build.finalName}</path>
                         </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <!-- prepare resources -->
-        <profile>
-            <id>resources</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.googlecode.maven-download-plugin</groupId>
-                        <artifactId>maven-download-plugin</artifactId>
-                        <version>1.1.0</version>
-                        <executions>
-                            <execution>
-                                <id>install-resources</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>wget</goal>
-                                </goals>
-                                <configuration>
-                                    <url>http://inaumov.com/mybar/images.zip</url>
-                                    <unpack>true</unpack>
-                                    <outputDirectory>${project.basedir}/src/main/webapp/resources</outputDirectory>
-                                    <md5>f01640fb5694e92abbb2e3614b7e3621</md5>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
