@@ -69,7 +69,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void findAll_ShouldReturnAllBottleEntriesWithoutIngredients() throws Exception {
+    public void findAll_Should_ReturnAllBottleEntriesWithoutIngredients() throws Exception {
 
         final BottleDto first = new BottleDto();
         first.setId(TEST_ID_1);
@@ -115,7 +115,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void findAll_ShouldReturnAllBottleEntriesWithIngredientIds() throws Exception {
+    public void findAll_Should_ReturnAllBottleEntriesWithIngredientIds() throws Exception {
 
         final BottleDto first = new BottleDto();
         first.setId(TEST_ID_1);
@@ -149,7 +149,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void create_ShouldCreateNewBottle() throws Exception {
+    public void create_Should_CreateNewBottle() throws Exception {
 
         final BottleBean testBottle = new BottleBean();
 
@@ -170,7 +170,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void update_ShouldUpdateBottle() throws Exception {
+    public void update_Should_UpdateBottle() throws Exception {
         final BottleDto bottleDto = new BottleDto();
         bottleDto.setId(TEST_ID_1);
         BeverageDto beverageBean = new BeverageDto();
@@ -211,7 +211,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void update_shouldThrowNotFound() throws Exception {
+    public void update_Should_ThrowNotFound() throws Exception {
         final BottleBean testBottle = new BottleBean();
 
         when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenThrow(new BottleNotFoundException(0));
@@ -229,7 +229,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void delete_ShouldDeleteBottle() throws Exception {
+    public void delete_Should_DeleteBottle() throws Exception {
 
         doNothing().when(shelfService).deleteBottleById(TEST_ID_1);
 
@@ -242,7 +242,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void delete_shouldThrowNotFound() throws Exception {
+    public void delete_Should_ThrowNotFound() throws Exception {
 
         doThrow(new BottleNotFoundException(TEST_ID_2)).when(shelfService).deleteBottleById(TEST_ID_2);
 

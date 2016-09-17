@@ -62,7 +62,7 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void test_Should_ReturnAllIngredients() throws Exception {
+    public void findAll_Should_ReturnAll() throws Exception {
 
         AdditiveDto additive = new AdditiveDto();
         DrinkDto drink = new DrinkDto();
@@ -105,7 +105,7 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void test_FindByGroupName_Should_ReturnOnlyAdditives() throws Exception {
+    public void findByGroupName_Should_ReturnOnlyAdditives() throws Exception {
 
         AdditiveDto additive1 = new AdditiveDto();
         AdditiveDto additive2 = new AdditiveDto();
@@ -134,7 +134,7 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void test_FindByGroupName_Should_ReturnOnlyBeverages() throws Exception {
+    public void findByGroupName_Should_ReturnOnlyBeverages() throws Exception {
 
         BeverageDto beverage3 = new BeverageDto();
         beverage3.setId(3);
@@ -166,7 +166,7 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void test_FindByGroupName_Should_ReturnOnlyDrinks() throws Exception {
+    public void findByGroupName_Should_ReturnOnlyDrinks() throws Exception {
 
         DrinkDto drink2 = new DrinkDto();
         drink2.setId(2);
@@ -197,7 +197,7 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void test_FindByGroupName_Should_ReturnNothing_When_FilterUnknown() throws Exception {
+    public void findByGroupName_Should_ReturnNothing_When_FilterByUnknown() throws Exception {
 
         when(ingredientService.findByGroupName(UNKNOWN)).thenReturn(Collections.<IIngredient>emptyList());
 
