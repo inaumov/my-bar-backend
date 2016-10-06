@@ -1,5 +1,6 @@
 package mybar.web.rest.bar.exception;
 
+import com.google.common.base.Strings;
 import mybar.exception.BottleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -22,7 +23,7 @@ public class RestExceptionProcessor {
     public ErrorInfo bottleNotFound(HttpServletRequest req, BottleNotFoundException ex) {
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.no.bottle.id", null, locale);
-
+        errorMessage += " ";
         errorMessage += ex.getBottleId();
         String errorURL = req.getRequestURL().toString();
 

@@ -27,10 +27,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -69,6 +71,48 @@ public class ShelfRestControllerTest {
     }
 
     @Test
+    public void findById_Should_ReturnBottleEntry() throws Exception {
+
+        final BottleDto first = new BottleDto();
+        first.setId(TEST_ID_1);
+        first.setBrandName(BRAND_NAME_1);
+        first.setPrice(PRICE_1);
+        first.setInShelf(true);
+        first.setVolume(VOLUME_1);
+        first.setImageUrl(IMAGE_URL_1);
+
+        when(shelfService.findById(TEST_ID_1)).thenReturn(first);
+
+        mockMvc.perform(get("/shelf/bottles/" + TEST_ID_1))
+
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+
+                .andExpect(jsonPath("$.id", is(TEST_ID_1)))
+                .andExpect(jsonPath("$.brandName", is(BRAND_NAME_1)))
+                .andExpect(jsonPath("$.price", is(PRICE_1)))
+                .andExpect(jsonPath("$.inShelf", is(true)))
+                .andExpect(jsonPath("$.volume", is(VOLUME_1)))
+                .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_1)));
+
+        verify(shelfService, times(1)).findById(anyInt());
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
+    public void findById_Should_ThrowNotFound() throws Exception {
+        when(shelfService.findById(TEST_ID_2)).thenThrow(new BottleNotFoundException(TEST_ID_2));
+
+        mockMvc.perform(get("/shelf/bottles/" + TEST_ID_2))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"There is no Bottle with id: " + TEST_ID_2)));
+
+        verify(shelfService, times(1)).findById(anyInt());
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
     public void findAll_Should_ReturnAllBottleEntriesWithoutIngredients() throws Exception {
 
         final BottleDto first = new BottleDto();
@@ -89,7 +133,7 @@ public class ShelfRestControllerTest {
 
         when(shelfService.findAllBottles()).thenReturn(Arrays.<IBottle>asList(first, second));
 
-        mockMvc.perform(get("/shelf/bottles").accept("application/json"))
+        mockMvc.perform(get("/shelf/bottles"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -214,15 +258,16 @@ public class ShelfRestControllerTest {
     public void update_Should_ThrowNotFound() throws Exception {
         final BottleBean testBottle = new BottleBean();
 
-        when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenThrow(new BottleNotFoundException(0));
+        when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenThrow(new BottleNotFoundException(TEST_ID_2));
 
         String requestJson = toRequestJson(testBottle);
 
-        mockMvc.perform(put("/shelf/bottles/" + TEST_ID_1, requestJson).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/shelf/bottles/" + TEST_ID_2, requestJson).contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
                 .accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"There is no Bottle with id: " + TEST_ID_2)));
 
         verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
         verifyNoMoreInteractions(shelfService);
@@ -247,8 +292,10 @@ public class ShelfRestControllerTest {
         doThrow(new BottleNotFoundException(TEST_ID_2)).when(shelfService).deleteBottleById(TEST_ID_2);
 
         mockMvc.perform(delete("/shelf/bottles/" + TEST_ID_2).accept("application/json"))
+                .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"There is no Bottle with id: " + TEST_ID_2)));
 
         verify(shelfService, times(1)).deleteBottleById(TEST_ID_2);
         verifyNoMoreInteractions(shelfService);

@@ -3,11 +3,11 @@ package mybar.web.rest.bar.exception;
 public class ErrorInfo {
 
     private String url;
-    private String message;
+    private String errorMessage;
 
-    public ErrorInfo(String url, String message) {
+    public ErrorInfo(String url, String errorMessage) {
         this.url = url;
-        this.message = message;
+        this.errorMessage = errorMessage;
     }
 
     public String getUrl() {
@@ -18,12 +18,12 @@ public class ErrorInfo {
         this.url = url;
     }
 
-    public String getMessage() {
-        return message;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
 }

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -53,20 +52,17 @@ public class ShelfController {
 
     //-------------------Retrieve a Bottle--------------------------------------------------------
 
-    @RequestMapping(value = "/bottles/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/bottles/{id}", method = RequestMethod.GET)
     public ResponseEntity<BottleBean> getBottle(@PathVariable("id") int id) {
         logger.info("Fetching Bottle with id " + id);
+
         IBottle bottle = shelfService.findById(id);
-        if (bottle == null) {
-            logger.info("Bottle with id " + id + " not found");
-            return new ResponseEntity<BottleBean>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<BottleBean>(BottleBean.from(bottle), HttpStatus.OK);
+        return new ResponseEntity<>(BottleBean.from(bottle), HttpStatus.OK);
     }
 
     //-------------------Create a Bottle--------------------------------------------------------
 
-    @RequestMapping(value = "/bottles", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/bottles", method = RequestMethod.POST)
     public ResponseEntity<BottleBean> createBottle(@RequestBody BottleBean bottleBean, UriComponentsBuilder ucBuilder) {
 //        logger.info("Creating a Bottle of " + bottleBean.getBeverage().getKind());
         // TODO check this
@@ -88,7 +84,7 @@ public class ShelfController {
         logger.info("Updating Bottle " + id);
 
         final IBottle updated = shelfService.updateBottle(bottleBean);
-        return new ResponseEntity<BottleBean>(BottleBean.from(updated), HttpStatus.OK);
+        return new ResponseEntity<>(BottleBean.from(updated), HttpStatus.OK);
     }
 
     //------------------- Delete a Bottle --------------------------------------------------------
@@ -98,7 +94,7 @@ public class ShelfController {
         logger.info("Fetching & Deleting Bottle with id " + id);
 
         shelfService.deleteBottleById(id);
-        return new ResponseEntity<BottleBean>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //------------------- Delete All Bottles --------------------------------------------------------
@@ -108,7 +104,7 @@ public class ShelfController {
         logger.info("Deleting All Bottles");
 
         shelfService.deleteAllBottles();
-        return new ResponseEntity<BottleBean>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

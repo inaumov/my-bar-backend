@@ -25,7 +25,7 @@ public class ShelfService {
     private List<Bottle> all;
     private boolean shouldUpdate;
 
-    public IBottle findById(int id) {
+    public IBottle findById(int id) throws BottleNotFoundException {
         if (all != null) {
             for (Bottle p : all) {
                 if (p.getId() == id) {
