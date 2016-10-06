@@ -79,9 +79,9 @@ public class ShelfController {
 
     //------------------- Update a Bottle --------------------------------------------------------
 
-    @RequestMapping(value = "/bottles/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<BottleBean> updateBottle(@PathVariable("id") int id, @RequestBody BottleBean bottleBean) throws BottleNotFoundException {
-        logger.info("Updating Bottle " + id);
+    @RequestMapping(value = "/bottles/", method = RequestMethod.PUT)
+    public ResponseEntity<BottleBean> updateBottle(@RequestBody BottleBean bottleBean) {
+        logger.info("Updating Bottle " + bottleBean.getId());
 
         final IBottle updated = shelfService.updateBottle(bottleBean);
         return new ResponseEntity<>(BottleBean.from(updated), HttpStatus.OK);

@@ -233,7 +233,7 @@ public class ShelfRestControllerTest {
 
         String requestJson = toRequestJson(BottleBean.from(bottleDto));
 
-        mockMvc.perform(put("/shelf/bottles/" + TEST_ID_1, requestJson)
+        mockMvc.perform(put("/shelf/bottles/", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
                 .accept("application/json"))
@@ -262,7 +262,7 @@ public class ShelfRestControllerTest {
 
         String requestJson = toRequestJson(testBottle);
 
-        mockMvc.perform(put("/shelf/bottles/" + TEST_ID_2, requestJson).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/shelf/bottles/", requestJson).contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
                 .accept("application/json"))
                 .andExpect(status().isNotFound())
