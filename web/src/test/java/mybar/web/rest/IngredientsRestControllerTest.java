@@ -197,13 +197,13 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void findByGroupName_Should_ReturnNothing_When_FilterByUnknown() throws Exception {
+    public void findByGroupName_Should_ReturnEmptyArray_When_FilterByUnknown() throws Exception {
 
         when(ingredientService.findByGroupName(UNKNOWN)).thenReturn(Collections.<IIngredient>emptyList());
 
         mockMvc.perform(get("/ingredients?filter=unknown"))
 
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("$", empty()));

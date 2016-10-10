@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -53,7 +54,7 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
         }
 
         if (ingredients.isEmpty()) {
-            return new ResponseEntity<>(ingredients, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(Collections.<BEAN>emptyList(), HttpStatus.OK);
         }
 
         Collection<DTO> beverages = filter(ingredients, IBeverage.class);

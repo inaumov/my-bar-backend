@@ -116,7 +116,7 @@ public class ShelfRestControllerTest {
     }
 
     @Test
-    public void findAll_Should_ReturnEmptyEntriesArray() throws Exception {
+    public void findAll_Should_ReturnEmptyArray() throws Exception {
 
         when(shelfService.findAllBottles()).thenReturn(Collections.<IBottle>emptyList());
 
