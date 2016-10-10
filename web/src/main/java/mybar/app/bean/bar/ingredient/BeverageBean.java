@@ -1,9 +1,12 @@
 package mybar.app.bean.bar.ingredient;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.base.MoreObjects;
 import mybar.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.app.bean.bar.View;
+
+import java.util.Objects;
 
 public class BeverageBean implements IBeverage {
 
@@ -50,4 +53,12 @@ public class BeverageBean implements IBeverage {
         return bean;
     }
 
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("id", id)
+                .add("kind", kind)
+                .add("beverageType", beverageType)
+                .toString();
+    }
 }
