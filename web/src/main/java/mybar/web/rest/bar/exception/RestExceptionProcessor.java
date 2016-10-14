@@ -1,7 +1,7 @@
 package mybar.web.rest.bar.exception;
 
-import com.google.common.base.Strings;
 import mybar.exception.BottleNotFoundException;
+import mybar.exception.CocktailNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -25,6 +25,19 @@ public class RestExceptionProcessor {
         String errorMessage = messageSource.getMessage("error.no.bottle.id", null, locale);
         errorMessage += " ";
         errorMessage += ex.getBottleId();
+        String errorURL = req.getRequestURL().toString();
+
+        return new ErrorInfo(errorURL, errorMessage);
+    }
+
+    @ExceptionHandler(CocktailNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorInfo cocktailNotFound(HttpServletRequest req, CocktailNotFoundException ex) {
+        Locale locale = LocaleContextHolder.getLocale();
+        String errorMessage = messageSource.getMessage("error.no.cocktail.id", null, locale);
+        errorMessage += " ";
+        errorMessage += ex.getCocktailId();
         String errorURL = req.getRequestURL().toString();
 
         return new ErrorInfo(errorURL, errorMessage);

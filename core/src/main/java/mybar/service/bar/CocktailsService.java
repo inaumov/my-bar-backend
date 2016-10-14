@@ -11,6 +11,7 @@ import mybar.domain.EntityFactory;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
+import mybar.exception.CocktailNotFoundException;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.bar.MenuDao;
 import mybar.repository.history.OrderDao;
@@ -78,7 +79,7 @@ public class CocktailsService {
         });
     }
 
-    public ICocktail saveOrUpdateCocktail(ICocktail cocktail) {
+    public ICocktail saveOrUpdateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
         if (cocktail.getId() == 0) {
             try {
                 Cocktail entity = EntityFactory.from(cocktail);
@@ -124,7 +125,7 @@ public class CocktailsService {
         return false;
     }
 
-    public ICocktail findCocktailById(int id) {
+    public ICocktail findCocktailById(int id) throws CocktailNotFoundException {
         return cocktailDao.read(id).toDto();
     }
 
@@ -132,7 +133,7 @@ public class CocktailsService {
         return orderDao.findCocktailInHistory(cocktail);
     }
 
-    public void deleteCocktailById(int id) {
+    public void deleteCocktailById(int id) throws CocktailNotFoundException {
         cocktailDao.delete(id);
         if (allMenusCached == null) {
             return;

@@ -73,7 +73,7 @@ public class ShelfController {
 
     //------------------- Update a Bottle --------------------------------------------------------
 
-    @RequestMapping(value = "/bottles/", method = RequestMethod.PUT)
+    @RequestMapping(value = "/bottles", method = RequestMethod.PUT)
     public ResponseEntity<BottleBean> updateBottle(@RequestBody BottleBean bottleBean) {
         logger.info("Updating a bottle " + bottleBean);
 
