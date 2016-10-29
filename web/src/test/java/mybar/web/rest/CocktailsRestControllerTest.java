@@ -129,13 +129,14 @@ public class CocktailsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("$[0].long", hasSize(1)))
-                .andExpect(jsonPath("$[0].long[0].id", is(TEST_ID_1)))
+                .andExpect(jsonPath("$.long.", hasSize(1)))
+                .andExpect(jsonPath("$.long[0].id", is(TEST_ID_1)))
 
-                .andExpect(jsonPath("$[1].short", hasSize(1)))
-                .andExpect(jsonPath("$[1].short[0].id", is(TEST_ID_2)));
+                .andExpect(jsonPath("$.short.", hasSize(1)))
+                .andExpect(jsonPath("$.short[0].id", is(TEST_ID_2)))
+;
 
-        verify(cocktailsService, times(1)).findCocktailById(anyInt());
+        verify(cocktailsService, times(1)).getAllCocktails();
         verifyNoMoreInteractions(cocktailsService);
     }
 
