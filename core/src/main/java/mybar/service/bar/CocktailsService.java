@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import mybar.State;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
@@ -23,6 +24,7 @@ import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -68,15 +70,17 @@ public class CocktailsService {
 
     // cocktails
 
-    public List<ICocktail> getAllCocktailsForMenu(final Integer menuId) {
-        Menu menu = findMenuById(menuId);
-        List<Cocktail> cocktails = new ArrayList<>(menu.getCocktails());
-        return Lists.transform(cocktails, new Function<Cocktail, ICocktail>() {
-            @Override
-            public ICocktail apply(Cocktail cocktail) {
-                return cocktail.toDto();
-            }
-        });
+    public Map<String, List<ICocktail>> getAllCocktails() {
+        Map<String, List<ICocktail>> cocktails = Maps.newHashMap();
+        for (Menu menu : allMenusCached) {
+            cocktails.put(menu.toString(), Lists.transform((List<Cocktail>) menu.getCocktails(), new Function<Cocktail, ICocktail>() {
+                @Override
+                public ICocktail apply(Cocktail cocktail) {
+                    return cocktail.toDto();
+                }
+            }));
+        }
+        return cocktails;
     }
 
     public ICocktail saveOrUpdateCocktail(ICocktail cocktail) throws CocktailNotFoundException {

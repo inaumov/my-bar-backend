@@ -100,18 +100,20 @@ public class CocktailBean implements ICocktail {
     public static CocktailBean from(final ICocktail cocktail) {
         ModelMapper modelMapper = new ModelMapper();
         CocktailBean cocktailBean = modelMapper.map(cocktail, CocktailBean.class);
-        cocktailBean.setInsideItems(Maps.transformValues(cocktail.getInsideItems(),
-                new Function<Collection<? extends IInside>, Collection<InsideBean>>() {
-                    @Override
-                    public Collection<InsideBean> apply(Collection<? extends IInside> insideItems) {
-                        return Collections2.transform(insideItems, new Function<IInside, InsideBean>() {
-                            @Override
-                            public InsideBean apply(IInside inside) {
-                                return InsideBean.from(inside);
-                            }
-                        });
-                    }
-                }));
+        if (cocktail.getInsideItems() != null) {
+            cocktailBean.setInsideItems(Maps.transformValues(cocktail.getInsideItems(),
+                    new Function<Collection<? extends IInside>, Collection<InsideBean>>() {
+                        @Override
+                        public Collection<InsideBean> apply(Collection<? extends IInside> insideItems) {
+                            return Collections2.transform(insideItems, new Function<IInside, InsideBean>() {
+                                @Override
+                                public InsideBean apply(IInside inside) {
+                                    return InsideBean.from(inside);
+                                }
+                            });
+                        }
+                    }));
+        }
         return cocktailBean;
     }
 

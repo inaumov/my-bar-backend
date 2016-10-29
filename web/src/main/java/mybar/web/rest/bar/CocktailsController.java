@@ -1,6 +1,8 @@
 package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.app.bean.bar.CocktailBean;
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,6 +22,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cocktails")
@@ -36,47 +38,53 @@ public class CocktailsController {
     @JsonView(View.Menu.class)
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public ResponseEntity<List<MenuBean>> listAllMenuItems() {
-        logger.info("Fetching Menu items list...");
+        logger.info("Fetching menu items list...");
+
         List<IMenu> menuList = cocktailsService.getAllMenuItems();
         if (menuList.isEmpty()) {
             logger.info("Menu list is empty.");
-            return new ResponseEntity<>(Collections.<MenuBean>emptyList(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Collections.<MenuBean>emptyList(), HttpStatus.OK);
         }
         List<MenuBean> convertedList = new ArrayList<>();
         for (IMenu menu : menuList) {
             convertedList.add(MenuBean.from(menu));
         }
-        logger.info(MessageFormat.format("Found {0} items in menu list", menuList.size()));
+        logger.info(MessageFormat.format("Found {0} items in menu list.", menuList.size()));
         return new ResponseEntity<>(convertedList, HttpStatus.OK);
     }
 
     //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
 
     @JsonView(View.Cocktail.class)
-    @RequestMapping(value = "/{menuId}/all", method = RequestMethod.GET)
-    public ResponseEntity<List<CocktailBean>> findCocktailsForMenu(@PathVariable("menuId") Integer menuId) {
-        logger.info("Fetching cocktails for menu with id {0}...", menuId);
-        List<ICocktail> cocktails = cocktailsService.getAllCocktailsForMenu(menuId);
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Map<String, List<CocktailBean>>> allCocktails() {
+        Map<String, List<ICocktail>> cocktails = cocktailsService.getAllCocktails();
         if (cocktails.isEmpty()) {
-            logger.info(MessageFormat.format("Cocktails list for Menu with id={0} is empty.", menuId));
-            return new ResponseEntity<>(Collections.<CocktailBean>emptyList(), HttpStatus.OK);
+            logger.info("Cocktail list is empty.");
+            return new ResponseEntity<>(Collections.<String, List<CocktailBean>>emptyMap(), HttpStatus.OK);
         }
-        List<CocktailBean> convertedList = new ArrayList<>();
-        for (ICocktail cocktail : cocktails) {
-            convertedList.add(CocktailBean.from(cocktail));
+        Map<String, List<CocktailBean>> converted = Maps.newHashMap();
+        for (String menu : cocktails.keySet()) {
+            List<CocktailBean> cocktailBeans = Lists.newArrayList();
+            for (ICocktail cocktail : cocktails.get(menu)) {
+                cocktailBeans.add(CocktailBean.from(cocktail));
+            }
+            converted.put(menu, cocktailBeans);
         }
-        logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", cocktails.size(), menuId));
-        return new ResponseEntity<>(convertedList, HttpStatus.OK);
+        for (String menu : converted.keySet()) {
+            logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", converted.get(menu).size(), menu));
+        }
+        return new ResponseEntity<>(converted, HttpStatus.OK);
     }
 
     //-------------------Retrieve a cocktail with details--------------------------------------------------------
 
     @JsonView(View.CocktailWithDetails.class)
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<CocktailBean> getCocktail(@PathVariable("id") Integer id) {
         logger.info("Fetching cocktail with id " + id);
-        ICocktail cocktail = cocktailsService.findCocktailById(id);
 
+        ICocktail cocktail = cocktailsService.findCocktailById(id);
         return new ResponseEntity<>(CocktailBean.from(cocktail), HttpStatus.OK);
     }
 
@@ -84,20 +92,20 @@ public class CocktailsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CocktailBean> addCocktail(@RequestBody CocktailBean cocktailBean, UriComponentsBuilder ucBuilder) {
-        logger.info("Creating a new cocktail item " + cocktailBean.getName());
+        logger.info("Creating a new cocktail item " + cocktailBean);
 
         ICocktail saved = cocktailsService.saveOrUpdateCocktail(cocktailBean);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/cocktail/{id}").buildAndExpand(cocktailBean.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/cocktails/{id}").buildAndExpand(cocktailBean.getId()).toUri());
         return new ResponseEntity<>(CocktailBean.from(saved), headers, HttpStatus.CREATED);
     }
 
     //------------------- Update a Cocktail --------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<CocktailBean> updateCocktail(@PathVariable("id") int id, @RequestBody CocktailBean cocktailBean) {
-        logger.info("Updating a cocktail " + id);
+    public ResponseEntity<CocktailBean> updateCocktail(@RequestBody CocktailBean cocktailBean) {
+        logger.info("Updating a cocktail " + cocktailBean);
 
         ICocktail updated = cocktailsService.saveOrUpdateCocktail(cocktailBean);
         return new ResponseEntity<>(CocktailBean.from(updated), HttpStatus.OK);
