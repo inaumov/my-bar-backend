@@ -29,9 +29,9 @@ public class MenuDaoTest extends BaseDaoTest {
         List<Menu> list = menuDao.findAll();
         assertEquals(3, list.size());
         Iterator<Menu> it = list.iterator();
-        assertMenu(it.next(), 1, "Shot");
-        assertMenu(it.next(), 2, "Long");
-        assertMenu(it.next(), 3, "Smoothie");
+        assertMenu(it.next(), 1, "shot");
+        assertMenu(it.next(), 2, "long");
+        assertMenu(it.next(), 3, "smoothie");
     }
 
     private void assertMenu(Menu c, int id, String name) {

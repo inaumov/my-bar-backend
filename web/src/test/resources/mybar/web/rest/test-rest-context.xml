@@ -20,9 +20,8 @@
     <!-- To enable @RequestMapping process on type level and method level -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
 
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basenames" value="/WEB-INF/i18n/messages"/>
-        <property name="fallbackToSystemLocale" value="true"/>
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="messages"/>
     </bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>

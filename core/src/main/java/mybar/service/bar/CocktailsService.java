@@ -10,7 +10,6 @@ import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Cocktail;
-import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
 import mybar.exception.CocktailNotFoundException;
 import mybar.repository.bar.CocktailDao;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -72,8 +70,8 @@ public class CocktailsService {
 
     public Map<String, List<ICocktail>> getAllCocktails() {
         Map<String, List<ICocktail>> cocktails = Maps.newHashMap();
-        for (Menu menu : allMenusCached) {
-            cocktails.put(menu.toString(), Lists.transform((List<Cocktail>) menu.getCocktails(), new Function<Cocktail, ICocktail>() {
+        for (Menu menu : allMenus()) {
+            cocktails.put(menu.getName(), Lists.transform((List<Cocktail>) menu.getCocktails(), new Function<Cocktail, ICocktail>() {
                 @Override
                 public ICocktail apply(Cocktail cocktail) {
                     return cocktail.toDto();

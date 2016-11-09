@@ -4,29 +4,28 @@ import com.fasterxml.jackson.annotation.JsonView;
 import mybar.api.bar.IMenu;
 import org.modelmapper.ModelMapper;
 
-public class MenuBean implements IMenu {
-
-    @JsonView(View.Menu.class)
-    private int id;
+public class MenuBean {
 
     @JsonView(View.Menu.class)
     private String name;
 
-    public int getId() {
-        return id;
-    }
+    @JsonView(View.Menu.class)
+    private String translation;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Override
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
     public static MenuBean from(IMenu menu) {

@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import mybar.api.bar.ICocktail;
+import mybar.api.bar.IMenu;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.dto.bar.CocktailDto;
+import mybar.dto.bar.MenuDto;
 import mybar.exception.CocktailNotFoundException;
 import mybar.service.bar.CocktailsService;
 import org.junit.After;
@@ -58,6 +60,33 @@ public class CocktailsRestControllerTest {
     @After
     public void tearDown() throws Exception {
         reset(cocktailsService);
+    }
+
+    @Test
+    public void listAllMenuItems_Should_ReturnAllMenuEntries() throws Exception {
+
+        final MenuDto first = new MenuDto();
+        first.setId(TEST_ID_1);
+        first.setName("shot");
+
+        final MenuDto second = new MenuDto();
+        second.setId(TEST_ID_2);
+        second.setName("long");
+
+        when(cocktailsService.getAllMenuItems()).thenReturn(Lists.<IMenu>newArrayList(first, second));
+
+        mockMvc.perform(get("/cocktails/menu"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+
+                .andExpect(jsonPath("$[0].name", is("shot")))
+                .andExpect(jsonPath("$[0].translation", equalTo("Test Shot")))
+                .andExpect(jsonPath("$[1].name", is("long")))
+                .andExpect(jsonPath("$[1].translation", equalTo("Test Long")));
+
+        verify(cocktailsService, times(1)).getAllMenuItems();
+        verifyNoMoreInteractions(cocktailsService);
     }
 
     @Test
@@ -120,7 +149,7 @@ public class CocktailsRestControllerTest {
 
         ImmutableMap<String, List<ICocktail>> cocktails = ImmutableMap.<String, List<ICocktail>>of(
                 "long", Lists.<ICocktail>newArrayList(first),
-                "short", Lists.<ICocktail>newArrayList(second)
+                "shot", Lists.<ICocktail>newArrayList(second)
         );
         when(cocktailsService.getAllCocktails()).thenReturn(cocktails);
 
@@ -132,9 +161,8 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.long.", hasSize(1)))
                 .andExpect(jsonPath("$.long[0].id", is(TEST_ID_1)))
 
-                .andExpect(jsonPath("$.short.", hasSize(1)))
-                .andExpect(jsonPath("$.short[0].id", is(TEST_ID_2)))
-;
+                .andExpect(jsonPath("$.shot.", hasSize(1)))
+                .andExpect(jsonPath("$.shot[0].id", is(TEST_ID_2)));
 
         verify(cocktailsService, times(1)).getAllCocktails();
         verifyNoMoreInteractions(cocktailsService);

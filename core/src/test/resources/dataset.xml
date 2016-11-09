@@ -2,9 +2,9 @@
 <dataset>
 
     <!-- bar management -->
-    <MENU ID="1" NAME="Shot"/>
-    <MENU ID="2" NAME="Long"/>
-    <MENU ID="3" NAME="Smoothie"/>
+    <MENU ID="1" NAME="shot"/>
+    <MENU ID="2" NAME="long"/>
+    <MENU ID="3" NAME="smoothie"/>
 
     <COCKTAIL ID="1" MENU_ID="1" NAME="B52" AVAILABLE="1" DESCRIPTION="The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers." IMAGE_URL="http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png"></COCKTAIL>
     <COCKTAIL ID="2" MENU_ID="1" NAME="B53" AVAILABLE="1"></COCKTAIL>

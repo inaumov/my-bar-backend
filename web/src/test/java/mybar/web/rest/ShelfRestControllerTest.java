@@ -109,7 +109,7 @@ public class ShelfRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(containsString("errorMessage\":\"There is no Bottle with id: " + TEST_ID_2)));
+                .andExpect(content().string(containsString("errorMessage\":\"There is no bottle with id: " + TEST_ID_2)));
 
         verify(shelfService, times(1)).findById(anyInt());
         verifyNoMoreInteractions(shelfService);
@@ -298,7 +298,7 @@ public class ShelfRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(containsString("errorMessage\":\"There is no Bottle with id: " + TEST_ID_2)));
+                .andExpect(content().string(containsString("errorMessage\":\"There is no bottle with id: " + TEST_ID_2)));
 
         verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
         verifyNoMoreInteractions(shelfService);
@@ -327,7 +327,7 @@ public class ShelfRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(containsString("errorMessage\":\"There is no Bottle with id: " + TEST_ID_2)));
+                .andExpect(content().string(containsString("errorMessage\":\"There is no bottle with id: " + TEST_ID_2)));
 
         verify(shelfService, times(1)).deleteBottleById(TEST_ID_2);
         verifyNoMoreInteractions(shelfService);

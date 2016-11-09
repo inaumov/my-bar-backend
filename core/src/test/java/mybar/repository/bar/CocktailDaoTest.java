@@ -136,7 +136,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, UnitsValue.ML, Additive.class);
 
         assertEquals("Menu ID related to cocktail should be same.", 3, updatedCocktail.getMenu().getId());
-        assertEquals("Menu NAME related to cocktail should be same.", "Smoothie", updatedCocktail.getMenu().getName());
+        assertEquals("Menu NAME related to cocktail should be same.", "smoothie", updatedCocktail.getMenu().getName());
         assertEquals("Cocktail name should same.", "Random smoothie name", updatedCocktail.getName());
         assertEquals("Cocktail state should be same.", State.NOT_AVAILABLE, updatedCocktail.getState());
         assertEquals("Cocktail description should be same.", "Random smoothie description", updatedCocktail.getDescription());

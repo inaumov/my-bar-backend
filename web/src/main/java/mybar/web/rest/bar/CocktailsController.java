@@ -12,6 +12,8 @@ import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/cocktails")
@@ -32,6 +31,8 @@ public class CocktailsController {
 
     @Autowired
     private CocktailsService cocktailsService;
+    @Autowired
+    private MessageSource messageSource;
 
     //-------------------Retrieve Menu List--------------------------------------------------------
 
@@ -46,8 +47,11 @@ public class CocktailsController {
             return new ResponseEntity<>(Collections.<MenuBean>emptyList(), HttpStatus.OK);
         }
         List<MenuBean> convertedList = new ArrayList<>();
+        Locale locale = LocaleContextHolder.getLocale();
         for (IMenu menu : menuList) {
-            convertedList.add(MenuBean.from(menu));
+            MenuBean from = MenuBean.from(menu);
+            from.setTranslation(messageSource.getMessage(menu.getName(), null, locale));
+            convertedList.add(from);
         }
         logger.info(MessageFormat.format("Found {0} items in menu list.", menuList.size()));
         return new ResponseEntity<>(convertedList, HttpStatus.OK);
@@ -64,12 +68,12 @@ public class CocktailsController {
             return new ResponseEntity<>(Collections.<String, List<CocktailBean>>emptyMap(), HttpStatus.OK);
         }
         Map<String, List<CocktailBean>> converted = Maps.newHashMap();
-        for (String menu : cocktails.keySet()) {
+        for (String menuName : cocktails.keySet()) {
             List<CocktailBean> cocktailBeans = Lists.newArrayList();
-            for (ICocktail cocktail : cocktails.get(menu)) {
+            for (ICocktail cocktail : cocktails.get(menuName)) {
                 cocktailBeans.add(CocktailBean.from(cocktail));
             }
-            converted.put(menu, cocktailBeans);
+            converted.put(menuName, cocktailBeans);
         }
         for (String menu : converted.keySet()) {
             logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", converted.get(menu).size(), menu));
