@@ -8,7 +8,6 @@ public class CocktailToIngredientDto implements IInside {
     private int ingredientId;
     private double volume;
     private UnitsValue unitsValue;
-    private boolean missing;
 
     @Override
     public int getIngredientId() {
@@ -36,14 +35,4 @@ public class CocktailToIngredientDto implements IInside {
     public void setUnitsValue(UnitsValue unitsValue) {
         this.unitsValue = unitsValue;
     }
-
-    @Override
-    public boolean isMissing() {
-        return missing;
-    }
-
-    public void setMissing(boolean missing) {
-        this.missing = missing;
-    }
-
 }

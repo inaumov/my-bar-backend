@@ -28,7 +28,7 @@ public class CocktailBean implements ICocktail {
     @JsonView(View.Cocktail.class)
     private String imageUrl;
 
-    @JsonView(View.CocktailWithDetails.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private Map<String, Collection<InsideBean>> insideItems = new HashMap<>();
 
     @JsonView(View.CocktailWithDetails.class)

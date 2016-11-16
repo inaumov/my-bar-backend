@@ -7,16 +7,17 @@ import org.modelmapper.ModelMapper;
 
 public class InsideBean implements IInside {
 
-    @JsonView(View.CocktailWithDetails.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private int ingredientId;
 
-    @JsonView(View.CocktailWithDetails.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private double volume;
 
-    @JsonView(View.CocktailWithDetails.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private UnitsValue unitsValue;
 
-    private boolean missing;
+    @JsonView(View.Cocktail.class)
+    private Boolean missing;
 
     @Override
     public int getIngredientId() {
@@ -41,9 +42,12 @@ public class InsideBean implements IInside {
         return unitsValue;
     }
 
-    @Override
-    public boolean isMissing() {
-        return false;
+    public Boolean isMissing() {
+        return missing;
+    }
+
+    public void setMissing(Boolean missing) {
+        this.missing = missing;
     }
 
     public void setUnitsValue(UnitsValue unitsValue) {

@@ -97,7 +97,6 @@ public class CocktailToIngredient {
             @Override
             protected void configure() {
                 map().setIngredientId(source.getIngredient().getId());
-                skip().setMissing(false);
             }
         };
         ModelMapper modelMapper = new ModelMapper();

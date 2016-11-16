@@ -9,7 +9,4 @@ public interface IInside {
     double getVolume();
 
     UnitsValue getUnitsValue();
-
-    boolean isMissing();
-
 }
