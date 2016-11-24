@@ -1,6 +1,7 @@
 package mybar.dto.bar;
 
 import mybar.domain.bar.Menu;
+import mybar.dto.DtoFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +17,7 @@ public class MenuTest {
         menu.setId(MENU_ID);
         menu.setName(NAME);
 
-        MenuDto dto = menu.toDto();
+        MenuDto dto = DtoFactory.toDto(menu);
         assertEquals(MENU_ID, dto.getId());
         assertEquals(NAME, dto.getName());
     }

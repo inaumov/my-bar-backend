@@ -42,12 +42,4 @@ public class DrinkBean implements IDrink {
         this.drinkType = drinkType;
     }
 
-    public static DrinkBean from(IDrink drink) {
-        DrinkBean bean = new DrinkBean();
-        bean.setId(drink.getId());
-        bean.setKind(drink.getKind());
-        bean.setDrinkType(drink.getDrinkType());
-        return bean;
-    }
-
 }

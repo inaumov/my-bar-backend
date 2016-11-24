@@ -1,18 +1,16 @@
 package mybar.service.bar;
 
 import com.google.common.base.Function;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import mybar.api.bar.ingredient.IAdditive;
-import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.api.bar.ingredient.IIngredient;
+import mybar.domain.bar.ingredient.Additive;
+import mybar.domain.bar.ingredient.Beverage;
+import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
-import mybar.dto.bar.ingredient.AdditiveDto;
-import mybar.dto.bar.ingredient.BeverageDto;
-import mybar.dto.bar.ingredient.DrinkDto;
 import mybar.repository.bar.IngredientDao;
-import org.modelmapper.ModelMapper;
+import mybar.dto.DtoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,20 +39,18 @@ public class IngredientService {
         return transformToDto(ingredients);
     }
 
-    private static  <T extends IIngredient> List<T> transformToDto(List<Ingredient> ingredients) {
+    private static <T extends IIngredient> List<T> transformToDto(List<Ingredient> ingredients) {
 
         Function<Ingredient, T> function = new Function<Ingredient, T>() {
-
-            ModelMapper mapper = new ModelMapper();
 
             @Override
             public T apply(Ingredient ingredient) {
                 if (ingredient instanceof IAdditive)
-                    return (T) mapper.map(ingredient, AdditiveDto.class);
+                    return (T) DtoFactory.toDto((Additive) ingredient);
                 if (ingredient instanceof IDrink)
-                    return (T) mapper.map(ingredient, DrinkDto.class);
-                if (ingredient instanceof IBeverage)
-                    return (T) mapper.map(ingredient, BeverageDto.class);
+                    return (T) DtoFactory.toDto((Drink) ingredient);
+                if (ingredient instanceof Beverage)
+                    return (T) DtoFactory.toDto((Beverage) ingredient);
                 return null;
             }
         };

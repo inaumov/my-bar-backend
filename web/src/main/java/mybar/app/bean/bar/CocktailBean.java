@@ -1,22 +1,19 @@
 package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Maps;
 import mybar.State;
 import mybar.api.bar.ICocktail;
-import mybar.api.bar.IInside;
-import org.modelmapper.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CocktailBean implements ICocktail {
 
-    @JsonView(View.Cocktail.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private int id;
 
-    @JsonView(View.Cocktail.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private String name;
 
     @JsonView(View.CocktailWithDetails.class)
@@ -25,7 +22,7 @@ public class CocktailBean implements ICocktail {
     @JsonView(View.Cocktail.class)
     private State state;
 
-    @JsonView(View.Cocktail.class)
+    @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private String imageUrl;
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
@@ -95,26 +92,6 @@ public class CocktailBean implements ICocktail {
 
     public void setInsideItems(Map<String, Collection<InsideBean>> insides) {
         this.insideItems = insides;
-    }
-
-    public static CocktailBean from(final ICocktail cocktail) {
-        ModelMapper modelMapper = new ModelMapper();
-        CocktailBean cocktailBean = modelMapper.map(cocktail, CocktailBean.class);
-        if (cocktail.getInsideItems() != null) {
-            cocktailBean.setInsideItems(Maps.transformValues(cocktail.getInsideItems(),
-                    new Function<Collection<? extends IInside>, Collection<InsideBean>>() {
-                        @Override
-                        public Collection<InsideBean> apply(Collection<? extends IInside> insideItems) {
-                            return Collections2.transform(insideItems, new Function<IInside, InsideBean>() {
-                                @Override
-                                public InsideBean apply(IInside inside) {
-                                    return InsideBean.from(inside);
-                                }
-                            });
-                        }
-                    }));
-        }
-        return cocktailBean;
     }
 
 }

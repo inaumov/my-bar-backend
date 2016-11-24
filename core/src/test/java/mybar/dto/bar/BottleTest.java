@@ -1,9 +1,9 @@
 package mybar.dto.bar;
 
 import mybar.State;
-import mybar.api.bar.IBottle;
-import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.Bottle;
+import mybar.domain.bar.ingredient.Beverage;
+import mybar.dto.DtoFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +29,7 @@ public class BottleTest {
         bottleEntity.setVolume(VOLUME);
         bottleEntity.setImageUrl(IMAGE_URL);
 
-        BottleDto dto = bottleEntity.toDto();
+        BottleDto dto = DtoFactory.toDto(bottleEntity);
         assertEquals(TEST_ID, dto.getId());
         assertEquals(TEST_ID, dto.getBeverage().getId());
         assertEquals(BRAND_NAME, dto.getBrandName());

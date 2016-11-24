@@ -1,21 +1,24 @@
 package mybar.domain.bar;
 
 import com.google.common.base.MoreObjects;
-import mybar.dto.bar.MenuDto;
-import org.modelmapper.ModelMapper;
+import lombok.Getter;
+import lombok.Setter;
+import mybar.api.bar.IMenu;
+import mybar.dto.DtoFactory;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
+@Getter
+@Setter
 @Entity
 public class Menu {
 
     @Id
     private int id;
 
-    @Column(name = "NAME")
+    @Column
     private String name;
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
@@ -25,26 +28,6 @@ public class Menu {
         cocktails = new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Collection<Cocktail> getCocktails() {
-        return cocktails;
-    }
-
     public void addCocktail(Cocktail cocktail) {
         if (!getCocktails().contains(cocktail)) {
             getCocktails().add(cocktail);
@@ -52,9 +35,8 @@ public class Menu {
         }
     }
 
-    public MenuDto toDto() {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(this, MenuDto.class);
+    public IMenu toDto() {
+        return DtoFactory.toDto(this);
     }
 
     @Override

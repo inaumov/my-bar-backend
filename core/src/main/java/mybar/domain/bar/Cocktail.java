@@ -1,17 +1,19 @@
 package mybar.domain.bar;
 
 import com.google.common.base.MoreObjects;
+import lombok.Getter;
+import lombok.Setter;
 import mybar.State;
-import mybar.dto.bar.CocktailDto;
-import mybar.util.ModelMapperConverters;
+import mybar.api.bar.ICocktail;
+import mybar.dto.DtoFactory;
 import org.hibernate.annotations.Cascade;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "COCKTAIL")
 public class Cocktail {
@@ -48,26 +50,6 @@ public class Cocktail {
     @Column(name = "IMAGE_URL", nullable = true)
     private String imageUrl;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<CocktailToIngredient> getCocktailToIngredientList() {
-        return cocktailToIngredientList;
-    }
-
     public void addCocktailToIngredient(CocktailToIngredient cocktailToIngredient) {
         if (!getCocktailToIngredientList().contains(cocktailToIngredient)) {
             getCocktailToIngredientList().add(cocktailToIngredient);
@@ -75,55 +57,8 @@ public class Cocktail {
         }
     }
 
-    public void setCocktailToIngredientList(List<CocktailToIngredient> cocktailToIngredientList) {
-        this.cocktailToIngredientList = cocktailToIngredientList;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public CocktailDto toDto() {
-
-        PropertyMap<Cocktail, CocktailDto> insidesMap = new PropertyMap<Cocktail, CocktailDto>() {
-            @Override
-            protected void configure() {
-                using(ModelMapperConverters.INSIDES_CONVERTER).map(source.getCocktailToIngredientList()).setInsideItems(null);
-                map().setMenuId(source.getMenu().getId());
-            }
-        };
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(insidesMap);
-
-        return modelMapper.map(this, CocktailDto.class);
+    public ICocktail toDto() {
+        return DtoFactory.toDto(this);
     }
 
     @Override

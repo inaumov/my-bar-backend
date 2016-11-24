@@ -1,5 +1,7 @@
 package mybar.domain.bar.ingredient;
 
+import lombok.Getter;
+import lombok.Setter;
 import mybar.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.bar.Bottle;
@@ -7,6 +9,8 @@ import mybar.domain.bar.Bottle;
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @DiscriminatorValue(value = "Beverage")
 public class Beverage extends Ingredient implements IBeverage {
@@ -23,23 +27,6 @@ public class Beverage extends Ingredient implements IBeverage {
 
     public Beverage(int beverageId) {
         setId(beverageId);
-    }
-
-    @Override
-    public BeverageType getBeverageType() {
-        return beverageType;
-    }
-
-    public void setBeverageType(BeverageType beverageType) {
-        this.beverageType = beverageType;
-    }
-
-    public List<Bottle> getBottles() {
-        return bottles;
-    }
-
-    public void setBottles(List<Bottle> bottles) {
-        this.bottles = bottles;
     }
 
 }

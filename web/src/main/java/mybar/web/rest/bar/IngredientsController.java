@@ -9,11 +9,11 @@ import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.api.bar.ingredient.IIngredient;
+import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.ingredient.AdditiveBean;
 import mybar.app.bean.bar.ingredient.BeverageBean;
 import mybar.app.bean.bar.ingredient.DrinkBean;
 import mybar.service.bar.IngredientService;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/ingredients")
-public class IngredientsController<DTO extends IIngredient, BEAN extends IIngredient> {
+public class IngredientsController {
 
     private Logger logger = LoggerFactory.getLogger(IngredientsController.class);
 
@@ -45,7 +45,7 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
     public ResponseEntity listIngredients(
             @RequestParam(value = "filter", required = false) String groupName) {
 
-        List<DTO> ingredients;
+        List<IIngredient> ingredients;
 
         if (Strings.isNullOrEmpty(groupName)) {
             ingredients = ingredientService.findAll();
@@ -54,14 +54,14 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
         }
 
         if (ingredients.isEmpty()) {
-            return new ResponseEntity<>(Collections.<BEAN>emptyList(), HttpStatus.OK);
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
         }
 
-        Collection<DTO> beverages = filter(ingredients, IBeverage.class);
-        Collection<DTO> drinks = filter(ingredients, IDrink.class);
-        Collection<DTO> additives = filter(ingredients, IAdditive.class);
+        Collection beverages = filter(ingredients, IBeverage.class);
+        Collection drinks = filter(ingredients, IDrink.class);
+        Collection additives = filter(ingredients, IAdditive.class);
 
-        ImmutableMap.Builder<String, Collection<BEAN>> builder = ImmutableMap.builder();
+        ImmutableMap.Builder<String, Collection<IIngredient>> builder = ImmutableMap.builder();
         putIfPresent(builder, IBeverage.GROUP_NAME, new IngredientsMapper<>(BeverageBean.class).map(beverages));
         putIfPresent(builder, IDrink.GROUP_NAME, new IngredientsMapper<>(DrinkBean.class).map(drinks));
         putIfPresent(builder, IAdditive.GROUP_NAME, new IngredientsMapper<>(AdditiveBean.class).map(additives));
@@ -69,7 +69,7 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
         return new ResponseEntity<>(builder.build(), HttpStatus.OK);
     }
 
-    private void putIfPresent(ImmutableMap.Builder<String, Collection<BEAN>> builder, String groupName, Collection beans) {
+    private void putIfPresent(ImmutableMap.Builder<String, Collection<IIngredient>> builder, String groupName, Collection beans) {
         if (beans.isEmpty()) {
             return;
         }
@@ -88,7 +88,6 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
     private class IngredientsMapper<OUT> {
 
         private final Class<OUT> type;
-        private ModelMapper mapper = new ModelMapper();
 
         private IngredientsMapper() {
             Type t = this.getClass().getGenericSuperclass();
@@ -104,7 +103,14 @@ public class IngredientsController<DTO extends IIngredient, BEAN extends IIngred
             return Collections2.transform(filtered, new Function<IN, OUT>() {
                 @Override
                 public OUT apply(IN input) {
-                    return mapper.map(input, type);
+                    if (type == AdditiveBean.class) {
+                        return (OUT) RestBeanConverter.from((IAdditive) input);
+                    } else if (type == DrinkBean.class) {
+                        return (OUT) RestBeanConverter.from((IDrink) input);
+                    } else if (type == BeverageBean.class) {
+                        return (OUT) RestBeanConverter.from((IBeverage) input);
+                    }
+                    return null;
                 }
             });
 

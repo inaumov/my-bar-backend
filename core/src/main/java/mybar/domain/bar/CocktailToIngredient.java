@@ -4,9 +4,6 @@ import mybar.UnitsValue;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
-import mybar.dto.bar.CocktailToIngredientDto;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 
 import javax.persistence.*;
 
@@ -90,19 +87,6 @@ public class CocktailToIngredient {
 
     public int hashCode() {
         return (getPk() != null ? getPk().hashCode() : 0);
-    }
-
-    public CocktailToIngredientDto toDto() {
-        PropertyMap<CocktailToIngredient, CocktailToIngredientDto> insideMap = new PropertyMap<CocktailToIngredient, CocktailToIngredientDto>() {
-            @Override
-            protected void configure() {
-                map().setIngredientId(source.getIngredient().getId());
-            }
-        };
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(insideMap);
-
-        return modelMapper.map(this, CocktailToIngredientDto.class);
     }
 
 }

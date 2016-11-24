@@ -35,4 +35,5 @@ public class CocktailToIngredientDto implements IInside {
     public void setUnitsValue(UnitsValue unitsValue) {
         this.unitsValue = unitsValue;
     }
+
 }

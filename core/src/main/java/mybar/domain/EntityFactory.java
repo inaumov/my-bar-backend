@@ -19,14 +19,14 @@ import java.util.Objects;
 
 public class EntityFactory {
 
-    public static final Menu from(final IMenu menu) {
+    public static Menu from(final IMenu menu) {
         Menu entity = new Menu();
         entity.setId(menu.getId());
         entity.setName(menu.getName());
         return entity;
     }
 
-    public static final Cocktail from(final ICocktail cocktail) {
+    public static Cocktail from(final ICocktail cocktail) {
         Cocktail entity = new Cocktail();
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
@@ -46,7 +46,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final CocktailToIngredient from(String groupName, final IInside inside) {
+    public static CocktailToIngredient from(String groupName, final IInside inside) {
         CocktailToIngredient cocktailToIngredient = new CocktailToIngredient();
         if (Objects.equals(groupName, IBeverage.GROUP_NAME)) {
             Beverage beverage = new Beverage();
@@ -66,7 +66,7 @@ public class EntityFactory {
         return cocktailToIngredient;
     }
 
-    public static final Ingredient from(final IBeverage beverage) {
+    public static Ingredient from(final IBeverage beverage) {
         Beverage entity = new Beverage();
         entity.setId(beverage.getId());
         entity.setKind(beverage.getKind());
@@ -74,7 +74,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Ingredient from(final IDrink drink) {
+    public static Ingredient from(final IDrink drink) {
         Drink entity = new Drink();
         entity.setId(drink.getId());
         entity.setKind(drink.getKind());
@@ -82,14 +82,14 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Ingredient from(final IAdditive additive) {
+    public static Ingredient from(final IAdditive additive) {
         Additive entity = new Additive();
         entity.setId(additive.getId());
         entity.setKind(additive.getKind());
         return entity;
     }
 
-    public static final Bottle from(final IBottle bottle) {
+    public static Bottle from(final IBottle bottle) {
         Bottle entity = new Bottle();
         entity.setId(bottle.getId());
         entity.setVolume(bottle.getVolume());
@@ -101,7 +101,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public static final Order from(final IOrder order) {
+    public static Order from(final IOrder order) {
         Order entity = new Order();
         entity.setId(order.getId());
         entity.setAmount(order.getAmount());

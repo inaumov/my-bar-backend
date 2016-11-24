@@ -3,6 +3,7 @@ package mybar.web.rest.bar;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import mybar.api.bar.IBottle;
+import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.BottleBean;
 import mybar.app.bean.bar.View;
 import mybar.service.bar.ShelfService;
@@ -27,6 +28,13 @@ public class ShelfController {
     @Autowired
     private ShelfService shelfService;
 
+    public static Function<IBottle, BottleBean> toBottleBeanFn = new Function<IBottle, BottleBean>() {
+        @Override
+        public BottleBean apply(IBottle bottle) {
+            return RestBeanConverter.from(bottle);
+        }
+    };
+
     //-------------------Retrieve All Bottles--------------------------------------------------------
 
     @RequestMapping(value = "/bottles", method = RequestMethod.GET)
@@ -41,12 +49,7 @@ public class ShelfController {
     }
 
     private static List<BottleBean> toRestModels(List<IBottle> allBottles) {
-        return Lists.transform(allBottles, new Function<IBottle, BottleBean>() {
-            @Override
-            public BottleBean apply(IBottle bottle) {
-                return BottleBean.from(bottle);
-            }
-        });
+        return Lists.transform(allBottles, toBottleBeanFn);
     }
 
     //-------------------Retrieve a Bottle--------------------------------------------------------
@@ -56,7 +59,7 @@ public class ShelfController {
         logger.info("Fetching a bottle with id " + id);
 
         IBottle bottle = shelfService.findById(id);
-        return new ResponseEntity<>(BottleBean.from(bottle), HttpStatus.OK);
+        return new ResponseEntity<>(RestBeanConverter.from(bottle), HttpStatus.OK);
     }
 
     //-------------------Create a Bottle--------------------------------------------------------
@@ -68,7 +71,7 @@ public class ShelfController {
         IBottle saved = shelfService.saveBottle(bottleBean);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/bottle/{id}").buildAndExpand(bottleBean.getId()).toUri());
-        return new ResponseEntity<>(BottleBean.from(saved), headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(RestBeanConverter.from(saved), headers, HttpStatus.CREATED);
     }
 
     //------------------- Update a Bottle --------------------------------------------------------
@@ -78,7 +81,7 @@ public class ShelfController {
         logger.info("Updating a bottle " + bottleBean);
 
         final IBottle updated = shelfService.updateBottle(bottleBean);
-        return new ResponseEntity<>(BottleBean.from(updated), HttpStatus.OK);
+        return new ResponseEntity<>(RestBeanConverter.from(updated), HttpStatus.OK);
     }
 
     //------------------- Delete a Bottle --------------------------------------------------------

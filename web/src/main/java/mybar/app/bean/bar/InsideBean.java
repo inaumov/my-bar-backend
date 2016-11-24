@@ -3,7 +3,6 @@ package mybar.app.bean.bar;
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.UnitsValue;
 import mybar.api.bar.IInside;
-import org.modelmapper.ModelMapper;
 
 public class InsideBean implements IInside {
 
@@ -52,11 +51,6 @@ public class InsideBean implements IInside {
 
     public void setUnitsValue(UnitsValue unitsValue) {
         this.unitsValue = unitsValue;
-    }
-
-    public static InsideBean from(IInside inside) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(inside, InsideBean.class);
     }
 
 }

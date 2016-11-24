@@ -1,8 +1,6 @@
 package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import mybar.api.bar.IMenu;
-import org.modelmapper.ModelMapper;
 
 public class MenuBean {
 
@@ -26,11 +24,6 @@ public class MenuBean {
 
     public void setTranslation(String translation) {
         this.translation = translation;
-    }
-
-    public static MenuBean from(IMenu menu) {
-        ModelMapper mapper = new ModelMapper();
-        return mapper.map(menu, MenuBean.class);
     }
 
 }

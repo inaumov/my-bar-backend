@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.MoreObjects;
 import mybar.api.bar.IBottle;
 import mybar.app.bean.bar.ingredient.BeverageBean;
-import org.modelmapper.ModelMapper;
 
 public class BottleBean implements IBottle {
 
@@ -92,11 +91,6 @@ public class BottleBean implements IBottle {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public static BottleBean from(IBottle bottle) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(bottle, BottleBean.class);
     }
 
     @Override

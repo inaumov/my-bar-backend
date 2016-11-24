@@ -1,6 +1,7 @@
 package mybar.service.bar;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import mybar.api.bar.IBottle;
 import mybar.domain.EntityFactory;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityExistsException;
 import java.util.List;
 
+import static mybar.dto.DtoFactory.*;
+
 @Service
 @Transactional
 public class ShelfService {
@@ -25,15 +28,22 @@ public class ShelfService {
     private List<Bottle> all;
     private boolean shouldUpdate;
 
+    public static final Function<Bottle, IBottle> toDtoFunction = new Function<Bottle, IBottle>() {
+        @Override
+        public IBottle apply(Bottle bottle) {
+            return toDto(bottle);
+        }
+    };
+
     public IBottle findById(int id) throws BottleNotFoundException {
         if (all != null) {
-            for (Bottle p : all) {
-                if (p.getId() == id) {
-                    return p.toDto();
+            for (Bottle bottle : all) {
+                if (bottle.getId() == id) {
+                    return toDto(bottle);
                 }
             }
         }
-        return bottleDao.read(id).toDto();
+        return toDto(bottleDao.read(id));
     }
 
     public IBottle saveBottle(IBottle bottle) {
@@ -41,10 +51,10 @@ public class ShelfService {
         try {
             entity = bottleDao.create(EntityFactory.from(bottle));
         } catch (EntityExistsException e) {
-            return entity.toDto();
+            return toDto(entity);
         }
         all.add(entity);
-        return entity.toDto();
+        return toDto(entity);
     }
 
     public IBottle updateBottle(IBottle bottle) throws BottleNotFoundException {
@@ -52,7 +62,7 @@ public class ShelfService {
         if (entity.getId() != 0) {
             shouldUpdate = true;
         }
-        return entity.toDto();
+        return toDto(entity);
     }
 
     public void deleteBottleById(int id) throws BottleNotFoundException {
@@ -69,16 +79,15 @@ public class ShelfService {
         if (all == null || shouldUpdate) {
             all = bottleDao.findAll();
         }
-        return Lists.transform(all, new Function<Bottle, IBottle>() {
-            @Override
-            public IBottle apply(Bottle bottle) {
-                return bottle.toDto();
-            }
-        });
+        return ImmutableList.copyOf(Lists.transform(all, toDtoFunction));
     }
 
     public int deleteAllBottles() {
         return bottleDao.destroyAll();
+    }
+
+    public boolean isBottleAvailable(int ingredientId) {
+        return ingredientId % 2 == 1; // todo
     }
 
 }

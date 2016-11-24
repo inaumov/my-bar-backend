@@ -3,6 +3,7 @@ package mybar.dto.bar;
 import com.google.common.collect.Lists;
 import mybar.State;
 import mybar.UnitsValue;
+import mybar.api.bar.ICocktail;
 import mybar.api.bar.IInside;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
@@ -53,19 +54,19 @@ public class CocktailTest {
         cocktail.setState(State.AVAILABLE);
         cocktail.setImageUrl(IMAGE_URL);
 
-        CocktailDto dto = cocktail.toDto();
+        ICocktail dto = cocktail.toDto();
         assertEquals(TEST_ID, dto.getId());
         assertEquals(IMAGE_URL, dto.getImageUrl());
         assertEquals(MENU_ID, dto.getMenuId());
         assertEquals(NAME, dto.getName());
         assertEquals(DESCRIPTION, dto.getDescription());
 
-        Map<String, Collection<CocktailToIngredientDto>> insideList = dto.getInsideItems();
+        Map<String, ? extends Collection<? extends IInside>> insideList = dto.getInsideItems();
         assertEquals(2, insideList.size());
         assertTrue(insideList.containsKey("beverages"));
         assertTrue(insideList.containsKey("drinks"));
 
-        Collection<CocktailToIngredientDto> beverages = insideList.get("beverages");
+        Collection<? extends IInside> beverages = insideList.get("beverages");
         assertEquals(1, beverages.size());
 
         IInside beverageDto = beverages.iterator().next();
@@ -73,7 +74,7 @@ public class CocktailTest {
         assertEquals(50, beverageDto.getVolume(), 0);
         assertEquals(UnitsValue.ML, beverageDto.getUnitsValue());
 
-        Collection<CocktailToIngredientDto> drinks = insideList.get("drinks");
+        Collection<? extends IInside> drinks = insideList.get("drinks");
         assertEquals(1, drinks.size());
 
         IInside juiceDto = drinks.iterator().next();

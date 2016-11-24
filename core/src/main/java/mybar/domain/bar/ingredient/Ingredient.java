@@ -1,9 +1,13 @@
 package mybar.domain.bar.ingredient;
 
+import lombok.Getter;
+import lombok.Setter;
 import mybar.api.bar.ingredient.IIngredient;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "INGREDIENT")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -25,22 +29,5 @@ public class Ingredient implements IIngredient {
 
     @Column(name = "KIND")
     private String kind;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
 
 }

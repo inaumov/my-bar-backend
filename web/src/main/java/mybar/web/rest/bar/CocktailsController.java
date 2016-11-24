@@ -1,10 +1,12 @@
 package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.collect.Lists;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
+import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.MenuBean;
 import mybar.app.bean.bar.View;
@@ -33,6 +35,15 @@ public class CocktailsController {
     private CocktailsService cocktailsService;
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private AvailableCocktailsWrapper cocktailsWrapper;
+
+    public static Function<ICocktail, CocktailBean> toCocktailBeanFunction = new Function<ICocktail, CocktailBean>() {
+        @Override
+        public CocktailBean apply(ICocktail cocktail) {
+            return RestBeanConverter.toCocktailBean(cocktail);
+        }
+    };
 
     //-------------------Retrieve Menu List--------------------------------------------------------
 
@@ -49,7 +60,7 @@ public class CocktailsController {
         List<MenuBean> convertedList = new ArrayList<>();
         Locale locale = LocaleContextHolder.getLocale();
         for (IMenu menu : menuList) {
-            MenuBean from = MenuBean.from(menu);
+            MenuBean from = RestBeanConverter.toMenuBean(menu);
             from.setTranslation(messageSource.getMessage(menu.getName(), null, locale));
             convertedList.add(from);
         }
@@ -69,12 +80,12 @@ public class CocktailsController {
         }
         Map<String, List<CocktailBean>> converted = Maps.newHashMap();
         for (String menuName : cocktails.keySet()) {
-            List<CocktailBean> cocktailBeans = Lists.newArrayList();
-            for (ICocktail cocktail : cocktails.get(menuName)) {
-                cocktailBeans.add(CocktailBean.from(cocktail));
-            }
-            converted.put(menuName, cocktailBeans);
+            converted.put(menuName, FluentIterable
+                    .from(cocktails.get(menuName))
+                    .transform(toCocktailBeanFunction)
+                    .toList());
         }
+        converted = cocktailsWrapper.get(converted);
         for (String menu : converted.keySet()) {
             logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", converted.get(menu).size(), menu));
         }
@@ -89,7 +100,7 @@ public class CocktailsController {
         logger.info("Fetching cocktail with id " + id);
 
         ICocktail cocktail = cocktailsService.findCocktailById(id);
-        return new ResponseEntity<>(CocktailBean.from(cocktail), HttpStatus.OK);
+        return new ResponseEntity<>(RestBeanConverter.toCocktailBean(cocktail), HttpStatus.OK);
     }
 
     //-------------------Create a Cocktail--------------------------------------------------------
@@ -102,7 +113,7 @@ public class CocktailsController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/cocktails/{id}").buildAndExpand(cocktailBean.getId()).toUri());
-        return new ResponseEntity<>(CocktailBean.from(saved), headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(RestBeanConverter.toCocktailBean(saved), headers, HttpStatus.CREATED);
     }
 
     //------------------- Update a Cocktail --------------------------------------------------------
@@ -112,7 +123,7 @@ public class CocktailsController {
         logger.info("Updating a cocktail " + cocktailBean);
 
         ICocktail updated = cocktailsService.saveOrUpdateCocktail(cocktailBean);
-        return new ResponseEntity<>(CocktailBean.from(updated), HttpStatus.OK);
+        return new ResponseEntity<>(RestBeanConverter.toCocktailBean(updated), HttpStatus.OK);
     }
 
     //------------------- Delete a Cocktail --------------------------------------------------------

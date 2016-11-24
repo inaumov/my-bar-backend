@@ -45,14 +45,6 @@ public class BeverageBean implements IBeverage {
         this.beverageType = beverageType;
     }
 
-    public static BeverageBean from(IBeverage drink) {
-        BeverageBean bean = new BeverageBean();
-        bean.setId(drink.getId());
-        bean.setKind(drink.getKind());
-        bean.setBeverageType(drink.getBeverageType());
-        return bean;
-    }
-
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this.getClass())

@@ -10,6 +10,7 @@ import mybar.UnitsValue;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.api.bar.ingredient.IBeverage;
+import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.dto.bar.CocktailDto;
 import mybar.dto.bar.CocktailToIngredientDto;
@@ -190,7 +191,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].insideItems.beverages[0].ingredientId", is(5)))
                 .andExpect(jsonPath("$.other[0].insideItems.beverages[0].volume", is(TEST_VOLUME_VALUE)))
                 .andExpect(jsonPath("$.other[0].insideItems.beverages[0].unitsValue", is(UnitsValue.ML.name())))
-                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].missing").exists()); // TODO
+                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].missing").exists());
 
         verify(cocktailsService, times(1)).getAllCocktails();
         verifyNoMoreInteractions(cocktailsService);
@@ -201,7 +202,7 @@ public class CocktailsRestControllerTest {
         CocktailDto cocktailDto = createCocktailDto();
 
         when(cocktailsService.saveOrUpdateCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
-        String requestJson = toRequestJson(CocktailBean.from(cocktailDto));
+        String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
         ResultActions resultActions = mockMvc.perform(post("/cocktails", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -224,7 +225,7 @@ public class CocktailsRestControllerTest {
 
         when(cocktailsService.saveOrUpdateCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
 
-        String requestJson = toRequestJson(CocktailBean.from(cocktailDto));
+        String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
         ResultActions resultActions = mockMvc.perform(put("/cocktails/", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -313,7 +314,7 @@ public class CocktailsRestControllerTest {
         return ow.writeValueAsString(testCocktail);
     }
 
-    private static CocktailDto createCocktailDto() {
+    public static CocktailDto createCocktailDto() {
         final CocktailDto cocktailDto = new CocktailDto();
         cocktailDto.setId(TEST_ID_1);
         cocktailDto.setName(NAME);

@@ -2,6 +2,7 @@ package mybar.service.bar;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -10,6 +11,7 @@ import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Cocktail;
+import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
 import mybar.exception.CocktailNotFoundException;
 import mybar.repository.bar.CocktailDao;
@@ -39,15 +41,23 @@ public class CocktailsService {
 
     private List<Menu> allMenusCached;
 
+    Function<Cocktail, ICocktail> cocktailFunction = new Function<Cocktail, ICocktail>() {
+        @Override
+        public ICocktail apply(Cocktail cocktail) {
+            return cocktail.toDto();
+        }
+    };
+    Function<Menu, IMenu> menuFunction = new Function<Menu, IMenu>() {
+        @Override
+        public IMenu apply(Menu menu) {
+            return menu.toDto();
+        }
+    };
+
     // menu
 
     public List<IMenu> getAllMenuItems() {
-        return Lists.transform(allMenus(), new Function<Menu, IMenu>() {
-            @Override
-            public IMenu apply(Menu menu) {
-                return menu.toDto();
-            }
-        });
+        return Lists.transform(allMenus(), menuFunction);
     }
 
     private List<Menu> allMenus() {
@@ -71,12 +81,7 @@ public class CocktailsService {
     public Map<String, List<ICocktail>> getAllCocktails() {
         Map<String, List<ICocktail>> cocktails = Maps.newHashMap();
         for (Menu menu : allMenus()) {
-            cocktails.put(menu.getName(), Lists.transform((List<Cocktail>) menu.getCocktails(), new Function<Cocktail, ICocktail>() {
-                @Override
-                public ICocktail apply(Cocktail cocktail) {
-                    return cocktail.toDto();
-                }
-            }));
+            cocktails.put(menu.getName(), FluentIterable.from(menu.getCocktails()).transform(cocktailFunction).toList());
         }
         return cocktails;
     }
@@ -96,18 +101,18 @@ public class CocktailsService {
             }
         } else {
             Cocktail cocktailFromDb = cocktailDao.read(cocktail.getId());
-            cocktailFromDb.getMenu().getCocktails().remove(cocktailFromDb);
-
-            Cocktail entity = EntityFactory.from(cocktail);
-            entity.setId(cocktail.getId());
-            entity.setName(cocktail.getName());
-            entity.setState(cocktail.getState());
-            entity.setDescription(cocktail.getDescription());
-            entity.setImageUrl(cocktail.getImageUrl());
+            cocktailFromDb.setName(cocktail.getName());
+            cocktailFromDb.setDescription(cocktail.getDescription());
+            cocktailFromDb.setImageUrl(cocktail.getImageUrl());
             Menu menuById = findMenuById(cocktail.getMenuId());
-            menuById.addCocktail(entity);
-
-            Cocktail updated = cocktailDao.update(entity);
+            cocktailFromDb.setMenu(menuById);
+            cocktailFromDb.getCocktailToIngredientList().clear();
+            List<CocktailToIngredient> cocktailToIngredientList = EntityFactory.from(cocktail).getCocktailToIngredientList();
+            for (CocktailToIngredient cocktailToIngredient : cocktailToIngredientList) {
+                cocktailFromDb.addCocktailToIngredient(cocktailToIngredient);
+            }
+            Cocktail updated = cocktailDao.update(cocktailFromDb);
+            //cocktailDao.read(cocktail.getId()).toDto();
             return updated.toDto();
         }
     }

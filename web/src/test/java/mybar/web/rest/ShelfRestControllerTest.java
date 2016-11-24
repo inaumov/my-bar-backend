@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import mybar.BeverageType;
 import mybar.api.bar.IBottle;
+import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.BottleBean;
 import mybar.app.bean.bar.ingredient.BeverageBean;
 import mybar.dto.bar.BottleDto;
@@ -82,6 +83,7 @@ public class ShelfRestControllerTest {
         first.setInShelf(true);
         first.setVolume(VOLUME_1);
         first.setImageUrl(IMAGE_URL_1);
+        first.setBeverage(new BeverageDto());
 
         when(shelfService.findById(TEST_ID_1)).thenReturn(first);
 
@@ -243,23 +245,11 @@ public class ShelfRestControllerTest {
 
     @Test
     public void update_Should_UpdateBottle() throws Exception {
-        final BottleDto bottleDto = new BottleDto();
-        bottleDto.setId(TEST_ID_1);
-        BeverageDto beverageBean = new BeverageDto();
-        beverageBean.setId(42);
-        beverageBean.setKind("Whiskey");
-        beverageBean.setBeverageType(BeverageType.DISTILLED);
-
-        bottleDto.setBeverage(beverageBean);
-        bottleDto.setBrandName(BRAND_NAME_1);
-        bottleDto.setPrice(PRICE_1);
-        bottleDto.setInShelf(true);
-        bottleDto.setVolume(VOLUME_1);
-        bottleDto.setImageUrl(IMAGE_URL_1);
+        final BottleDto bottleDto = prepareBottleDto();
 
         when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenReturn(bottleDto);
 
-        String requestJson = toRequestJson(BottleBean.from(bottleDto));
+        String requestJson = toRequestJson(RestBeanConverter.from(bottleDto));
 
         mockMvc.perform(put("/shelf/bottles/", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -281,6 +271,23 @@ public class ShelfRestControllerTest {
 
         verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
         verifyNoMoreInteractions(shelfService);
+    }
+
+    private BottleDto prepareBottleDto() {
+        final BottleDto bottleDto = new BottleDto();
+        bottleDto.setId(TEST_ID_1);
+        BeverageDto beverageBean = new BeverageDto();
+        beverageBean.setId(42);
+        beverageBean.setKind("Whiskey");
+        beverageBean.setBeverageType(BeverageType.DISTILLED);
+
+        bottleDto.setBeverage(beverageBean);
+        bottleDto.setBrandName(BRAND_NAME_1);
+        bottleDto.setPrice(PRICE_1);
+        bottleDto.setInShelf(true);
+        bottleDto.setVolume(VOLUME_1);
+        bottleDto.setImageUrl(IMAGE_URL_1);
+        return bottleDto;
     }
 
     @Test

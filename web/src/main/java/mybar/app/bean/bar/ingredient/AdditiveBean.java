@@ -30,11 +30,4 @@ public class AdditiveBean implements IAdditive {
         this.kind = kind;
     }
 
-    public static AdditiveBean from(IAdditive ingredient) {
-        AdditiveBean bean = new AdditiveBean();
-        bean.setId(ingredient.getId());
-        bean.setKind(ingredient.getKind());
-        return bean;
-    }
-
 }
