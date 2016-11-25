@@ -1,7 +1,8 @@
 package mybar.web.rest.bar;
 
 import com.google.common.collect.Iterables;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import mybar.State;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.InsideBean;
@@ -14,10 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Component
 public class AvailableCocktailsWrapper {
 
-    @Setter
     @Autowired // TODO fix setter or autowired???
     private ShelfService shelfService;
 

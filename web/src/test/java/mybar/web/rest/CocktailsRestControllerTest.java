@@ -17,10 +17,12 @@ import mybar.dto.bar.CocktailToIngredientDto;
 import mybar.dto.bar.MenuDto;
 import mybar.exception.CocktailNotFoundException;
 import mybar.service.bar.CocktailsService;
+import mybar.web.rest.bar.AvailableCocktailsWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -62,10 +64,13 @@ public class CocktailsRestControllerTest {
 
     @Autowired
     private CocktailsService cocktailsService;
+    @Autowired
+    private AvailableCocktailsWrapper cocktailsWrapper;
 
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        doAnswer(AdditionalAnswers.returnsFirstArg()).when(cocktailsWrapper).get(anyMap());
     }
 
     @After
@@ -191,7 +196,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].insideItems.beverages[0].ingredientId", is(5)))
                 .andExpect(jsonPath("$.other[0].insideItems.beverages[0].volume", is(TEST_VOLUME_VALUE)))
                 .andExpect(jsonPath("$.other[0].insideItems.beverages[0].unitsValue", is(UnitsValue.ML.name())))
-                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].missing").exists());
+                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].missing").doesNotExist());
 
         verify(cocktailsService, times(1)).getAllCocktails();
         verifyNoMoreInteractions(cocktailsService);

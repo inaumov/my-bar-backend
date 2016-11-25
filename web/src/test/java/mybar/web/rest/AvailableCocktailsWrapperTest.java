@@ -10,14 +10,17 @@ import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.InsideBean;
 import mybar.service.bar.ShelfService;
 import mybar.web.rest.bar.AvailableCocktailsWrapper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
 
@@ -25,25 +28,31 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.reset;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("test-rest-context.xml")
 public class AvailableCocktailsWrapperTest {
 
-    @Mock
+    @Autowired
     private ShelfService shelfService;
 
     private AvailableCocktailsWrapper cocktailsWrapper;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        cocktailsWrapper = new AvailableCocktailsWrapper();
-        cocktailsWrapper.setShelfService(shelfService);
+        cocktailsWrapper = new AvailableCocktailsWrapper(shelfService);
         Mockito.doAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
                 return (Integer) invocationOnMock.getArguments()[0] % 2 == 0; // not available = ingredient is missing
             }
         }).when(shelfService).isBottleAvailable(Matchers.anyInt());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        reset(shelfService);
     }
 
     @Test
