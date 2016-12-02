@@ -2,7 +2,7 @@ package mybar.api.bar;
 
 import mybar.UnitsValue;
 
-public interface IInside {
+public interface ICocktailIngredient {
 
     int getIngredientId();
 

@@ -41,16 +41,8 @@ public class DtoFactory {
         dto.setName(entity.getName());
         dto.setImageUrl(entity.getImageUrl());
         dto.setDescription(entity.getDescription());
-        dto.setInsideItems(convert(entity.getCocktailToIngredientList()));
+        dto.setIngredients(convert(entity.getCocktailToIngredientList()));
         dto.setMenuId(entity.getMenu().getId());
-        return dto;
-    }
-
-    public static CocktailToIngredientDto toDto(CocktailToIngredient entity) {
-        CocktailToIngredientDto dto = new CocktailToIngredientDto();
-        dto.setIngredientId(entity.getIngredient().getId());
-        dto.setUnitsValue(entity.getUnitsValue());
-        dto.setVolume(entity.getVolume());
         return dto;
     }
 
@@ -67,6 +59,14 @@ public class DtoFactory {
             }
         }
         return result.asMap();
+    }
+
+    private static CocktailToIngredientDto toDto(CocktailToIngredient entity) {
+        CocktailToIngredientDto dto = new CocktailToIngredientDto();
+        dto.setIngredientId(entity.getIngredient().getId());
+        dto.setUnitsValue(entity.getUnitsValue());
+        dto.setVolume(entity.getVolume());
+        return dto;
     }
 
     public static BottleDto toDto(Bottle entity) {

@@ -87,6 +87,7 @@ public class CocktailsService {
     }
 
     public ICocktail saveOrUpdateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
+        allMenusCached.clear();
         if (cocktail.getId() == 0) {
             try {
                 Cocktail entity = EntityFactory.from(cocktail);

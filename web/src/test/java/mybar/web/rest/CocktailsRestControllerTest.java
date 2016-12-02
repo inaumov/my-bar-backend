@@ -121,11 +121,11 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL)))
 
-                .andExpect(jsonPath("$.insideItems.beverages", hasSize(1)))
-                .andExpect(jsonPath("$.insideItems.beverages[0].ingredientId", is(5)))
-                .andExpect(jsonPath("$.insideItems.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$.insideItems.beverages[0].unitsValue", is(UnitsValue.ML.name())))
-                .andExpect(jsonPath("$.insideItems.beverages[0].missing", is(nullValue())));
+                .andExpect(jsonPath("$.ingredients.beverages", hasSize(1)))
+                .andExpect(jsonPath("$.ingredients.beverages[0].ingredientId", is(5)))
+                .andExpect(jsonPath("$.ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
+                .andExpect(jsonPath("$.ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$.ingredients.beverages[0].missing", is(nullValue())));
 
         verify(cocktailsService, times(1)).findCocktailById(anyInt());
         verifyNoMoreInteractions(cocktailsService);
@@ -192,11 +192,11 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].imageUrl", is(IMAGE_URL)))
                 .andExpect(jsonPath("$.other[0].menuId").doesNotExist())
 
-                .andExpect(jsonPath("$.other[0].insideItems.beverages", hasSize(1)))
-                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].ingredientId", is(5)))
-                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].unitsValue", is(UnitsValue.ML.name())))
-                .andExpect(jsonPath("$.other[0].insideItems.beverages[0].missing").doesNotExist());
+                .andExpect(jsonPath("$.other[0].ingredients.beverages", hasSize(1)))
+                .andExpect(jsonPath("$.other[0].ingredients.beverages[0].ingredientId", is(5)))
+                .andExpect(jsonPath("$.other[0].ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
+                .andExpect(jsonPath("$.other[0].ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$.other[0].ingredients.beverages[0].missing").doesNotExist());
 
         verify(cocktailsService, times(1)).getAllCocktails();
         verifyNoMoreInteractions(cocktailsService);
@@ -255,11 +255,11 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.menuId", is(MENU_ID)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
 
-                .andExpect(jsonPath("$.insideItems.beverages", hasSize(1)))
-                .andExpect(jsonPath("$.insideItems.beverages[0].ingredientId", is(5)))
-                .andExpect(jsonPath("$.insideItems.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$.insideItems.beverages[0].unitsValue", is(UnitsValue.ML.name())))
-                .andExpect(jsonPath("$.insideItems.beverages[0].missing").doesNotExist());
+                .andExpect(jsonPath("$.ingredients.beverages", hasSize(1)))
+                .andExpect(jsonPath("$.ingredients.beverages[0].ingredientId", is(5)))
+                .andExpect(jsonPath("$.ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
+                .andExpect(jsonPath("$.ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$.ingredients.beverages[0].missing").doesNotExist());
     }
 
     @Test
@@ -332,7 +332,7 @@ public class CocktailsRestControllerTest {
         beverage.setVolume(25);
         beverage.setUnitsValue(UnitsValue.ML);
 
-        cocktailDto.setInsideItems(ImmutableMap.<String, Collection<CocktailToIngredientDto>>of(IBeverage.GROUP_NAME, Collections.singleton(beverage)));
+        cocktailDto.setIngredients(ImmutableMap.<String, Collection<CocktailToIngredientDto>>of(IBeverage.GROUP_NAME, Collections.singleton(beverage)));
         return cocktailDto;
     }
 

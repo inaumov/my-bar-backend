@@ -1,19 +1,13 @@
 package mybar.dto.bar.ingredient;
 
+import lombok.Getter;
+import lombok.Setter;
 import mybar.DrinkType;
 import mybar.api.bar.ingredient.IDrink;
 
+@Getter
+@Setter
 public class DrinkDto extends IngredientBaseDto implements IDrink {
 
     private DrinkType drinkType;
-
-    @Override
-    public DrinkType getDrinkType() {
-        return drinkType;
-    }
-
-    public void setDrinkType(DrinkType drinkType) {
-        this.drinkType = drinkType;
-    }
-
 }

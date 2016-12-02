@@ -33,11 +33,11 @@ public class EntityFactory {
         entity.setState(cocktail.getState());
         entity.setDescription(cocktail.getDescription());
         entity.setImageUrl(cocktail.getImageUrl());
-        Map<String, ? extends Collection<? extends IInside>> insideItems = cocktail.getInsideItems();
+        Map<String, ? extends Collection<? extends ICocktailIngredient>> insideItems = cocktail.getIngredients();
         for (String groupName : insideItems.keySet()) {
-            Collection<? extends IInside> iInsides = insideItems.get(groupName);
-            for (IInside iInside : iInsides) {
-                entity.addCocktailToIngredient(from(groupName, iInside));
+            Collection<? extends ICocktailIngredient> iInsides = insideItems.get(groupName);
+            for (ICocktailIngredient cocktailToIngredient : iInsides) {
+                entity.addCocktailToIngredient(from(groupName, cocktailToIngredient));
             }
         }
         Menu menu = new Menu();
@@ -46,7 +46,7 @@ public class EntityFactory {
         return entity;
     }
 
-    public static CocktailToIngredient from(String groupName, final IInside inside) {
+    public static CocktailToIngredient from(String groupName, final ICocktailIngredient inside) {
         CocktailToIngredient cocktailToIngredient = new CocktailToIngredient();
         if (Objects.equals(groupName, IBeverage.GROUP_NAME)) {
             Beverage beverage = new Beverage();

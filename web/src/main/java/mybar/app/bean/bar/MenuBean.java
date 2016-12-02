@@ -1,7 +1,12 @@
 package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.base.MoreObjects;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class MenuBean {
 
     @JsonView(View.Menu.class)
@@ -10,20 +15,12 @@ public class MenuBean {
     @JsonView(View.Menu.class)
     private String translation;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTranslation() {
-        return translation;
-    }
-
-    public void setTranslation(String translation) {
-        this.translation = translation;
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("name", name)
+                .add("translation", translation)
+                .toString();
     }
 
 }

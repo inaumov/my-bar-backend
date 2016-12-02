@@ -1,26 +1,13 @@
 package mybar.dto.bar.ingredient;
 
+import lombok.Getter;
+import lombok.Setter;
 import mybar.api.bar.ingredient.IIngredient;
 
+@Getter
+@Setter
 public class IngredientBaseDto implements IIngredient {
 
     private int id;
     private String kind;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
 }

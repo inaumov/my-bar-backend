@@ -1,11 +1,12 @@
 package mybar.app;
 
 import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mybar.api.bar.IBottle;
 import mybar.api.bar.ICocktail;
-import mybar.api.bar.IInside;
+import mybar.api.bar.ICocktailIngredient;
 import mybar.api.bar.IMenu;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
@@ -13,7 +14,7 @@ import mybar.api.bar.ingredient.IDrink;
 import mybar.api.bar.ingredient.IIngredient;
 import mybar.app.bean.bar.BottleBean;
 import mybar.app.bean.bar.CocktailBean;
-import mybar.app.bean.bar.InsideBean;
+import mybar.app.bean.bar.CocktailIngredientBean;
 import mybar.app.bean.bar.MenuBean;
 import mybar.app.bean.bar.ingredient.AdditiveBean;
 import mybar.app.bean.bar.ingredient.BeverageBean;
@@ -21,48 +22,43 @@ import mybar.app.bean.bar.ingredient.DrinkBean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
 public final class RestBeanConverter {
 
-    public static Function<IInside, InsideBean> toInsideBean = new Function<IInside, InsideBean>() {
-        @Override
-        public InsideBean apply(IInside inside) {
-            return from(inside);
-        }
-    };
-
-    private static InsideBean from(IInside inside) {
-        InsideBean bean = new InsideBean();
+    private static CocktailIngredientBean from(ICocktailIngredient inside) {
+        CocktailIngredientBean bean = new CocktailIngredientBean();
         BeanUtils.copyProperties(inside, bean);
         return bean;
     }
 
-    public static Function<Collection<? extends IInside>, Collection<InsideBean>> toInsideMap = new Function<Collection<? extends IInside>, Collection<InsideBean>>() {
-        @Override
-        public Collection<InsideBean> apply(Collection<? extends IInside> insideItems) {
-            return FluentIterable.from(insideItems).transform(RestBeanConverter.toInsideBean).toList();
-        }
-    };
-
     public static CocktailBean toCocktailBean(ICocktail cocktail) {
         CocktailBean bean = new CocktailBean();
         BeanUtils.copyProperties(cocktail, bean);
-        bean.setInsideItems(transformMap(cocktail.getInsideItems(), RestBeanConverter.toInsideMap)); // TODO remove functions
+        bean.setIngredients(transformIngredients(cocktail.getIngredients()));
         return bean;
     }
 
-    private static Map transformMap(Map<String, ? extends Collection<? extends IInside>> map, Function<Collection<? extends IInside>, Collection<InsideBean>> function) {
+    private static Map<String, Collection<CocktailIngredientBean>> transformIngredients(Map<String, ? extends Collection<? extends ICocktailIngredient>> map) {
         if (CollectionUtils.isEmpty(map)) {
             return Collections.emptyMap();
         }
-        Map<String, Collection<InsideBean>> transformedMap = Maps.newHashMap();
-        for (Map.Entry<String, ? extends Collection<? extends IInside>> entry : map.entrySet()) {
-            transformedMap.put(entry.getKey(), function.apply(entry.getValue()));
+        Map<String, Collection<CocktailIngredientBean>> transformedMap = Maps.newHashMap();
+        for (Map.Entry<String, ? extends Collection<? extends ICocktailIngredient>> entry : map.entrySet()) {
+            transformedMap.put(entry.getKey(), transformCocktailIngredients(entry.getValue()));
         }
         return transformedMap;
+    }
+
+    private static ArrayList<CocktailIngredientBean> transformCocktailIngredients(Collection<? extends ICocktailIngredient> cocktailIngredients) {
+        ArrayList<CocktailIngredientBean> cocktailIngredientBeans = Lists.newArrayList();
+        for (ICocktailIngredient cocktailIngredient : cocktailIngredients) {
+            cocktailIngredientBeans.add(from(cocktailIngredient));
+        }
+        return cocktailIngredientBeans;
     }
 
     public static MenuBean toMenuBean(IMenu menu) {

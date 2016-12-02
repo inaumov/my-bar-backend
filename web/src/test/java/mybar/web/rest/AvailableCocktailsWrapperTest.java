@@ -7,7 +7,7 @@ import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.app.bean.bar.CocktailBean;
-import mybar.app.bean.bar.InsideBean;
+import mybar.app.bean.bar.CocktailIngredientBean;
 import mybar.service.bar.ShelfService;
 import mybar.web.rest.bar.AvailableCocktailsWrapper;
 import org.junit.After;
@@ -59,11 +59,11 @@ public class AvailableCocktailsWrapperTest {
     public void testGet() throws Exception {
         final CocktailBean emptyBean1 = new CocktailBean();
         emptyBean1.setId(1);
-        emptyBean1.setInsideItems(ImmutableMap.<String, Collection<InsideBean>>of(IDrink.GROUP_NAME, Collections.<InsideBean>emptyList()));
+        emptyBean1.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IDrink.GROUP_NAME, Collections.<CocktailIngredientBean>emptyList()));
 
         final CocktailBean emptyBean2 = new CocktailBean();
         emptyBean2.setId(2);
-        emptyBean2.setInsideItems(ImmutableMap.<String, Collection<InsideBean>>of(IAdditive.GROUP_NAME, Collections.<InsideBean>emptyList()));
+        emptyBean2.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IAdditive.GROUP_NAME, Collections.<CocktailIngredientBean>emptyList()));
 
         CocktailBean testNotEmptyBean = new CocktailBean();
         testNotEmptyBean.setId(3);
@@ -78,14 +78,14 @@ public class AvailableCocktailsWrapperTest {
         List<CocktailBean> shots = result.get("shot");
         CocktailBean shot1 = shots.get(0);
         assertEquals(State.UNDEFINED, shot1.getState());
-        assertThat(shot1.getInsideItems().get(IDrink.GROUP_NAME), is(empty()));
+        assertThat(shot1.getIngredients().get(IDrink.GROUP_NAME), is(empty()));
         CocktailBean shot2 = shots.get(1);
         assertEquals(State.UNDEFINED, shot2.getState());
-        assertThat(shot2.getInsideItems().get(IAdditive.GROUP_NAME), is(empty()));
+        assertThat(shot2.getIngredients().get(IAdditive.GROUP_NAME), is(empty()));
 
         List<CocktailBean> other = result.get("other");
         CocktailBean cocktail = other.get(0);
-        Iterator<InsideBean> insideBeanIterator = cocktail.getInsideItems().get(IBeverage.GROUP_NAME).iterator();
+        Iterator<CocktailIngredientBean> insideBeanIterator = cocktail.getIngredients().get(IBeverage.GROUP_NAME).iterator();
         assertThat(insideBeanIterator.next().isMissing(), is(false));
         assertThat(insideBeanIterator.next().isMissing(), is(true));
         assertThat(insideBeanIterator.next().isMissing(), is(false));
@@ -93,14 +93,14 @@ public class AvailableCocktailsWrapperTest {
     }
 
     public static CocktailBean addIngredients(CocktailBean cocktailBean) {
-        InsideBean a = new InsideBean();
+        CocktailIngredientBean a = new CocktailIngredientBean();
         a.setIngredientId(2);
-        InsideBean b = new InsideBean();
+        CocktailIngredientBean b = new CocktailIngredientBean();
         b.setIngredientId(3);
-        InsideBean c = new InsideBean();
+        CocktailIngredientBean c = new CocktailIngredientBean();
         c.setIngredientId(4);
 
-        cocktailBean.setInsideItems(ImmutableMap.<String, Collection<InsideBean>>of(IBeverage.GROUP_NAME, Lists.newArrayList(a, b, c)));
+        cocktailBean.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IBeverage.GROUP_NAME, Lists.newArrayList(a, b, c)));
         return cocktailBean;
     }
 

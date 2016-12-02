@@ -1,39 +1,15 @@
 package mybar.dto.bar;
 
+import lombok.Getter;
+import lombok.Setter;
 import mybar.UnitsValue;
-import mybar.api.bar.IInside;
+import mybar.api.bar.ICocktailIngredient;
 
-public class CocktailToIngredientDto implements IInside {
+@Getter
+@Setter
+public class CocktailToIngredientDto implements ICocktailIngredient {
 
     private int ingredientId;
     private double volume;
     private UnitsValue unitsValue;
-
-    @Override
-    public int getIngredientId() {
-        return ingredientId;
-    }
-
-    public void setIngredientId(int ingredientId) {
-        this.ingredientId = ingredientId;
-    }
-
-    @Override
-    public double getVolume() {
-        return volume;
-    }
-
-    public void setVolume(double volume) {
-        this.volume = volume;
-    }
-
-    @Override
-    public UnitsValue getUnitsValue() {
-        return unitsValue;
-    }
-
-    public void setUnitsValue(UnitsValue unitsValue) {
-        this.unitsValue = unitsValue;
-    }
-
 }

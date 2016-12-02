@@ -2,9 +2,9 @@ package mybar.app.bean.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import mybar.UnitsValue;
-import mybar.api.bar.IInside;
+import mybar.api.bar.ICocktailIngredient;
 
-public class InsideBean implements IInside {
+public class CocktailIngredientBean implements ICocktailIngredient {
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private int ingredientId;

@@ -1,9 +1,14 @@
 package mybar.app.bean.bar.ingredient;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.common.base.MoreObjects;
+import lombok.Getter;
+import lombok.Setter;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.app.bean.bar.View;
 
+@Getter
+@Setter
 public class AdditiveBean implements IAdditive {
 
     @JsonView(View.CocktailWithDetails.class)
@@ -13,21 +18,11 @@ public class AdditiveBean implements IAdditive {
     private String kind;
 
     @Override
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("id", id)
+                .add("kind", kind)
+                .toString();
     }
 
 }

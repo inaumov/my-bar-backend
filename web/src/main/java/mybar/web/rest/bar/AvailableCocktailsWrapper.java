@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import mybar.State;
 import mybar.app.bean.bar.CocktailBean;
-import mybar.app.bean.bar.InsideBean;
+import mybar.app.bean.bar.CocktailIngredientBean;
 import mybar.service.bar.ShelfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,22 +27,22 @@ public class AvailableCocktailsWrapper {
         Iterator<Map.Entry<String, List<CocktailBean>>> entries = cocktails.entrySet().iterator();
         for (; entries.hasNext(); ) {
             for (CocktailBean cocktail : entries.next().getValue()) {
-                cocktail.setState(calculateAvailability(cocktail.getInsideItems()));
+                cocktail.setState(calculateAvailability(cocktail.getIngredients()));
             }
         }
         return cocktails;
     }
 
-    private State calculateAvailability(Map<String, Collection<InsideBean>> insideItems) {
-        Collection<Collection<InsideBean>> values = insideItems.values();
-        Iterable<InsideBean> beans = Iterables.concat(values);
+    private State calculateAvailability(Map<String, Collection<CocktailIngredientBean>> insideItems) {
+        Collection<Collection<CocktailIngredientBean>> values = insideItems.values();
+        Iterable<CocktailIngredientBean> beans = Iterables.concat(values);
         if (!beans.iterator().hasNext()) { // TODO improve this check
             return State.UNDEFINED;
         }
         boolean isCocktailAvailable = true;
-        Iterator<Map.Entry<String, Collection<InsideBean>>> entries = insideItems.entrySet().iterator();
+        Iterator<Map.Entry<String, Collection<CocktailIngredientBean>>> entries = insideItems.entrySet().iterator();
         for (; entries.hasNext(); ) {
-            for (InsideBean inside : entries.next().getValue()) {
+            for (CocktailIngredientBean inside : entries.next().getValue()) {
                 boolean isBottleAvailable = shelfService.isBottleAvailable(inside.getIngredientId());
                 inside.setMissing(!isBottleAvailable);
                 isCocktailAvailable &= isBottleAvailable;
