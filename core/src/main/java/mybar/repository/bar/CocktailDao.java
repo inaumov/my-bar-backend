@@ -19,4 +19,12 @@ public class CocktailDao extends GenericDaoImpl<Cocktail> {
         return cocktails;
     }
 
+    public boolean findCocktailByName(String cocktailName) {
+        TypedQuery<String> q = em.createQuery("select c.name from Cocktail c where lower(c.name) like :cocktailName", String.class);
+        q.setParameter("cocktailName", cocktailName.toLowerCase());
+        List<String> resultList = q.getResultList();
+        q.setMaxResults(1);
+        return !resultList.isEmpty();
+    }
+
 }

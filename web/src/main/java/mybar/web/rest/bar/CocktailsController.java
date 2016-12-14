@@ -109,7 +109,7 @@ public class CocktailsController {
     public ResponseEntity<CocktailBean> addCocktail(@RequestBody CocktailBean cocktailBean, UriComponentsBuilder ucBuilder) {
         logger.info("Creating a new cocktail item " + cocktailBean);
 
-        ICocktail saved = cocktailsService.saveOrUpdateCocktail(cocktailBean);
+        ICocktail saved = cocktailsService.saveCocktail(cocktailBean);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/cocktails/{id}").buildAndExpand(cocktailBean.getId()).toUri());
@@ -122,7 +122,7 @@ public class CocktailsController {
     public ResponseEntity<CocktailBean> updateCocktail(@RequestBody CocktailBean cocktailBean) {
         logger.info("Updating a cocktail " + cocktailBean);
 
-        ICocktail updated = cocktailsService.saveOrUpdateCocktail(cocktailBean);
+        ICocktail updated = cocktailsService.updateCocktail(cocktailBean);
         return new ResponseEntity<>(RestBeanConverter.toCocktailBean(updated), HttpStatus.OK);
     }
 

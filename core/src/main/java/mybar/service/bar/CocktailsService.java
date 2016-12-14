@@ -14,6 +14,7 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
 import mybar.exception.CocktailNotFoundException;
+import mybar.exception.UniqueCocktailNameException;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.bar.MenuDao;
 import mybar.repository.history.OrderDao;
@@ -25,6 +26,7 @@ import javax.persistence.EntityExistsException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -61,7 +63,7 @@ public class CocktailsService {
     }
 
     private List<Menu> allMenus() {
-        if (allMenusCached == null) {
+        if (allMenusCached == null || allMenusCached.isEmpty()) {
             allMenusCached = menuDao.findAll();
         }
         return allMenusCached;
@@ -86,35 +88,54 @@ public class CocktailsService {
         return cocktails;
     }
 
-    public ICocktail saveOrUpdateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
+    public ICocktail saveCocktail(ICocktail cocktail) throws UniqueCocktailNameException {
+        checkCocktailExists(cocktail);
+        Cocktail entity = EntityFactory.from(cocktail);
+        Menu menuById = findMenuById(cocktail.getMenuId());
+        menuById.addCocktail(entity);
+        try {
+            Cocktail created = performSaveOrUpdate(entity);
+            return created.toDto();
+        } catch (EntityExistsException e) {
+            return null;
+        }
+    }
+
+    public ICocktail updateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
+        Cocktail cocktailFromDb = cocktailDao.read(cocktail.getId());
+        copyCocktailFieldsForUpdate(cocktailFromDb, cocktail);
+        Cocktail updated = performSaveOrUpdate(cocktailFromDb);
+        return updated.toDto();
+    }
+
+    private void copyCocktailFieldsForUpdate(Cocktail destination, ICocktail source) {
+        Cocktail existedEntity = (Cocktail) destination;
+        Objects.requireNonNull(existedEntity.getId());
+        existedEntity.setName(source.getName());
+        existedEntity.setDescription(source.getDescription());
+        existedEntity.setImageUrl(source.getImageUrl());
+        existedEntity.setMenu(findMenuById(source.getMenuId()));
+        existedEntity.getCocktailToIngredientList().clear();
+        List<CocktailToIngredient> cocktailToIngredientList = EntityFactory.from(source).getCocktailToIngredientList();
+        for (CocktailToIngredient cocktailToIngredient : cocktailToIngredientList) {
+            existedEntity.addCocktailToIngredient(cocktailToIngredient);
+        }
+    }
+
+    private Cocktail performSaveOrUpdate(Cocktail cocktail) {
         allMenusCached.clear();
         if (cocktail.getId() == 0) {
-            try {
-                Cocktail entity = EntityFactory.from(cocktail);
-                Menu menuById = findMenuById(cocktail.getMenuId());
-                menuById.addCocktail(entity);
-
-                Cocktail created = cocktailDao.create(entity);
-                //all.add(entity);
-                return created.toDto();
-            } catch (EntityExistsException e) {
-                return null;
-            }
+            Cocktail created = cocktailDao.create(cocktail);
+            return created;
         } else {
-            Cocktail cocktailFromDb = cocktailDao.read(cocktail.getId());
-            cocktailFromDb.setName(cocktail.getName());
-            cocktailFromDb.setDescription(cocktail.getDescription());
-            cocktailFromDb.setImageUrl(cocktail.getImageUrl());
-            Menu menuById = findMenuById(cocktail.getMenuId());
-            cocktailFromDb.setMenu(menuById);
-            cocktailFromDb.getCocktailToIngredientList().clear();
-            List<CocktailToIngredient> cocktailToIngredientList = EntityFactory.from(cocktail).getCocktailToIngredientList();
-            for (CocktailToIngredient cocktailToIngredient : cocktailToIngredientList) {
-                cocktailFromDb.addCocktailToIngredient(cocktailToIngredient);
-            }
-            Cocktail updated = cocktailDao.update(cocktailFromDb);
-            //cocktailDao.read(cocktail.getId()).toDto();
-            return updated.toDto();
+            Cocktail updated = cocktailDao.update(cocktail);
+            return updated;
+        }
+    }
+
+    private void checkCocktailExists(ICocktail cocktail) throws UniqueCocktailNameException {
+        if (cocktailDao.findCocktailByName(cocktail.getName())) {
+            throw new UniqueCocktailNameException(cocktail.getName());
         }
     }
 
@@ -130,6 +151,11 @@ public class CocktailsService {
     }
 
     public boolean isCocktailExist(ICocktail cocktail) {
+        try {
+            checkCocktailExists(cocktail);
+        } catch (UniqueCocktailNameException e) {
+            return true;
+        }
         return false;
     }
 

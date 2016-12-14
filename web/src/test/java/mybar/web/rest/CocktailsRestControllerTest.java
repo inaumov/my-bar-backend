@@ -206,7 +206,7 @@ public class CocktailsRestControllerTest {
     public void create_Should_CreateNewCocktail() throws Exception {
         CocktailDto cocktailDto = createCocktailDto();
 
-        when(cocktailsService.saveOrUpdateCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
+        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
         ResultActions resultActions = mockMvc.perform(post("/cocktails", requestJson)
@@ -220,7 +220,7 @@ public class CocktailsRestControllerTest {
 
         assertCocktailResponseBody(resultActions);
 
-        verify(cocktailsService, times(1)).saveOrUpdateCocktail(Matchers.any(ICocktail.class));
+        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
         verifyNoMoreInteractions(cocktailsService);
     }
 
@@ -228,7 +228,7 @@ public class CocktailsRestControllerTest {
     public void update_Should_UpdateCocktail() throws Exception {
         final CocktailDto cocktailDto = createCocktailDto();
 
-        when(cocktailsService.saveOrUpdateCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
+        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
 
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
@@ -243,7 +243,7 @@ public class CocktailsRestControllerTest {
 
         assertCocktailResponseBody(resultActions);
 
-        verify(cocktailsService, times(1)).saveOrUpdateCocktail(Matchers.any(ICocktail.class));
+        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
         verifyNoMoreInteractions(cocktailsService);
     }
 
@@ -266,7 +266,7 @@ public class CocktailsRestControllerTest {
     public void update_Should_ThrowNotFound() throws Exception {
         final CocktailBean testCocktail = new CocktailBean();
 
-        when(cocktailsService.saveOrUpdateCocktail(Matchers.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
+        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
         String requestJson = toRequestJson(testCocktail);
 
@@ -279,7 +279,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
-        verify(cocktailsService, times(1)).saveOrUpdateCocktail(Matchers.any(ICocktail.class));
+        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
         verifyNoMoreInteractions(cocktailsService);
     }
 
