@@ -3,6 +3,8 @@ package mybar.web.rest.bar;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
@@ -71,6 +73,24 @@ public class CocktailsController {
     //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
 
     @JsonView(View.Cocktail.class)
+    @RequestMapping(value = "/{menuId}", method = RequestMethod.GET)
+    public ResponseEntity<List<CocktailBean>> findCocktailsForMenu(@PathVariable("menuId") Integer menuId) {
+        logger.info("Fetching cocktails for menu with id={0}...", menuId);
+        List<ICocktail> cocktails = cocktailsService.getAllCocktailsForMenu(menuId);
+        if (cocktails.isEmpty()) {
+            logger.error(MessageFormat.format("Cocktails list for menu with id={0} does not exist", menuId));
+            return new ResponseEntity<>(Collections.<CocktailBean>emptyList(), HttpStatus.OK);
+        }
+        List<CocktailBean> converted = Lists.transform(cocktails, toCocktailBeanFunction);
+        //converted = cocktailsWrapper.get();
+        logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", cocktails.size(), menuId));
+        List<CocktailBean> response = new ArrayList<>(converted);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //-------------------Retrieve All Cocktails--------------------------------------------------------
+
+    @JsonView(View.Cocktail.class)
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<CocktailBean>>> allCocktails() {
         Map<String, List<ICocktail>> cocktails = cocktailsService.getAllCocktails();
@@ -86,8 +106,8 @@ public class CocktailsController {
                     .toList());
         }
         converted = cocktailsWrapper.get(converted);
-        for (String menu : converted.keySet()) {
-            logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", converted.get(menu).size(), menu));
+        for (String menuCode : converted.keySet()) {
+            logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.get(menuCode).size(), menuCode));
         }
         return new ResponseEntity<>(converted, HttpStatus.OK);
     }

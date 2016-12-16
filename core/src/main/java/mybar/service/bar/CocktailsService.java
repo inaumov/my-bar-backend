@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Transactional
@@ -79,6 +76,12 @@ public class CocktailsService {
     }
 
     // cocktails
+
+    public List<ICocktail> getAllCocktailsForMenu(final Integer menuId) {
+        Menu menu = findMenuById(menuId);
+        List<Cocktail> cocktails = new ArrayList<>(menu.getCocktails());
+        return Lists.transform(cocktails, cocktailFunction);
+    }
 
     public Map<String, List<ICocktail>> getAllCocktails() {
         Map<String, List<ICocktail>> cocktails = Maps.newHashMap();
