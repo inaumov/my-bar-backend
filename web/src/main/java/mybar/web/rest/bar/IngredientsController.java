@@ -43,14 +43,14 @@ public class IngredientsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity listIngredients(
-            @RequestParam(value = "filter", required = false) String groupName) {
+            @RequestParam(value = "filter", required = false) String groupNameParam) {
 
         List<IIngredient> ingredients;
 
-        if (Strings.isNullOrEmpty(groupName)) {
+        if (Strings.isNullOrEmpty(groupNameParam)) {
             ingredients = ingredientService.findAll();
         } else {
-            ingredients = ingredientService.findByGroupName(groupName);
+            ingredients = ingredientService.findByGroupName(groupNameParam);
         }
 
         if (ingredients.isEmpty()) {

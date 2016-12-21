@@ -203,6 +203,41 @@ public class CocktailsRestControllerTest {
     }
 
     @Test
+    public void findAll_Should_ReturnFilteredCocktailEntries() throws Exception {
+
+        final CocktailDto first = new CocktailDto();
+        first.setId(5);
+
+        final CocktailDto second = new CocktailDto();
+        second.setId(10);
+
+        when(cocktailsService.getAllCocktailsForMenu("any")).thenReturn(Lists.<ICocktail>newArrayList(first, second, createCocktailDto()));
+
+        mockMvc.perform(get("/cocktails?filter=any"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].id", is(5)))
+                .andExpect(jsonPath("$[1].id", is(10)))
+                .andExpect(jsonPath("$[2].id", is(TEST_ID_1)))
+                .andExpect(jsonPath("$[2].name", is(NAME)))
+                .andExpect(jsonPath("$[2].description").doesNotExist())
+                .andExpect(jsonPath("$[2].imageUrl", is(IMAGE_URL)))
+                .andExpect(jsonPath("$[2].menuId").doesNotExist())
+
+                .andExpect(jsonPath("$[2].ingredients.beverages", hasSize(1)))
+                .andExpect(jsonPath("$[2].ingredients.beverages[0].ingredientId", is(5)))
+                .andExpect(jsonPath("$[2].ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
+                .andExpect(jsonPath("$[2].ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$[2].ingredients.beverages[0].missing").doesNotExist());
+
+        verify(cocktailsService, times(1)).getAllCocktailsForMenu("any");
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
     public void create_Should_CreateNewCocktail() throws Exception {
         CocktailDto cocktailDto = createCocktailDto();
 

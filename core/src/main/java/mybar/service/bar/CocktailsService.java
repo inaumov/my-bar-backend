@@ -1,6 +1,7 @@
 package mybar.service.bar;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
@@ -75,12 +76,24 @@ public class CocktailsService {
         });
     }
 
+    private Optional<Menu> findMenuByName(final String menuName) {
+        return Iterables.tryFind(allMenus(), new Predicate<Menu>() {
+            @Override
+            public boolean apply(Menu menu) {
+                return menu.getName().equals(menuName);
+            }
+        });
+    }
+
     // cocktails
 
-    public List<ICocktail> getAllCocktailsForMenu(final Integer menuId) {
-        Menu menu = findMenuById(menuId);
-        List<Cocktail> cocktails = new ArrayList<>(menu.getCocktails());
-        return Lists.transform(cocktails, cocktailFunction);
+    public List<ICocktail> getAllCocktailsForMenu(final String menuName) {
+        Optional<Menu> menu = findMenuByName(menuName);
+        if(menu.isPresent()) {
+            List<Cocktail> cocktails = new ArrayList<>(menu.get().getCocktails());
+            return Lists.transform(cocktails, cocktailFunction);
+        }
+        return Collections.emptyList();
     }
 
     public Map<String, List<ICocktail>> getAllCocktails() {

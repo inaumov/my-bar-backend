@@ -22,15 +22,19 @@ public class AvailableCocktailsWrapper {
 
     @Autowired // TODO fix setter or autowired???
     private ShelfService shelfService;
-
+    // TODO extract or refactor
     public Map<String, List<CocktailBean>> get(Map<String, List<CocktailBean>> cocktails) {
         Iterator<Map.Entry<String, List<CocktailBean>>> entries = cocktails.entrySet().iterator();
         for (; entries.hasNext(); ) {
-            for (CocktailBean cocktail : entries.next().getValue()) {
-                cocktail.setState(calculateAvailability(cocktail.getIngredients()));
-            }
+            updateWithState(entries.next().getValue());
         }
         return cocktails;
+    }
+
+    public void updateWithState(List<CocktailBean> cocktails) {
+        for (CocktailBean cocktail : cocktails) {
+            cocktail.setState(calculateAvailability(cocktail.getIngredients()));
+        }
     }
 
     private State calculateAvailability(Map<String, Collection<CocktailIngredientBean>> insideItems) {

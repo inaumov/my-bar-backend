@@ -2,10 +2,8 @@ package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.base.Strings;
+import com.google.common.collect.*;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.app.RestBeanConverter;
@@ -72,27 +70,35 @@ public class CocktailsController {
 
     //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
 
-    @JsonView(View.Cocktail.class)
-    @RequestMapping(value = "/{menuId}", method = RequestMethod.GET)
-    public ResponseEntity<List<CocktailBean>> findCocktailsForMenu(@PathVariable("menuId") Integer menuId) {
-        logger.info("Fetching cocktails for menu with id={0}...", menuId);
-        List<ICocktail> cocktails = cocktailsService.getAllCocktailsForMenu(menuId);
+    private ResponseEntity<List<CocktailBean>> findCocktailsForMenu(String menuName) {
+        logger.info("Fetching cocktails for menu [{0}]...", menuName);
+        List<ICocktail> cocktails = cocktailsService.getAllCocktailsForMenu(menuName);
         if (cocktails.isEmpty()) {
-            logger.error(MessageFormat.format("Cocktails list for menu with id={0} does not exist", menuId));
+            logger.error(MessageFormat.format("Cocktails list for menu [{0}] does not exist", menuName));
             return new ResponseEntity<>(Collections.<CocktailBean>emptyList(), HttpStatus.OK);
         }
-        List<CocktailBean> converted = Lists.transform(cocktails, toCocktailBeanFunction);
-        //converted = cocktailsWrapper.get();
-        logger.info(MessageFormat.format("Found {0} cocktails for menu with id={1}", cocktails.size(), menuId));
-        List<CocktailBean> response = new ArrayList<>(converted);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+
+        List<CocktailBean> converted = toCocktailBeans(cocktails);
+        cocktailsWrapper.updateWithState(converted);
+        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", cocktails.size(), menuName));
+        return new ResponseEntity<>(converted, HttpStatus.OK);
+    }
+
+    private static List<CocktailBean> toCocktailBeans(List<ICocktail> cocktails) {
+        return FluentIterable
+                .from(cocktails)
+                .transform(toCocktailBeanFunction)
+                .toList();
     }
 
     //-------------------Retrieve All Cocktails--------------------------------------------------------
 
     @JsonView(View.Cocktail.class)
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<CocktailBean>>> allCocktails() {
+    public ResponseEntity allCocktails(@RequestParam(value = "filter", required = false) String menuNameParam) {
+        if (!Strings.isNullOrEmpty(menuNameParam)) {
+            return findCocktailsForMenu(menuNameParam);
+        }
         Map<String, List<ICocktail>> cocktails = cocktailsService.getAllCocktails();
         if (cocktails.isEmpty()) {
             logger.info("Cocktail list is empty.");
@@ -100,12 +106,9 @@ public class CocktailsController {
         }
         Map<String, List<CocktailBean>> converted = Maps.newHashMap();
         for (String menuName : cocktails.keySet()) {
-            converted.put(menuName, FluentIterable
-                    .from(cocktails.get(menuName))
-                    .transform(toCocktailBeanFunction)
-                    .toList());
+            converted.put(menuName, toCocktailBeans(cocktails.get(menuName)));
         }
-        converted = cocktailsWrapper.get(converted);
+        cocktailsWrapper.get(converted);
         for (String menuCode : converted.keySet()) {
             logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.get(menuCode).size(), menuCode));
         }
