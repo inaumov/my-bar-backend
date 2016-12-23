@@ -11,8 +11,10 @@
 	   http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="mybar.web.rest"/>
+    <context:component-scan base-package="mybar.web"/>
     <mvc:annotation-driven/>
+
+    <bean id="corsFilter" class="mybar.web.filter.MyBarCORSFilter"/>
 
     <!-- To enable @RequestMapping process on type level and method level -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
