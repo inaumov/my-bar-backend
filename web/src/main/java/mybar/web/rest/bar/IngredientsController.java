@@ -66,7 +66,11 @@ public class IngredientsController {
         putIfPresent(builder, IDrink.GROUP_NAME, new IngredientsMapper<>(DrinkBean.class).map(drinks));
         putIfPresent(builder, IAdditive.GROUP_NAME, new IngredientsMapper<>(AdditiveBean.class).map(additives));
 
-        return new ResponseEntity<>(builder.build(), HttpStatus.OK);
+        ImmutableMap<String, Collection<IIngredient>> responseMap = builder.build();
+        if (responseMap.size() == 1) {
+            return new ResponseEntity<>(responseMap.get(groupNameParam), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     private void putIfPresent(ImmutableMap.Builder<String, Collection<IIngredient>> builder, String groupName, Collection beans) {

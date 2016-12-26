@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -27,9 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -121,13 +118,13 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("additives.$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(2)))
 
-                .andExpect(jsonPath("additives.$[0].id", is(1)))
-                .andExpect(jsonPath("additives.$[0].kind", is("Ice")))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].kind", is("Ice")))
 
-                .andExpect(jsonPath("additives.$[1].id", is(2)))
-                .andExpect(jsonPath("additives.$[1].kind", is("Lime")));
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].kind", is("Lime")));
 
         verify(ingredientService, times(1)).findByGroupName(ADDITIVES);
         verifyNoMoreInteractions(ingredientService);
@@ -153,13 +150,13 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("beverages.$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(2)))
 
-                .andExpect(jsonPath("beverages.$[0].id", is(3)))
-                .andExpect(jsonPath("beverages.$[0].kind", is("Whiskey")))
+                .andExpect(jsonPath("$[0].id", is(3)))
+                .andExpect(jsonPath("$[0].kind", is("Whiskey")))
 
-                .andExpect(jsonPath("beverages.$[1].id", is(7)))
-                .andExpect(jsonPath("beverages.$[1].kind", is("Rum")));
+                .andExpect(jsonPath("$[1].id", is(7)))
+                .andExpect(jsonPath("$[1].kind", is("Rum")));
 
         verify(ingredientService, times(1)).findByGroupName(BEVERAGES);
         verifyNoMoreInteractions(ingredientService);
@@ -184,13 +181,13 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("drinks.$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(2)))
 
-                .andExpect(jsonPath("drinks.$[0].id", is(11)))
-                .andExpect(jsonPath("drinks.$[0].kind", is("Golden tips")))
+                .andExpect(jsonPath("$[0].id", is(11)))
+                .andExpect(jsonPath("$[0].kind", is("Golden tips")))
 
-                .andExpect(jsonPath("drinks.$[1].id", is(2)))
-                .andExpect(jsonPath("drinks.$[1].kind", is("Black tea")));
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].kind", is("Black tea")));
 
         verify(ingredientService, times(1)).findByGroupName(DRINKS);
         verifyNoMoreInteractions(ingredientService);
