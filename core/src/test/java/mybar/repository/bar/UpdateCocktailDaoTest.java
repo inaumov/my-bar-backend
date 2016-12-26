@@ -50,14 +50,14 @@ import static org.junit.Assert.*;
                 DbUnitTestExecutionListener.class
         }
 )
-@ContextConfiguration(locations = "classpath:applicationContext-testBulkUpdate-hsqldb.xml")
+@ContextConfiguration(locations = "classpath:applicationContext-testUpdateCocktail-hsqldb.xml")
 @DatabaseSetups(
         {
                 @DatabaseSetup("classpath:dataSet.xml")
         }
 )
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
-public class BulkUpdateCocktailDaoTest {
+public class UpdateCocktailDaoTest {
 
     private static EntityManagerFactory entityManagerFactory;
 
@@ -65,7 +65,7 @@ public class BulkUpdateCocktailDaoTest {
 
     @BeforeClass
     public static void init() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("bulkUpdatePU");
+        entityManagerFactory = Persistence.createEntityManagerFactory("cocktailUpdatePU");
     }
 
     private EntityManager entityManager;
@@ -82,7 +82,7 @@ public class BulkUpdateCocktailDaoTest {
     }
 
     @Test
-    public void testCreateAndBulkUpdateCocktail() throws Exception {
+    public void testCreateAndUpdateCocktail() throws Exception {
 
         entityManager.getTransaction().begin();
 
@@ -107,7 +107,7 @@ public class BulkUpdateCocktailDaoTest {
         // check total cocktail to ingredient relations total rows before
         assertEquals("Number of CocktailToIngredient rows should be 17 before.", 17, getTotalCocktailToIngredientCount(entityManager));
 
-        // bulk update
+        // force update
         List<Ingredient> all = ingredientDao.findAll();
         assertThat("Number of ingredients should be 18.", all, hasSize(18));
 
