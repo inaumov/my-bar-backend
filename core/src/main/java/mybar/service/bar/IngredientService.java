@@ -3,14 +3,15 @@ package mybar.service.bar;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import mybar.api.bar.ingredient.IAdditive;
+import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.api.bar.ingredient.IIngredient;
 import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
-import mybar.repository.bar.IngredientDao;
 import mybar.dto.DtoFactory;
+import mybar.repository.bar.IngredientDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,37 +26,41 @@ public class IngredientService {
     @Autowired(required = false)
     private IngredientDao ingredientDao;
 
-    public <T extends IIngredient> List<T> findByGroupName(String groupName) {
+    public List<IIngredient> findByGroupName(String groupName) {
         try {
             List<Ingredient> ingredients = ingredientDao.findByGroupName(groupName);
-            return transformToDto(ingredients);
+            return Lists.newArrayList(Lists.transform(ingredients, ingredientFunction()));
         } catch (Exception e) {
             return Collections.emptyList();
         }
     }
 
-    public <T extends IIngredient> List<T> findAll() {
+    public List<IIngredient> findAll() {
         List<Ingredient> ingredients = ingredientDao.findAll();
-        return transformToDto(ingredients);
+        return Lists.newArrayList(Lists.transform(ingredients, ingredientFunction()));
     }
 
-    private static <T extends IIngredient> List<T> transformToDto(List<Ingredient> ingredients) {
-
-        Function<Ingredient, T> function = new Function<Ingredient, T>() {
+    private static <ENTITY, DTO extends IIngredient> Function<ENTITY, DTO> ingredientFunction() {
+        return new Function<ENTITY, DTO>() {
 
             @Override
-            public T apply(Ingredient ingredient) {
-                if (ingredient instanceof IAdditive)
-                    return (T) DtoFactory.toDto((Additive) ingredient);
-                if (ingredient instanceof IDrink)
-                    return (T) DtoFactory.toDto((Drink) ingredient);
-                if (ingredient instanceof Beverage)
-                    return (T) DtoFactory.toDto((Beverage) ingredient);
-                return null;
+            public DTO apply(ENTITY input) {
+                IIngredient from = null;
+                if (input instanceof IAdditive) {
+                    from = DtoFactory.toDto((IAdditive) input);
+                } else if (input instanceof IDrink) {
+                    from = DtoFactory.toDto((IDrink) input);
+                } else if (input instanceof IBeverage) {
+                    from = DtoFactory.toDto((IBeverage) input);
+                }
+                return uncheckedCast(from);
+            }
+
+            @SuppressWarnings({"unchecked"})
+            private DTO uncheckedCast(Object obj) {
+                return (DTO) obj;
             }
         };
-
-        return Lists.transform(ingredients, function);
     }
 
 }

@@ -32,9 +32,8 @@ public class Bottle {
     @Column(name = "PRICE")
     private double price;
 
-    @Column(name = "AVAILABLE")
-    @Enumerated(EnumType.ORDINAL)
-    private State state;
+    @Column(name = "IN_SHELF")
+    private boolean inShelf;
 
     @Column(name = "IMAGE_URL", nullable = true)
     private String imageUrl;

@@ -38,7 +38,7 @@ public class BasketController {
         } catch (NullPointerException e) {
             return cnt;
         }
-        logger.info("Found cocktails in basket = " + cocktail.getMenu().getName() + "|" + cocktail.getName() + " :: " + cnt);
+        logger.info("Found cocktails in basket = " + cocktail.getMenuId() + "|" + cocktail.getName() + " :: " + cnt);
         return cnt;
     }
 

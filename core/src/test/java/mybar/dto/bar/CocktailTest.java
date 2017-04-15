@@ -1,13 +1,11 @@
 package mybar.dto.bar;
 
 import com.google.common.collect.Lists;
-import mybar.State;
 import mybar.UnitsValue;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.ICocktailIngredient;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
-import mybar.domain.bar.Menu;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import org.junit.Test;
@@ -45,13 +43,8 @@ public class CocktailTest {
         juice.setUnitsValue(UnitsValue.ML);
 
         cocktail.setCocktailToIngredientList(Lists.newArrayList(beverage, juice));
-
-        Menu menu = new Menu();
-        menu.setId(MENU_ID);
-
-        cocktail.setMenu(menu);
+        cocktail.setMenuId(MENU_ID);
         cocktail.setDescription(DESCRIPTION);
-        cocktail.setState(State.AVAILABLE);
         cocktail.setImageUrl(IMAGE_URL);
 
         ICocktail dto = cocktail.toDto();

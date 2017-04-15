@@ -53,7 +53,7 @@ public class ShelfService {
         } catch (EntityExistsException e) {
             return toDto(entity);
         }
-        all.add(entity);
+        all.add(entity); // TODO NPE
         return toDto(entity);
     }
 

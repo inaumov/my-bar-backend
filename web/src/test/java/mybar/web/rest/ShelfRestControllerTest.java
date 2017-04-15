@@ -95,7 +95,7 @@ public class ShelfRestControllerTest {
                 .andExpect(jsonPath("$.id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$.brandName", is(BRAND_NAME_1)))
                 .andExpect(jsonPath("$.price", is(PRICE_1)))
-                .andExpect(jsonPath("$.inShelf", is(true)))
+                .andExpect(jsonPath("$.inShelf", is("YES")))
                 .andExpect(jsonPath("$.volume", is(VOLUME_1)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_1)));
 
@@ -164,14 +164,14 @@ public class ShelfRestControllerTest {
                 .andExpect(jsonPath("$[0].id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$[0].brandName", is(BRAND_NAME_1)))
                 .andExpect(jsonPath("$[0].price", is(PRICE_1)))
-                .andExpect(jsonPath("$[0].inShelf", is(true)))
+                .andExpect(jsonPath("$[0].inShelf", is("YES")))
                 .andExpect(jsonPath("$[0].volume", is(VOLUME_1)))
                 .andExpect(jsonPath("$[0].imageUrl", is(IMAGE_URL_1)))
 
                 .andExpect(jsonPath("$[1].id", is(TEST_ID_2)))
                 .andExpect(jsonPath("$[1].brandName", is(BRAND_NAME_2)))
                 .andExpect(jsonPath("$[1].price", is(PRICE_2)))
-                .andExpect(jsonPath("$[1].inShelf", is(false)))
+                .andExpect(jsonPath("$[1].inShelf", is("NO")))
                 .andExpect(jsonPath("$[1].volume", is(VOLUME_2)))
                 .andExpect(jsonPath("$[1].imageUrl", is(IMAGE_URL_2)));
 
@@ -265,7 +265,7 @@ public class ShelfRestControllerTest {
                 .andExpect(jsonPath("$.ingredient.kind", is("Whiskey")))
                 .andExpect(jsonPath("$.brandName", is(BRAND_NAME_1)))
                 .andExpect(jsonPath("$.price", is(PRICE_1)))
-                .andExpect(jsonPath("$.inShelf", is(true)))
+                .andExpect(jsonPath("$.inShelf", is("YES")))
                 .andExpect(jsonPath("$.volume", is(VOLUME_1)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_1)));
 

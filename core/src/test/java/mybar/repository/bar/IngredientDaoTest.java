@@ -3,7 +3,6 @@ package mybar.repository.bar;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import mybar.BeverageType;
-import mybar.State;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
@@ -128,12 +127,12 @@ public class IngredientDaoTest extends BaseDaoTest {
                     if (bacardi.equals(bottle.getId())) {
                         assertEquals("Bottle id should be same.", bacardi.intValue(), bottle.getId());
 
-                        assertEquals("Bottle state should be same.", State.AVAILABLE, bottle.getState());
+                        assertTrue("Bottle in shelf.", bottle.isInShelf());
                         assertEquals("Bottle brand name should be same.", "Bacardi", bottle.getBrandName());
                     } else if (havanaClub.equals(bottle.getId())) {
                         assertEquals("Bottle id should be same.", havanaClub.intValue(), bottle.getId());
 
-                        assertEquals("Bottle state should be same.", State.NOT_AVAILABLE, bottle.getState());
+                        assertFalse("Bottle not in shelf.", bottle.isInShelf());
                         assertEquals("Bottle brand name should be same.", "Havana Club", bottle.getBrandName());
                     }
                 }

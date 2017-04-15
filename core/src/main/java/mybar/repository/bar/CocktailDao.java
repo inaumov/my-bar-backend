@@ -13,7 +13,7 @@ public class CocktailDao extends GenericDaoImpl<Cocktail> {
 
     @Deprecated
     public List<Cocktail> findAllFor(Menu menu) {
-        TypedQuery<Cocktail> q = em.createQuery("SELECT m FROM Menu m WHERE m.menuId = :menuId", Cocktail.class);
+        TypedQuery<Cocktail> q = em.createQuery("SELECT c FROM Cocktail c WHERE c.menuId = :menuId", Cocktail.class);
         q.setParameter("menuId", menu.getId());
         List<Cocktail> cocktails = q.getResultList();
         return cocktails;

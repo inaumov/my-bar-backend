@@ -3,9 +3,8 @@ package mybar.repository.bar;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import mybar.BeverageType;
-import mybar.State;
-import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.Bottle;
+import mybar.domain.bar.ingredient.Beverage;
 import mybar.repository.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +81,7 @@ public class BottleDaoTest extends BaseDaoTest {
         Bottle bottle = new Bottle();
         bottle.setBrandName("Johny Walker");
         bottle.setPrice(289);
-        bottle.setState(State.AVAILABLE);
+        bottle.setInShelf(true);
         bottle.setImageUrl("http://whiskey.last.jpg");
         Beverage beverageRef = em.getReference(Beverage.class, 6);
         bottle.setBeverage(beverageRef);
@@ -107,14 +106,14 @@ public class BottleDaoTest extends BaseDaoTest {
         bottle.setBeverage(beverage);
         bottle.setBrandName("Johny Walker");
         bottle.setPrice(289);
-        bottle.setState(State.AVAILABLE);
+        bottle.setInShelf(true);
         bottle.setImageUrl("http://whiskey.last.jpg");
 
         // assert updated bottle
         Bottle updated = bottleDao.update(bottle);
         assertEquals("Johny Walker", updated.getBrandName());
         assertEquals(6, updated.getBeverage().getId());
-        assertEquals(State.AVAILABLE, updated.getState());
+        assertTrue(updated.isInShelf());
         assertTrue(updated.getImageUrl().contains("whiskey"));
     }
 
@@ -139,7 +138,7 @@ public class BottleDaoTest extends BaseDaoTest {
         assertEquals("Havana Club", bottle.getBrandName());
         assertEquals(0.5, bottle.getVolume(), 0);
         assertEquals(119, bottle.getPrice(), 0);
-        assertEquals(State.NOT_AVAILABLE, bottle.getState());
+        assertFalse(bottle.isInShelf());
         assertTrue(bottle.getImageUrl().contains("rum"));
     }
 

@@ -3,7 +3,6 @@ package mybar.domain.bar;
 import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
-import mybar.State;
 import mybar.api.bar.ICocktail;
 import mybar.dto.DtoFactory;
 import org.hibernate.annotations.Cascade;
@@ -36,16 +35,11 @@ public class Cocktail {
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<CocktailToIngredient> cocktailToIngredientList = new LinkedList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "MENU_ID")
-    private Menu menu;
+    @Column(name = "MENU_ID")
+    private int menuId;
 
     @Column(name = "DESCRIPTION", nullable = true)
     private String description;
-
-    @Column(name = "AVAILABLE")
-    @Enumerated(EnumType.ORDINAL)
-    private State state;
 
     @Column(name = "IMAGE_URL", nullable = true)
     private String imageUrl;
@@ -66,7 +60,6 @@ public class Cocktail {
         return MoreObjects.toStringHelper(this.getClass())
                 .add("id", id)
                 .add("name", name)
-                .add("state", state)
                 .toString();
     }
 

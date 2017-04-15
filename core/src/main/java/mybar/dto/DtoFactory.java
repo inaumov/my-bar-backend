@@ -6,6 +6,7 @@ import mybar.State;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
+import mybar.api.bar.ingredient.IIngredient;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
@@ -42,7 +43,7 @@ public class DtoFactory {
         dto.setImageUrl(entity.getImageUrl());
         dto.setDescription(entity.getDescription());
         dto.setIngredients(convert(entity.getCocktailToIngredientList()));
-        dto.setMenuId(entity.getMenu().getId());
+        dto.setMenuId(entity.getMenuId());
         return dto;
     }
 
@@ -76,30 +77,30 @@ public class DtoFactory {
         dto.setPrice(entity.getPrice());
         dto.setVolume(entity.getVolume());
         dto.setBrandName(entity.getBrandName());
-        dto.setInShelf(entity.getState() == State.AVAILABLE);
+        dto.setInShelf(entity.isInShelf());
         dto.setImageUrl(entity.getImageUrl());
         return dto;
     }
 
-    public static BeverageDto toDto(Beverage entity) {
+    public static BeverageDto toDto(IBeverage entity) {
         BeverageDto dto = new BeverageDto();
         fillBaseIngredientDto(entity, dto);
         dto.setBeverageType(entity.getBeverageType());
         return dto;
     }
 
-    private static void fillBaseIngredientDto(Ingredient entity, IngredientBaseDto dto) {
+    private static void fillBaseIngredientDto(IIngredient entity, IngredientBaseDto dto) {
         dto.setId(entity.getId());
         dto.setKind(entity.getKind());
     }
 
-    public static AdditiveDto toDto(Additive entity) {
+    public static AdditiveDto toDto(IAdditive entity) {
         AdditiveDto dto = new AdditiveDto();
         fillBaseIngredientDto(entity, dto);
         return dto;
     }
 
-    public static DrinkDto toDto(Drink entity) {
+    public static DrinkDto toDto(IDrink entity) {
         DrinkDto dto = new DrinkDto();
         fillBaseIngredientDto(entity, dto);
         dto.setDrinkType(entity.getDrinkType());

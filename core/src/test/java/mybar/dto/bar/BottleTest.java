@@ -1,6 +1,5 @@
 package mybar.dto.bar;
 
-import mybar.State;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.dto.DtoFactory;
@@ -24,7 +23,7 @@ public class BottleTest {
         beverageEntity.setId(TEST_ID);
         bottleEntity.setBeverage(beverageEntity);
         bottleEntity.setBrandName(BRAND_NAME);
-        bottleEntity.setState(State.AVAILABLE);
+        bottleEntity.setInShelf(true);
         bottleEntity.setPrice(PRICE);
         bottleEntity.setVolume(VOLUME);
         bottleEntity.setImageUrl(IMAGE_URL);

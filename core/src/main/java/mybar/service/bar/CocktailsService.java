@@ -130,7 +130,7 @@ public class CocktailsService {
         existedEntity.setName(source.getName());
         existedEntity.setDescription(source.getDescription());
         existedEntity.setImageUrl(source.getImageUrl());
-        existedEntity.setMenu(findMenuById(source.getMenuId()));
+        existedEntity.setMenuId(source.getMenuId());
         existedEntity.getCocktailToIngredientList().clear();
         List<CocktailToIngredient> cocktailToIngredientList = EntityFactory.from(source).getCocktailToIngredientList();
         for (CocktailToIngredient cocktailToIngredient : cocktailToIngredientList) {
@@ -159,7 +159,6 @@ public class CocktailsService {
         boolean hasRef = isCocktailInHistory(cocktail);
         if (hasRef) {
             Cocktail entity = EntityFactory.from(cocktail);
-            entity.setState(State.NOT_AVAILABLE);
             cocktailDao.update(entity);
         } else {
             cocktailDao.delete(cocktail);

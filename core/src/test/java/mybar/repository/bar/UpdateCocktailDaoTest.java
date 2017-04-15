@@ -7,11 +7,9 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Iterables;
-import mybar.State;
 import mybar.UnitsValue;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
-import mybar.domain.bar.Menu;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
@@ -88,17 +86,16 @@ public class UpdateCocktailDaoTest {
 
         Cocktail cocktail = new Cocktail();
         cocktail.setName("New Cocktail");
-        cocktail.setState(State.AVAILABLE);
         cocktail.setImageUrl("http://img.path.jpg");
         cocktail.setDescription("some description");
-        cocktail.setMenu(entityManager.getReference(Menu.class, 3));
+        cocktail.setMenuId(3);
 
         cocktail = cocktailDao.create(cocktail);
         entityManager.getTransaction().commit();
 
         assertNotNull(cocktail);
         assertThat(cocktail.getId(), is(13));
-        assertEquals("Menu ID related to cocktail should be same.", 3, cocktail.getMenu().getId());
+        assertEquals("Menu ID related to cocktail should be same.", 3, cocktail.getMenuId());
         assertEquals("Cocktail name should same.", "New Cocktail", cocktail.getName());
         assertEquals("Cocktail description should be same.", "some description", cocktail.getDescription());
         assertEquals("Cocktail image url should be same.", "http://img.path.jpg", cocktail.getImageUrl());
@@ -116,7 +113,7 @@ public class UpdateCocktailDaoTest {
         String name = cocktail.getName();
         String description = cocktail.getDescription();
         String imageUrl = cocktail.getImageUrl();
-        int menuId = cocktail.getMenu().getId();
+        int menuId = cocktail.getMenuId();
 
         for (int i = 0; i < all.size(); i++) {
 
@@ -129,21 +126,21 @@ public class UpdateCocktailDaoTest {
             assertEquals("Cocktail name should same.", name, cocktailForUpdate.getName());
             assertEquals("Cocktail description should be same.", description, cocktailForUpdate.getDescription());
             assertEquals("Cocktail image url should be same.", imageUrl, cocktailForUpdate.getImageUrl());
-            assertEquals("Menu ID related to cocktail should be same.", menuId, cocktailForUpdate.getMenu().getId());
+            assertEquals("Menu ID related to cocktail should be same.", menuId, cocktailForUpdate.getMenuId());
             assertEquals("Ingredients list in cocktail should have same number of ingredients.", i, cocktailForUpdate.getCocktailToIngredientList().size());
 
             // save new values
             name = cocktail.getName() + i;
             description = cocktail.getDescription() + i;
             imageUrl = cocktail.getImageUrl() + i;
-            menuId = cocktail.getMenu().getId();
+            menuId = cocktail.getMenuId();
 
             // set new values
             cocktailForUpdate.setId(id);
             cocktailForUpdate.setName(name);
             cocktailForUpdate.setDescription(description);
             cocktailForUpdate.setImageUrl(imageUrl);
-            cocktailForUpdate.setMenu(entityManager.find(Menu.class, menuId));
+            cocktailForUpdate.setMenuId(menuId);
 
             // add cocktail to ingredients relation
             CocktailToIngredient cocktailToIngredient = new CocktailToIngredient();
@@ -168,7 +165,7 @@ public class UpdateCocktailDaoTest {
         assertEquals("Cocktail name should same.", name, updatedCocktail.getName());
         assertEquals("Cocktail description should be same.", description, updatedCocktail.getDescription());
         assertEquals("Cocktail image url should be same.", imageUrl, updatedCocktail.getImageUrl());
-        assertEquals("Menu ID related to cocktail should be same.", menuId, updatedCocktail.getMenu().getId());
+        assertEquals("Menu ID related to cocktail should be same.", menuId, updatedCocktail.getMenuId());
         // check cocktailToIngredientList related to new cocktail
         List<CocktailToIngredient> cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
         int expectedCocktailToIngredientRelationsCnt = ingredients.size();

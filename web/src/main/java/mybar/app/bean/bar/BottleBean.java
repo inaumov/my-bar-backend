@@ -1,5 +1,6 @@
 package mybar.app.bean.bar;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.MoreObjects;
@@ -29,10 +30,16 @@ public class BottleBean implements IBottle {
     private double price;
 
     @JsonView(View.Shelf.class)
-    private boolean inShelf;
+    private InShelf inShelf = InShelf.NO;
 
     @JsonView(View.Shelf.class)
     private String imageUrl;
+
+    @JsonIgnore
+    @Override
+    public boolean isInShelf() {
+        return InShelf.YES == inShelf;
+    }
 
     @Override
     public String toString() {

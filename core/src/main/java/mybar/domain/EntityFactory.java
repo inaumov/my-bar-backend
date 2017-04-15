@@ -1,12 +1,17 @@
 package mybar.domain;
 
-import mybar.State;
-import mybar.api.bar.*;
+import mybar.api.bar.IBottle;
+import mybar.api.bar.ICocktail;
+import mybar.api.bar.ICocktailIngredient;
+import mybar.api.bar.IMenu;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.api.history.IOrder;
-import mybar.domain.bar.*;
+import mybar.domain.bar.Bottle;
+import mybar.domain.bar.Cocktail;
+import mybar.domain.bar.CocktailToIngredient;
+import mybar.domain.bar.Menu;
 import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
@@ -30,7 +35,6 @@ public class EntityFactory {
         Cocktail entity = new Cocktail();
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
-        entity.setState(cocktail.getState());
         entity.setDescription(cocktail.getDescription());
         entity.setImageUrl(cocktail.getImageUrl());
         Map<String, ? extends Collection<? extends ICocktailIngredient>> insideItems = cocktail.getIngredients();
@@ -40,9 +44,7 @@ public class EntityFactory {
                 entity.addCocktailToIngredient(from(groupName, cocktailToIngredient));
             }
         }
-        Menu menu = new Menu();
-        menu.setId(cocktail.getId());
-        entity.setMenu(menu);
+        entity.setMenuId(cocktail.getId());
         return entity;
     }
 
@@ -96,7 +98,7 @@ public class EntityFactory {
         entity.setPrice(bottle.getPrice());
         entity.setBrandName(bottle.getBrandName());
         entity.setBeverage(new Beverage(bottle.getBeverage().getId()));
-        entity.setState(bottle.isInShelf() ? State.AVAILABLE : State.NOT_AVAILABLE);
+        entity.setInShelf(bottle.isInShelf());
         entity.setImageUrl(bottle.getImageUrl());
         return entity;
     }

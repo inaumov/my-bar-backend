@@ -3,7 +3,6 @@ package mybar.repository.bar;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Iterables;
-import mybar.State;
 import mybar.UnitsValue;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
@@ -67,10 +66,10 @@ public class CocktailDaoTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = it.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 4, cocktails.size());
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), 1, 1, "B52", State.AVAILABLE);
-        assertExistedCocktail(cocktailIterator.next(), 2, 1, "B53", State.AVAILABLE);
-        assertExistedCocktail(cocktailIterator.next(), 3, 1, "Green Mexican", State.AVAILABLE);
-        assertExistedCocktail(cocktailIterator.next(), 4, 1, "Blow Job", State.NOT_AVAILABLE);
+        assertExistedCocktail(cocktailIterator.next(), 1, 1, "B52");
+        assertExistedCocktail(cocktailIterator.next(), 2, 1, "B53");
+        assertExistedCocktail(cocktailIterator.next(), 3, 1, "Green Mexican");
+        assertExistedCocktail(cocktailIterator.next(), 4, 1, "Blow Job");
         assertEquals("Number of CocktailToIngredient rows should be same.", 14, getCocktailToIngredientCount());
 
         // test second menu
@@ -97,11 +96,8 @@ public class CocktailDaoTest extends BaseDaoTest {
 
         cocktail.setName("Random smoothie name");
         cocktail.setDescription("Random smoothie description");
-        cocktail.setState(State.NOT_AVAILABLE);
         cocktail.setImageUrl("http://test-url.image.jpg");
-        Menu menu = new Menu();
-        menu.setId(3);
-        cocktail.setMenu(menu);
+        cocktail.setMenuId(3);
 
         // add cocktail to ingredients relation
         CocktailToIngredient juice = new CocktailToIngredient();
@@ -135,10 +131,8 @@ public class CocktailDaoTest extends BaseDaoTest {
         assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, UnitsValue.ML, Drink.class);
         assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, UnitsValue.ML, Additive.class);
 
-        assertEquals("Menu ID related to cocktail should be same.", 3, updatedCocktail.getMenu().getId());
-        assertEquals("Menu NAME related to cocktail should be same.", "smoothie", updatedCocktail.getMenu().getName());
+        assertEquals("Menu ID related to cocktail should be same.", 3, updatedCocktail.getMenuId());
         assertEquals("Cocktail name should same.", "Random smoothie name", updatedCocktail.getName());
-        assertEquals("Cocktail state should be same.", State.NOT_AVAILABLE, updatedCocktail.getState());
         assertEquals("Cocktail description should be same.", "Random smoothie description", updatedCocktail.getDescription());
         assertEquals("Cocktail image url should be same.", "http://test-url.image.jpg", updatedCocktail.getImageUrl());
 
@@ -161,9 +155,8 @@ public class CocktailDaoTest extends BaseDaoTest {
         cocktailForUpdate.setId(cocktail.getId());
         cocktailForUpdate.setName(cocktail.getName());
         cocktailForUpdate.setDescription(cocktail.getDescription());
-        cocktailForUpdate.setState(cocktail.getState());
         cocktailForUpdate.setImageUrl(cocktail.getImageUrl());
-        cocktailForUpdate.setMenu(cocktail.getMenu());
+        cocktailForUpdate.setMenuId(cocktail.getMenuId());
 
         // add cocktail to ingredients relation
         CocktailToIngredient juice = new CocktailToIngredient();

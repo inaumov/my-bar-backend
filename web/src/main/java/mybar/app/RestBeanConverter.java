@@ -1,7 +1,5 @@
 package mybar.app;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mybar.api.bar.IBottle;
@@ -12,10 +10,7 @@ import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.api.bar.ingredient.IIngredient;
-import mybar.app.bean.bar.BottleBean;
-import mybar.app.bean.bar.CocktailBean;
-import mybar.app.bean.bar.CocktailIngredientBean;
-import mybar.app.bean.bar.MenuBean;
+import mybar.app.bean.bar.*;
 import mybar.app.bean.bar.ingredient.AdditiveBean;
 import mybar.app.bean.bar.ingredient.BeverageBean;
 import mybar.app.bean.bar.ingredient.DrinkBean;
@@ -69,7 +64,8 @@ public final class RestBeanConverter {
 
     public static BottleBean from(IBottle bottle) {
         BottleBean bean = new BottleBean();
-        BeanUtils.copyProperties(bottle, bean);
+        BeanUtils.copyProperties(bottle, bean, "inShelf");
+        bean.setInShelf(bottle.isInShelf() ? InShelf.YES : InShelf.NO);
 
         IBeverage beverage = bottle.getBeverage();
         if (beverage != null) {

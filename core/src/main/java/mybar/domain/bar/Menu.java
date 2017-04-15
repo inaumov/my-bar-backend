@@ -21,7 +21,8 @@ public class Menu {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="MENU_ID", referencedColumnName="ID")
     private Collection<Cocktail> cocktails;
 
     public Menu() {
@@ -31,7 +32,7 @@ public class Menu {
     public void addCocktail(Cocktail cocktail) {
         if (!getCocktails().contains(cocktail)) {
             getCocktails().add(cocktail);
-            cocktail.setMenu(this);
+            cocktail.setMenuId(id);
         }
     }
 

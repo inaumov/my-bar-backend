@@ -6,18 +6,18 @@
     <MENU ID="2" NAME="long"/>
     <MENU ID="3" NAME="smoothie"/>
 
-    <COCKTAIL ID="1" MENU_ID="1" NAME="B52" AVAILABLE="1" DESCRIPTION="The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers." IMAGE_URL="http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png"></COCKTAIL>
-    <COCKTAIL ID="2" MENU_ID="1" NAME="B53" AVAILABLE="1"></COCKTAIL>
-    <COCKTAIL ID="3" MENU_ID="1" NAME="Green Mexican" AVAILABLE="1"></COCKTAIL>
-    <COCKTAIL ID="4" MENU_ID="1" NAME="Blow Job" AVAILABLE="0"></COCKTAIL>
-    <COCKTAIL ID="5" MENU_ID="2" NAME="Long Island Iced Tea" AVAILABLE="1" DESCRIPTION="A Long Island Iced Tea is a type of alcoholic mixed drink typically made with, among other ingredients, tequila, vodka, light rum, triple sec, and gin. It is so named because of the resemblance to the color and taste of iced tea." IMAGE_URL="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/07/Long-Island-Iced-Tea.jpg"></COCKTAIL>
-    <COCKTAIL ID="6" MENU_ID="2" NAME="Tequila Sunrise" AVAILABLE="1"></COCKTAIL>
-    <COCKTAIL ID="7" MENU_ID="2" NAME="Black Russian" AVAILABLE="0"></COCKTAIL>
-    <COCKTAIL ID="8" MENU_ID="2" NAME="Hurricane"  AVAILABLE="0"></COCKTAIL>
-    <COCKTAIL ID="9" MENU_ID="2" NAME="Mai Tai" AVAILABLE="1"></COCKTAIL>
-    <COCKTAIL ID="10" MENU_ID="2" NAME="Margarita" AVAILABLE="1" DESCRIPTION="The margarita is a cocktail consisting of tequila, triple sec and lime or lemon juice, often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice." IMAGE_URL="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"></COCKTAIL>
-    <COCKTAIL ID="11" MENU_ID="2" NAME="Sex on the beach" AVAILABLE="1"></COCKTAIL>
-    <COCKTAIL ID="12" MENU_ID="3" NAME="Banana Blast II" AVAILABLE="1"></COCKTAIL>
+    <COCKTAIL ID="1" MENU_ID="1" NAME="B52" DESCRIPTION="The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers." IMAGE_URL="http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png"></COCKTAIL>
+    <COCKTAIL ID="2" MENU_ID="1" NAME="B53"></COCKTAIL>
+    <COCKTAIL ID="3" MENU_ID="1" NAME="Green Mexican"></COCKTAIL>
+    <COCKTAIL ID="4" MENU_ID="1" NAME="Blow Job"></COCKTAIL>
+    <COCKTAIL ID="5" MENU_ID="2" NAME="Long Island Iced Tea" DESCRIPTION="A Long Island Iced Tea is a type of alcoholic mixed drink typically made with, among other ingredients, tequila, vodka, light rum, triple sec, and gin. It is so named because of the resemblance to the color and taste of iced tea." IMAGE_URL="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/07/Long-Island-Iced-Tea.jpg"></COCKTAIL>
+    <COCKTAIL ID="6" MENU_ID="2" NAME="Tequila Sunrise"></COCKTAIL>
+    <COCKTAIL ID="7" MENU_ID="2" NAME="Black Russian"></COCKTAIL>
+    <COCKTAIL ID="8" MENU_ID="2" NAME="Hurricane" ></COCKTAIL>
+    <COCKTAIL ID="9" MENU_ID="2" NAME="Mai Tai"></COCKTAIL>
+    <COCKTAIL ID="10" MENU_ID="2" NAME="Margarita" DESCRIPTION="The margarita is a cocktail consisting of tequila, triple sec and lime or lemon juice, often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice." IMAGE_URL="http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg"></COCKTAIL>
+    <COCKTAIL ID="11" MENU_ID="2" NAME="Sex on the beach"></COCKTAIL>
+    <COCKTAIL ID="12" MENU_ID="3" NAME="Banana Blast II"></COCKTAIL>
 
     <INGREDIENT ID="1" GROUP_NAME="Beverage" KIND="Vodka" TYPE="DISTILLED"></INGREDIENT>
     <INGREDIENT ID="2" GROUP_NAME="Beverage" KIND="Gin" TYPE="DISTILLED"></INGREDIENT>
@@ -56,12 +56,12 @@
     <COCKTAIL_TO_INGREDIENT COCKTAIL_ID="5" INGREDIENT_ID="14" VOLUME="5" UNITS="PCS"></COCKTAIL_TO_INGREDIENT>
     <COCKTAIL_TO_INGREDIENT COCKTAIL_ID="5" INGREDIENT_ID="18" VOLUME="5" UNITS="PCS"></COCKTAIL_TO_INGREDIENT>
 
-    <BOTTLE ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120" BRAND_NAME="Absolute" AVAILABLE="1" IMAGE_URL="http://vodka.first.jpg"></BOTTLE>
-    <BOTTLE ID="2" INGREDIENT_ID="2" VOLUME="0.75" PRICE="140" BRAND_NAME="" AVAILABLE="1"></BOTTLE>
-    <BOTTLE ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5" BRAND_NAME="Bacardi" AVAILABLE="1"></BOTTLE>
-    <BOTTLE ID="4" INGREDIENT_ID="4" VOLUME="1" PRICE="178" BRAND_NAME="" AVAILABLE="1"></BOTTLE>
-    <BOTTLE ID="5" INGREDIENT_ID="8" VOLUME="0.5" PRICE="172.35" BRAND_NAME="" AVAILABLE="1"></BOTTLE>
-    <BOTTLE ID="6" INGREDIENT_ID="6" VOLUME="1" PRICE="254" BRAND_NAME="" AVAILABLE="1"></BOTTLE>
-    <BOTTLE ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119" BRAND_NAME="Havana Club" AVAILABLE="0" IMAGE_URL="http://rum.last.jpg"></BOTTLE>
+    <BOTTLE ID="1" INGREDIENT_ID="1" VOLUME="0.7" PRICE="120" BRAND_NAME="Absolute" IN_SHELF="1" IMAGE_URL="http://vodka.first.jpg"></BOTTLE>
+    <BOTTLE ID="2" INGREDIENT_ID="2" VOLUME="0.75" PRICE="140" BRAND_NAME="" IN_SHELF="1"></BOTTLE>
+    <BOTTLE ID="3" INGREDIENT_ID="3" VOLUME="1" PRICE="198.5" BRAND_NAME="Bacardi" IN_SHELF="1"></BOTTLE>
+    <BOTTLE ID="4" INGREDIENT_ID="4" VOLUME="1" PRICE="178" BRAND_NAME="" IN_SHELF="1"></BOTTLE>
+    <BOTTLE ID="5" INGREDIENT_ID="8" VOLUME="0.5" PRICE="172.35" BRAND_NAME="" IN_SHELF="1"></BOTTLE>
+    <BOTTLE ID="6" INGREDIENT_ID="6" VOLUME="1" PRICE="254" BRAND_NAME="" IN_SHELF="1"></BOTTLE>
+    <BOTTLE ID="7" INGREDIENT_ID="3" VOLUME="0.5" PRICE="119" BRAND_NAME="Havana Club" IN_SHELF="0" IMAGE_URL="http://rum.last.jpg"></BOTTLE>
 
 </dataset>
