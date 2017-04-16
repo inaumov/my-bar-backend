@@ -57,6 +57,11 @@ public class CocktailsController {
             logger.info("Menu list is empty.");
             return new ResponseEntity<>(Collections.<MenuBean>emptyList(), HttpStatus.OK);
         }
+        List<MenuBean> convertedList = convertWithTranslations(menuList);
+        return new ResponseEntity<>(convertedList, HttpStatus.OK);
+    }
+
+    private List<MenuBean> convertWithTranslations(List<IMenu> menuList) {
         List<MenuBean> convertedList = new ArrayList<>();
         Locale locale = LocaleContextHolder.getLocale();
         for (IMenu menu : menuList) {
@@ -65,22 +70,20 @@ public class CocktailsController {
             convertedList.add(from);
         }
         logger.info(MessageFormat.format("Found {0} items in menu list.", menuList.size()));
-        return new ResponseEntity<>(convertedList, HttpStatus.OK);
+        return convertedList;
     }
 
     //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
 
     private ResponseEntity<List<CocktailBean>> findCocktailsForMenu(String menuName) {
         logger.info("Fetching cocktails for menu [{0}]...", menuName);
-        List<ICocktail> cocktails = cocktailsService.getAllCocktailsForMenu(menuName);
-        if (cocktails.isEmpty()) {
-            logger.error(MessageFormat.format("Cocktails list for menu [{0}] does not exist", menuName));
+        List<ICocktail> cocktailsList = cocktailsService.getAllCocktailsForMenu(menuName);
+        if (cocktailsList.isEmpty()) {
+            logger.info(MessageFormat.format("Cocktails list for menu [{0}] is empty.", menuName));
             return new ResponseEntity<>(Collections.<CocktailBean>emptyList(), HttpStatus.OK);
         }
 
-        List<CocktailBean> converted = toCocktailBeans(cocktails);
-        cocktailsWrapper.updateWithState(converted);
-        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", cocktails.size(), menuName));
+        List<CocktailBean> converted = convertWithAvailability(menuName, cocktailsList);
         return new ResponseEntity<>(converted, HttpStatus.OK);
     }
 
@@ -99,20 +102,29 @@ public class CocktailsController {
         if (!Strings.isNullOrEmpty(menuNameParam)) {
             return findCocktailsForMenu(menuNameParam);
         }
-        Map<String, List<ICocktail>> cocktails = cocktailsService.getAllCocktails();
-        if (cocktails.isEmpty()) {
+        Map<String, List<ICocktail>> cocktailsMap = cocktailsService.getAllCocktails();
+        if (cocktailsMap.isEmpty()) {
             logger.info("Cocktail list is empty.");
             return new ResponseEntity<>(Collections.<String, List<CocktailBean>>emptyMap(), HttpStatus.OK);
         }
-        Map<String, List<CocktailBean>> converted = Maps.newHashMap();
-        for (String menuName : cocktails.keySet()) {
-            converted.put(menuName, toCocktailBeans(cocktails.get(menuName)));
-        }
-        cocktailsWrapper.get(converted);
-        for (String menuCode : converted.keySet()) {
-            logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.get(menuCode).size(), menuCode));
-        }
-        return new ResponseEntity<>(converted, HttpStatus.OK);
+        Map<String, List<CocktailBean>> map = convertWithAvailability(cocktailsMap);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    private Map<String, List<CocktailBean>> convertWithAvailability(Map<String, List<ICocktail>> cocktailsMap) {
+        return Maps.transformEntries(cocktailsMap, new Maps.EntryTransformer<String, List<ICocktail>, List<CocktailBean>>() {
+            @Override
+            public List<CocktailBean> transformEntry(String menuName, List<ICocktail> values) {
+                return convertWithAvailability(menuName, values);
+            }
+        });
+    }
+
+    private List<CocktailBean> convertWithAvailability(String menuName, List<ICocktail> values) {
+        List<CocktailBean> converted = toCocktailBeans(values);
+        cocktailsWrapper.updateWithState(converted);
+        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", values.size(), menuName));
+        return ImmutableList.copyOf(converted);
     }
 
     //-------------------Retrieve a cocktail with details--------------------------------------------------------
