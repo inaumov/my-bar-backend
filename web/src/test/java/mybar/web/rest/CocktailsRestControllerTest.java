@@ -50,7 +50,7 @@ public class CocktailsRestControllerTest {
 
     public static final int TEST_ID_1 = 1;
     public static final int TEST_ID_2 = 2;
-    public static final int MENU_ID = 2;
+    public static final String MENU_NAME = "TEST_MENU";
     public static final String NAME = "Rum Cola";
     public static final String DESCRIPTION = "Loren ipsum";
     public static final String IMAGE_URL = "http://cocktail-image.jpg";
@@ -114,7 +114,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("$.id", is(TEST_ID_1)))
-                .andExpect(jsonPath("$.menuId", is(MENU_ID)))
+                .andExpect(jsonPath("$.relatedToMenu", is(MENU_NAME)))
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL)))
@@ -190,7 +190,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].description").doesNotExist())
                 .andExpect(jsonPath("$.other[0].imageUrl", is(IMAGE_URL)))
                 .andExpect(jsonPath("$.other[0].available", is("UNDEFINED")))
-                .andExpect(jsonPath("$.other[0].menuId").doesNotExist())
+                .andExpect(jsonPath("$.other[0].relatedToMenu").doesNotExist())
 
                 .andExpect(jsonPath("$.other[0].ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$.other[0].ingredients.beverages[0].ingredientId", is(5)))
@@ -227,7 +227,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$[2].description").doesNotExist())
                 .andExpect(jsonPath("$[2].imageUrl", is(IMAGE_URL)))
                 .andExpect(jsonPath("$[2].available", is("UNDEFINED")))
-                .andExpect(jsonPath("$[2].menuId").doesNotExist())
+                .andExpect(jsonPath("$[2].relatedToMenu").doesNotExist())
 
                 .andExpect(jsonPath("$[2].ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$[2].ingredients.beverages[0].ingredientId", is(5)))
@@ -289,7 +289,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL)))
-                .andExpect(jsonPath("$.menuId", is(MENU_ID)))
+                .andExpect(jsonPath("$.relatedToMenu", is(MENU_NAME)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.available", is("UNDEFINED")))
 
@@ -363,7 +363,7 @@ public class CocktailsRestControllerTest {
         cocktailDto.setName(NAME);
         cocktailDto.setDescription(DESCRIPTION);
         cocktailDto.setImageUrl(IMAGE_URL);
-        cocktailDto.setMenuId(MENU_ID);
+        cocktailDto.setMenuName(MENU_NAME);
 
         CocktailToIngredientDto beverage = new CocktailToIngredientDto();
         beverage.setIngredientId(5);

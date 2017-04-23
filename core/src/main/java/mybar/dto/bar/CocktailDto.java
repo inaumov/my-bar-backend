@@ -14,7 +14,7 @@ public class CocktailDto implements ICocktail {
     private int id;
     private String name;
     private Map<String, Collection<CocktailToIngredientDto>> ingredients;
-    private int menuId;
+    private String menuName;
     private String description;
     private String imageUrl;
 }

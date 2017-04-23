@@ -3,18 +3,14 @@ package mybar.service.bar;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import mybar.State;
+import com.google.common.collect.*;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Cocktail;
-import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
 import mybar.exception.CocktailNotFoundException;
+import mybar.exception.UnknownMenuException;
 import mybar.exception.UniqueCocktailNameException;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.bar.MenuDao;
@@ -39,15 +35,9 @@ public class CocktailsService {
     @Autowired(required = false)
     private OrderDao orderDao;
 
-    private List<Menu> allMenusCached;
+    private Map<IMenu, Collection<ICocktail>> allMenusCached = new HashMap<>();
 
-    Function<Cocktail, ICocktail> cocktailFunction = new Function<Cocktail, ICocktail>() {
-        @Override
-        public ICocktail apply(Cocktail cocktail) {
-            return cocktail.toDto();
-        }
-    };
-    Function<Menu, IMenu> menuFunction = new Function<Menu, IMenu>() {
+    private Function<Menu, IMenu> menuFunction = new Function<Menu, IMenu>() {
         @Override
         public IMenu apply(Menu menu) {
             return menu.toDto();
@@ -56,96 +46,102 @@ public class CocktailsService {
 
     // menu
 
-    public List<IMenu> getAllMenuItems() {
-        return Lists.transform(allMenus(), menuFunction);
+    public Collection<IMenu> getAllMenuItems() {
+        return allMenusCached.keySet();
     }
 
-    private List<Menu> allMenus() {
+    private Map<IMenu, Collection<ICocktail>> allMenus() {
         if (allMenusCached == null || allMenusCached.isEmpty()) {
-            allMenusCached = menuDao.findAll();
+            List<Menu> all = menuDao.findAll();
+            for (final Menu menu : all) {
+                allMenusCached.put(
+                        menuFunction.apply(menu),
+                        FluentIterable.from(menu.getCocktails()).transform(new Function<Cocktail, ICocktail>() {
+                            @Override
+                            public ICocktail apply(Cocktail cocktail) {
+                                return cocktail.toDto(menu.getName());
+                            }
+                        }).toList());
+            }
         }
         return allMenusCached;
     }
 
-    private Menu findMenuById(final int menuId) {
-        return Iterables.find(allMenus(), new Predicate<Menu>() {
+    private IMenu findMenuById(final int menuId) {
+        return Iterables.find(allMenus().keySet(), new Predicate<IMenu>() {
             @Override
-            public boolean apply(Menu menu) {
+            public boolean apply(IMenu menu) {
                 return menu.getId() == menuId;
             }
         });
     }
 
-    private Optional<Menu> findMenuByName(final String menuName) {
-        return Iterables.tryFind(allMenus(), new Predicate<Menu>() {
+    private IMenu findMenuByName(final String menuName) {
+        Optional<IMenu> relatedMenu = Iterables.tryFind(allMenus().keySet(), new Predicate<IMenu>() {
             @Override
-            public boolean apply(Menu menu) {
+            public boolean apply(IMenu menu) {
                 return menu.getName().equals(menuName);
             }
         });
+        if (!relatedMenu.isPresent()) {
+            throw new UnknownMenuException(menuName); // TODO map to REST ex
+        }
+        return relatedMenu.get();
     }
 
     // cocktails
 
     public List<ICocktail> getAllCocktailsForMenu(final String menuName) {
-        Optional<Menu> menu = findMenuByName(menuName);
-        if(menu.isPresent()) {
-            List<Cocktail> cocktails = new ArrayList<>(menu.get().getCocktails());
-            return Lists.transform(cocktails, cocktailFunction);
+        Optional<IMenu> menuOptional = Iterables.tryFind(allMenus().keySet(), new Predicate<IMenu>() {
+            @Override
+            public boolean apply(IMenu menu) {
+                return menu.getName().equals(menuName);
+            }
+        });
+        if(menuOptional.isPresent()) {
+            return ImmutableList.copyOf(allMenus().get(menuOptional.get()));
         }
         return Collections.emptyList();
     }
 
     public Map<String, List<ICocktail>> getAllCocktails() {
         Map<String, List<ICocktail>> cocktails = Maps.newHashMap();
-        for (Menu menu : allMenus()) {
-            cocktails.put(menu.getName(), FluentIterable.from(menu.getCocktails()).transform(cocktailFunction).toList());
+        for (IMenu menu : allMenus().keySet()) {
+            cocktails.put(menu.getName(), ImmutableList.copyOf(allMenus().get(menu)));
         }
         return cocktails;
     }
 
     public ICocktail saveCocktail(ICocktail cocktail) throws UniqueCocktailNameException {
+        Objects.requireNonNull(cocktail.getMenuName());
         checkCocktailExists(cocktail);
-        Cocktail entity = EntityFactory.from(cocktail);
-        Menu menuById = findMenuById(cocktail.getMenuId());
-        menuById.addCocktail(entity);
-        try {
-            Cocktail created = performSaveOrUpdate(entity);
-            return created.toDto();
-        } catch (EntityExistsException e) {
-            return null;
-        }
+
+        return performSaveOrUpdate(cocktail);
     }
 
     public ICocktail updateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
-        Cocktail cocktailFromDb = cocktailDao.read(cocktail.getId());
-        copyCocktailFieldsForUpdate(cocktailFromDb, cocktail);
-        Cocktail updated = performSaveOrUpdate(cocktailFromDb);
-        return updated.toDto();
+        Objects.requireNonNull(cocktail.getId());
+        Objects.requireNonNull(cocktail.getMenuName());
+
+        return performSaveOrUpdate(cocktail);
     }
 
-    private void copyCocktailFieldsForUpdate(Cocktail destination, ICocktail source) {
-        Cocktail existedEntity = (Cocktail) destination;
-        Objects.requireNonNull(existedEntity.getId());
-        existedEntity.setName(source.getName());
-        existedEntity.setDescription(source.getDescription());
-        existedEntity.setImageUrl(source.getImageUrl());
-        existedEntity.setMenuId(source.getMenuId());
-        existedEntity.getCocktailToIngredientList().clear();
-        List<CocktailToIngredient> cocktailToIngredientList = EntityFactory.from(source).getCocktailToIngredientList();
-        for (CocktailToIngredient cocktailToIngredient : cocktailToIngredientList) {
-            existedEntity.addCocktailToIngredient(cocktailToIngredient);
-        }
-    }
-
-    private Cocktail performSaveOrUpdate(Cocktail cocktail) {
-        allMenusCached.clear();
-        if (cocktail.getId() == 0) {
-            Cocktail created = cocktailDao.create(cocktail);
-            return created;
-        } else {
-            Cocktail updated = cocktailDao.update(cocktail);
-            return updated;
+    private ICocktail performSaveOrUpdate(ICocktail cocktail) {
+        String menuName = cocktail.getMenuName();
+        IMenu menu = findMenuByName(menuName);
+        Cocktail cocktailEntity = EntityFactory.from(cocktail, menu.getId());
+        try {
+            Cocktail result;
+            if (cocktailEntity.getId() == 0) {
+                result = cocktailDao.create(cocktailEntity);
+            } else {
+                result = cocktailDao.update(cocktailEntity);
+            }
+            return result.toDto(menuName);
+        } catch (EntityExistsException e) {
+            return null;
+        } finally {
+            allMenusCached.clear();
         }
     }
 
@@ -158,7 +154,7 @@ public class CocktailsService {
     public void removeCocktail(ICocktail cocktail) throws Exception {
         boolean hasRef = isCocktailInHistory(cocktail);
         if (hasRef) {
-            Cocktail entity = EntityFactory.from(cocktail);
+            Cocktail entity = EntityFactory.from(cocktail, -1);
             cocktailDao.update(entity);
         } else {
             cocktailDao.delete(cocktail);
@@ -175,7 +171,8 @@ public class CocktailsService {
     }
 
     public ICocktail findCocktailById(int id) throws CocktailNotFoundException {
-        return cocktailDao.read(id).toDto();
+        Cocktail cocktail = cocktailDao.read(id);
+        return cocktail.toDto(findMenuById(cocktail.getMenuId()).getName());
     }
 
     public boolean isCocktailInHistory(ICocktail cocktail) {
@@ -184,12 +181,12 @@ public class CocktailsService {
 
     public void deleteCocktailById(int id) throws CocktailNotFoundException {
         cocktailDao.delete(id);
-        if (allMenusCached == null) {
+        if (allMenusCached == null || allMenusCached.isEmpty()) {
             return;
         }
-        for (Menu m : allMenusCached) {
-            Collection<Cocktail> cocktails = m.getCocktails();
-            for (Cocktail cocktail : cocktails) {
+        for (IMenu m : allMenusCached.keySet()) {
+            Collection<ICocktail> cocktails = allMenus().get(m);
+            for (ICocktail cocktail : cocktails) {
                 if (cocktail.getId() == id) {
                     cocktails.remove(cocktail);
                     break;

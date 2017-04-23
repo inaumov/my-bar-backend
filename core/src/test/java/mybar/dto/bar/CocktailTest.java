@@ -20,6 +20,7 @@ public class CocktailTest {
 
     public static final int TEST_ID = 1;
     public static final int MENU_ID = 2;
+    public static final String MENU_NAME = "TEST_NAME";
     public static final String NAME = "Rum Cola";
     public static final String DESCRIPTION = "Loren ipsum";
     public static final String IMAGE_URL = "http://cocktail-image.jpg";
@@ -47,10 +48,10 @@ public class CocktailTest {
         cocktail.setDescription(DESCRIPTION);
         cocktail.setImageUrl(IMAGE_URL);
 
-        ICocktail dto = cocktail.toDto();
+        ICocktail dto = cocktail.toDto(MENU_NAME);
         assertEquals(TEST_ID, dto.getId());
         assertEquals(IMAGE_URL, dto.getImageUrl());
-        assertEquals(MENU_ID, dto.getMenuId());
+        assertEquals(MENU_NAME, dto.getMenuName());
         assertEquals(NAME, dto.getName());
         assertEquals(DESCRIPTION, dto.getDescription());
 

@@ -22,7 +22,8 @@ public class CocktailBean implements ICocktail {
     private String name;
 
     @JsonView(View.CocktailWithDetails.class)
-    private int menuId;
+    @JsonProperty("relatedToMenu")
+    private String menuName;
 
     @JsonView(View.Cocktail.class)
     @JsonProperty("available")

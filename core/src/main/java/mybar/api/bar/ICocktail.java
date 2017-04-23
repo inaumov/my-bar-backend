@@ -11,7 +11,7 @@ public interface ICocktail {
 
     Map<String, ? extends Collection<? extends ICocktailIngredient>> getIngredients();
 
-    int getMenuId();
+    String getMenuName();
 
     String getDescription();
 

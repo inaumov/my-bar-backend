@@ -36,14 +36,14 @@ public class DtoFactory {
         return dto;
     }
 
-    public static CocktailDto toDto(Cocktail entity) {
+    public static CocktailDto toDto(Cocktail entity, String relatedToMenuName) {
         CocktailDto dto = new CocktailDto();
         dto.setId(entity.getId());
+        dto.setMenuName(relatedToMenuName);
         dto.setName(entity.getName());
         dto.setImageUrl(entity.getImageUrl());
         dto.setDescription(entity.getDescription());
         dto.setIngredients(convert(entity.getCocktailToIngredientList()));
-        dto.setMenuId(entity.getMenuId());
         return dto;
     }
 

@@ -31,20 +31,20 @@ public class EntityFactory {
         return entity;
     }
 
-    public static Cocktail from(final ICocktail cocktail) {
+    public static Cocktail from(final ICocktail cocktail, int menuId) {
         Cocktail entity = new Cocktail();
         entity.setId(cocktail.getId());
         entity.setName(cocktail.getName());
         entity.setDescription(cocktail.getDescription());
         entity.setImageUrl(cocktail.getImageUrl());
-        Map<String, ? extends Collection<? extends ICocktailIngredient>> insideItems = cocktail.getIngredients();
-        for (String groupName : insideItems.keySet()) {
-            Collection<? extends ICocktailIngredient> iInsides = insideItems.get(groupName);
-            for (ICocktailIngredient cocktailToIngredient : iInsides) {
+        Map<String, ? extends Collection<? extends ICocktailIngredient>> allIngredients = cocktail.getIngredients();
+        for (String groupName : allIngredients.keySet()) {
+            Collection<? extends ICocktailIngredient> ingredientsByGroup = allIngredients.get(groupName);
+            for (ICocktailIngredient cocktailToIngredient : ingredientsByGroup) {
                 entity.addCocktailToIngredient(from(groupName, cocktailToIngredient));
             }
         }
-        entity.setMenuId(cocktail.getId());
+        entity.setMenuId(menuId);
         return entity;
     }
 

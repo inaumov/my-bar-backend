@@ -51,8 +51,8 @@ public class Cocktail {
         }
     }
 
-    public ICocktail toDto() {
-        return DtoFactory.toDto(this);
+    public ICocktail toDto(String menuName) {
+        return DtoFactory.toDto(this, menuName);
     }
 
     @Override

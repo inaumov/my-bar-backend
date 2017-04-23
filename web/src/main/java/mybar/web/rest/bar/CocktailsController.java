@@ -52,24 +52,24 @@ public class CocktailsController {
     public ResponseEntity<List<MenuBean>> listAllMenuItems() {
         logger.info("Fetching menu items list...");
 
-        List<IMenu> menuList = cocktailsService.getAllMenuItems();
-        if (menuList.isEmpty()) {
+        Collection<IMenu> allMenuItems = cocktailsService.getAllMenuItems();
+        if (allMenuItems.isEmpty()) {
             logger.info("Menu list is empty.");
             return new ResponseEntity<>(Collections.<MenuBean>emptyList(), HttpStatus.OK);
         }
-        List<MenuBean> convertedList = convertWithTranslations(menuList);
+        List<MenuBean> convertedList = convertWithTranslations(allMenuItems);
         return new ResponseEntity<>(convertedList, HttpStatus.OK);
     }
 
-    private List<MenuBean> convertWithTranslations(List<IMenu> menuList) {
+    private List<MenuBean> convertWithTranslations(Collection<IMenu> menuItems) {
         List<MenuBean> convertedList = new ArrayList<>();
         Locale locale = LocaleContextHolder.getLocale();
-        for (IMenu menu : menuList) {
+        for (IMenu menu : menuItems) {
             MenuBean from = RestBeanConverter.toMenuBean(menu);
             from.setTranslation(messageSource.getMessage(menu.getName(), null, locale));
             convertedList.add(from);
         }
-        logger.info(MessageFormat.format("Found {0} items in menu list.", menuList.size()));
+        logger.info(MessageFormat.format("Found {0} items in menu list.", menuItems.size()));
         return convertedList;
     }
 
