@@ -73,7 +73,7 @@ public class ShelfService {
 
     public List<IBottle> findAllBottles() {
         if (bottleCache == null || bottleCache.isEmpty()) {
-            bottleCache = FluentIterable.from(bottleDao.findAll()).transform(toDtoFunction).toList();
+            bottleCache = Lists.newArrayList(Lists.transform(bottleDao.findAll(), toDtoFunction));
         }
         return bottleCache;
     }
