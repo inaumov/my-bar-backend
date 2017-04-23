@@ -1,10 +1,10 @@
 package mybar.app.bean.bar;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
-import mybar.State;
 import mybar.api.bar.ICocktail;
 
 import java.util.Collection;
@@ -25,7 +25,8 @@ public class CocktailBean implements ICocktail {
     private int menuId;
 
     @JsonView(View.Cocktail.class)
-    private State state;
+    @JsonProperty("available")
+    private YesNoEnum hasAllIngredients = YesNoEnum.UNDEFINED;
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private String imageUrl;

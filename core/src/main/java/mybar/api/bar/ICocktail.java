@@ -1,7 +1,5 @@
 package mybar.api.bar;
 
-import mybar.State;
-
 import java.util.Collection;
 import java.util.Map;
 
@@ -16,8 +14,6 @@ public interface ICocktail {
     int getMenuId();
 
     String getDescription();
-
-    State getState();
 
     String getImageUrl();
 

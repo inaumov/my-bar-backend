@@ -118,6 +118,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL)))
+                .andExpect(jsonPath("$.available", is("UNDEFINED")))
 
                 .andExpect(jsonPath("$.ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$.ingredients.beverages[0].ingredientId", is(5)))
@@ -188,6 +189,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].name", is(NAME)))
                 .andExpect(jsonPath("$.other[0].description").doesNotExist())
                 .andExpect(jsonPath("$.other[0].imageUrl", is(IMAGE_URL)))
+                .andExpect(jsonPath("$.other[0].available", is("UNDEFINED")))
                 .andExpect(jsonPath("$.other[0].menuId").doesNotExist())
 
                 .andExpect(jsonPath("$.other[0].ingredients.beverages", hasSize(1)))
@@ -218,11 +220,13 @@ public class CocktailsRestControllerTest {
 
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].id", is(5)))
+                .andExpect(jsonPath("$[0].available", is("UNDEFINED")))
                 .andExpect(jsonPath("$[1].id", is(10)))
                 .andExpect(jsonPath("$[2].id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$[2].name", is(NAME)))
                 .andExpect(jsonPath("$[2].description").doesNotExist())
                 .andExpect(jsonPath("$[2].imageUrl", is(IMAGE_URL)))
+                .andExpect(jsonPath("$[2].available", is("UNDEFINED")))
                 .andExpect(jsonPath("$[2].menuId").doesNotExist())
 
                 .andExpect(jsonPath("$[2].ingredients.beverages", hasSize(1)))
@@ -287,6 +291,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL)))
                 .andExpect(jsonPath("$.menuId", is(MENU_ID)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
+                .andExpect(jsonPath("$.available", is("UNDEFINED")))
 
                 .andExpect(jsonPath("$.ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$.ingredients.beverages[0].ingredientId", is(5)))

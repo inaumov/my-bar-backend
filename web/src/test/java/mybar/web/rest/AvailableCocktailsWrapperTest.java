@@ -2,12 +2,12 @@ package mybar.web.rest;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import mybar.State;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.CocktailIngredientBean;
+import mybar.app.bean.bar.YesNoEnum;
 import mybar.service.bar.ShelfService;
 import mybar.web.rest.bar.AvailableCocktailsWrapper;
 import org.junit.After;
@@ -77,11 +77,11 @@ public class AvailableCocktailsWrapperTest {
         assertEquals(4, cocktails.size());
 
         CocktailBean bean1 = cocktails.get(0);
-        assertEquals(State.UNDEFINED, bean1.getState());
+        assertEquals(YesNoEnum.UNDEFINED, bean1.getHasAllIngredients());
         assertThat(bean1.getIngredients().get(IDrink.GROUP_NAME), is(empty()));
 
         CocktailBean bean2 = cocktails.get(1);
-        assertEquals(State.UNDEFINED, bean2.getState());
+        assertEquals(YesNoEnum.UNDEFINED, bean2.getHasAllIngredients());
         assertThat(bean2.getIngredients().get(IAdditive.GROUP_NAME), is(empty()));
 
         CocktailBean bean3 = cocktails.get(2);
@@ -89,13 +89,13 @@ public class AvailableCocktailsWrapperTest {
         assertThat(ingredients3It.next().isMissing(), is(false));
         assertThat(ingredients3It.next().isMissing(), is(true));
         assertThat(ingredients3It.next().isMissing(), is(false));
-        assertEquals(State.NOT_AVAILABLE, bean3.getState());
+        assertEquals(YesNoEnum.NO, bean3.getHasAllIngredients());
 
         CocktailBean bean4 = cocktails.get(3);
         Iterator<CocktailIngredientBean> ingredients4It = bean4.getIngredients().get(IBeverage.GROUP_NAME).iterator();
         assertThat(ingredients4It.next().isMissing(), is(false));
         assertThat(ingredients4It.next().isMissing(), is(false));
-        assertEquals(State.AVAILABLE, bean4.getState());
+        assertEquals(YesNoEnum.YES, bean4.getHasAllIngredients());
     }
 
     private CocktailBean prepareAvailableCocktail(CocktailBean cocktailBean) {

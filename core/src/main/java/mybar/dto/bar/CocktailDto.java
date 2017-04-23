@@ -2,7 +2,6 @@ package mybar.dto.bar;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.State;
 import mybar.api.bar.ICocktail;
 
 import java.util.Collection;
@@ -17,6 +16,5 @@ public class CocktailDto implements ICocktail {
     private Map<String, Collection<CocktailToIngredientDto>> ingredients;
     private int menuId;
     private String description;
-    private State state;
     private String imageUrl;
 }

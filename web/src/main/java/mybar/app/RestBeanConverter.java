@@ -65,7 +65,7 @@ public final class RestBeanConverter {
     public static BottleBean from(IBottle bottle) {
         BottleBean bean = new BottleBean();
         BeanUtils.copyProperties(bottle, bean, "inShelf");
-        bean.setInShelf(bottle.isInShelf() ? InShelf.YES : InShelf.NO);
+        bean.setInShelf(bottle.isInShelf() ? YesNoEnum.YES : YesNoEnum.NO);
 
         IBeverage beverage = bottle.getBeverage();
         if (beverage != null) {

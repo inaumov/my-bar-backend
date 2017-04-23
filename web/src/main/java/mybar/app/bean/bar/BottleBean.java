@@ -30,7 +30,8 @@ public class BottleBean implements IBottle {
     private double price;
 
     @JsonView(View.Shelf.class)
-    private InShelf inShelf = InShelf.NO;
+    @JsonProperty("inShelf")
+    private YesNoEnum inShelf = YesNoEnum.NO;
 
     @JsonView(View.Shelf.class)
     private String imageUrl;
@@ -38,7 +39,7 @@ public class BottleBean implements IBottle {
     @JsonIgnore
     @Override
     public boolean isInShelf() {
-        return InShelf.YES == inShelf;
+        return YesNoEnum.YES == inShelf;
     }
 
     @Override

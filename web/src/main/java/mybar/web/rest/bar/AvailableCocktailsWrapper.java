@@ -3,9 +3,9 @@ package mybar.web.rest.bar;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import mybar.State;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.CocktailIngredientBean;
+import mybar.app.bean.bar.YesNoEnum;
 import mybar.service.bar.ShelfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,15 +25,15 @@ public class AvailableCocktailsWrapper {
 
     public void updateWithState(List<CocktailBean> cocktails) {
         for (CocktailBean cocktail : cocktails) {
-            cocktail.setState(calculateAvailability(cocktail.getIngredients()));
+            cocktail.setHasAllIngredients(calculateAvailability(cocktail.getIngredients()));
         }
     }
 
-    private State calculateAvailability(Map<String, Collection<CocktailIngredientBean>> insideItems) {
+    private YesNoEnum calculateAvailability(Map<String, Collection<CocktailIngredientBean>> insideItems) {
         Collection<Collection<CocktailIngredientBean>> values = insideItems.values();
         Iterable<CocktailIngredientBean> beans = Iterables.concat(values);
         if (!beans.iterator().hasNext()) { // TODO improve this check
-            return State.UNDEFINED;
+            return YesNoEnum.UNDEFINED;
         }
         boolean isCocktailAvailable = true;
         Iterator<Map.Entry<String, Collection<CocktailIngredientBean>>> entries = insideItems.entrySet().iterator();
@@ -44,7 +44,7 @@ public class AvailableCocktailsWrapper {
                 isCocktailAvailable &= isBottleAvailable;
             }
         }
-        return isCocktailAvailable ? State.AVAILABLE : State.NOT_AVAILABLE;
+        return isCocktailAvailable ? YesNoEnum.YES : YesNoEnum.NO;
     }
 
 }
