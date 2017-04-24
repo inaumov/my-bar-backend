@@ -73,7 +73,7 @@ public class AvailableCocktailsWrapperTest {
 
         ArrayList<CocktailBean> cocktails = Lists.newArrayList(emptyBean1, emptyBean2, addIngredients(testNotEmptyBean), prepareAvailableCocktail(testAvailableBean));
 
-        cocktailsWrapper.updateWithState(cocktails);
+        cocktailsWrapper.updateWithAvailability(cocktails);
         assertEquals(4, cocktails.size());
 
         CocktailBean bean1 = cocktails.get(0);

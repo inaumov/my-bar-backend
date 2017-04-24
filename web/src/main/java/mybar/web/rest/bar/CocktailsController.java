@@ -122,7 +122,7 @@ public class CocktailsController {
 
     private List<CocktailBean> convertWithAvailability(String menuName, List<ICocktail> values) {
         List<CocktailBean> converted = toCocktailBeans(values);
-        cocktailsWrapper.updateWithState(converted);
+        cocktailsWrapper.updateWithAvailability(converted);
         logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", values.size(), menuName));
         return ImmutableList.copyOf(converted);
     }
@@ -135,7 +135,9 @@ public class CocktailsController {
         logger.info("Fetching cocktail with id " + id);
 
         ICocktail cocktail = cocktailsService.findCocktailById(id);
-        return new ResponseEntity<>(RestBeanConverter.toCocktailBean(cocktail), HttpStatus.OK);
+        CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(cocktail);
+        cocktailsWrapper.updateWithAvailability(cocktailBeanResponse);
+        return new ResponseEntity<>(cocktailBeanResponse, HttpStatus.OK);
     }
 
     //-------------------Create a Cocktail--------------------------------------------------------
@@ -148,7 +150,9 @@ public class CocktailsController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/cocktails/{id}").buildAndExpand(cocktailBean.getId()).toUri());
-        return new ResponseEntity<>(RestBeanConverter.toCocktailBean(saved), headers, HttpStatus.CREATED);
+        CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(saved);
+        cocktailsWrapper.updateWithAvailability(cocktailBeanResponse);
+        return new ResponseEntity<>(cocktailBeanResponse, headers, HttpStatus.CREATED);
     }
 
     //------------------- Update a Cocktail --------------------------------------------------------
@@ -158,7 +162,9 @@ public class CocktailsController {
         logger.info("Updating a cocktail " + cocktailBean);
 
         ICocktail updated = cocktailsService.updateCocktail(cocktailBean);
-        return new ResponseEntity<>(RestBeanConverter.toCocktailBean(updated), HttpStatus.OK);
+        CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(updated);
+        cocktailsWrapper.updateWithAvailability(cocktailBeanResponse);
+        return new ResponseEntity<>(cocktailBeanResponse, HttpStatus.OK);
     }
 
     //------------------- Delete a Cocktail --------------------------------------------------------

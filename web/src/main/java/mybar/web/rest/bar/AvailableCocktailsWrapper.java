@@ -23,10 +23,14 @@ public class AvailableCocktailsWrapper {
     @Autowired // TODO fix setter or autowired???
     private ShelfService shelfService;
 
-    public void updateWithState(List<CocktailBean> cocktails) {
+    public void updateWithAvailability(List<CocktailBean> cocktails) {
         for (CocktailBean cocktail : cocktails) {
-            cocktail.setHasAllIngredients(calculateAvailability(cocktail.getIngredients()));
+            updateWithAvailability(cocktail);
         }
+    }
+
+    public void updateWithAvailability(CocktailBean cocktail) {
+        cocktail.setHasAllIngredients(calculateAvailability(cocktail.getIngredients()));
     }
 
     private YesNoEnum calculateAvailability(Map<String, Collection<CocktailIngredientBean>> insideItems) {
