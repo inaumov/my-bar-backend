@@ -16,6 +16,7 @@ import mybar.dto.bar.CocktailDto;
 import mybar.dto.bar.CocktailToIngredientDto;
 import mybar.dto.bar.MenuDto;
 import mybar.exception.CocktailNotFoundException;
+import mybar.exception.UnknownMenuException;
 import mybar.service.bar.CocktailsService;
 import mybar.web.rest.bar.AvailableCocktailsWrapper;
 import org.junit.After;
@@ -246,7 +247,7 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
-        ResultActions resultActions = mockMvc.perform(post("/cocktails", requestJson)
+        ResultActions resultActions = mockMvc.perform(post("/cocktails")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
                 .accept("application/json"))
@@ -262,6 +263,24 @@ public class CocktailsRestControllerTest {
     }
 
     @Test
+    public void create_Should_ThrowMenuUnknown() throws Exception {
+
+        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
+
+        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+                .accept("application/json"))
+
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
+
+        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
     public void update_Should_UpdateCocktail() throws Exception {
         final CocktailDto cocktailDto = createCocktailDto();
 
@@ -269,7 +288,7 @@ public class CocktailsRestControllerTest {
 
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
-        ResultActions resultActions = mockMvc.perform(put("/cocktails/", requestJson)
+        ResultActions resultActions = mockMvc.perform(put("/cocktails")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
                 .accept("application/json"))
@@ -302,20 +321,35 @@ public class CocktailsRestControllerTest {
 
     @Test
     public void update_Should_ThrowNotFound() throws Exception {
-        final CocktailBean testCocktail = new CocktailBean();
 
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
-        String requestJson = toRequestJson(testCocktail);
-
-        mockMvc.perform(put("/cocktails/", requestJson).contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
+        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
                 .accept("application/json"))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
+
+        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
+    public void update_Should_ThrowMenuUnknown() throws Exception {
+
+        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
+
+        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+                .accept("application/json"))
+
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
 
         verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
         verifyNoMoreInteractions(cocktailsService);

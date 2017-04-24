@@ -84,7 +84,7 @@ public class CocktailsService {
             }
         });
         if (!relatedMenu.isPresent()) {
-            throw new UnknownMenuException(menuName); // TODO map to REST ex
+            throw new UnknownMenuException(menuName);
         }
         return relatedMenu.get();
     }

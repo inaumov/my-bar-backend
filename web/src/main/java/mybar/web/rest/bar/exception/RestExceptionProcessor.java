@@ -3,6 +3,7 @@ package mybar.web.rest.bar.exception;
 import mybar.exception.BottleNotFoundException;
 import mybar.exception.CocktailNotFoundException;
 import mybar.exception.UniqueCocktailNameException;
+import mybar.exception.UnknownMenuException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -51,6 +52,19 @@ public class RestExceptionProcessor {
     public ErrorInfo cocktailUniqueName(HttpServletRequest req, UniqueCocktailNameException ex) {
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.unique.cocktail.name", null, locale);
+        errorMessage += " ";
+        errorMessage = MessageFormat.format(errorMessage, ex.getName());
+        String errorURL = req.getRequestURL().toString();
+
+        return new ErrorInfo(errorURL, errorMessage);
+    }
+
+    @ExceptionHandler(UnknownMenuException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorInfo unknownMenuName(HttpServletRequest req, UnknownMenuException ex) {
+        Locale locale = LocaleContextHolder.getLocale();
+        String errorMessage = messageSource.getMessage("error.unknown.menu.name", null, locale);
         errorMessage += " ";
         errorMessage = MessageFormat.format(errorMessage, ex.getName());
         String errorURL = req.getRequestURL().toString();

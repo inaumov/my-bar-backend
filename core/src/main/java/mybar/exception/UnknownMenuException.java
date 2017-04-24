@@ -2,14 +2,14 @@ package mybar.exception;
 
 public class UnknownMenuException extends RuntimeException {
 
-    private String name;
+    private String menuName;
 
-    public UnknownMenuException(String name) {
-        this.name = name;
+    public UnknownMenuException(String menuName) {
+        this.menuName = menuName;
     }
      
     public String getName() {
-        return name;
+        return menuName;
     }
  
 }
