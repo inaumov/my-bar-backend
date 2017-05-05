@@ -21,7 +21,7 @@ public class Menu {
     @Column
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="MENU_ID", referencedColumnName="ID")
     private Collection<Cocktail> cocktails;
 

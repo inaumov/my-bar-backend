@@ -35,7 +35,8 @@ public class CocktailsService {
     @Autowired(required = false)
     private OrderDao orderDao;
 
-    private Map<IMenu, Collection<ICocktail>> allMenusCached = new HashMap<>();
+    private Set<IMenu> allMenusCached = new HashSet<>();
+    private Map<String, List<ICocktail>> cocktailsCache = new HashMap<>();
 
     private Function<Menu, IMenu> menuFunction = new Function<Menu, IMenu>() {
         @Override
@@ -47,28 +48,44 @@ public class CocktailsService {
     // menu
 
     public Collection<IMenu> getAllMenuItems() {
-        return allMenusCached.keySet();
+        return allMenus();
     }
 
-    private Map<IMenu, Collection<ICocktail>> allMenus() {
+    private Set<IMenu> allMenus() {
         if (allMenusCached == null || allMenusCached.isEmpty()) {
             List<Menu> all = menuDao.findAll();
             for (final Menu menu : all) {
-                allMenusCached.put(
-                        menuFunction.apply(menu),
-                        FluentIterable.from(menu.getCocktails()).transform(new Function<Cocktail, ICocktail>() {
-                            @Override
-                            public ICocktail apply(Cocktail cocktail) {
-                                return cocktail.toDto(menu.getName());
-                            }
-                        }).toList());
+                allMenusCached.add(menuFunction.apply(menu));
             }
         }
         return allMenusCached;
     }
 
+    private Map<String, List<ICocktail>> allCocktails() {
+        if (cocktailsCache == null || cocktailsCache.isEmpty()) {
+            List<Menu> all = menuDao.findAll();
+            for (final Menu menu : all) {
+                final String menuName = menu.getName();
+                if (cocktailsCache.containsKey(menuName)) {
+                    continue;
+                }
+                cocktailsCache.put(menuName, convertCocktailsToDtoList(menu, menuName));
+            }
+        }
+        return cocktailsCache;
+    }
+
+    private static ImmutableList<ICocktail> convertCocktailsToDtoList(Menu menu, final String menuName) {
+        return FluentIterable.from(menu.getCocktails()).transform(new Function<Cocktail, ICocktail>() {
+            @Override
+            public ICocktail apply(Cocktail cocktail) {
+                return cocktail.toDto(menuName);
+            }
+        }).toList();
+    }
+
     private IMenu findMenuById(final int menuId) {
-        return Iterables.find(allMenus().keySet(), new Predicate<IMenu>() {
+        return Iterables.find(allMenus(), new Predicate<IMenu>() {
             @Override
             public boolean apply(IMenu menu) {
                 return menu.getId() == menuId;
@@ -77,7 +94,7 @@ public class CocktailsService {
     }
 
     private IMenu findMenuByName(final String menuName) {
-        Optional<IMenu> relatedMenu = Iterables.tryFind(allMenus().keySet(), new Predicate<IMenu>() {
+        Optional<IMenu> relatedMenu = Iterables.tryFind(allMenus(), new Predicate<IMenu>() {
             @Override
             public boolean apply(IMenu menu) {
                 return menu.getName().equals(menuName);
@@ -89,27 +106,23 @@ public class CocktailsService {
         return relatedMenu.get();
     }
 
-    // cocktails
+    // cocktails per menu
 
     public List<ICocktail> getAllCocktailsForMenu(final String menuName) {
-        Optional<IMenu> menuOptional = Iterables.tryFind(allMenus().keySet(), new Predicate<IMenu>() {
-            @Override
-            public boolean apply(IMenu menu) {
-                return menu.getName().equals(menuName);
-            }
-        });
-        if(menuOptional.isPresent()) {
-            return ImmutableList.copyOf(allMenus().get(menuOptional.get()));
+
+        if (cocktailsCache.containsKey(menuName)) {
+            return cocktailsCache.get(menuName);
         }
-        return Collections.emptyList();
+        IMenu menu = findMenuByName(menuName);
+        ImmutableList<ICocktail> cocktailDtoList = convertCocktailsToDtoList(menuDao.read(menu.getId()), menuName);
+        cocktailsCache.put(menuName, cocktailDtoList);
+        return cocktailDtoList;
     }
 
+    // all cocktails per menu
+
     public Map<String, List<ICocktail>> getAllCocktails() {
-        Map<String, List<ICocktail>> cocktails = Maps.newHashMap();
-        for (IMenu menu : allMenus().keySet()) {
-            cocktails.put(menu.getName(), ImmutableList.copyOf(allMenus().get(menu)));
-        }
-        return cocktails;
+        return ImmutableMap.copyOf(allCocktails());
     }
 
     public ICocktail saveCocktail(ICocktail cocktail) throws UniqueCocktailNameException {
@@ -181,14 +194,16 @@ public class CocktailsService {
 
     public void deleteCocktailById(int id) throws CocktailNotFoundException {
         cocktailDao.delete(id);
-        if (allMenusCached == null || allMenusCached.isEmpty()) {
+        if (cocktailsCache == null || cocktailsCache.isEmpty()) {
             return;
         }
-        for (IMenu m : allMenusCached.keySet()) {
-            Collection<ICocktail> cocktails = allMenus().get(m);
-            for (ICocktail cocktail : cocktails) {
-                if (cocktail.getId() == id) {
-                    cocktails.remove(cocktail);
+        for (String menu : cocktailsCache.keySet()) {
+            Collection<ICocktail> cocktails = cocktailsCache.get(menu);
+            Iterator<ICocktail> iterator = cocktails.iterator();
+            while (iterator.hasNext()) {
+                ICocktail next = iterator.next();
+                if (next.getId() == id) {
+                    iterator.remove();
                     break;
                 }
             }
