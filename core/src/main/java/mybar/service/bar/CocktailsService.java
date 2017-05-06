@@ -1,8 +1,6 @@
 package mybar.service.bar;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
+import com.google.common.base.*;
 import com.google.common.collect.*;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
@@ -21,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import java.util.*;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -97,7 +96,7 @@ public class CocktailsService {
         Optional<IMenu> relatedMenu = Iterables.tryFind(allMenus(), new Predicate<IMenu>() {
             @Override
             public boolean apply(IMenu menu) {
-                return menu.getName().equals(menuName);
+                return Objects.equals(menu.getName(), menuName);
             }
         });
         if (!relatedMenu.isPresent()) {
@@ -126,15 +125,16 @@ public class CocktailsService {
     }
 
     public ICocktail saveCocktail(ICocktail cocktail) throws UniqueCocktailNameException {
-        Objects.requireNonNull(cocktail.getMenuName());
-        checkCocktailExists(cocktail);
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getName()), "Cocktail name is required.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getMenuName()), "Menu name is required.");
+        checkCocktailExists(cocktail.getName());
 
         return performSaveOrUpdate(cocktail);
     }
 
     public ICocktail updateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
-        Objects.requireNonNull(cocktail.getId());
-        Objects.requireNonNull(cocktail.getMenuName());
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getName()), "Cocktail name is required.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getMenuName()), "Menu name is required.");
 
         return performSaveOrUpdate(cocktail);
     }
@@ -155,12 +155,13 @@ public class CocktailsService {
             return null;
         } finally {
             allMenusCached.clear();
+            cocktailsCache.clear();
         }
     }
 
-    private void checkCocktailExists(ICocktail cocktail) throws UniqueCocktailNameException {
-        if (cocktailDao.findCocktailByName(cocktail.getName())) {
-            throw new UniqueCocktailNameException(cocktail.getName());
+    private void checkCocktailExists(String name) throws UniqueCocktailNameException {
+        if (cocktailDao.findCocktailByName(name)) {
+            throw new UniqueCocktailNameException(name);
         }
     }
 
@@ -176,7 +177,7 @@ public class CocktailsService {
 
     public boolean isCocktailExist(ICocktail cocktail) {
         try {
-            checkCocktailExists(cocktail);
+            checkCocktailExists(cocktail.getName());
         } catch (UniqueCocktailNameException e) {
             return true;
         }

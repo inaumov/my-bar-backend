@@ -281,6 +281,40 @@ public class CocktailsRestControllerTest {
     }
 
     @Test
+    public void create_Should_ValidateCocktailNameRequired() throws Exception {
+
+        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+
+        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"relatedToMenu\":\"test\"}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Cocktail name is required.")));
+
+        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
+    public void create_Should_ValidateMenuNameRequired() throws Exception {
+
+        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+
+        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"test\"}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
+
+        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
     public void update_Should_UpdateCocktail() throws Exception {
         final CocktailDto cocktailDto = createCocktailDto();
 
@@ -350,6 +384,40 @@ public class CocktailsRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
+
+        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
+    public void update_Should_ValidateCocktailNameRequired() throws Exception {
+
+        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+
+        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"relatedToMenu\":\"test\"}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Cocktail name is required.")));
+
+        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
+    public void update_Should_ValidateMenuNameRequired() throws Exception {
+
+        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+
+        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"test\"}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
 
         verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
         verifyNoMoreInteractions(cocktailsService);

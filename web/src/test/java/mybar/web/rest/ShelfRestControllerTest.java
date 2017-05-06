@@ -12,6 +12,7 @@ import mybar.app.bean.bar.ingredient.BeverageBean;
 import mybar.dto.bar.BottleDto;
 import mybar.dto.bar.ingredient.BeverageDto;
 import mybar.exception.BottleNotFoundException;
+import mybar.exception.UnknownBeverageException;
 import mybar.service.bar.ShelfService;
 import org.junit.After;
 import org.junit.Before;
@@ -244,6 +245,59 @@ public class ShelfRestControllerTest {
     }
 
     @Test
+    public void create_Should_ThrowIngredientUnknown() throws Exception {
+
+        BeverageBean beverage = new BeverageBean();
+        beverage.setId(102);
+        when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenThrow(new UnknownBeverageException(beverage));
+
+        mockMvc.perform(post("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Beverage [102] is unknown.")));
+
+        verify(shelfService, times(1)).saveBottle(Matchers.any(IBottle.class));
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
+    public void create_Should_ValidateBrandNameRequired() throws Exception {
+
+        when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
+
+        mockMvc.perform(post("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"ingredient\":{\"id\":6}}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Brand name is required.")));
+
+        verify(shelfService, times(1)).saveBottle(Matchers.any(IBottle.class));
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
+    public void create_Should_ValidateBeverageIdRequired() throws Exception {
+
+        when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
+
+        mockMvc.perform(post("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"brandName\":\"test\"}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Beverage ID is required.")));
+
+        verify(shelfService, times(1)).saveBottle(Matchers.any(IBottle.class));
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
     public void update_Should_UpdateBottle() throws Exception {
         final BottleDto bottleDto = prepareBottleDto();
 
@@ -306,6 +360,59 @@ public class ShelfRestControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no bottle with id: " + TEST_ID_2)));
+
+        verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
+    public void update_Should_ThrowIngredientUnknown() throws Exception {
+
+        BeverageBean beverageBean = new BeverageBean();
+        beverageBean.setId(21);
+        when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenThrow(new UnknownBeverageException(beverageBean));
+
+        mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Beverage [21] is unknown.")));
+
+        verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
+    public void update_Should_ValidateBrandNameRequired() throws Exception {
+
+        when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
+
+        mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"ingredient\":{\"id\":21}}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Brand name is required")));
+
+        verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
+        verifyNoMoreInteractions(shelfService);
+    }
+
+    @Test
+    public void update_Should_ValidateBeverageIdRequired() throws Exception {
+
+        when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
+
+        mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"brandName\":\"test\"}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Beverage ID is required.")));
 
         verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
         verifyNoMoreInteractions(shelfService);

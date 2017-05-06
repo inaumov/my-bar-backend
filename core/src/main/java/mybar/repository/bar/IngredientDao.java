@@ -53,4 +53,8 @@ public class IngredientDao {
         return q.getResultList();
     }
 
+    public Beverage findBeverageById(int id) {
+        return em.find(Beverage.class, id);
+    }
+
 }
