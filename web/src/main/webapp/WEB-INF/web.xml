@@ -8,10 +8,14 @@
 
     <display-name>My Bar</display-name>
 
-    <!-- Default welcome page -->
-    <welcome-file-list>
-        <welcome-file>index.xhtml</welcome-file>
-    </welcome-file-list>
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>resources/log4j.properties</param-value>
+    </context-param>
 
     <!-- The context params that read by ContextLoaderListener  -->
     <context-param>

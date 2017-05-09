@@ -94,6 +94,8 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo unknownIngredientName(HttpServletRequest req, UnknownBeverageException ex) {
+        log.error("Unknown beverage thrown", ex);
+
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.beverage.unknown", null, locale);
         errorMessage = MessageFormat.format(errorMessage, ex.getId());
@@ -106,6 +108,8 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo requiredFields(HttpServletRequest req, IllegalArgumentException ex) {
+        log.error("Invalid property value", ex);
+
         String errorURL = req.getRequestURL().toString();
         return new ErrorInfo(errorURL, ex.getMessage());
     }
