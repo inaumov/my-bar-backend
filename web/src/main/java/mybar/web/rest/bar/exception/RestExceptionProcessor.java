@@ -93,12 +93,26 @@ public class RestExceptionProcessor {
     @ExceptionHandler(UnknownBeverageException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorInfo unknownIngredientName(HttpServletRequest req, UnknownBeverageException ex) {
+    public ErrorInfo unknownBeverage(HttpServletRequest req, UnknownBeverageException ex) {
         log.error("Unknown beverage thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.beverage.unknown", null, locale);
         errorMessage = MessageFormat.format(errorMessage, ex.getId());
+        String errorURL = req.getRequestURL().toString();
+
+        return new ErrorInfo(errorURL, errorMessage);
+    }
+
+    @ExceptionHandler(UnknownIngredientsException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorInfo unknownIngredients(HttpServletRequest req, UnknownIngredientsException ex) {
+        log.error("Unknown ingredient thrown", ex);
+
+        Locale locale = LocaleContextHolder.getLocale();
+        String errorMessage = messageSource.getMessage("error.ingredients.unknown", null, locale);
+        errorMessage = MessageFormat.format(errorMessage, ex.getIds());
         String errorURL = req.getRequestURL().toString();
 
         return new ErrorInfo(errorURL, errorMessage);

@@ -57,4 +57,9 @@ public class IngredientDao {
         return em.find(Beverage.class, id);
     }
 
+    public List<Ingredient> findIn(List<Integer> ids) {
+        TypedQuery<Ingredient> q = em.createNamedQuery("findIn", Ingredient.class);
+        q.setParameter("ids", ids);
+        return q.getResultList();
+    }
 }

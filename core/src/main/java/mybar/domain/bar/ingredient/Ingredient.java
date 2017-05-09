@@ -18,6 +18,10 @@ import javax.persistence.*;
                 query = "SELECT i FROM Ingredient i order by i.class, i.kind"
         ),
         @NamedQuery(
+                name = "findIn",
+                query = "SELECT i FROM Ingredient i where i.id in :ids"
+        ),
+        @NamedQuery(
                 name = "findByGroupName",
                 query = "SELECT i FROM Ingredient i WHERE TYPE(i) = :type order by i.kind"
         )

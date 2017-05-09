@@ -3,14 +3,15 @@ package mybar.service.bar;
 import com.google.common.base.*;
 import com.google.common.collect.*;
 import mybar.api.bar.ICocktail;
+import mybar.api.bar.ICocktailIngredient;
 import mybar.api.bar.IMenu;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;
-import mybar.exception.CocktailNotFoundException;
-import mybar.exception.UnknownMenuException;
-import mybar.exception.UniqueCocktailNameException;
+import mybar.domain.bar.ingredient.Ingredient;
+import mybar.exception.*;
 import mybar.repository.bar.CocktailDao;
+import mybar.repository.bar.IngredientDao;
 import mybar.repository.bar.MenuDao;
 import mybar.repository.history.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class CocktailsService {
 
     @Autowired(required = false)
     private CocktailDao cocktailDao;
+
+    @Autowired(required = false)
+    private IngredientDao ingredientDao;
 
     @Autowired(required = false)
     private OrderDao orderDao;
@@ -142,6 +146,8 @@ public class CocktailsService {
     private ICocktail performSaveOrUpdate(ICocktail cocktail) {
         String menuName = cocktail.getMenuName();
         IMenu menu = findMenuByName(menuName);
+        checkIngredientsExist(cocktail.getIngredients().values());
+
         Cocktail cocktailEntity = EntityFactory.from(cocktail, menu.getId());
         try {
             Cocktail result;
@@ -157,6 +163,41 @@ public class CocktailsService {
             allMenusCached.clear();
             cocktailsCache.clear();
         }
+    }
+
+    // TODO simplify the code
+    private void checkIngredientsExist(Collection<? extends Collection<? extends ICocktailIngredient>> ingredients) {
+        ImmutableList<Integer> asIds = FluentIterable
+                .from(ingredients)
+                .transformAndConcat(new Function<Collection<? extends ICocktailIngredient>, Collection<? extends ICocktailIngredient>>() {
+                    @Override
+                    public Collection<? extends ICocktailIngredient> apply(Collection<? extends ICocktailIngredient> input) {
+                        return input;
+                    }
+                }).transform(new Function<ICocktailIngredient, Integer>() {
+                    @Override
+                    public Integer apply(ICocktailIngredient input) {
+                        return input.getIngredientId();
+                    }
+                })
+                .toList();
+
+        List<Integer> existedIngredientIds = getExistedIngredientIds(asIds);
+        if (asIds.size() != existedIngredientIds.size()) {
+            List<Integer> copy = Lists.newArrayList(asIds);
+            copy.removeAll(existedIngredientIds);
+            throw new UnknownIngredientsException(copy);
+        }
+    }
+
+    private ArrayList<Integer> getExistedIngredientIds(List<Integer> asIds) {
+        List<Ingredient> ingredients = ingredientDao.findIn(asIds);
+        return Lists.newArrayList(Collections2.transform(ingredients, new Function<Ingredient, Integer>() {
+            @Override
+            public Integer apply(Ingredient input) {
+                return input.getId();
+            }
+        }));
     }
 
     private void checkCocktailExists(String name) throws UniqueCocktailNameException {
