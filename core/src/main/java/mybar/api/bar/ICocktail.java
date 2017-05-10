@@ -9,7 +9,7 @@ public interface ICocktail {
 
     String getName();
 
-    Map<String, ? extends Collection<? extends ICocktailIngredient>> getIngredients();
+    <T extends ICocktailIngredient> Map<String, Collection<T>> getIngredients();
 
     String getMenuName();
 

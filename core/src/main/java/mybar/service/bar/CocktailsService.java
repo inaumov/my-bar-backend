@@ -165,19 +165,18 @@ public class CocktailsService {
         }
     }
 
-    // TODO simplify the code
-    private void checkIngredientsExist(Collection<? extends Collection<? extends ICocktailIngredient>> ingredients) {
+    private void checkIngredientsExist(Collection<Collection<ICocktailIngredient>> ingredients) {
         ImmutableList<Integer> asIds = FluentIterable
                 .from(ingredients)
-                .transformAndConcat(new Function<Collection<? extends ICocktailIngredient>, Collection<? extends ICocktailIngredient>>() {
+                .transformAndConcat(new Function<Collection<ICocktailIngredient>, Collection<ICocktailIngredient>>() {
                     @Override
-                    public Collection<? extends ICocktailIngredient> apply(Collection<? extends ICocktailIngredient> input) {
-                        return input;
+                    public Collection<ICocktailIngredient> apply(Collection<ICocktailIngredient> cocktailIngredientCollection) {
+                        return cocktailIngredientCollection;
                     }
                 }).transform(new Function<ICocktailIngredient, Integer>() {
                     @Override
-                    public Integer apply(ICocktailIngredient input) {
-                        return input.getIngredientId();
+                    public Integer apply(ICocktailIngredient cocktailIngredient) {
+                        return cocktailIngredient.getIngredientId();
                     }
                 })
                 .toList();
