@@ -16,6 +16,7 @@ import mybar.dto.bar.CocktailDto;
 import mybar.dto.bar.CocktailToIngredientDto;
 import mybar.dto.bar.MenuDto;
 import mybar.exception.CocktailNotFoundException;
+import mybar.exception.UnknownIngredientsException;
 import mybar.exception.UnknownMenuException;
 import mybar.service.bar.CocktailsService;
 import mybar.web.rest.bar.AvailableCocktailsWrapper;
@@ -315,6 +316,23 @@ public class CocktailsRestControllerTest {
     }
 
     @Test
+    public void create_Should_ValidateIngredientsUnknown() throws Exception {
+
+        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
+
+        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Provided ingredients [15, 20, 40] are unknown.")));
+
+        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
     public void update_Should_UpdateCocktail() throws Exception {
         final CocktailDto cocktailDto = createCocktailDto();
 
@@ -418,6 +436,23 @@ public class CocktailsRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
+
+        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsService);
+    }
+
+    @Test
+    public void update_Should_ValidateIngredientsUnknown() throws Exception {
+
+        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
+
+        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+                .accept("application/json"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Provided ingredients [15, 20, 40] are unknown.")));
 
         verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
         verifyNoMoreInteractions(cocktailsService);
