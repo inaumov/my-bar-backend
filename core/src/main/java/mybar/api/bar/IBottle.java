@@ -2,6 +2,8 @@ package mybar.api.bar;
 
 import mybar.api.bar.ingredient.IBeverage;
 
+import java.math.BigDecimal;
+
 public interface IBottle {
 
     int getId();
@@ -12,7 +14,7 @@ public interface IBottle {
 
     double getVolume();
 
-    double getPrice();
+    BigDecimal getPrice();
 
     boolean isInShelf();
 

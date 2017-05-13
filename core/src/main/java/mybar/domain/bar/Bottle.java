@@ -6,6 +6,7 @@ import mybar.domain.bar.ingredient.Beverage;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -28,8 +29,8 @@ public class Bottle {
     @Column(name = "VOLUME")
     private double volume;
 
-    @Column(name = "PRICE")
-    private double price;
+    @Column(name = "PRICE", scale = 2)
+    private BigDecimal price;
 
     @Column(name = "IN_SHELF")
     private boolean inShelf;

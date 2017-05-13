@@ -6,12 +6,15 @@ import mybar.BeverageType;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.repository.BaseDaoTest;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -19,6 +22,7 @@ import static org.junit.Assert.*;
  */
 public class BottleDaoTest extends BaseDaoTest {
 
+    private static final BigDecimal PRICE = new BigDecimal(119.00);
     @Autowired
     private BottleDao bottleDao;
 
@@ -80,7 +84,7 @@ public class BottleDaoTest extends BaseDaoTest {
     public void testCreateBottle() throws Exception {
         Bottle bottle = new Bottle();
         bottle.setBrandName("Johny Walker");
-        bottle.setPrice(289);
+        bottle.setPrice(new BigDecimal(289));
         bottle.setInShelf(true);
         bottle.setImageUrl("http://whiskey.last.jpg");
         Beverage beverageRef = em.getReference(Beverage.class, 6);
@@ -105,7 +109,7 @@ public class BottleDaoTest extends BaseDaoTest {
         beverage.setId(6);
         bottle.setBeverage(beverage);
         bottle.setBrandName("Johny Walker");
-        bottle.setPrice(289);
+        bottle.setPrice(new BigDecimal(289));
         bottle.setInShelf(true);
         bottle.setImageUrl("http://whiskey.last.jpg");
 
@@ -137,7 +141,7 @@ public class BottleDaoTest extends BaseDaoTest {
         assertEquals(3, bottle.getBeverage().getId());
         assertEquals("Havana Club", bottle.getBrandName());
         assertEquals(0.5, bottle.getVolume(), 0);
-        assertEquals(119, bottle.getPrice(), 0);
+        assertThat(PRICE, Matchers.comparesEqualTo(bottle.getPrice()));
         assertFalse(bottle.isInShelf());
         assertTrue(bottle.getImageUrl().contains("rum"));
     }

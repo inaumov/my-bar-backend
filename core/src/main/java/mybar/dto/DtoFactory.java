@@ -2,7 +2,6 @@ package mybar.dto;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import mybar.State;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
@@ -14,7 +13,6 @@ import mybar.domain.bar.Menu;
 import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
-import mybar.domain.bar.ingredient.Ingredient;
 import mybar.dto.bar.BottleDto;
 import mybar.dto.bar.CocktailDto;
 import mybar.dto.bar.CocktailToIngredientDto;

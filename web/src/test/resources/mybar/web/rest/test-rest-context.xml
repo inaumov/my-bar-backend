@@ -61,5 +61,10 @@
     <bean id="jacksonObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
         <!-- by some convenient method -->
         <property name="failOnEmptyBeans" value="true"/>
+        <property name="featuresToEnable">
+            <array>
+                <value type="com.fasterxml.jackson.databind.DeserializationFeature">USE_BIG_DECIMAL_FOR_FLOATS</value>
+            </array>
+        </property>
     </bean>
 </beans>

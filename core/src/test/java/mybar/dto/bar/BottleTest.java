@@ -3,15 +3,19 @@ package mybar.dto.bar;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.dto.DtoFactory;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class BottleTest {
 
     public static final int TEST_ID = 1;
     public static final String BRAND_NAME = "brand name";
-    public static final double PRICE = 100;
+    public static final BigDecimal PRICE = new BigDecimal(195.00);
     public static final double VOLUME = 1;
     public static final String IMAGE_URL = "http://bottle-image.jpg";
 
@@ -33,7 +37,7 @@ public class BottleTest {
         assertEquals(TEST_ID, dto.getBeverage().getId());
         assertEquals(BRAND_NAME, dto.getBrandName());
         assertEquals(true, dto.isInShelf());
-        assertEquals(PRICE, dto.getPrice(), 0);
+        assertThat(PRICE,  Matchers.comparesEqualTo(dto.getPrice()));
         assertEquals(VOLUME, dto.getVolume(), 0);
         assertEquals(IMAGE_URL, dto.getImageUrl());
     }

@@ -5,6 +5,8 @@ import lombok.Setter;
 import mybar.api.bar.IBottle;
 import mybar.dto.bar.ingredient.BeverageDto;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class BottleDto implements IBottle {
@@ -13,7 +15,7 @@ public class BottleDto implements IBottle {
     private BeverageDto beverage;
     private String brandName;
     private double volume;
-    private double price;
+    private BigDecimal price;
     private boolean inShelf;
     private String imageUrl;
 }

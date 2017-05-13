@@ -9,6 +9,8 @@ import lombok.Setter;
 import mybar.api.bar.IBottle;
 import mybar.app.bean.bar.ingredient.BeverageBean;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class BottleBean implements IBottle {
@@ -27,7 +29,7 @@ public class BottleBean implements IBottle {
     private double volume;
 
     @JsonView(View.Shelf.class)
-    private double price;
+    private BigDecimal price;
 
     @JsonView(View.Shelf.class)
     @JsonProperty("inShelf")

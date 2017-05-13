@@ -28,12 +28,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,6 +54,14 @@ public class ShelfRestControllerTest {
     public static final double PRICE_2 = 200;
     public static final double VOLUME_2 = 0.5;
     public static final String IMAGE_URL_2 = "http://bottle-image2.jpg";
+
+    public static final int TEST_ID_3 = 67;
+    public static final double PRICE_3 = 2176.99;
+    public static final double VOLUME_3 = 2;
+    public static final String IMAGE_URL_3 = "http://martell.jpg";
+    public static final int INGREDIENT_ID_3 = 42;
+    public static final String KIND_3 = "Cognac";
+    public static final String BRAND_NAME_3 = "Martell";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -80,7 +87,7 @@ public class ShelfRestControllerTest {
         final BottleDto first = new BottleDto();
         first.setId(TEST_ID_1);
         first.setBrandName(BRAND_NAME_1);
-        first.setPrice(PRICE_1);
+        first.setPrice(BigDecimal.valueOf(PRICE_1));
         first.setInShelf(true);
         first.setVolume(VOLUME_1);
         first.setImageUrl(IMAGE_URL_1);
@@ -95,7 +102,7 @@ public class ShelfRestControllerTest {
 
                 .andExpect(jsonPath("$.id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$.brandName", is(BRAND_NAME_1)))
-                .andExpect(jsonPath("$.price", is(PRICE_1)))
+                .andExpect(jsonPath("$.price", comparesEqualTo(PRICE_1)))
                 .andExpect(jsonPath("$.inShelf", is("YES")))
                 .andExpect(jsonPath("$.volume", is(VOLUME_1)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_1)));
@@ -140,7 +147,7 @@ public class ShelfRestControllerTest {
         final BottleDto first = new BottleDto();
         first.setId(TEST_ID_1);
         first.setBrandName(BRAND_NAME_1);
-        first.setPrice(PRICE_1);
+        first.setPrice(BigDecimal.valueOf(PRICE_1));
         first.setInShelf(true);
         first.setVolume(VOLUME_1);
         first.setImageUrl(IMAGE_URL_1);
@@ -148,7 +155,7 @@ public class ShelfRestControllerTest {
         final BottleDto second = new BottleDto();
         second.setId(2);
         second.setBrandName(BRAND_NAME_2);
-        second.setPrice(PRICE_2);
+        second.setPrice(BigDecimal.valueOf(PRICE_2));
         second.setInShelf(false);
         second.setVolume(VOLUME_2);
         second.setImageUrl(IMAGE_URL_2);
@@ -164,14 +171,14 @@ public class ShelfRestControllerTest {
 
                 .andExpect(jsonPath("$[0].id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$[0].brandName", is(BRAND_NAME_1)))
-                .andExpect(jsonPath("$[0].price", is(PRICE_1)))
+                .andExpect(jsonPath("$[0].price", comparesEqualTo(PRICE_1)))
                 .andExpect(jsonPath("$[0].inShelf", is("YES")))
                 .andExpect(jsonPath("$[0].volume", is(VOLUME_1)))
                 .andExpect(jsonPath("$[0].imageUrl", is(IMAGE_URL_1)))
 
                 .andExpect(jsonPath("$[1].id", is(TEST_ID_2)))
                 .andExpect(jsonPath("$[1].brandName", is(BRAND_NAME_2)))
-                .andExpect(jsonPath("$[1].price", is(PRICE_2)))
+                .andExpect(jsonPath("$[1].price", comparesEqualTo(PRICE_2)))
                 .andExpect(jsonPath("$[1].inShelf", is("NO")))
                 .andExpect(jsonPath("$[1].volume", is(VOLUME_2)))
                 .andExpect(jsonPath("$[1].imageUrl", is(IMAGE_URL_2)));
@@ -217,19 +224,10 @@ public class ShelfRestControllerTest {
     @Test
     public void create_Should_CreateNewBottle() throws Exception {
 
-        final BottleBean testBottle = new BottleBean();
-        final BeverageBean beverage = new BeverageBean();
-        beverage.setId(89);
-        beverage.setKind("Cognac");
-        beverage.setBeverageType(BeverageType.DISTILLED);
-        testBottle.setId(TEST_ID_1);
-        testBottle.setBeverage(beverage);
-        testBottle.setBrandName("Shabo");
-        testBottle.setPrice(176.83);
-        testBottle.setVolume(0.7);
-        String requestJson = toRequestJson(testBottle);
+        BottleDto prepareBottleDto = prepareBottleDto();
+        String requestJson = toRequestJson(RestBeanConverter.from(prepareBottleDto));
 
-        when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenReturn(new BottleDto());
+        when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenReturn(prepareBottleDto);
 
         mockMvc.perform(post("/shelf/bottles", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -238,7 +236,16 @@ public class ShelfRestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+
+                .andExpect(jsonPath("$.id", is(TEST_ID_3)))
+                .andExpect(jsonPath("$.ingredient.id", is(INGREDIENT_ID_3)))
+                .andExpect(jsonPath("$.ingredient.kind", is(KIND_3)))
+                .andExpect(jsonPath("$.brandName", is(BRAND_NAME_3)))
+                .andExpect(jsonPath("$.price", comparesEqualTo(PRICE_3)))
+                .andExpect(jsonPath("$.inShelf", is("YES")))
+                .andExpect(jsonPath("$.volume", is(VOLUME_3)))
+                .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_3)));
 
         verify(shelfService, times(1)).saveBottle(Matchers.any(IBottle.class));
         verifyNoMoreInteractions(shelfService);
@@ -314,14 +321,14 @@ public class ShelfRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("$.id", is(TEST_ID_1)))
-                .andExpect(jsonPath("$.ingredient.id", is(42)))
-                .andExpect(jsonPath("$.ingredient.kind", is("Whiskey")))
-                .andExpect(jsonPath("$.brandName", is(BRAND_NAME_1)))
-                .andExpect(jsonPath("$.price", is(PRICE_1)))
+                .andExpect(jsonPath("$.id", is(TEST_ID_3)))
+                .andExpect(jsonPath("$.ingredient.id", is(INGREDIENT_ID_3)))
+                .andExpect(jsonPath("$.ingredient.kind", is(KIND_3)))
+                .andExpect(jsonPath("$.brandName", is(BRAND_NAME_3)))
+                .andExpect(jsonPath("$.price", comparesEqualTo(PRICE_3)))
                 .andExpect(jsonPath("$.inShelf", is("YES")))
-                .andExpect(jsonPath("$.volume", is(VOLUME_1)))
-                .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_1)));
+                .andExpect(jsonPath("$.volume", is(VOLUME_3)))
+                .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_3)));
 
         verify(shelfService, times(1)).updateBottle(Matchers.any(IBottle.class));
         verifyNoMoreInteractions(shelfService);
@@ -329,18 +336,18 @@ public class ShelfRestControllerTest {
 
     private BottleDto prepareBottleDto() {
         final BottleDto bottleDto = new BottleDto();
-        bottleDto.setId(TEST_ID_1);
+        bottleDto.setId(TEST_ID_3);
         BeverageDto beverageBean = new BeverageDto();
-        beverageBean.setId(42);
-        beverageBean.setKind("Whiskey");
+        beverageBean.setId(INGREDIENT_ID_3);
+        beverageBean.setKind(KIND_3);
         beverageBean.setBeverageType(BeverageType.DISTILLED);
 
         bottleDto.setBeverage(beverageBean);
-        bottleDto.setBrandName(BRAND_NAME_1);
-        bottleDto.setPrice(PRICE_1);
+        bottleDto.setBrandName(BRAND_NAME_3);
+        bottleDto.setPrice(BigDecimal.valueOf(PRICE_3));
         bottleDto.setInShelf(true);
-        bottleDto.setVolume(VOLUME_1);
-        bottleDto.setImageUrl(IMAGE_URL_1);
+        bottleDto.setVolume(VOLUME_3);
+        bottleDto.setImageUrl(IMAGE_URL_3);
         return bottleDto;
     }
 
