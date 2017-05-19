@@ -2,8 +2,8 @@ package mybar.domain.bar;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.State;
 import mybar.domain.bar.ingredient.Beverage;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -11,12 +11,11 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "BOTTLE")
-//@SequenceGenerator(name = "BOTTLE_SEQUENCE", sequenceName = "BOTTLE_SEQUENCE", allocationSize = 3, initialValue = 1)
+@GenericGenerator(name = "bottle_id", strategy = "mybar.domain.EntityIdGenerator")
 public class Bottle {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOTTLE_SEQUENCE")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(generator = "bottle_id")
     private int id;
 
     @ManyToOne

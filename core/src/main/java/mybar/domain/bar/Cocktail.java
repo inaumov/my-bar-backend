@@ -6,6 +6,7 @@ import lombok.Setter;
 import mybar.api.bar.ICocktail;
 import mybar.dto.DtoFactory;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -15,10 +16,11 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "COCKTAIL")
+@GenericGenerator(name = "cocktail_id", strategy = "mybar.domain.EntityIdGenerator")
 public class Cocktail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "cocktail_id")
     private int id;
 
     @Column(name = "NAME")
