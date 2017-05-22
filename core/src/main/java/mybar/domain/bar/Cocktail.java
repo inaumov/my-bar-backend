@@ -21,7 +21,7 @@ public class Cocktail {
 
     @Id
     @GeneratedValue(generator = "cocktail_id")
-    private int id;
+    private String id;
 
     @Column(name = "NAME")
     private String name;

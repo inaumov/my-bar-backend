@@ -50,9 +50,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration("test-rest-context.xml")
 public class CocktailsRestControllerTest {
 
-    public static final int TEST_ID_1 = 1;
-    public static final int TEST_ID_2 = 2;
-    public static final String MENU_NAME = "TEST_MENU";
+    public static final String TEST_ID_1 = "cocktail-000001";
+    public static final String TEST_ID_2 = "cocktail-000002";
+    public static final String MENU_NAME = "Chai";
     public static final String NAME = "Rum Cola";
     public static final String DESCRIPTION = "Loren ipsum";
     public static final String IMAGE_URL = "http://cocktail-image.jpg";
@@ -82,11 +82,11 @@ public class CocktailsRestControllerTest {
     public void listAllMenuItems_Should_ReturnAllMenuEntries() throws Exception {
 
         final MenuDto first = new MenuDto();
-        first.setId(TEST_ID_1);
+        first.setId(1);
         first.setName("shot");
 
         final MenuDto second = new MenuDto();
-        second.setId(TEST_ID_2);
+        second.setId(2);
         second.setName("long");
 
         when(cocktailsService.getAllMenuItems()).thenReturn(Lists.<IMenu>newArrayList(first, second));
@@ -128,7 +128,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
                 .andExpect(jsonPath("$.ingredients.beverages[0].missing", is(nullValue())));
 
-        verify(cocktailsService, times(1)).findCocktailById(anyInt());
+        verify(cocktailsService, times(1)).findCocktailById(anyString());
         verifyNoMoreInteractions(cocktailsService);
     }
 
@@ -142,7 +142,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
-        verify(cocktailsService, times(1)).findCocktailById(anyInt());
+        verify(cocktailsService, times(1)).findCocktailById(anyString());
         verifyNoMoreInteractions(cocktailsService);
     }
 
@@ -166,10 +166,10 @@ public class CocktailsRestControllerTest {
     public void findAll_Should_ReturnAllCocktailEntries() throws Exception {
 
         final CocktailDto first = new CocktailDto();
-        first.setId(5);
+        first.setId("cocktail-000005");
 
         final CocktailDto second = new CocktailDto();
-        second.setId(10);
+        second.setId("cocktail-000010");
 
         ImmutableMap<String, List<ICocktail>> cocktails = ImmutableMap.<String, List<ICocktail>>of(
                 "shot", Lists.<ICocktail>newArrayList(first, second),
@@ -183,8 +183,8 @@ public class CocktailsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("$.shot.", hasSize(2)))
-                .andExpect(jsonPath("$.shot[0].id", is(5)))
-                .andExpect(jsonPath("$.shot[1].id", is(10)))
+                .andExpect(jsonPath("$.shot[0].id", is("cocktail-000005")))
+                .andExpect(jsonPath("$.shot[1].id", is("cocktail-000010")))
 
                 .andExpect(jsonPath("$.other.", hasSize(1)))
                 .andExpect(jsonPath("$.other[0].id", is(TEST_ID_1)))
@@ -208,10 +208,10 @@ public class CocktailsRestControllerTest {
     public void findAll_Should_ReturnFilteredCocktailEntries() throws Exception {
 
         final CocktailDto first = new CocktailDto();
-        first.setId(5);
+        first.setId("cocktail-000005");
 
         final CocktailDto second = new CocktailDto();
-        second.setId(10);
+        second.setId("cocktail-000010");
 
         when(cocktailsService.getAllCocktailsForMenu("any")).thenReturn(Lists.<ICocktail>newArrayList(first, second, createCocktailDto()));
 
@@ -221,9 +221,9 @@ public class CocktailsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id", is(5)))
+                .andExpect(jsonPath("$[0].id", is("cocktail-000005")))
                 .andExpect(jsonPath("$[0].available", is("UNDEFINED")))
-                .andExpect(jsonPath("$[1].id", is(10)))
+                .andExpect(jsonPath("$[1].id", is("cocktail-000010")))
                 .andExpect(jsonPath("$[2].id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$[2].name", is(NAME)))
                 .andExpect(jsonPath("$[2].description").doesNotExist())
@@ -413,7 +413,7 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"relatedToMenu\":\"test\"}")
+                .content("{\"id\":\"cocktail-test00\",\"relatedToMenu\":\"test\"}")
                 .accept("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -430,7 +430,7 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"test\"}")
+                .content("{\"id\":\"cocktail-test00\",\"name\":\"test\"}")
                 .accept("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())

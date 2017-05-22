@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityExistsException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Objects;
 
 import static mybar.dto.DtoFactory.toDto;
 
@@ -43,14 +43,15 @@ public class ShelfService {
         }
     };
 
-    public IBottle findById(final int id) throws BottleNotFoundException {
+    public IBottle findById(final String id) throws BottleNotFoundException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
         Predicate<IBottle> findBottlePredicate = new Predicate<IBottle>() {
             @Override
             public boolean apply(IBottle bottle) {
-                return bottle.getId() == id;
+                return Objects.equals(bottle.getId(), id);
             }
         };
-        return Iterables.find(findAllBottles(), findBottlePredicate, toDto(bottleDao.read(id)));
+        return Iterables.find(findAllBottles(), findBottlePredicate, toDto(bottleDao.read(id))); // TODO check NPE
     }
 
     public IBottle saveBottle(IBottle bottle) {
@@ -72,6 +73,7 @@ public class ShelfService {
     }
 
     public IBottle updateBottle(IBottle bottle) throws BottleNotFoundException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(bottle.getId()), "Bottle id is required.");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(bottle.getBrandName()), "Brand name is required.");
         Preconditions.checkArgument(bottle.getBeverage() != null && bottle.getBeverage().getId() >= 0, "Beverage ID is required.");
         checkBeverageExists(bottle.getBeverage());
@@ -93,12 +95,13 @@ public class ShelfService {
         return ingredientDao.findBeverageById(beverage.getId());
     }
 
-    public void deleteBottleById(final int id) throws BottleNotFoundException {
+    public void deleteBottleById(final String id) throws BottleNotFoundException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
         bottleDao.delete(id);
         Iterables.removeIf(findAllBottles(), new Predicate<IBottle>() {
             @Override
             public boolean apply(IBottle bottle) {
-                return bottle.getId() == id;
+                return Objects.equals(bottle.getId(), id);
             }
         });
     }
@@ -119,7 +122,8 @@ public class ShelfService {
         Optional<IBottle> bottleById = Iterables.tryFind(findAllBottles(), new Predicate<IBottle>() {
             @Override
             public boolean apply(IBottle bottle) {
-                return bottle.getId() == ingredientId;
+                IBeverage beverage = bottle.getBeverage();
+                return beverage != null && beverage.getId() == ingredientId;
             }
         });
         return bottleById.isPresent() && bottleById.get().isInShelf();

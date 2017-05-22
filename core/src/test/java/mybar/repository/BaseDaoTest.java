@@ -28,12 +28,12 @@ import javax.persistence.PersistenceContext;
                 TransactionDbUnitTestExecutionListener.class
         },
         inheritListeners = false)
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
 @DatabaseSetups(
         {
                 @DatabaseSetup("classpath:dataSet.xml"),
-                @DatabaseSetup("classpath:umDataSet.xml"),
-                @DatabaseSetup("classpath:ordersDataSet.xml")
+//                @DatabaseSetup("classpath:umDataSet.xml"),
+//                @DatabaseSetup("classpath:ordersDataSet.xml")
         }
 )
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")

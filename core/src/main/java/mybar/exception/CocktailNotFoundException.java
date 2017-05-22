@@ -2,13 +2,13 @@ package mybar.exception;
 
 public class CocktailNotFoundException extends RuntimeException {
 
-    private final int cocktailId;
+    private final String cocktailId;
 
-    public CocktailNotFoundException(int id) {
+    public CocktailNotFoundException(String id) {
         cocktailId = id;
     }
 
-    public int getCocktailId() {
+    public String getCocktailId() {
         return cocktailId;
     }
  

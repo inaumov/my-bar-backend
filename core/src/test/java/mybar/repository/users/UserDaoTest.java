@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
+@Ignore
 public class UserDaoTest extends UmBaseDaoTest {
 
     @Autowired

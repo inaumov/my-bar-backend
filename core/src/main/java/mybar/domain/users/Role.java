@@ -5,8 +5,8 @@ import mybar.api.users.IRole;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name="ROLES")
+//@Entity
+//@Table(name="ROLES")
 public class Role implements IRole {
 	
 	@Id

@@ -58,18 +58,18 @@ public class AvailableCocktailsWrapperTest {
     @Test
     public void testGet() throws Exception {
         final CocktailBean emptyBean1 = new CocktailBean();
-        emptyBean1.setId(1);
+        emptyBean1.setId("cocktail-000001");
         emptyBean1.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IDrink.GROUP_NAME, Collections.<CocktailIngredientBean>emptyList()));
 
         final CocktailBean emptyBean2 = new CocktailBean();
-        emptyBean2.setId(2);
+        emptyBean2.setId("cocktail-000002");
         emptyBean2.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IAdditive.GROUP_NAME, Collections.<CocktailIngredientBean>emptyList()));
 
         CocktailBean testNotEmptyBean = new CocktailBean();
-        testNotEmptyBean.setId(3);
+        testNotEmptyBean.setId("cocktail-000003");
 
         CocktailBean testAvailableBean = new CocktailBean();
-        testNotEmptyBean.setId(4);
+        testNotEmptyBean.setId("cocktail-000004");
 
         ArrayList<CocktailBean> cocktails = Lists.newArrayList(emptyBean1, emptyBean2, addIngredients(testNotEmptyBean), prepareAvailableCocktail(testAvailableBean));
 

@@ -55,7 +55,7 @@ public class ShelfController {
     //-------------------Retrieve a Bottle--------------------------------------------------------
 
     @RequestMapping(value = "/bottles/{id}", method = RequestMethod.GET)
-    public ResponseEntity<BottleBean> getBottle(@PathVariable("id") int id) {
+    public ResponseEntity<BottleBean> getBottle(@PathVariable("id") String id) {
         logger.info("Fetching a bottle with id " + id);
 
         IBottle bottle = shelfService.findById(id);
@@ -87,7 +87,7 @@ public class ShelfController {
     //------------------- Delete a Bottle --------------------------------------------------------
 
     @RequestMapping(value = "/bottles/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<BottleBean> deleteBottle(@PathVariable("id") int id) {
+    public ResponseEntity<BottleBean> deleteBottle(@PathVariable("id") String id) {
         logger.info("Deleting a bottle with id " + id);
 
         shelfService.deleteBottleById(id);

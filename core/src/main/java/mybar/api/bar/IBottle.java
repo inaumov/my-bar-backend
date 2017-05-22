@@ -4,9 +4,7 @@ import mybar.api.bar.ingredient.IBeverage;
 
 import java.math.BigDecimal;
 
-public interface IBottle {
-
-    int getId();
+public interface IBottle extends IModifiable {
 
     IBeverage getBeverage();
 

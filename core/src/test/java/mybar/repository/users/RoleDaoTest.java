@@ -2,11 +2,12 @@ package mybar.repository.users;
 
 import mybar.api.users.WebRole;
 import mybar.domain.users.Role;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
-
+@Ignore
 public class RoleDaoTest extends UmBaseDaoTest {
 
     @Autowired

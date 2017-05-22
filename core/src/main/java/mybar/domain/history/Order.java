@@ -8,8 +8,8 @@ import mybar.domain.users.User;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "orders")
+//@Entity
+//@Table(name = "ORDERS")
 @SequenceGenerator(name = "ORDER_SEQUENCE", sequenceName = "ORDER_SEQUENCE", allocationSize = 3, initialValue = 1)
 public class Order implements IOrder {
 

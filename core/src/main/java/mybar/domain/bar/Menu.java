@@ -13,6 +13,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
+@Table(name = "MENU")
 public class Menu {
 
     @Id

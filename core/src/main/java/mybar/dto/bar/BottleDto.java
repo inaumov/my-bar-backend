@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 public class BottleDto implements IBottle {
 
-    private int id;
+    private String id;
     private BeverageDto beverage;
     private String brandName;
     private double volume;

@@ -43,19 +43,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration("test-rest-context.xml")
 public class ShelfRestControllerTest {
 
-    public static final int TEST_ID_1 = 1;
+    public static final String TEST_ID_1 = "bottle-000001";
     public static final String BRAND_NAME_1 = "brand name 1";
     public static final double PRICE_1 = 100;
     public static final double VOLUME_1 = 1;
     public static final String IMAGE_URL_1 = "http://bottle-image1.jpg";
 
-    public static final int TEST_ID_2 = 2;
+    public static final String TEST_ID_2 = "bottle-000002";
     public static final String BRAND_NAME_2 = "brand name 2";
     public static final double PRICE_2 = 200;
     public static final double VOLUME_2 = 0.5;
     public static final String IMAGE_URL_2 = "http://bottle-image2.jpg";
 
-    public static final int TEST_ID_3 = 67;
+    public static final String TEST_ID_3 = "bottle-000067";
     public static final double PRICE_3 = 2176.99;
     public static final double VOLUME_3 = 2;
     public static final String IMAGE_URL_3 = "http://martell.jpg";
@@ -107,7 +107,7 @@ public class ShelfRestControllerTest {
                 .andExpect(jsonPath("$.volume", is(VOLUME_1)))
                 .andExpect(jsonPath("$.imageUrl", is(IMAGE_URL_1)));
 
-        verify(shelfService, times(1)).findById(anyInt());
+        verify(shelfService, times(1)).findById(anyString());
         verifyNoMoreInteractions(shelfService);
     }
 
@@ -121,7 +121,7 @@ public class ShelfRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no bottle with id: " + TEST_ID_2)));
 
-        verify(shelfService, times(1)).findById(anyInt());
+        verify(shelfService, times(1)).findById(anyString());
         verifyNoMoreInteractions(shelfService);
     }
 
@@ -153,7 +153,7 @@ public class ShelfRestControllerTest {
         first.setImageUrl(IMAGE_URL_1);
 
         final BottleDto second = new BottleDto();
-        second.setId(2);
+        second.setId(TEST_ID_2);
         second.setBrandName(BRAND_NAME_2);
         second.setPrice(BigDecimal.valueOf(PRICE_2));
         second.setInShelf(false);
@@ -397,7 +397,7 @@ public class ShelfRestControllerTest {
         when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"ingredient\":{\"id\":21}}")
+                .content("{\"id\":\"bottle-test00\",\"ingredient\":{\"id\":21}}")
                 .accept("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -414,7 +414,7 @@ public class ShelfRestControllerTest {
         when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"brandName\":\"test\"}")
+                .content("{\"id\":\"bottle-test00\",\"brandName\":\"test\"}")
                 .accept("application/json"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())

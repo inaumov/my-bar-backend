@@ -16,7 +16,7 @@ import java.util.Map;
 public class CocktailBean implements ICocktail {
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
-    private int id;
+    private String id;
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private String name;

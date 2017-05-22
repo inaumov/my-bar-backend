@@ -1,6 +1,7 @@
 package mybar.repository.bar;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import mybar.BeverageType;
 import mybar.domain.bar.Bottle;
@@ -41,13 +42,13 @@ public class BottleDaoTest extends BaseDaoTest {
 
     @Test
     public void testReadById() {
-        Bottle bottle = bottleDao.read(1);
+        Bottle bottle = bottleDao.read("bottle-000001");
         assertTrue(bottle.getBrandName().equals("Absolute"));
     }
 
     @Test
     public void testBeverageRelatedToBottle() {
-        Bottle bottle = bottleDao.read(1);
+        Bottle bottle = bottleDao.read("bottle-000001");
         assertEquals(bottle.getBeverage().getId(), 1);
         assertEquals(bottle.getBeverage().getKind(), "Vodka");
         assertEquals(bottle.getBeverage().getBeverageType(), BeverageType.DISTILLED);
@@ -56,7 +57,7 @@ public class BottleDaoTest extends BaseDaoTest {
     @Test
     public void testGetBottlesByBeverage() {
 
-        Bottle bottle = bottleDao.read(3);
+        Bottle bottle = bottleDao.read("bottle-000003");
         assertEquals(bottle.getBeverage().getId(), 3);
         assertEquals(bottle.getBeverage().getKind(), "Rum");
         assertEquals(bottle.getBeverage().getBeverageType(), BeverageType.DISTILLED);
@@ -91,7 +92,7 @@ public class BottleDaoTest extends BaseDaoTest {
         bottle.setBeverage(beverageRef);
 
         Bottle saved = bottleDao.create(bottle);
-        assertFalse(saved.getId() == 0);
+        assertFalse(Strings.isNullOrEmpty(saved.getId()));
         List<Bottle> all = bottleDao.findAll();
         assertEquals(8, all.size());
         assertBottles(1, all); // TODO until switch to HSQLDB because derby doesn't work with identity generated value for ID columns.
@@ -99,7 +100,7 @@ public class BottleDaoTest extends BaseDaoTest {
 
     @Test
     public void testUpdateBottle() throws Exception {
-        Bottle bottle = bottleDao.read(7);
+        Bottle bottle = bottleDao.read("bottle-000007");
 
         // assert existing bottle
         assertLast(bottle);
@@ -123,7 +124,7 @@ public class BottleDaoTest extends BaseDaoTest {
 
     @Test
     public void testDeleteBottle() throws Exception {
-        bottleDao.delete(1);
+        bottleDao.delete("bottle-000001");
         List<Bottle> all = bottleDao.findAll();
         assertEquals(6, all.size());
         assertBottles(2, all);
@@ -131,13 +132,14 @@ public class BottleDaoTest extends BaseDaoTest {
 
     private void assertBottles(int startFromId, List<Bottle> all) {
         Iterator<Bottle> it = all.iterator();
-        for (int id = startFromId; id <= all.size(); id++) {
-            assertEquals(id, it.next().getId());
+        for (int id = startFromId; id < all.size(); id++) {
+            assertEquals("bottle-00000" + id, it.next().getId());
         }
+        assertTrue(it.next().getId().contains("bottle-"));
     }
 
     private void assertLast(Bottle bottle) {
-        assertEquals(7, bottle.getId());
+        assertEquals("bottle-000007", bottle.getId());
         assertEquals(3, bottle.getBeverage().getId());
         assertEquals("Havana Club", bottle.getBrandName());
         assertEquals(0.5, bottle.getVolume(), 0);

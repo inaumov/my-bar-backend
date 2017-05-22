@@ -4,6 +4,7 @@ import mybar.History;
 import mybar.OrderStatus;
 import mybar.domain.history.Order;
 import mybar.repository.BaseDaoTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +16,7 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-
+@Ignore
 public class OrderDaoTest extends BaseDaoTest {
 
     @Autowired

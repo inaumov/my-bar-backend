@@ -1,5 +1,6 @@
 package mybar.domain.bar;
 
+import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.domain.bar.ingredient.Beverage;
@@ -17,7 +18,7 @@ public class Bottle {
 
     @Id
     @GeneratedValue(generator = "bottle_id")
-    private int id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "INGREDIENT_ID", nullable = false)
@@ -37,5 +38,13 @@ public class Bottle {
 
     @Column(name = "IMAGE_URL", nullable = true)
     private String imageUrl;
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("id", id)
+                .add("brandName", brandName)
+                .toString();
+    }
 
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 @Setter
 public class CocktailDto implements ICocktail {
 
-    private int id;
+    private String id;
     private String name;
     private Map<String, Collection<CocktailToIngredientDto>> ingredients;
     private String menuName;

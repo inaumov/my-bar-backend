@@ -2,13 +2,14 @@ package mybar.repository.users;
 
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
-
+@Ignore
 public class UserToRoleRelationsTest extends UmBaseDaoTest {
 
     @Autowired

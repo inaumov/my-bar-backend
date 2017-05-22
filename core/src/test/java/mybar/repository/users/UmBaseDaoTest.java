@@ -3,6 +3,7 @@ package mybar.repository.users;
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
 import mybar.repository.BaseDaoTest;
+import org.junit.Ignore;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -10,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-
+@Ignore
 public class UmBaseDaoTest extends BaseDaoTest {
 
     public static final int COURIER_ID = 5;

@@ -131,7 +131,7 @@ public class CocktailsController {
 
     @JsonView(View.CocktailWithDetails.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<CocktailBean> getCocktail(@PathVariable("id") Integer id) {
+    public ResponseEntity<CocktailBean> getCocktail(@PathVariable("id") String id) {
         logger.info("Fetching cocktail with id " + id);
 
         ICocktail cocktail = cocktailsService.findCocktailById(id);
@@ -170,7 +170,7 @@ public class CocktailsController {
     //------------------- Delete a Cocktail --------------------------------------------------------
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<CocktailBean> deleteCocktail(@PathVariable("id") int id) {
+    public ResponseEntity<CocktailBean> deleteCocktail(@PathVariable("id") String id) {
         logger.info("Deleting a cocktail with id " + id);
 
         cocktailsService.deleteCocktailById(id);

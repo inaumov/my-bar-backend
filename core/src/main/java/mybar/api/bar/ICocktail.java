@@ -3,9 +3,7 @@ package mybar.api.bar;
 import java.util.Collection;
 import java.util.Map;
 
-public interface ICocktail {
-
-    int getId();
+public interface ICocktail extends IModifiable {
 
     String getName();
 

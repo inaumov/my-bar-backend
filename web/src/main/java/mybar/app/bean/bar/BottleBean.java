@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class BottleBean implements IBottle {
 
     @JsonView(View.Shelf.class)
-    private int id;
+    private String id;
 
     @JsonView(View.Shelf.class)
     @JsonProperty("ingredient")

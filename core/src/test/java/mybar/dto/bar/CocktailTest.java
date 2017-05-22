@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CocktailTest {
 
-    public static final int TEST_ID = 1;
+    public static final String TEST_REFERENCE = "cocktail-123";
     public static final int MENU_ID = 2;
     public static final String MENU_NAME = "TEST_NAME";
     public static final String NAME = "Rum Cola";
@@ -28,7 +28,7 @@ public class CocktailTest {
     @Test
     public void testConvertCocktailToDto() throws Exception {
         Cocktail cocktail = new Cocktail();
-        cocktail.setId(TEST_ID);
+        cocktail.setId(TEST_REFERENCE);
         cocktail.setName(NAME);
 
         CocktailToIngredient beverage = new CocktailToIngredient();
@@ -49,7 +49,7 @@ public class CocktailTest {
         cocktail.setImageUrl(IMAGE_URL);
 
         ICocktail dto = cocktail.toDto(MENU_NAME);
-        assertEquals(TEST_ID, dto.getId());
+        assertEquals(TEST_REFERENCE, dto.getId());
         assertEquals(IMAGE_URL, dto.getImageUrl());
         assertEquals(MENU_NAME, dto.getMenuName());
         assertEquals(NAME, dto.getName());

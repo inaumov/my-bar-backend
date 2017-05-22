@@ -137,6 +137,7 @@ public class CocktailsService {
     }
 
     public ICocktail updateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getId()), "Cocktail id is required.");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getName()), "Cocktail name is required.");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getMenuName()), "Menu name is required.");
 
@@ -151,7 +152,7 @@ public class CocktailsService {
         Cocktail cocktailEntity = EntityFactory.from(cocktail, menu.getId());
         try {
             Cocktail result;
-            if (cocktailEntity.getId() == 0) {
+            if (Strings.isNullOrEmpty(cocktailEntity.getId())) {
                 result = cocktailDao.create(cocktailEntity);
             } else {
                 result = cocktailDao.update(cocktailEntity);
@@ -224,7 +225,8 @@ public class CocktailsService {
         return false;
     }
 
-    public ICocktail findCocktailById(int id) throws CocktailNotFoundException {
+    public ICocktail findCocktailById(String id) throws CocktailNotFoundException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
         Cocktail cocktail = cocktailDao.read(id);
         return cocktail.toDto(findMenuById(cocktail.getMenuId()).getName());
     }
@@ -233,7 +235,8 @@ public class CocktailsService {
         return orderDao.findCocktailInHistory(cocktail);
     }
 
-    public void deleteCocktailById(int id) throws CocktailNotFoundException {
+    public void deleteCocktailById(String id) throws CocktailNotFoundException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
         cocktailDao.delete(id);
         if (cocktailsCache == null || cocktailsCache.isEmpty()) {
             return;
@@ -243,7 +246,7 @@ public class CocktailsService {
             Iterator<ICocktail> iterator = cocktails.iterator();
             while (iterator.hasNext()) {
                 ICocktail next = iterator.next();
-                if (next.getId() == id) {
+                if (Strings.isNullOrEmpty(next.getId())) {
                     iterator.remove();
                     break;
                 }

@@ -94,7 +94,7 @@ public class UpdateCocktailDaoTest {
         entityManager.getTransaction().commit();
 
         assertNotNull(cocktail);
-        assertThat(cocktail.getId(), is(13));
+        assertTrue(cocktail.getId().contains("cocktail-"));
         assertEquals("Menu ID related to cocktail should be same.", 3, cocktail.getMenuId());
         assertEquals("Cocktail name should same.", "New Cocktail", cocktail.getName());
         assertEquals("Cocktail description should be same.", "some description", cocktail.getDescription());
@@ -109,7 +109,7 @@ public class UpdateCocktailDaoTest {
         assertThat("Number of ingredients should be 18.", all, hasSize(18));
 
         // save previous values;
-        int id = cocktail.getId();
+        String id = cocktail.getId();
         String name = cocktail.getName();
         String description = cocktail.getDescription();
         String imageUrl = cocktail.getImageUrl();
@@ -122,7 +122,7 @@ public class UpdateCocktailDaoTest {
             // refresh entity
             Cocktail cocktailForUpdate = cocktailDao.read(id);
             assertNotNull(cocktailForUpdate);
-            assertThat(cocktailForUpdate.getId(), greaterThan(12));
+            assertThat(cocktailForUpdate.getId(), greaterThan("12"));
             assertEquals("Cocktail name should same.", name, cocktailForUpdate.getName());
             assertEquals("Cocktail description should be same.", description, cocktailForUpdate.getDescription());
             assertEquals("Cocktail image url should be same.", imageUrl, cocktailForUpdate.getImageUrl());
@@ -157,11 +157,11 @@ public class UpdateCocktailDaoTest {
 
     }
 
-    private void assertUpdatedCocktail(List<Ingredient> ingredients, int id, String name, String description, String imageUrl, int menuId) {
+    private void assertUpdatedCocktail(List<Ingredient> ingredients, String id, String name, String description, String imageUrl, int menuId) {
         // check saved cocktail
         Cocktail updatedCocktail = cocktailDao.read(id);
         assertNotNull(updatedCocktail);
-        assertThat(updatedCocktail.getId(), is(13));
+        assertTrue(updatedCocktail.getId().contains("cocktail-"));
         assertEquals("Cocktail name should same.", name, updatedCocktail.getName());
         assertEquals("Cocktail description should be same.", description, updatedCocktail.getDescription());
         assertEquals("Cocktail image url should be same.", imageUrl, updatedCocktail.getImageUrl());

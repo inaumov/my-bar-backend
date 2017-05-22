@@ -34,8 +34,8 @@ import static org.junit.Assert.*;
  */
 public class CocktailDaoTest extends BaseDaoTest {
 
-    public static final int TEST_ID_OF_COCKTAIL_WITH_INGREDIENTS = 1;
-    public static final int TEST_ID_OF_COCKTAIL_WITH_NO_INGREDIENTS = 9;
+    public static final String TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS = "cocktail-000001";
+    public static final String TEST_REF_OF_COCKTAIL_WITH_NO_INGREDIENTS = "cocktail-000009";
 
     public static final List<Integer> INGREDIENTS_TEST_IDS = newArrayList(ContiguousSet.create(closed(1, 18), integers()));
 
@@ -66,10 +66,10 @@ public class CocktailDaoTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = it.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 4, cocktails.size());
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), 1, 1, "B52");
-        assertExistedCocktail(cocktailIterator.next(), 2, 1, "B53");
-        assertExistedCocktail(cocktailIterator.next(), 3, 1, "Green Mexican");
-        assertExistedCocktail(cocktailIterator.next(), 4, 1, "Blow Job");
+        assertExistedCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
+        assertExistedCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
+        assertExistedCocktail(cocktailIterator.next(), "cocktail-000003", 1, "Green Mexican");
+        assertExistedCocktail(cocktailIterator.next(), "cocktail-000004", 1, "Blow Job");
         assertEquals("Number of CocktailToIngredient rows should be same.", 14, getCocktailToIngredientCount());
 
         // test second menu
@@ -91,7 +91,7 @@ public class CocktailDaoTest extends BaseDaoTest {
 
     @Test
     public void testUpdateCocktailAndAddNewIngredients() throws Exception {
-        Cocktail cocktail = cocktailDao.read(TEST_ID_OF_COCKTAIL_WITH_NO_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
+        Cocktail cocktail = cocktailDao.read(TEST_REF_OF_COCKTAIL_WITH_NO_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
         assertNotNull(cocktail);
 
         cocktail.setName("Random smoothie name");
@@ -123,7 +123,7 @@ public class CocktailDaoTest extends BaseDaoTest {
 
         // check saved cocktail
         assertEquals("Number of CocktailToIngredient rows should be increased by two ingredients.", 19, getCocktailToIngredientCount());
-        Cocktail updatedCocktail = findCocktailById(TEST_ID_OF_COCKTAIL_WITH_NO_INGREDIENTS);
+        Cocktail updatedCocktail = findCocktailById(TEST_REF_OF_COCKTAIL_WITH_NO_INGREDIENTS);
         em.refresh(updatedCocktail); // TODO (temp solution) check potential issue with refreshing of related ingredients and menu
         List<CocktailToIngredient> cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
@@ -142,7 +142,7 @@ public class CocktailDaoTest extends BaseDaoTest {
 
     @Test
     public void testUpdateCocktailWhenChangeIngredients() throws Exception {
-        Cocktail cocktail = cocktailDao.read(TEST_ID_OF_COCKTAIL_WITH_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
+        Cocktail cocktail = cocktailDao.read(TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
         assertNotNull(cocktail);
         List<CocktailToIngredient> cocktailToIngredientList = cocktail.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 3, cocktailToIngredientList.size());
@@ -182,7 +182,7 @@ public class CocktailDaoTest extends BaseDaoTest {
 
         // check saved cocktail
         assertEquals("Number of CocktailToIngredient rows should be decrease by 1 ingredient [3 removed, 2 new added].", 16, getCocktailToIngredientCount());
-        Cocktail updatedCocktail = findCocktailById(TEST_ID_OF_COCKTAIL_WITH_INGREDIENTS);
+        Cocktail updatedCocktail = findCocktailById(TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS);
         cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
 
@@ -250,7 +250,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         return count.intValue();
     }
 
-    protected Cocktail findCocktailById(int id) {
+    protected Cocktail findCocktailById(String id) {
         TypedQuery<Cocktail> q = em.createQuery("SELECT c FROM Cocktail c WHERE c.id = :id", Cocktail.class);
         q.setParameter("id", id);
         Cocktail result = q.getSingleResult();

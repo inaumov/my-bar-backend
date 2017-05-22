@@ -7,8 +7,8 @@ import mybar.domain.history.Order;
 import javax.persistence.*;
 import java.util.Collection;
 
-@Entity
-@Table(name = "USERS")
+//@Entity
+//@Table(name = "USERS")
 //@SequenceGenerator(name="USER_SEQUENCE", sequenceName="USER_SEQUENCE", allocationSize=3, initialValue = 1)
 public class User implements IUser {
 
