@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext-test-hsqldb.xml")
+@ContextConfiguration(locations = "classpath:testApplicationContext.xml")
 @TestExecutionListeners(
         listeners = {
                 DependencyInjectionTestExecutionListener.class,
@@ -28,7 +28,7 @@ import javax.persistence.PersistenceContext;
                 TransactionDbUnitTestExecutionListener.class
         },
         inheritListeners = false)
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @DatabaseSetups(
         {
                 @DatabaseSetup("classpath:dataSet.xml"),

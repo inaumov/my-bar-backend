@@ -16,9 +16,11 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver"/>
-        <property name="url" value="jdbc:hsqldb:d:/dev/MyBar-server/testDB"/>
+    <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/dev_my_bar" />
+        <property name="username" value="root" />
+        <property name="password" value="rootPass" />
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -27,12 +29,12 @@
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="showSql" value="true"/>
-                <property name="generateDdl" value="true"/>
-                <property name="database" value="HSQL"/>
-                <property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect"/>
+                <property name="generateDdl" value="false"/>
+                <property name="database" value="MYSQL"/>
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
             </bean>
         </property>
-        <property name="persistenceUnitName" value="testDB"/>
+        <property name="persistenceUnitName" value="myBarDb"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>

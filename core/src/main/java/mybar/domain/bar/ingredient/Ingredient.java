@@ -29,6 +29,7 @@ import javax.persistence.*;
 public class Ingredient implements IIngredient {
 
     @Id
+    @Column(name = "ID")
     private int id;
 
     @Column(name = "KIND")

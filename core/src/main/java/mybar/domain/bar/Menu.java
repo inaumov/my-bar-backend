@@ -17,9 +17,10 @@ import java.util.Collection;
 public class Menu {
 
     @Id
+    @Column(name = "ID")
     private int id;
 
-    @Column
+    @Column(name = "NAME")
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY)

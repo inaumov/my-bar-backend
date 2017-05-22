@@ -18,6 +18,7 @@ public class Bottle {
 
     @Id
     @GeneratedValue(generator = "bottle_id")
+    @Column(name = "ID")
     private String id;
 
     @ManyToOne

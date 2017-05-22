@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "COCKTAIL_TO_INGREDIENT")
 @AssociationOverrides({
-        @AssociationOverride(name = "pk.cocktail", joinColumns = @JoinColumn(name = "cocktail_id")),
-        @AssociationOverride(name = "pk.ingredient", joinColumns = @JoinColumn(name = "ingredient_id"))
+        @AssociationOverride(name = "pk.cocktail", joinColumns = @JoinColumn(name = "COCKTAIL_ID")),
+        @AssociationOverride(name = "pk.ingredient", joinColumns = @JoinColumn(name = "INGREDIENT_ID"))
 })
 public class CocktailToIngredient {
 

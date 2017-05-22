@@ -21,6 +21,7 @@ public class Cocktail {
 
     @Id
     @GeneratedValue(generator = "cocktail_id")
+    @Column(name = "ID")
     private String id;
 
     @Column(name = "NAME")

@@ -42,6 +42,7 @@
         <jackson-databind.version>2.5.3</jackson-databind.version>
         <mockito-core.version>1.9.5</mockito-core.version>
         <lombok.version>1.16.8</lombok.version>
+        <mysql-connector-java.version>5.1.26</mysql-connector-java.version>
     </properties>
 
     <modules>
@@ -90,6 +91,11 @@
             </dependency>
 
             <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
@@ -128,6 +134,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${hamcrest-all.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

@@ -51,9 +51,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
 
         <dependency>
@@ -74,26 +76,31 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!-- testing -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.springtestdbunit</groupId>
             <artifactId>spring-test-dbunit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>${hamcrest-all.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -119,6 +126,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>de.juplo</groupId>
+                <artifactId>hibernate4-maven-plugin</artifactId>
+                <version>1.0.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>export</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <hibernateDialect>org.hibernate.dialect.HSQLDialect</hibernateDialect>
+                    <target>NONE</target>
+                    <type>CREATE</type>
+                </configuration>
             </plugin>
         </plugins>
     </build>
