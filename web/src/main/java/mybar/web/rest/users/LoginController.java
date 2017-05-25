@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-@Controller
+//@Controller
 public class LoginController implements Serializable {
 
     private List<SimpleGrantedAuthority> authorities;

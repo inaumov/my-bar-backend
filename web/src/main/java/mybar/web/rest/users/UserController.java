@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Controller
+//@Controller
 public class UserController {
 
     private static final String XML_VIEW_NAME = "users";

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-@Service("authenticationService")
+//@Service("authenticationService")
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
