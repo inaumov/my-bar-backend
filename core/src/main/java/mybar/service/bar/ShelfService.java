@@ -1,6 +1,7 @@
 package mybar.service.bar;
 
 import com.google.common.base.*;
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import mybar.api.bar.IBottle;

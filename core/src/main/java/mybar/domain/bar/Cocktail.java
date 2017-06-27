@@ -32,7 +32,7 @@ public class Cocktail {
      * Hibernate to automatically insert and update
      * CocktailToIngredientList (if any)
      */
-    @OneToMany(mappedBy = "pk.cocktail", fetch = FetchType.EAGER,
+    @OneToMany(mappedBy = "pk.cocktail", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)

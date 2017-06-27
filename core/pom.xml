@@ -16,14 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>javax.persistence</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
@@ -139,7 +131,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <hibernateDialect>org.hibernate.dialect.HSQLDialect</hibernateDialect>
+                    <hibernateDialect>org.hibernate.dialect.MySQL5Dialect</hibernateDialect>
                     <target>NONE</target>
                     <type>CREATE</type>
                 </configuration>

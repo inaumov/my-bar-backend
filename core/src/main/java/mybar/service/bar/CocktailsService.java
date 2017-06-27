@@ -1,6 +1,7 @@
 package mybar.service.bar;
 
 import com.google.common.base.*;
+import com.google.common.base.Optional;
 import com.google.common.collect.*;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.ICocktailIngredient;
