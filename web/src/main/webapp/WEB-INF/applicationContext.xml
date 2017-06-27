@@ -17,10 +17,10 @@
     </context:component-scan>
 
     <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/dev_my_bar" />
-        <property name="username" value="root" />
-        <property name="password" value="rootPass" />
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/dev_my_bar"/>
+        <property name="username" value="root"/>
+        <property name="password" value="rootPass"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -34,7 +34,7 @@
                 <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
             </bean>
         </property>
-        <property name="persistenceUnitName" value="myBarDb"/>
+        <property name="persistenceUnitName" value="dev_my_bar"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
