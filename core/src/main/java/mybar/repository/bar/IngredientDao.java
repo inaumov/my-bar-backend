@@ -5,10 +5,12 @@ import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -58,6 +60,9 @@ public class IngredientDao {
     }
 
     public List<Ingredient> findIn(List<Integer> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
         TypedQuery<Ingredient> q = em.createNamedQuery("findIn", Ingredient.class);
         q.setParameter("ids", ids);
         return q.getResultList();
