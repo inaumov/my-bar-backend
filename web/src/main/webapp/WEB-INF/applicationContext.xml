@@ -16,7 +16,7 @@
                                 expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
-    <bean id="databaseProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean id="databaseProperties" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="location">
             <value>/WEB-INF/database.properties</value>
         </property>
