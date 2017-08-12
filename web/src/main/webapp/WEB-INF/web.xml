@@ -49,7 +49,7 @@
     </filter>
     <filter-mapping>
         <filter-name>corsFilter</filter-name>
-        <url-pattern>api/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
 </web-app>
