@@ -44,7 +44,7 @@
         <json-path.version>0.8.1</json-path.version>
         <jackson-databind.version>2.5.3</jackson-databind.version>
         <mockito-core.version>1.9.5</mockito-core.version>
-        <lombok.version>1.16.8</lombok.version>
+        <lombok.version>1.16.16</lombok.version>
         <mysql-connector-java.version>5.1.42</mysql-connector-java.version>
         <jetty-maven-plugin.latest>9.4.6.v20170531</jetty-maven-plugin.latest>
     </properties>
