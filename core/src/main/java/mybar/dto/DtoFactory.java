@@ -63,7 +63,7 @@ public class DtoFactory {
     private static CocktailToIngredientDto toDto(CocktailToIngredient entity) {
         CocktailToIngredientDto dto = new CocktailToIngredientDto();
         dto.setIngredientId(entity.getIngredient().getId());
-        dto.setUnitsValue(entity.getUnitsValue());
+        dto.setUnitOfMeasurement(entity.getUnitOfMeasurement());
         dto.setVolume(entity.getVolume());
         return dto;
     }

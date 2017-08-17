@@ -25,11 +25,7 @@ public class Menu {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="MENU_ID", referencedColumnName="ID")
-    private Collection<Cocktail> cocktails;
-
-    public Menu() {
-        cocktails = new ArrayList<>();
-    }
+    private Collection<Cocktail> cocktails = new ArrayList<>();
 
     public void addCocktail(Cocktail cocktail) {
         if (!getCocktails().contains(cocktail)) {

@@ -1,7 +1,7 @@
 package mybar.dto.bar;
 
 import com.google.common.collect.Lists;
-import mybar.UnitsValue;
+import mybar.UnitOfMeasurement;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.ICocktailIngredient;
 import mybar.domain.bar.Cocktail;
@@ -34,14 +34,14 @@ public class CocktailTest {
         CocktailToIngredient beverage = new CocktailToIngredient();
         beverage.setIngredient(new Beverage(1));
         beverage.setVolume(50);
-        beverage.setUnitsValue(UnitsValue.ML);
+        beverage.setUnitOfMeasurement(UnitOfMeasurement.ML);
 
         CocktailToIngredient juice = new CocktailToIngredient();
         Drink drink = new Drink();
         drink.setId(25);
         juice.setIngredient(drink);
         juice.setVolume(150);
-        juice.setUnitsValue(UnitsValue.ML);
+        juice.setUnitOfMeasurement(UnitOfMeasurement.ML);
 
         cocktail.setCocktailToIngredientList(Lists.newArrayList(beverage, juice));
         cocktail.setMenuId(MENU_ID);
@@ -66,7 +66,7 @@ public class CocktailTest {
         ICocktailIngredient beverageDto = beverages.iterator().next();
         assertEquals(1, beverageDto.getIngredientId());
         assertEquals(50, beverageDto.getVolume(), 0);
-        assertEquals(UnitsValue.ML, beverageDto.getUnitsValue());
+        assertEquals(UnitOfMeasurement.ML, beverageDto.getUnitOfMeasurement());
 
         Collection<? extends ICocktailIngredient> drinks = insideList.get("drinks");
         assertEquals(1, drinks.size());
@@ -74,7 +74,7 @@ public class CocktailTest {
         ICocktailIngredient juiceDto = drinks.iterator().next();
         assertEquals(25, juiceDto.getIngredientId());
         assertEquals(150, juice.getVolume(), 0);
-        assertEquals(UnitsValue.ML, beverageDto.getUnitsValue());
+        assertEquals(UnitOfMeasurement.ML, beverageDto.getUnitOfMeasurement());
     }
 
 }

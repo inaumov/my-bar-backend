@@ -1,5 +1,7 @@
 package mybar.domain.bar;
 
+import lombok.Getter;
+import lombok.Setter;
 import mybar.domain.bar.ingredient.Ingredient;
 
 import javax.persistence.Embeddable;
@@ -9,26 +11,15 @@ import java.io.Serializable;
 @Embeddable
 public class CocktailToIngredientPk implements Serializable {
 
+    @Getter
+    @Setter
+    @ManyToOne
     private Cocktail cocktail;
+
+    @Getter
+    @Setter
+    @ManyToOne
     private Ingredient ingredient;
-
-    @ManyToOne
-    public Cocktail getCocktail() {
-        return cocktail;
-    }
-
-    public void setCocktail(Cocktail cocktail) {
-        this.cocktail = cocktail;
-    }
-
-    @ManyToOne
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
-    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

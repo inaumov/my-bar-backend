@@ -7,7 +7,7 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Iterables;
-import mybar.UnitsValue;
+import mybar.UnitOfMeasurement;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.ingredient.Beverage;
@@ -173,7 +173,7 @@ public class UpdateCocktailDaoTest {
 
         for (int i = 0; i < expectedCocktailToIngredientRelationsCnt; i++) {
             Ingredient ingredient = ingredients.get(i);
-            UnitsValue uv = ingredient instanceof Beverage || ingredient instanceof Drink ? UnitsValue.ML : UnitsValue.PCS;
+            UnitOfMeasurement uv = ingredient instanceof Beverage || ingredient instanceof Drink ? UnitOfMeasurement.ML : UnitOfMeasurement.PCS;
             assertCocktailToIngredient(cocktailToIngredientList, ingredient.getKind(), ingredient.getId(), i * 10, uv, ingredient.getClass());
         }
 
@@ -190,11 +190,11 @@ public class UpdateCocktailDaoTest {
                                                    String ingredientName,
                                                    int ingredientId,
                                                    int expectedVolume,
-                                                   UnitsValue unitsValue, Class type) {
+                                                   UnitOfMeasurement unitOfMeasurement, Class type) {
         CocktailToIngredient cocktailToIngredient = findCocktailToIngredientByIngredientName(cocktailToIngredientList, ingredientName);
         assertEquals("Ingredient ID should be same.", ingredientId, cocktailToIngredient.getIngredient().getId());
         assertEquals("Volume of ingredient should be same.", expectedVolume, cocktailToIngredient.getVolume(), 0);
-        assertEquals("Units value of ingredient should be same.", unitsValue, cocktailToIngredient.getUnitsValue());
+        assertEquals("Units value of ingredient should be same.", unitOfMeasurement, cocktailToIngredient.getUnitOfMeasurement());
         assertThat("Ingredient class type should be same.", cocktailToIngredient.getIngredient(), isA(type));
     }
 

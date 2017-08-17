@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import mybar.UnitsValue;
+import mybar.UnitOfMeasurement;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.api.bar.ingredient.IBeverage;
@@ -125,7 +125,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$.ingredients.beverages[0].ingredientId", is(5)))
                 .andExpect(jsonPath("$.ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$.ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$.ingredients.beverages[0].unitOfMeasurement", is(UnitOfMeasurement.ML.name())))
                 .andExpect(jsonPath("$.ingredients.beverages[0].missing", is(nullValue())));
 
         verify(cocktailsService, times(1)).findCocktailById(anyString());
@@ -197,7 +197,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$.other[0].ingredients.beverages[0].ingredientId", is(5)))
                 .andExpect(jsonPath("$.other[0].ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$.other[0].ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$.other[0].ingredients.beverages[0].unitOfMeasurement", is(UnitOfMeasurement.ML.name())))
                 .andExpect(jsonPath("$.other[0].ingredients.beverages[0].missing").doesNotExist());
 
         verify(cocktailsService, times(1)).getAllCocktails();
@@ -234,7 +234,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$[2].ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$[2].ingredients.beverages[0].ingredientId", is(5)))
                 .andExpect(jsonPath("$[2].ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$[2].ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$[2].ingredients.beverages[0].unitOfMeasurement", is(UnitOfMeasurement.ML.name())))
                 .andExpect(jsonPath("$[2].ingredients.beverages[0].missing").doesNotExist());
 
         verify(cocktailsService, times(1)).getAllCocktailsForMenu("any");
@@ -367,7 +367,7 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.ingredients.beverages", hasSize(1)))
                 .andExpect(jsonPath("$.ingredients.beverages[0].ingredientId", is(5)))
                 .andExpect(jsonPath("$.ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$.ingredients.beverages[0].unitsValue", is(UnitsValue.ML.name())))
+                .andExpect(jsonPath("$.ingredients.beverages[0].unitOfMeasurement", is(UnitOfMeasurement.ML.name())))
                 .andExpect(jsonPath("$.ingredients.beverages[0].missing").doesNotExist());
     }
 
@@ -505,7 +505,7 @@ public class CocktailsRestControllerTest {
         CocktailToIngredientDto beverage = new CocktailToIngredientDto();
         beverage.setIngredientId(5);
         beverage.setVolume(25);
-        beverage.setUnitsValue(UnitsValue.ML);
+        beverage.setUnitOfMeasurement(UnitOfMeasurement.ML);
 
         cocktailDto.setIngredients(ImmutableMap.<String, Collection<CocktailToIngredientDto>>of(IBeverage.GROUP_NAME, Collections.singleton(beverage)));
         return cocktailDto;

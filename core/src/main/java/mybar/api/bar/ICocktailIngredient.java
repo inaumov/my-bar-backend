@@ -1,6 +1,6 @@
 package mybar.api.bar;
 
-import mybar.UnitsValue;
+import mybar.UnitOfMeasurement;
 
 public interface ICocktailIngredient {
 
@@ -8,6 +8,6 @@ public interface ICocktailIngredient {
 
     double getVolume();
 
-    UnitsValue getUnitsValue();
+    UnitOfMeasurement getUnitOfMeasurement();
 
 }

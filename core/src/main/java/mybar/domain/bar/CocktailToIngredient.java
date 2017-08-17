@@ -1,6 +1,8 @@
 package mybar.domain.bar;
 
-import mybar.UnitsValue;
+import lombok.Getter;
+import lombok.Setter;
+import mybar.UnitOfMeasurement;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
@@ -15,26 +17,29 @@ import javax.persistence.*;
 })
 public class CocktailToIngredient {
 
+    @Getter
+    @Setter
+    @EmbeddedId
     private CocktailToIngredientPk pk = new CocktailToIngredientPk();
+
+    @Getter
+    @Setter
+    @Column(name = "VOLUME")
     private double volume;
-    private UnitsValue unitsValue;
+
+    @Getter
+    @Setter
+    @Column(name = "UNITS")
+    @Enumerated(EnumType.STRING)
+    private UnitOfMeasurement unitOfMeasurement;
 
     @PrePersist
     @PreUpdate
     public void setDefaults() {
-        if (unitsValue == null) {
+        if (unitOfMeasurement == null) {
             boolean isLiquid = pk.getIngredient() instanceof Beverage || pk.getIngredient() instanceof Drink;
-            unitsValue = isLiquid ? UnitsValue.ML : UnitsValue.PCS;
+            unitOfMeasurement = isLiquid ? UnitOfMeasurement.ML : UnitOfMeasurement.PCS;
         }
-    }
-
-    @EmbeddedId
-    private CocktailToIngredientPk getPk() {
-        return pk;
-    }
-
-    private void setPk(CocktailToIngredientPk pk) {
-        this.pk = pk;
     }
 
     @Transient
@@ -55,34 +60,13 @@ public class CocktailToIngredient {
         getPk().setIngredient(ingredient);
     }
 
-    @Column(name = "VOLUME")
-    public double getVolume() {
-        return volume;
-    }
-
-    public void setVolume(double volume) {
-        this.volume = volume;
-    }
-
-    @Column(name = "UNITS")
-    @Enumerated(EnumType.STRING)
-    public UnitsValue getUnitsValue() {
-        return unitsValue;
-    }
-
-    public void setUnitsValue(UnitsValue unitsValue) {
-        this.unitsValue = unitsValue;
-    }
-
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         CocktailToIngredient that = (CocktailToIngredient) o;
 
-        if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
-
-        return true;
+        return getPk() != null ? getPk().equals(that.getPk()) : that.getPk() == null;
     }
 
     public int hashCode() {
