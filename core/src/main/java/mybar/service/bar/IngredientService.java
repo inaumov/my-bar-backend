@@ -1,6 +1,8 @@
 package mybar.service.bar;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
@@ -20,10 +22,17 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class IngredientService {
 
+    private ImmutableSet<String> GROUP_NAMES = ImmutableSet.of(
+            IBeverage.GROUP_NAME,
+            IDrink.GROUP_NAME,
+            IAdditive.GROUP_NAME
+    );
+
     @Autowired(required = false)
     private IngredientDao ingredientDao;
 
     public List<IIngredient> findByGroupName(String groupName) {
+        Preconditions.checkArgument(GROUP_NAMES.contains(groupName), "Unknown group name: " + groupName);
         try {
             List<Ingredient> ingredients = ingredientDao.findByGroupName(groupName);
             return Lists.newArrayList(Lists.transform(ingredients, ingredientFunction()));

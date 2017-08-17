@@ -1,5 +1,8 @@
 package mybar.repository.bar;
 
+import mybar.api.bar.ingredient.IAdditive;
+import mybar.api.bar.ingredient.IBeverage;
+import mybar.api.bar.ingredient.IDrink;
 import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
@@ -25,21 +28,20 @@ public class IngredientDao {
     public List<Ingredient> findByGroupName(String groupName) throws Exception {
         Class<? extends Ingredient> clazz;
         switch (groupName) {
-            case "beverages": {
+            case IBeverage.GROUP_NAME: {
                 clazz = Beverage.class;
                 break;
             }
-            case "drinks": {
+            case IDrink.GROUP_NAME: {
                 clazz = Drink.class;
                 break;
             }
-            case "additives": {
+            case IAdditive.GROUP_NAME: {
                 clazz = Additive.class;
                 break;
             }
             default: {
-                // TODO maybe throw some other exception
-                throw new Exception("Type " + groupName + " not present");
+                return Collections.emptyList();
             }
         }
         TypedQuery<Ingredient> q = em.createNamedQuery("findByGroupName", Ingredient.class);
