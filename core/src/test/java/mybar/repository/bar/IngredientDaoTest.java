@@ -5,7 +5,7 @@ import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
-import mybar.BeverageType;
+import mybar.api.bar.ingredient.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;

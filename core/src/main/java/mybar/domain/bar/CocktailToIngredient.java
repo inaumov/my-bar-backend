@@ -2,7 +2,7 @@ package mybar.domain.bar;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.UnitOfMeasurement;
+import mybar.api.bar.Measurement;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
@@ -31,14 +31,14 @@ public class CocktailToIngredient {
     @Setter
     @Column(name = "UNITS")
     @Enumerated(EnumType.STRING)
-    private UnitOfMeasurement unitOfMeasurement;
+    private Measurement measurement;
 
     @PrePersist
     @PreUpdate
     public void setDefaults() {
-        if (unitOfMeasurement == null) {
+        if (measurement == null) {
             boolean isLiquid = pk.getIngredient() instanceof Beverage || pk.getIngredient() instanceof Drink;
-            unitOfMeasurement = isLiquid ? UnitOfMeasurement.ML : UnitOfMeasurement.PCS;
+            measurement = isLiquid ? Measurement.ML : Measurement.PCS;
         }
     }
 

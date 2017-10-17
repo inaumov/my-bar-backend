@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
-import mybar.BeverageType;
+import mybar.api.bar.ingredient.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.app.bean.bar.View;
-
-import java.util.Objects;
 
 @Getter
 @Setter

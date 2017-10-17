@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import mybar.BeverageType;
+import mybar.api.bar.ingredient.BeverageType;
 import mybar.api.bar.IBottle;
 import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.BottleBean;

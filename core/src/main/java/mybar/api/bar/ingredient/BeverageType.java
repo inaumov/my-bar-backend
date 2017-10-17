@@ -1,4 +1,4 @@
-package mybar;
+package mybar.api.bar.ingredient;
 
 /**
  * Beverages by raw material

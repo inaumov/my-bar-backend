@@ -1,11 +1,11 @@
-package mybar;
+package mybar.api.bar;
 
 import java.util.EnumSet;
 
 /**
- * Units of measurement that are mostly used in cocktails cooking.
+ * Represents mostly used units of measurement in cocktails cooking.
  */
-public enum UnitOfMeasurement {
+public enum Measurement {
 
     // related to liquids
     ML("milliliter"),
@@ -20,7 +20,7 @@ public enum UnitOfMeasurement {
 
     private String fullName;
 
-    UnitOfMeasurement(String fullName) {
+    Measurement(String fullName) {
         this.fullName = fullName;
     }
 
@@ -28,11 +28,11 @@ public enum UnitOfMeasurement {
         return fullName;
     }
 
-    public static EnumSet<UnitOfMeasurement> liquids() {
+    public static EnumSet<Measurement> liquids() {
         return EnumSet.range(ML, TSP);
     }
 
-    public static EnumSet<UnitOfMeasurement> solidComponents() {
+    public static EnumSet<Measurement> solidComponents() {
         return EnumSet.of(G, PCS);
     }
 

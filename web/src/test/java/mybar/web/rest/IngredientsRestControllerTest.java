@@ -1,11 +1,6 @@
 package mybar.web.rest;
 
-import mybar.BeverageType;
-import mybar.DrinkType;
-import mybar.api.bar.ingredient.IAdditive;
-import mybar.api.bar.ingredient.IBeverage;
-import mybar.api.bar.ingredient.IDrink;
-import mybar.api.bar.ingredient.IIngredient;
+import mybar.api.bar.ingredient.*;
 import mybar.dto.bar.ingredient.AdditiveDto;
 import mybar.dto.bar.ingredient.BeverageDto;
 import mybar.dto.bar.ingredient.DrinkDto;
@@ -117,7 +112,7 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("unitsOfMeasurement").exists())
+                .andExpect(jsonPath("measurements").exists())
                 .andExpect(jsonPath("items.$", hasSize(2)))
 
                 .andExpect(jsonPath("items.$[0].id", is(1)))
@@ -150,7 +145,7 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("unitsOfMeasurement").exists())
+                .andExpect(jsonPath("measurements").exists())
                 .andExpect(jsonPath("items.$", hasSize(2)))
 
                 .andExpect(jsonPath("items.$[0].id", is(3)))
@@ -182,7 +177,7 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("unitsOfMeasurement").exists())
+                .andExpect(jsonPath("measurements").exists())
                 .andExpect(jsonPath("items.$", hasSize(2)))
 
                 .andExpect(jsonPath("items.$[0].id", is(11)))
@@ -196,16 +191,32 @@ public class IngredientsRestControllerTest {
     }
 
     @Test
-    public void findByGroupName_Should_ReturnEmptyArray_When_FilterByUnknown() throws Exception {
+    public void findByGroupName_Should_ReturnEmptyResponse_When_FilterByGroup() throws Exception {
 
-        when(ingredientService.findByGroupName(UNKNOWN)).thenReturn(Collections.<IIngredient>emptyList());
+        when(ingredientService.findByGroupName("any_known")).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/ingredients?filter=unknown"))
+        mockMvc.perform(get("/ingredients?filter=any_known"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("$", empty()));
+                .andExpect(jsonPath("measurements.$", empty()))
+                .andExpect(jsonPath("items.$", empty()))
+                .andExpect(jsonPath("isLiquid").doesNotExist());
+
+        verify(ingredientService, times(1)).findByGroupName("any_known");
+        verifyNoMoreInteractions(ingredientService);
+    }
+
+    @Test
+    public void findByGroupName_Should_ThrowIllegalArgumentException_When_FilterByUnknown() throws Exception {
+
+        when(ingredientService.findByGroupName(UNKNOWN)).thenThrow(new IllegalArgumentException("Unknown group name: " + UNKNOWN));
+
+        mockMvc.perform(get("/ingredients?filter=unknown"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Unknown group name: " + UNKNOWN)));
 
         verify(ingredientService, times(1)).findByGroupName("unknown");
         verifyNoMoreInteractions(ingredientService);

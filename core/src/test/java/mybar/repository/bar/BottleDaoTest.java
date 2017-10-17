@@ -3,7 +3,7 @@ package mybar.repository.bar;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
-import mybar.BeverageType;
+import mybar.api.bar.ingredient.BeverageType;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.repository.BaseDaoTest;

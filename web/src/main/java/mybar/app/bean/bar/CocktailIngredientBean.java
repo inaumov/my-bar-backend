@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import mybar.UnitOfMeasurement;
+import mybar.api.bar.Measurement;
 import mybar.api.bar.ICocktailIngredient;
 
 @Getter
@@ -18,7 +18,7 @@ public class CocktailIngredientBean implements ICocktailIngredient {
     private double volume;
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
-    private UnitOfMeasurement unitOfMeasurement;
+    private Measurement measurement;
 
     @Getter(AccessLevel.NONE)
     @JsonView(View.Cocktail.class)

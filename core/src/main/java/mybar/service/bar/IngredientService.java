@@ -31,7 +31,7 @@ public class IngredientService {
     @Autowired(required = false)
     private IngredientDao ingredientDao;
 
-    public List<IIngredient> findByGroupName(String groupName) {
+    public List<IIngredient> findByGroupName(String groupName) throws IllegalArgumentException {
         Preconditions.checkArgument(GROUP_NAMES.contains(groupName), "Unknown group name: " + groupName);
         try {
             List<Ingredient> ingredients = ingredientDao.findByGroupName(groupName);

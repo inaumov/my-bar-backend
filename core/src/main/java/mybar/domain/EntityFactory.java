@@ -63,7 +63,7 @@ public class EntityFactory {
             additive.setId(inside.getIngredientId());
             cocktailToIngredient.setIngredient(additive);
         }
-        cocktailToIngredient.setUnitOfMeasurement(inside.getUnitOfMeasurement());
+        cocktailToIngredient.setMeasurement(inside.getMeasurement());
         cocktailToIngredient.setVolume(inside.getVolume());
         return cocktailToIngredient;
     }

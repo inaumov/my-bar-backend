@@ -2,7 +2,7 @@ package mybar.domain.bar.ingredient;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.BeverageType;
+import mybar.api.bar.ingredient.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.bar.Bottle;
 

@@ -2,7 +2,7 @@ package mybar.domain.bar.ingredient;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.DrinkType;
+import mybar.api.bar.ingredient.DrinkType;
 import mybar.api.bar.ingredient.IDrink;
 
 import javax.persistence.*;

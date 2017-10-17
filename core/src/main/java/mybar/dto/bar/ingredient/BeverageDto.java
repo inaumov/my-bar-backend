@@ -2,7 +2,7 @@ package mybar.dto.bar.ingredient;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.BeverageType;
+import mybar.api.bar.ingredient.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
 
 @Getter

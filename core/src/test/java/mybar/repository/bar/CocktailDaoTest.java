@@ -3,7 +3,7 @@ package mybar.repository.bar;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Iterables;
-import mybar.UnitOfMeasurement;
+import mybar.api.bar.Measurement;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
@@ -106,7 +106,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         ingredient1.setKind("Orange Juice");
         juice.setIngredient(ingredient1);
         juice.setVolume(250);
-        juice.setUnitOfMeasurement(UnitOfMeasurement.ML);
+        juice.setMeasurement(Measurement.ML);
 
         CocktailToIngredient grenadine = new CocktailToIngredient();
         Additive ingredient2 = new Additive();
@@ -114,7 +114,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         ingredient2.setKind("Grenadine");
         grenadine.setIngredient(ingredient2);
         grenadine.setVolume(10);
-        grenadine.setUnitOfMeasurement(UnitOfMeasurement.ML);
+        grenadine.setMeasurement(Measurement.ML);
 
         cocktail.addCocktailToIngredient(juice);
         cocktail.addCocktailToIngredient(grenadine);
@@ -128,8 +128,8 @@ public class CocktailDaoTest extends BaseDaoTest {
         List<CocktailToIngredient> cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, UnitOfMeasurement.ML, Drink.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, UnitOfMeasurement.ML, Additive.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, Measurement.ML, Drink.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, Measurement.ML, Additive.class);
 
         assertEquals("Menu ID related to cocktail should be same.", 3, updatedCocktail.getMenuId());
         assertEquals("Cocktail name should same.", "Random smoothie name", updatedCocktail.getName());
@@ -147,9 +147,9 @@ public class CocktailDaoTest extends BaseDaoTest {
         List<CocktailToIngredient> cocktailToIngredientList = cocktail.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 3, cocktailToIngredientList.size());
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Triple Sec", 8, 20, UnitOfMeasurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Irish cream", 11, 20, UnitOfMeasurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Coffee liqueur", 16, 20, UnitOfMeasurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Triple Sec", 8, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Irish cream", 11, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Coffee liqueur", 16, 20, Measurement.ML, Beverage.class);
 
         Cocktail cocktailForUpdate = new Cocktail();
         cocktailForUpdate.setId(cocktail.getId());
@@ -165,7 +165,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         ingredient1.setKind("Orange Juice");
         juice.setIngredient(ingredient1);
         juice.setVolume(250);
-        juice.setUnitOfMeasurement(UnitOfMeasurement.ML);
+        juice.setMeasurement(Measurement.ML);
 
         CocktailToIngredient grenadine = new CocktailToIngredient();
         Additive ingredient2 = new Additive();
@@ -173,7 +173,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         ingredient2.setKind("Grenadine");
         grenadine.setIngredient(ingredient2);
         grenadine.setVolume(10);
-        grenadine.setUnitOfMeasurement(UnitOfMeasurement.ML);
+        grenadine.setMeasurement(Measurement.ML);
 
         cocktailForUpdate.addCocktailToIngredient(juice);
         cocktailForUpdate.addCocktailToIngredient(grenadine);
@@ -186,8 +186,8 @@ public class CocktailDaoTest extends BaseDaoTest {
         cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, UnitOfMeasurement.ML, Drink.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, UnitOfMeasurement.ML, Additive.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, Measurement.ML, Drink.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, Measurement.ML, Additive.class);
 
         // check that ingredients remain same
         assertThat("Ingredient list should remain the same.", findAllIngredientIds(), equalTo(INGREDIENTS_TEST_IDS));
@@ -207,27 +207,27 @@ public class CocktailDaoTest extends BaseDaoTest {
         List<CocktailToIngredient> cocktailToIngredientList = longIsland.getCocktailToIngredientList();
         assertEquals("Number of ingredients in cocktail should be same.", 8, cocktailToIngredientList.size());
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Vodka", 1, 20, UnitOfMeasurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Gin", 2, 20, UnitOfMeasurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Rum", 3, 20, UnitOfMeasurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Tequila", 4, 20, UnitOfMeasurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Whisky", 6, 20, UnitOfMeasurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Vodka", 1, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Gin", 2, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Rum", 3, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Tequila", 4, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Whisky", 6, 20, Measurement.ML, Beverage.class);
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Coca Cola", 17, 150, UnitOfMeasurement.ML, Drink.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Coca Cola", 17, 150, Measurement.ML, Drink.class);
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Ice", 14, 5, UnitOfMeasurement.PCS, Additive.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Lime", 18, 5, UnitOfMeasurement.PCS, Additive.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Ice", 14, 5, Measurement.PCS, Additive.class);
+        assertCocktailToIngredient(cocktailToIngredientList, "Lime", 18, 5, Measurement.PCS, Additive.class);
     }
 
     private static void assertCocktailToIngredient(List<CocktailToIngredient> cocktailToIngredientList,
                                                    String ingredientName,
                                                    int ingredientId,
                                                    int expectedVolume,
-                                                   UnitOfMeasurement unitOfMeasurement, Class type) {
+                                                   Measurement measurement, Class type) {
         CocktailToIngredient cocktailToIngredient = findCocktailToIngredientByIngredientName(cocktailToIngredientList, ingredientName);
         assertEquals("Ingredient ID should be same.", ingredientId, cocktailToIngredient.getIngredient().getId());
         assertEquals("Volume of ingredient should be same.", expectedVolume, cocktailToIngredient.getVolume(), 0);
-        assertEquals("Units value of ingredient should be same.", unitOfMeasurement, cocktailToIngredient.getUnitOfMeasurement());
+        assertEquals("Units value of ingredient should be same.", measurement, cocktailToIngredient.getMeasurement());
         assertThat("Ingredient class type should be same.", cocktailToIngredient.getIngredient(), isA(type));
     }
 
