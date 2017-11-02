@@ -1,9 +1,7 @@
 package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.base.Function;
 import com.google.common.base.Strings;
-import com.google.common.collect.*;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.app.RestBeanConverter;
@@ -24,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cocktails")
@@ -37,13 +36,6 @@ public class CocktailsController {
     private MessageSource messageSource;
     @Autowired
     private AvailableCocktailsWrapper cocktailsWrapper;
-
-    public static Function<ICocktail, CocktailBean> toCocktailBeanFunction = new Function<ICocktail, CocktailBean>() {
-        @Override
-        public CocktailBean apply(ICocktail cocktail) {
-            return RestBeanConverter.toCocktailBean(cocktail);
-        }
-    };
 
     //-------------------Retrieve Menu List--------------------------------------------------------
 
@@ -88,10 +80,10 @@ public class CocktailsController {
     }
 
     private static List<CocktailBean> toCocktailBeans(List<ICocktail> cocktails) {
-        return FluentIterable
-                .from(cocktails)
-                .transform(toCocktailBeanFunction)
-                .toList();
+        return cocktails
+                .stream()
+                .map(RestBeanConverter::toCocktailBean)
+                .collect(Collectors.toList());
     }
 
     //-------------------Retrieve All Cocktails--------------------------------------------------------
@@ -112,19 +104,16 @@ public class CocktailsController {
     }
 
     private Map<String, List<CocktailBean>> convertWithAvailability(Map<String, List<ICocktail>> cocktailsMap) {
-        return Maps.transformEntries(cocktailsMap, new Maps.EntryTransformer<String, List<ICocktail>, List<CocktailBean>>() {
-            @Override
-            public List<CocktailBean> transformEntry(String menuName, List<ICocktail> values) {
-                return convertWithAvailability(menuName, values);
-            }
-        });
+        Map<String, List<CocktailBean>> newConvertedMap = new HashMap<>();
+        cocktailsMap.forEach((menuName, values) -> newConvertedMap.put(menuName, convertWithAvailability(menuName, values)));
+        return newConvertedMap;
     }
 
     private List<CocktailBean> convertWithAvailability(String menuName, List<ICocktail> values) {
         List<CocktailBean> converted = toCocktailBeans(values);
         cocktailsWrapper.updateWithAvailability(converted);
         logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", values.size(), menuName));
-        return ImmutableList.copyOf(converted);
+        return Collections.unmodifiableList(converted);
     }
 
     //-------------------Retrieve a cocktail with details--------------------------------------------------------

@@ -1,7 +1,5 @@
 package mybar.web.rest.bar;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import mybar.api.bar.IBottle;
 import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.BottleBean;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/shelf")
@@ -27,13 +26,6 @@ public class ShelfController {
 
     @Autowired
     private ShelfService shelfService;
-
-    public static Function<IBottle, BottleBean> toBottleBeanFn = new Function<IBottle, BottleBean>() {
-        @Override
-        public BottleBean apply(IBottle bottle) {
-            return RestBeanConverter.from(bottle);
-        }
-    };
 
     //-------------------Retrieve All Bottles--------------------------------------------------------
 
@@ -49,7 +41,10 @@ public class ShelfController {
     }
 
     private static List<BottleBean> toRestModels(List<IBottle> allBottles) {
-        return Lists.transform(allBottles, toBottleBeanFn);
+        return allBottles
+                .stream()
+                .map(RestBeanConverter::from)
+                .collect(Collectors.toList());
     }
 
     //-------------------Retrieve a Bottle--------------------------------------------------------

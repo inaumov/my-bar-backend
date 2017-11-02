@@ -1,14 +1,13 @@
 package mybar.service.bar;
 
-import com.google.common.base.*;
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import mybar.api.bar.IBottle;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.EntityFactory;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
+import mybar.dto.DtoFactory;
 import mybar.dto.bar.BottleDto;
 import mybar.exception.BottleNotFoundException;
 import mybar.exception.UnknownBeverageException;
@@ -20,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityExistsException;
-import java.util.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static mybar.dto.DtoFactory.toDto;
 
@@ -37,22 +38,17 @@ public class ShelfService {
     // kind of caching :)
     private List<IBottle> bottleCache;
 
-    public static final Function<Bottle, IBottle> toDtoFunction = new Function<Bottle, IBottle>() {
-        @Override
-        public IBottle apply(Bottle bottle) {
-            return toDto(bottle);
-        }
-    };
-
     public IBottle findById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
-        Predicate<IBottle> findBottlePredicate = new Predicate<IBottle>() {
-            @Override
-            public boolean apply(IBottle bottle) {
-                return Objects.equals(bottle.getId(), id);
-            }
-        };
-        return Iterables.find(findAllBottles(), findBottlePredicate, toDto(bottleDao.read(id))); // TODO check NPE
+        return findAllBottles()
+                .stream()
+                .filter(bottle -> Objects.equals(bottle.getId(), id))
+                .findAny()
+                .orElseGet(() -> {
+                    BottleDto bottleDto = toDto(bottleDao.read(id));
+                    bottleCache.add(bottleDto);
+                    return bottleDto;
+                });
     }
 
     public IBottle saveBottle(IBottle bottle) {
@@ -99,17 +95,16 @@ public class ShelfService {
     public void deleteBottleById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
         bottleDao.delete(id);
-        Iterables.removeIf(findAllBottles(), new Predicate<IBottle>() {
-            @Override
-            public boolean apply(IBottle bottle) {
-                return Objects.equals(bottle.getId(), id);
-            }
-        });
+        findAllBottles()
+                .removeIf(bottle -> Objects.equals(bottle.getId(), id));
     }
 
     public List<IBottle> findAllBottles() {
         if (bottleCache == null || bottleCache.isEmpty()) {
-            bottleCache = Lists.newArrayList(Lists.transform(bottleDao.findAll(), toDtoFunction));
+            bottleCache = bottleDao.findAll()
+                    .stream()
+                    .map(DtoFactory::toDto)
+                    .collect(Collectors.toList());
         }
         return bottleCache;
     }
@@ -120,14 +115,14 @@ public class ShelfService {
     }
 
     public boolean isBottleAvailable(final int ingredientId) {
-        Optional<IBottle> bottleById = Iterables.tryFind(findAllBottles(), new Predicate<IBottle>() {
-            @Override
-            public boolean apply(IBottle bottle) {
-                IBeverage beverage = bottle.getBeverage();
-                return beverage != null && beverage.getId() == ingredientId;
-            }
-        });
-        return bottleById.isPresent() && bottleById.get().isInShelf();
+        Optional<IBottle> bottleOptional = findAllBottles()
+                .stream()
+                .filter(bottle -> {
+                    IBeverage beverage = bottle.getBeverage();
+                    return beverage != null && beverage.getId() == ingredientId;
+                })
+                .findAny();
+        return bottleOptional.isPresent() && bottleOptional.get().isInShelf();
     }
 
     private void clearCache() {

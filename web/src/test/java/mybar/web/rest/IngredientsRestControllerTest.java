@@ -170,7 +170,7 @@ public class IngredientsRestControllerTest {
         drink11.setKind("Golden tips");
         drink11.setDrinkType(DrinkType.TEA);
 
-        when(ingredientService.findByGroupName(DRINKS)).thenReturn(Arrays.<IIngredient>asList(drink11, drink2));
+        when(ingredientService.findByGroupName(DRINKS)).thenReturn(Arrays.asList(drink11, drink2));
 
         mockMvc.perform(get("/ingredients?filter=drinks").accept("application/json"))
 
@@ -193,9 +193,9 @@ public class IngredientsRestControllerTest {
     @Test
     public void findByGroupName_Should_ReturnEmptyResponse_When_FilterByGroup() throws Exception {
 
-        when(ingredientService.findByGroupName("any_known")).thenReturn(Collections.emptyList());
+        when(ingredientService.findByGroupName("drinks")).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/ingredients?filter=any_known"))
+        mockMvc.perform(get("/ingredients?filter=drinks").accept("application/json"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -204,7 +204,7 @@ public class IngredientsRestControllerTest {
                 .andExpect(jsonPath("items.$", empty()))
                 .andExpect(jsonPath("isLiquid").doesNotExist());
 
-        verify(ingredientService, times(1)).findByGroupName("any_known");
+        verify(ingredientService, times(1)).findByGroupName("drinks");
         verifyNoMoreInteractions(ingredientService);
     }
 
@@ -213,7 +213,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findByGroupName(UNKNOWN)).thenThrow(new IllegalArgumentException("Unknown group name: " + UNKNOWN));
 
-        mockMvc.perform(get("/ingredients?filter=unknown"))
+        mockMvc.perform(get("/ingredients?filter=unknown").accept("application/json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"Unknown group name: " + UNKNOWN)));
