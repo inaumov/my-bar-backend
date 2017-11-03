@@ -7,6 +7,7 @@
         <property name="datatypeFactory">
             <bean class="org.dbunit.ext.hsqldb.HsqldbDataTypeFactory"/>
         </property>
+        <property name="allowEmptyFields" value="true"/>
     </bean>
 
     <bean id="dbUnitDatabaseConnection" class="com.github.springtestdbunit.bean.DatabaseDataSourceConnectionFactoryBean">

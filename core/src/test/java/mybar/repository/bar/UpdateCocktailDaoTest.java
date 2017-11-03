@@ -2,7 +2,6 @@ package mybar.repository.bar;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.DatabaseSetups;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ContiguousSet;
@@ -49,11 +48,7 @@ import static org.junit.Assert.*;
         }
 )
 @ContextConfiguration(locations = "classpath:applicationContext-testUpdateCocktail-hsqldb.xml")
-@DatabaseSetups(
-        {
-                @DatabaseSetup("classpath:dataSet.xml")
-        }
-)
+@DatabaseSetup("classpath:dataset.xml")
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
 public class UpdateCocktailDaoTest {
 

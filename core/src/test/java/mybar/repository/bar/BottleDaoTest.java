@@ -1,8 +1,9 @@
 package mybar.repository.bar;
 
-import com.google.common.base.Predicate;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import mybar.api.bar.ingredient.BeverageType;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
@@ -12,8 +13,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
@@ -21,6 +23,7 @@ import static org.junit.Assert.*;
 /**
  * Tests Bottle DAO.
  */
+@DatabaseSetup("classpath:dataset.xml")
 public class BottleDaoTest extends BaseDaoTest {
 
     private static final BigDecimal PRICE = new BigDecimal(119.00);
@@ -31,7 +34,9 @@ public class BottleDaoTest extends BaseDaoTest {
     public void testFindAll() throws Exception {
         List<Bottle> all = bottleDao.findAll();
         assertEquals(7, all.size());
-        assertBottles(1, all);
+
+        AtomicInteger id = new AtomicInteger();
+        all.forEach(bottle -> assertEquals("bottle-00000" + id.incrementAndGet(), bottle.getId()));
     }
 
     @Test
@@ -42,45 +47,41 @@ public class BottleDaoTest extends BaseDaoTest {
 
     @Test
     public void testReadById() {
-        Bottle bottle = bottleDao.read("bottle-000001");
-        assertTrue(bottle.getBrandName().equals("Absolute"));
-    }
+        Bottle bottle = bottleDao.read("bottle-000007");
 
-    @Test
-    public void testBeverageRelatedToBottle() {
-        Bottle bottle = bottleDao.read("bottle-000001");
-        assertEquals(bottle.getBeverage().getId(), 1);
-        assertEquals(bottle.getBeverage().getKind(), "Vodka");
-        assertEquals(bottle.getBeverage().getBeverageType(), BeverageType.DISTILLED);
+        assertLast(bottle);
     }
 
     @Test
     public void testGetBottlesByBeverage() {
-
         Bottle bottle = bottleDao.read("bottle-000003");
-        assertEquals(bottle.getBeverage().getId(), 3);
-        assertEquals(bottle.getBeverage().getKind(), "Rum");
-        assertEquals(bottle.getBeverage().getBeverageType(), BeverageType.DISTILLED);
+
+        assertEquals(3, bottle.getBeverage().getId());
+        assertEquals("Rum", bottle.getBeverage().getKind());
+        assertEquals(BeverageType.DISTILLED, bottle.getBeverage().getBeverageType());
 
         List<Bottle> bottlesByBeverage = bottle.getBeverage().getBottles();
         assertEquals(2, bottlesByBeverage.size());
 
-        Bottle first = Iterables.find(bottlesByBeverage, new Predicate<Bottle>() {
-            @Override
-            public boolean apply(Bottle bottle) {
-                return bottle.getBrandName().equals("Bacardi");
-            }
-        });
-        assertNotNull(first);
-        Bottle second = Iterables.find(bottlesByBeverage, new Predicate<Bottle>() {
-            @Override
-            public boolean apply(Bottle bottle) {
-                return bottle.getBrandName().equals("Havana Club");
-            }
-        });
-        assertNotNull(second);
+        Optional<Bottle> bacardi = bottlesByBeverage
+                .stream()
+                .filter(b -> b.getBrandName().equals("Bacardi"))
+                .findAny();
+        assertTrue(bacardi.isPresent());
+
+        Optional<Bottle> second = bottlesByBeverage
+                .stream()
+                .filter(b -> b.getBrandName().equals("Havana Club"))
+                .findAny();
+        assertTrue(second.isPresent());
     }
 
+    @ExpectedDatabase(
+            assertionMode = DatabaseAssertionMode.NON_STRICT,
+            columnFilters = {
+                    EntityIdExclusionFilter.class
+            },
+            value = "classpath:datasets/expected/bottles-create.xml", table = "BOTTLE")
     @Test
     public void testCreateBottle() throws Exception {
         Bottle bottle = new Bottle();
@@ -88,54 +89,48 @@ public class BottleDaoTest extends BaseDaoTest {
         bottle.setPrice(new BigDecimal(289));
         bottle.setInShelf(true);
         bottle.setImageUrl("http://whiskey.last.jpg");
+        bottle.setVolume(1.5);
         Beverage beverageRef = em.getReference(Beverage.class, 6);
         bottle.setBeverage(beverageRef);
 
         Bottle saved = bottleDao.create(bottle);
+        em.flush();
+
         assertFalse(Strings.isNullOrEmpty(saved.getId()));
-        List<Bottle> all = bottleDao.findAll();
-        assertEquals(8, all.size());
-        assertBottles(1, all); // TODO until switch to HSQLDB because derby doesn't work with identity generated value for ID columns.
+        assertEquals(8, countRowsInTable("BOTTLE"));
     }
 
+    @ExpectedDatabase(value = "classpath:datasets/expected/bottles-update.xml", table = "BOTTLE")
     @Test
     public void testUpdateBottle() throws Exception {
-        Bottle bottle = bottleDao.read("bottle-000007");
-
-        // assert existing bottle
-        assertLast(bottle);
+        Bottle bottle = new Bottle();
 
         // update retrieved bottle
         Beverage beverage = new Beverage();
         beverage.setId(6);
+        bottle.setId("bottle-000007");
         bottle.setBeverage(beverage);
         bottle.setBrandName("Johny Walker");
         bottle.setPrice(new BigDecimal(289));
+        bottle.setVolume(1.5);
         bottle.setInShelf(true);
         bottle.setImageUrl("http://whiskey.last.jpg");
 
         // assert updated bottle
         Bottle updated = bottleDao.update(bottle);
+        em.flush();
+
         assertEquals("Johny Walker", updated.getBrandName());
         assertEquals(6, updated.getBeverage().getId());
         assertTrue(updated.isInShelf());
         assertTrue(updated.getImageUrl().contains("whiskey"));
     }
 
+    @ExpectedDatabase(value = "classpath:datasets/expected/bottles-delete.xml", table = "BOTTLE")
     @Test
     public void testDeleteBottle() throws Exception {
         bottleDao.delete("bottle-000001");
-        List<Bottle> all = bottleDao.findAll();
-        assertEquals(6, all.size());
-        assertBottles(2, all);
-    }
-
-    private void assertBottles(int startFromId, List<Bottle> all) {
-        Iterator<Bottle> it = all.iterator();
-        for (int id = startFromId; id < all.size(); id++) {
-            assertEquals("bottle-00000" + id, it.next().getId());
-        }
-        assertTrue(it.next().getId().contains("bottle-"));
+        em.flush();
     }
 
     private void assertLast(Bottle bottle) {

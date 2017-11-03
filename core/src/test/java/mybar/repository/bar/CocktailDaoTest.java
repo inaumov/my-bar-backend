@@ -1,5 +1,6 @@
 package mybar.repository.bar;
 
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Iterables;
@@ -32,6 +33,7 @@ import static org.junit.Assert.*;
 /**
  * Deep Tests of Cocktail DAO.
  */
+@DatabaseSetup("classpath:dataset.xml")
 public class CocktailDaoTest extends BaseDaoTest {
 
     public static final String TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS = "cocktail-000001";

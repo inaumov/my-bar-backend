@@ -19,6 +19,7 @@
         <property name="datatypeFactory">
             <bean class="org.dbunit.ext.hsqldb.HsqldbDataTypeFactory"/>
         </property>
+        <property name="allowEmptyFields" value="true"/>
     </bean>
 
     <bean id="dbUnitDatabaseConnection"
@@ -53,5 +54,5 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
 </beans>

@@ -1,5 +1,6 @@
 package mybar.repository.bar;
 
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;
 import mybar.repository.BaseDaoTest;
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Basic Tests of Menu DAO.
  */
+@DatabaseSetup("classpath:dataset.xml")
 public class MenuDaoTest extends BaseDaoTest {
 
     @Autowired

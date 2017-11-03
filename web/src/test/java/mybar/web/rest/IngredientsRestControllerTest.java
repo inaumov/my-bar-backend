@@ -77,19 +77,19 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("additives.items.$", hasSize(1)))
-                .andExpect(jsonPath("additives.items.$[0].id", is(1)))
-                .andExpect(jsonPath("additives.items.$[0].kind", is("Lime")))
+                .andExpect(jsonPath("additives.items.", hasSize(1)))
+                .andExpect(jsonPath("additives.items.[0].id", is(1)))
+                .andExpect(jsonPath("additives.items.[0].kind", is("Lime")))
 
-                .andExpect(jsonPath("drinks.items.$", hasSize(1)))
-                .andExpect(jsonPath("drinks.items.$[0].id", is(2)))
-                .andExpect(jsonPath("drinks.items.$[0].kind", is("Black tea")))
-                .andExpect(jsonPath("drinks.items.$[0].drinkType", is(DrinkType.TEA.name())))
+                .andExpect(jsonPath("drinks.items.", hasSize(1)))
+                .andExpect(jsonPath("drinks.items.[0].id", is(2)))
+                .andExpect(jsonPath("drinks.items.[0].kind", is("Black tea")))
+                .andExpect(jsonPath("drinks.items.[0].drinkType", is(DrinkType.TEA.name())))
 
-                .andExpect(jsonPath("beverages.items.$", hasSize(1)))
-                .andExpect(jsonPath("beverages.items.$[0].id", is(3)))
-                .andExpect(jsonPath("beverages.items.$[0].kind", is("Whiskey")))
-                .andExpect(jsonPath("beverages.items.$[0].beverageType", is(BeverageType.DISTILLED.name())));
+                .andExpect(jsonPath("beverages.items.", hasSize(1)))
+                .andExpect(jsonPath("beverages.items.[0].id", is(3)))
+                .andExpect(jsonPath("beverages.items.[0].kind", is("Whiskey")))
+                .andExpect(jsonPath("beverages.items.[0].beverageType", is(BeverageType.DISTILLED.name())));
 
         verify(ingredientService, times(1)).findAll();
         verifyNoMoreInteractions(ingredientService);
@@ -113,13 +113,13 @@ public class IngredientsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("measurements").exists())
-                .andExpect(jsonPath("items.$", hasSize(2)))
+                .andExpect(jsonPath("items.", hasSize(2)))
 
-                .andExpect(jsonPath("items.$[0].id", is(1)))
-                .andExpect(jsonPath("items.$[0].kind", is("Ice")))
+                .andExpect(jsonPath("items.[0].id", is(1)))
+                .andExpect(jsonPath("items.[0].kind", is("Ice")))
 
-                .andExpect(jsonPath("items.$[1].id", is(2)))
-                .andExpect(jsonPath("items.$[1].kind", is("Lime")));
+                .andExpect(jsonPath("items.[1].id", is(2)))
+                .andExpect(jsonPath("items.[1].kind", is("Lime")));
 
         verify(ingredientService, times(1)).findByGroupName(ADDITIVES);
         verifyNoMoreInteractions(ingredientService);
@@ -146,13 +146,13 @@ public class IngredientsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("measurements").exists())
-                .andExpect(jsonPath("items.$", hasSize(2)))
+                .andExpect(jsonPath("items.", hasSize(2)))
 
-                .andExpect(jsonPath("items.$[0].id", is(3)))
-                .andExpect(jsonPath("items.$[0].kind", is("Whiskey")))
+                .andExpect(jsonPath("items.[0].id", is(3)))
+                .andExpect(jsonPath("items.[0].kind", is("Whiskey")))
 
-                .andExpect(jsonPath("items.$[1].id", is(7)))
-                .andExpect(jsonPath("items.$[1].kind", is("Rum")));
+                .andExpect(jsonPath("items.[1].id", is(7)))
+                .andExpect(jsonPath("items.[1].kind", is("Rum")));
 
         verify(ingredientService, times(1)).findByGroupName(BEVERAGES);
         verifyNoMoreInteractions(ingredientService);
@@ -178,13 +178,13 @@ public class IngredientsRestControllerTest {
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("measurements").exists())
-                .andExpect(jsonPath("items.$", hasSize(2)))
+                .andExpect(jsonPath("items.", hasSize(2)))
 
-                .andExpect(jsonPath("items.$[0].id", is(11)))
-                .andExpect(jsonPath("items.$[0].kind", is("Golden tips")))
+                .andExpect(jsonPath("items.[0].id", is(11)))
+                .andExpect(jsonPath("items.[0].kind", is("Golden tips")))
 
-                .andExpect(jsonPath("items.$[1].id", is(2)))
-                .andExpect(jsonPath("items.$[1].kind", is("Black tea")));
+                .andExpect(jsonPath("items.[1].id", is(2)))
+                .andExpect(jsonPath("items.[1].kind", is("Black tea")));
 
         verify(ingredientService, times(1)).findByGroupName(DRINKS);
         verifyNoMoreInteractions(ingredientService);
@@ -200,8 +200,8 @@ public class IngredientsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("measurements.$", empty()))
-                .andExpect(jsonPath("items.$", empty()))
+                .andExpect(jsonPath("measurements.", empty()))
+                .andExpect(jsonPath("items.", empty()))
                 .andExpect(jsonPath("isLiquid").doesNotExist());
 
         verify(ingredientService, times(1)).findByGroupName("drinks");

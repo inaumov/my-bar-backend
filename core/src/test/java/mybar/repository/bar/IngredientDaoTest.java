@@ -1,5 +1,6 @@
 package mybar.repository.bar;
 
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.google.common.base.Function;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
@@ -23,6 +24,7 @@ import static org.junit.Assert.*;
 /**
  * Tests Ingredient DAO.
  */
+@DatabaseSetup("classpath:dataset.xml")
 public class IngredientDaoTest extends BaseDaoTest {
 
     private static String[] INGREDIENTS_BY_GROUP_NAME_AND_KIND = {
