@@ -38,29 +38,66 @@ Returns json data about known ingredients (Alcoholic Beverages, Non-Alcoholic Dr
   * **Content:**
   ```json
   {
-    "beverages": [
-      {
-        "id": 5,
-        "kind": "Bourbon",
-        "beverageType": "DISTILLED"
-      }
-    ],
-    "drinks": [
-      {
-        "id": 17,
-        "drinkType": "SODA",
-        "kind": "Coca Cola"
-      }
-    ],
-    "additives": [
-      {
-        "id": 14,
-        "kind": "Ice"
-      }
-    ]
+    "beverages": {
+      "measurements": [
+        {
+          "value": "ML",
+          "fullName": "milliliter"
+        },
+        {
+          "value": "OZ",
+          "fullName": "ounce"
+        },
+        {
+          "value": "DROP",
+          "fullName": "drop"
+        },
+        {
+          "value": "DASH",
+          "fullName": "dash"
+        },
+        {
+          "value": "TSP",
+          "fullName": "teaspoon"
+        }
+      ],
+      "items": [
+        {
+          "id": 5,
+          "kind": "Bourbon",
+          "beverageType": "DISTILLED"
+        }
+      ],
+      "isLiquid": true
+    },
+    "drinks": {
+      "measurements": [],
+      "items": [
+        {
+          "id": 17,
+          "drinkType": "SODA",
+          "kind": "Coca Cola"
+        }
+      ],
+      "isLiquid": true
+    },
+    "additives": {
+      "measurements": [
+        {
+          "value": "PCS",
+          "fullName": "pieces"
+        }
+      ],
+      "items": [
+        {
+          "id": 14,
+          "kind": "Ice"
+        }
+      ],
+      "isLiquid": false
+    }
   }
   ```
-  * **Code:** 204 NO CONTENT <br/> 
 
 
 ### Shelf/Bottles API
@@ -326,7 +363,7 @@ Deletes selected bottle of alcoholic beverage that you own in your cupboard, fri
     }
   ]
   ```  
-  * **Code:** 204 NO CONTENT <br />
+
 
 ### Cocktails API
 
@@ -416,31 +453,31 @@ Returns json data with recipe details about selected cocktails.
         {
           "ingredientId": 1,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         },
         {
           "ingredientId": 2,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         },
         {
           "ingredientId": 3,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         },
         {
           "ingredientId": 4,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         },
         {
           "ingredientId": 6,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         }
       ],
@@ -448,19 +485,19 @@ Returns json data with recipe details about selected cocktails.
         {
           "ingredientId": 14,
           "volume": 5,
-          "unitsValue": "PCS"
+          "measurement": "PCS"
         },
         {
           "ingredientId": 18,
           "volume": 5,
-          "unitsValue": "PCS"
+          "measurement": "PCS"
         }
       ],
       "drinks": [
         {
           "ingredientId": 17,
           "volume": 150,
-          "unitsValue": "ML"
+          "measurement": "ML"
         }
       ]
     },
@@ -539,19 +576,19 @@ Updates json data about selected cocktail with recipe details.
         {
           "ingredientId": 8,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": true
         },
         {
           "ingredientId": 11,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         },
         {
           "ingredientId": 16,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": true
         }
       ]
@@ -656,19 +693,19 @@ Posts json data about selected cocktail with recipe details.
         {
           "ingredientId": 8,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": false
         },
         {
           "ingredientId": 11,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": true
         },
         {
           "ingredientId": 16,
           "volume": 20,
-          "unitsValue": "ML",
+          "measurement": "ML",
           "missing": true
         }
       ]
