@@ -8,6 +8,6 @@ import mybar.api.bar.ingredient.IIngredient;
 @Setter
 public class IngredientBaseDto implements IIngredient {
 
-    private int id;
+    private Integer id;
     private String kind;
 }

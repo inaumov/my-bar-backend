@@ -13,7 +13,7 @@ import mybar.app.bean.bar.View;
 public class DrinkBean implements IDrink {
 
     @JsonView(View.CocktailWithDetails.class)
-    private int id;
+    private Integer id;
 
     @JsonView(View.CocktailWithDetails.class)
     private String kind;

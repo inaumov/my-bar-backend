@@ -1,9 +1,7 @@
 package mybar.repository.bar;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.Iterables;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import mybar.api.bar.Measurement;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
@@ -11,55 +9,102 @@ import mybar.domain.bar.Menu;
 import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
+import mybar.domain.bar.ingredient.Ingredient;
 import mybar.repository.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
-import static com.google.common.collect.DiscreteDomain.integers;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Range.closed;
-import static mybar.repository.bar.MenuDaoTest.assertExistedCocktail;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isA;
+import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 
 /**
  * Deep Tests of Cocktail DAO.
  */
-@DatabaseSetup("classpath:dataset.xml")
+@DatabaseSetup("classpath:datasets/dataset.xml")
 public class CocktailDaoTest extends BaseDaoTest {
 
-    public static final String TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS = "cocktail-000001";
-    public static final String TEST_REF_OF_COCKTAIL_WITH_NO_INGREDIENTS = "cocktail-000009";
-
-    public static final List<Integer> INGREDIENTS_TEST_IDS = newArrayList(ContiguousSet.create(closed(1, 18), integers()));
+    private static final String COCKTAIL_WITH_INGREDIENTS_ID = "cocktail-000001";
+    private static final String COCKTAIL_WITH_NO_INGREDIENTS_ID = "cocktail-000009";
 
     @Autowired
     private MenuDao menuDao;
     @Autowired
     private CocktailDao cocktailDao;
+    @Autowired
+    private IngredientDao ingredientDao;
 
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-create-all-ingredients.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            columnFilters = {
+                    EntityIdExclusionFilter.class
+            },
+            table = "COCKTAIL"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-create-all-ingredients.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            columnFilters = {
+                    EntityIdExclusionFilter.class
+            },
+            table = "COCKTAIL_TO_INGREDIENT"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/ingredients.xml",
+            table = "INGREDIENT"
+    )
     @Test
-    public void testRemoveCocktailFromMenuWhenNoLikes() throws Exception {
-        Menu secondMenu = menuDao.findAll().get(1);
+    @Transactional
+    public void testCreateCocktail_WithAllIngredients() throws Exception {
 
-        // Now persists the menu cocktail relationship
-        Cocktail blackRussian = Iterables.find(secondMenu.getCocktails(), new Predicate<Cocktail>() {
-            @Override
-            public boolean apply(Cocktail cocktail) {
-                return cocktail.getName().contains("Black Russian");
-            }
-        });
-        cocktailDao.delete(blackRussian.getId());
-        secondMenu.getCocktails().remove(blackRussian);
-        menuDao.update(secondMenu);
+        Cocktail cocktail = new Cocktail();
+        cocktail.setName("New Cocktail");
+        cocktail.setImageUrl("http://img.path.jpg");
+        cocktail.setDescription("some description");
+        cocktail.setMenuId(2);
+
+        List<Ingredient> all = ingredientDao.findAll();
+        assertThat("Number of ingredients should be 18.", all, hasSize(18));
+
+        for (Ingredient ingredient : all) {
+            // add cocktail to ingredients relation
+            CocktailToIngredient cocktailToIngredient = new CocktailToIngredient();
+            cocktailToIngredient.setIngredient(ingredient);
+            cocktailToIngredient.setVolume(ingredient.getId() * 10);
+            cocktailToIngredient.setMeasurement(Measurement.ML);
+            cocktail.addCocktailToIngredient(cocktailToIngredient);
+        }
+        Cocktail created = cocktailDao.create(cocktail);
+        em.flush();
+
+        // refresh
+        created = cocktailDao.read(created.getId());
+        assertNotNull(created);
+        assertTrue(created.getId().contains("cocktail-"));
+        assertEquals(all.size(), created.getCocktailToIngredientList().size());
+    }
+
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-remove.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            table = "COCKTAIL"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-remove.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            table = "COCKTAIL_TO_INGREDIENT"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/ingredients.xml",
+            table = "INGREDIENT"
+    )
+    @Test
+    @Transactional
+    public void testRemoveCocktailFromMenuWhenNoLikes() throws Exception {
+        cocktailDao.delete("cocktail-000007");
+        em.flush();
 
         List<Menu> menuList = menuDao.findAll();
         Iterator<Menu> it = menuList.iterator();
@@ -67,12 +112,6 @@ public class CocktailDaoTest extends BaseDaoTest {
         // test first menu
         Collection<Cocktail> cocktails = it.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 4, cocktails.size());
-        Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000003", 1, "Green Mexican");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000004", 1, "Blow Job");
-        assertEquals("Number of CocktailToIngredient rows should be same.", 14, getCocktailToIngredientCount());
 
         // test second menu
         cocktails = it.next().getCocktails();
@@ -81,9 +120,6 @@ public class CocktailDaoTest extends BaseDaoTest {
         // test third menu
         cocktails = it.next().getCocktails();
         assertEquals(MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()), 1, cocktails.size());
-
-        // check that ingredients remain same
-        assertThat("Ingredient list should remain the same.", findAllIngredientIds(), equalTo(INGREDIENTS_TEST_IDS));
     }
 
     @Test
@@ -91,178 +127,141 @@ public class CocktailDaoTest extends BaseDaoTest {
         // TODO not for the first release
     }
 
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-update-add-ingredients.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            table = "COCKTAIL"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-update-add-ingredients.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            table = "COCKTAIL_TO_INGREDIENT"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/ingredients.xml",
+            table = "INGREDIENT"
+    )
     @Test
-    public void testUpdateCocktailAndAddNewIngredients() throws Exception {
-        Cocktail cocktail = cocktailDao.read(TEST_REF_OF_COCKTAIL_WITH_NO_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
-        assertNotNull(cocktail);
-
+    @Transactional
+    public void testUpdateCocktail_when_AddNewIngredients() throws Exception {
+        // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
+        Cocktail cocktail = new Cocktail();
+        cocktail.setId(COCKTAIL_WITH_NO_INGREDIENTS_ID);
         cocktail.setName("Random smoothie name");
         cocktail.setDescription("Random smoothie description");
         cocktail.setImageUrl("http://test-url.image.jpg");
         cocktail.setMenuId(3);
 
         // add cocktail to ingredients relation
-        CocktailToIngredient juice = new CocktailToIngredient();
-        Drink ingredient1 = new Drink();
-        ingredient1.setId(13);
-        ingredient1.setKind("Orange Juice");
-        juice.setIngredient(ingredient1);
-        juice.setVolume(250);
-        juice.setMeasurement(Measurement.ML);
-
-        CocktailToIngredient grenadine = new CocktailToIngredient();
-        Additive ingredient2 = new Additive();
-        ingredient2.setId(12);
-        ingredient2.setKind("Grenadine");
-        grenadine.setIngredient(ingredient2);
-        grenadine.setVolume(10);
-        grenadine.setMeasurement(Measurement.ML);
+        CocktailToIngredient juice = prepareCocktailToDrinkRel(13, "Orange Juice");
+        CocktailToIngredient grenadine = prepareCocktailToAdditiveRel(12, "Grenadine");
 
         cocktail.addCocktailToIngredient(juice);
         cocktail.addCocktailToIngredient(grenadine);
 
         cocktailDao.update(cocktail);
-
-        // check saved cocktail
-        assertEquals("Number of CocktailToIngredient rows should be increased by two ingredients.", 19, getCocktailToIngredientCount());
-        Cocktail updatedCocktail = findCocktailById(TEST_REF_OF_COCKTAIL_WITH_NO_INGREDIENTS);
-        em.refresh(updatedCocktail); // TODO (temp solution) check potential issue with refreshing of related ingredients and menu
-        List<CocktailToIngredient> cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
-        assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
-
-        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, Measurement.ML, Drink.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, Measurement.ML, Additive.class);
-
-        assertEquals("Menu ID related to cocktail should be same.", 3, updatedCocktail.getMenuId());
-        assertEquals("Cocktail name should same.", "Random smoothie name", updatedCocktail.getName());
-        assertEquals("Cocktail description should be same.", "Random smoothie description", updatedCocktail.getDescription());
-        assertEquals("Cocktail image url should be same.", "http://test-url.image.jpg", updatedCocktail.getImageUrl());
-
-        // check that ingredients remain same
-        assertThat("Ingredient list should remain the same.", findAllIngredientIds(), equalTo(INGREDIENTS_TEST_IDS));
+        em.flush();
     }
 
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-update-change-ingredients.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            table = "COCKTAIL"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-update-change-ingredients.xml",
+            assertionMode = NON_STRICT_UNORDERED,
+            table = "COCKTAIL_TO_INGREDIENT"
+    )
+    @ExpectedDatabase(value = "classpath:datasets/expected/ingredients.xml",
+            table = "INGREDIENT"
+    )
     @Test
-    public void testUpdateCocktailWhenChangeIngredients() throws Exception {
-        Cocktail cocktail = cocktailDao.read(TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS); // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
+    @Transactional
+    public void testUpdateCocktail_when_ChangeIngredients() throws Exception {
+        // Edit 'B52' cocktail and add more ingredients
+        Cocktail cocktail = cocktailDao.read(COCKTAIL_WITH_INGREDIENTS_ID);
         assertNotNull(cocktail);
-        List<CocktailToIngredient> cocktailToIngredientList = cocktail.getCocktailToIngredientList();
-        assertEquals("Number of ingredients in cocktail should be same.", 3, cocktailToIngredientList.size());
-
-        assertCocktailToIngredient(cocktailToIngredientList, "Triple Sec", 8, 20, Measurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Irish cream", 11, 20, Measurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Coffee liqueur", 16, 20, Measurement.ML, Beverage.class);
 
         Cocktail cocktailForUpdate = new Cocktail();
-        cocktailForUpdate.setId(cocktail.getId());
+        cocktailForUpdate.setId(COCKTAIL_WITH_INGREDIENTS_ID);
         cocktailForUpdate.setName(cocktail.getName());
         cocktailForUpdate.setDescription(cocktail.getDescription());
         cocktailForUpdate.setImageUrl(cocktail.getImageUrl());
         cocktailForUpdate.setMenuId(cocktail.getMenuId());
 
         // add cocktail to ingredients relation
-        CocktailToIngredient juice = new CocktailToIngredient();
-        Drink ingredient1 = new Drink();
-        ingredient1.setId(13);
-        ingredient1.setKind("Orange Juice");
-        juice.setIngredient(ingredient1);
-        juice.setVolume(250);
-        juice.setMeasurement(Measurement.ML);
-
-        CocktailToIngredient grenadine = new CocktailToIngredient();
-        Additive ingredient2 = new Additive();
-        ingredient2.setId(12);
-        ingredient2.setKind("Grenadine");
-        grenadine.setIngredient(ingredient2);
-        grenadine.setVolume(10);
-        grenadine.setMeasurement(Measurement.ML);
-
+        CocktailToIngredient juice = prepareCocktailToDrinkRel(13, "Orange Juice");
+        CocktailToIngredient grenadine = prepareCocktailToAdditiveRel(12, "Grenadine");
         cocktailForUpdate.addCocktailToIngredient(juice);
         cocktailForUpdate.addCocktailToIngredient(grenadine);
 
         cocktailDao.update(cocktailForUpdate);
+        em.flush();
+    }
 
-        // check saved cocktail
-        assertEquals("Number of CocktailToIngredient rows should be decrease by 1 ingredient [3 removed, 2 new added].", 16, getCocktailToIngredientCount());
-        Cocktail updatedCocktail = findCocktailById(TEST_REF_OF_COCKTAIL_WITH_INGREDIENTS);
-        cocktailToIngredientList = updatedCocktail.getCocktailToIngredientList();
-        assertEquals("Number of ingredients in cocktail should be same.", 2, cocktailToIngredientList.size());
+    private CocktailToIngredient prepareCocktailToAdditiveRel(int id, String kind) {
+        CocktailToIngredient cocktailToIngredient = new CocktailToIngredient();
+        Additive additive = new Additive();
+        additive.setId(id);
+        additive.setKind(kind);
+        cocktailToIngredient.setIngredient(additive);
+        cocktailToIngredient.setVolume(10);
+        cocktailToIngredient.setMeasurement(Measurement.ML);
+        return cocktailToIngredient;
+    }
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Orange Juice", 13, 250, Measurement.ML, Drink.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Grenadine", 12, 10, Measurement.ML, Additive.class);
-
-        // check that ingredients remain same
-        assertThat("Ingredient list should remain the same.", findAllIngredientIds(), equalTo(INGREDIENTS_TEST_IDS));
+    private CocktailToIngredient prepareCocktailToDrinkRel(int id, String kind) {
+        CocktailToIngredient cocktailToIngredient = new CocktailToIngredient();
+        Drink ingredient = new Drink();
+        ingredient.setId(id);
+        ingredient.setKind(kind);
+        cocktailToIngredient.setIngredient(ingredient);
+        cocktailToIngredient.setVolume(250);
+        cocktailToIngredient.setMeasurement(Measurement.ML);
+        return cocktailToIngredient;
     }
 
     @Test
     public void testGetIngredientsForCocktail() throws Exception {
-        Menu longMenu = menuDao.findAll().get(1);
+        Cocktail longIsland = cocktailDao.read("cocktail-000005");
+        assertNotNull(longIsland);
 
-        // Now persists the menu cocktail relationship
-        Cocktail longIsland = Iterables.find(longMenu.getCocktails(), new Predicate<Cocktail>() {
-            @Override
-            public boolean apply(Cocktail cocktail) {
-                return cocktail.getName().contains("Long Island Iced Tea");
-            }
-        });
-        List<CocktailToIngredient> cocktailToIngredientList = longIsland.getCocktailToIngredientList();
-        assertEquals("Number of ingredients in cocktail should be same.", 8, cocktailToIngredientList.size());
+        List<CocktailToIngredient> ingredients = longIsland.getCocktailToIngredientList();
+        assertEquals(8, ingredients.size());
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Vodka", 1, 20, Measurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Gin", 2, 20, Measurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Rum", 3, 20, Measurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Tequila", 4, 20, Measurement.ML, Beverage.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Whisky", 6, 20, Measurement.ML, Beverage.class);
+        assertCocktailToIngredient(1, 20, Measurement.ML, Beverage.class, findCocktailToIngredientByIngredientName(ingredients, "Vodka"));
+        assertCocktailToIngredient(2, 20, Measurement.ML, Beverage.class, findCocktailToIngredientByIngredientName(ingredients, "Gin"));
+        assertCocktailToIngredient(3, 20, Measurement.ML, Beverage.class, findCocktailToIngredientByIngredientName(ingredients, "Rum"));
+        assertCocktailToIngredient(4, 20, Measurement.ML, Beverage.class, findCocktailToIngredientByIngredientName(ingredients, "Tequila"));
+        assertCocktailToIngredient(6, 20, Measurement.ML, Beverage.class, findCocktailToIngredientByIngredientName(ingredients, "Whisky"));
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Coca Cola", 17, 150, Measurement.ML, Drink.class);
+        assertCocktailToIngredient(17, 150, Measurement.ML, Drink.class, findCocktailToIngredientByIngredientName(ingredients, "Coca Cola"));
 
-        assertCocktailToIngredient(cocktailToIngredientList, "Ice", 14, 5, Measurement.PCS, Additive.class);
-        assertCocktailToIngredient(cocktailToIngredientList, "Lime", 18, 5, Measurement.PCS, Additive.class);
+        assertCocktailToIngredient(14, 5, Measurement.PCS, Additive.class, findCocktailToIngredientByIngredientName(ingredients, "Ice"));
+        assertCocktailToIngredient(18, 5, Measurement.PCS, Additive.class, findCocktailToIngredientByIngredientName(ingredients, "Lime"));
     }
 
-    private static void assertCocktailToIngredient(List<CocktailToIngredient> cocktailToIngredientList,
-                                                   String ingredientName,
-                                                   int ingredientId,
-                                                   int expectedVolume,
-                                                   Measurement measurement, Class type) {
-        CocktailToIngredient cocktailToIngredient = findCocktailToIngredientByIngredientName(cocktailToIngredientList, ingredientName);
-        assertEquals("Ingredient ID should be same.", ingredientId, cocktailToIngredient.getIngredient().getId());
+    private static void assertCocktailToIngredient(int ingredientId, int expectedVolume, Measurement measurement, Class type, CocktailToIngredient cocktailToIngredient) {
+        assertTrue("Ingredient class type should be same.", type.isInstance(cocktailToIngredient.getIngredient()));
+        assertTrue("Ingredient ID should be same.", ingredientId == cocktailToIngredient.getIngredient().getId());
         assertEquals("Volume of ingredient should be same.", expectedVolume, cocktailToIngredient.getVolume(), 0);
         assertEquals("Units value of ingredient should be same.", measurement, cocktailToIngredient.getMeasurement());
-        assertThat("Ingredient class type should be same.", cocktailToIngredient.getIngredient(), isA(type));
     }
 
     public static CocktailToIngredient findCocktailToIngredientByIngredientName(List<CocktailToIngredient> cocktailToIngredientList,
                                                                                 final String ingredientName) {
-        CocktailToIngredient cocktailToIngredient = Iterables.find(cocktailToIngredientList, new Predicate<CocktailToIngredient>() {
-            @Override
-            public boolean apply(CocktailToIngredient cocktailToIngredient) {
-                return cocktailToIngredient.getIngredient().getKind().equals(ingredientName);
-            }
-        });
-        assertNotNull(MessageFormat.format("Cocktail to ingredient should be present for ingredientName = {0}.", ingredientName), cocktailToIngredient);
-        return cocktailToIngredient;
+        Optional<CocktailToIngredient> cocktailToIngredientOptional = cocktailToIngredientList
+                .stream()
+                .filter(cocktailToIngredient -> cocktailToIngredient.getIngredient().getKind().equals(ingredientName))
+                .findFirst();
+        assertTrue(MessageFormat.format("Cocktail to ingredient should be present for ingredientName = {0}.", ingredientName), cocktailToIngredientOptional.isPresent());
+        return cocktailToIngredientOptional.get();
     }
 
-    private int getCocktailToIngredientCount() {
-        String sql = "SELECT count(cti) FROM CocktailToIngredient cti";
-        Query q = em.createQuery(sql);
-        Long count = (Long) q.getSingleResult();
-        return count.intValue();
+    @Test
+    public void testFindCocktailByName_when_exists() throws Exception {
+        assertTrue(cocktailDao.findCocktailByName("Mai Tai"));
     }
 
-    protected Cocktail findCocktailById(String id) {
-        TypedQuery<Cocktail> q = em.createQuery("SELECT c FROM Cocktail c WHERE c.id = :id", Cocktail.class);
-        q.setParameter("id", id);
-        Cocktail result = q.getSingleResult();
-        return result;
-    }
-
-    protected List<Integer> findAllIngredientIds() {
-        Query q = em.createQuery("SELECT i.id FROM Ingredient i");
-        List<Integer> result = q.getResultList();
-        return result;
+    @Test
+    public void testFindCocktailByName_when_not_found() throws Exception {
+        assertFalse(cocktailDao.findCocktailByName("Blue Lagoon"));
     }
 
 }

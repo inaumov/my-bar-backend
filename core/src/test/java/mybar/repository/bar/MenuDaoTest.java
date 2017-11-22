@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Basic Tests of Menu DAO.
  */
-@DatabaseSetup("classpath:dataset.xml")
+@DatabaseSetup("classpath:datasets/dataset.xml")
 public class MenuDaoTest extends BaseDaoTest {
 
     @Autowired

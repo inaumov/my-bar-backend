@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BottleTest {
 
@@ -34,7 +35,7 @@ public class BottleTest {
 
         BottleDto dto = DtoFactory.toDto(bottleEntity);
         assertEquals(TEST_REFERENCE, dto.getId());
-        assertEquals(1, dto.getBeverage().getId());
+        assertTrue(1 == dto.getBeverage().getId());
         assertEquals(BRAND_NAME, dto.getBrandName());
         assertEquals(true, dto.isInShelf());
         assertThat(PRICE,  Matchers.comparesEqualTo(dto.getPrice()));

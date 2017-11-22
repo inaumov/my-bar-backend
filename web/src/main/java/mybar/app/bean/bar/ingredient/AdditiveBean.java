@@ -12,7 +12,7 @@ import mybar.app.bean.bar.View;
 public class AdditiveBean implements IAdditive {
 
     @JsonView(View.CocktailWithDetails.class)
-    private int id;
+    private Integer id;
 
     @JsonView(View.CocktailWithDetails.class)
     private String kind;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
@@ -44,7 +45,7 @@ public class IngredientDao {
                 return Collections.emptyList();
             }
         }
-        TypedQuery<Ingredient> q = em.createNamedQuery("findByGroupName", Ingredient.class);
+        TypedQuery<Ingredient> q = em.createNamedQuery("Ingredient.findByGroupName", Ingredient.class);
         q.setParameter("type", clazz);
         return q.getResultList();
     }
@@ -53,19 +54,26 @@ public class IngredientDao {
      * Find all ingredients ordered by group name, kind.
      */
     public List<Ingredient> findAll() {
-        TypedQuery<Ingredient> q = em.createNamedQuery("findAll", Ingredient.class);
+        TypedQuery<Ingredient> q = em.createNamedQuery("Ingredient.findAll", Ingredient.class);
         return q.getResultList();
     }
 
     public Beverage findBeverageById(int id) {
-        return em.find(Beverage.class, id);
+        try {
+            TypedQuery<Beverage> q = em.createNamedQuery("Beverage.findBeverageById", Beverage.class);
+            q.setParameter("id", id);
+            q.setParameter("type", Beverage.class);
+            return q.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 
     public List<Ingredient> findIn(List<Integer> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         }
-        TypedQuery<Ingredient> q = em.createNamedQuery("findIn", Ingredient.class);
+        TypedQuery<Ingredient> q = em.createNamedQuery("Ingredient.findIn", Ingredient.class);
         q.setParameter("ids", ids);
         return q.getResultList();
     }

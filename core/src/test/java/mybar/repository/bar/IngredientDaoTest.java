@@ -1,7 +1,6 @@
 package mybar.repository.bar;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.google.common.base.Function;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Lists;
@@ -15,8 +14,8 @@ import mybar.repository.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -24,8 +23,16 @@ import static org.junit.Assert.*;
 /**
  * Tests Ingredient DAO.
  */
-@DatabaseSetup("classpath:dataset.xml")
+@DatabaseSetup("classpath:datasets/dataset.xml")
 public class IngredientDaoTest extends BaseDaoTest {
+
+    private static final Integer THIRD_ITEM = 3;
+    private static final Integer LAST_ITEM = 16;
+
+    private static final int EXPECTED_BEVERAGES_NMB = 12;
+
+    private static final String BACARDI_BOTTLE_ID = "bottle-000003";
+    private static final String HAVANA_CLUB_BOTTLE_ID = "bottle-000007";
 
     private static String[] INGREDIENTS_BY_GROUP_NAME_AND_KIND = {
             // Additives
@@ -62,12 +69,10 @@ public class IngredientDaoTest extends BaseDaoTest {
         assertThat("Number of ingredients should be 18.", all, hasSize(18));
 
         // assert ordering
-        List<String> ingredientsByKind = Lists.transform(all, new Function<Ingredient, String>() {
-            @Override
-            public String apply(Ingredient ingredient) {
-                return ingredient.getKind();
-            }
-        });
+        List<String> ingredientsByKind = all
+                .stream()
+                .map(Ingredient::getKind)
+                .collect(Collectors.toList());
         assertThat("All ingredients should be sorted by group name and kind.", ingredientsByKind, contains(INGREDIENTS_BY_GROUP_NAME_AND_KIND));
     }
 
@@ -78,12 +83,10 @@ public class IngredientDaoTest extends BaseDaoTest {
         List<Ingredient> all = ingredientDao.findAll();
 
         // assert ordering
-        List<String> ingredientsByKind = Lists.transform(all, new Function<Ingredient, String>() {
-            @Override
-            public String apply(Ingredient ingredient) {
-                return ingredient.getKind();
-            }
-        });
+        List<String> ingredientsByKind = all
+                .stream()
+                .map(Ingredient::getKind)
+                .collect(Collectors.toList());
         // make it sorted alphabetically so it is wrong
         String[] items = INGREDIENTS_BY_GROUP_NAME_AND_KIND.clone();
         Arrays.sort(items);
@@ -119,69 +122,50 @@ public class IngredientDaoTest extends BaseDaoTest {
 
         List<Ingredient> beverages = ingredientDao.findByGroupName(IBeverage.GROUP_NAME);
 
-        int expected = 12;
-
         assertNotNull("Ingredient list is null.", beverages);
-        assertEquals("Number of ingredients should be same.", expected, beverages.size());
+        assertEquals(EXPECTED_BEVERAGES_NMB, beverages.size());
 
-        Integer third = new Integer(3);
-        Integer last = new Integer(16);
+        Optional<Ingredient> thirdIngredient = beverages.stream().filter(b -> Objects.equals(b.getId(), THIRD_ITEM)).findFirst();
+        assertTrue("Ingredient is null.", thirdIngredient.isPresent());
+        assertIngredient(thirdIngredient.get(), THIRD_ITEM, "Rum");
+        Beverage beverage = (Beverage) thirdIngredient.get();
+        List<Bottle> bottles = beverage.getBottles();
+        assertNotNull(beverage.getBottles());
+        assertEquals("Number of bottles assigned to ingredient should be same.", 2, beverage.getBottles().size());
+        assertBottle(BACARDI_BOTTLE_ID, "Bacardi", true, bottles.get(0));
+        assertBottle(HAVANA_CLUB_BOTTLE_ID, "Havana Club", false, bottles.get(1));
 
-        for (Ingredient ingredient : beverages) {
-            assertNotNull("Ingredient is null.", ingredient);
+        Optional<Ingredient> lastIngredient = beverages.stream().filter(b -> Objects.equals(LAST_ITEM, b.getId())).findFirst();
+        assertTrue("Ingredient is null.", lastIngredient.isPresent());
+        assertIngredient(lastIngredient.get(), LAST_ITEM, "Coffee liqueur");
+    }
 
-            if (third.equals(ingredient.getId())) {
+    private void assertIngredient(Ingredient ingredient, Integer item, String expected) {
+        assertTrue("Ingredient should be an instance of Beverage.", ingredient instanceof Beverage);
+        Beverage beverage = (Beverage) ingredient;
+        assertEquals(item, beverage.getId());
+        assertEquals("Ingredient kind name should be same.", expected, beverage.getKind());
+        assertEquals("Beverage type should be same.", BeverageType.DISTILLED, beverage.getBeverageType());
+    }
 
-                String kind = "Rum";
-                BeverageType beverageType = BeverageType.DISTILLED;
+    private void assertBottle(String id, String expectedBrand, boolean inShelf, Bottle bottle) {
+        assertNotNull(bottle);
 
-                int expectedBottles = 2;
+        assertEquals("Bottle id should be same.", id, bottle.getId());
+        assertEquals("Bottle in shelf.", inShelf, bottle.isInShelf());
+        assertEquals("Bottle brand name should be same.", expectedBrand, bottle.getBrandName());
+    }
 
-                assertEquals("Ingredient kind name should be same.", kind, ingredient.getKind());
-                assertTrue("Ingredient should be an instance of Beverage.", ingredient instanceof Beverage);
-                Beverage beverage = (Beverage) ingredient;
+    @Test
+    public void testFindBeverageById() throws Exception {
+        Beverage beverageById = ingredientDao.findBeverageById(5);
+        assertNotNull(beverageById);
+        assertEquals("Bourbon", beverageById.getKind());
+    }
 
-                assertNotNull("List of bottles assigned to ingredient is null.", beverage.getBottles());
-                assertEquals("Number of bottles assigned to ingredient should be same.", expectedBottles, beverage.getBottles().size());
-
-                assertEquals("Beverage type should be same.", beverageType, beverage.getBeverageType());
-
-                Integer bacardi = new Integer(3);
-                Integer havanaClub = new Integer(7);
-
-                for (Bottle bottle : beverage.getBottles()) {
-                    assertNotNull("Bottle is null.", bottle);
-
-                    if (bacardi.equals(bottle.getId())) {
-                        assertEquals("Bottle id should be same.", bacardi.intValue(), bottle.getId());
-
-                        assertTrue("Bottle in shelf.", bottle.isInShelf());
-                        assertEquals("Bottle brand name should be same.", "Bacardi", bottle.getBrandName());
-                    } else if (havanaClub.equals(bottle.getId())) {
-                        assertEquals("Bottle id should be same.", havanaClub.intValue(), bottle.getId());
-
-                        assertFalse("Bottle not in shelf.", bottle.isInShelf());
-                        assertEquals("Bottle brand name should be same.", "Havana Club", bottle.getBrandName());
-                    }
-                }
-
-            } else if (last.equals(ingredient.getId())) {
-
-                String kind = "Coffee liqueur";
-                BeverageType beverageType = BeverageType.DISTILLED;
-
-                int expectedBottles = 0;
-
-                assertEquals("Ingredient kind name should be same.", kind, ingredient.getKind());
-                assertTrue("Ingredient should be an instance of Beverage.", ingredient instanceof Beverage);
-                Beverage beverage = (Beverage) ingredient;
-
-                assertNotNull("List of bottles assigned to ingredient is null.", beverage.getBottles());
-                assertEquals("Number of bottles assigned to ingredient should be same.", expectedBottles, beverage.getBottles().size());
-
-                assertEquals("Beverage type should be same.", beverageType, beverage.getBeverageType());
-            }
-        }
+    @Test
+    public void testFindBeverageById_when_is_not_this_type() throws Exception {
+        assertNull(ingredientDao.findBeverageById(18));
     }
 
 }

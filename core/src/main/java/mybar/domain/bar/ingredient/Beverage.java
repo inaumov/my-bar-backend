@@ -13,6 +13,10 @@ import java.util.List;
 @Setter
 @Entity
 @DiscriminatorValue(value = "Beverage")
+@NamedQuery(
+        name = "Beverage.findBeverageById",
+        query = "SELECT b FROM Beverage b WHERE TYPE(b) = :type and b.id = :id"
+)
 public class Beverage extends Ingredient implements IBeverage {
 
     @Column(name = "TYPE")

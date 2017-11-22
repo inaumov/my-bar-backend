@@ -14,15 +14,15 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "GROUP_NAME")
 @NamedQueries({
         @NamedQuery(
-                name = "findAll",
+                name = "Ingredient.findAll",
                 query = "SELECT i FROM Ingredient i order by i.class, i.kind"
         ),
         @NamedQuery(
-                name = "findIn",
+                name = "Ingredient.findIn",
                 query = "SELECT i FROM Ingredient i where i.id in :ids"
         ),
         @NamedQuery(
-                name = "findByGroupName",
+                name = "Ingredient.findByGroupName",
                 query = "SELECT i FROM Ingredient i WHERE TYPE(i) = :type order by i.kind"
         )
 })
@@ -30,7 +30,7 @@ public class Ingredient implements IIngredient {
 
     @Id
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(name = "KIND")
     private String kind;

@@ -36,7 +36,7 @@ public abstract class BaseDaoTest extends AbstractTransactionalJUnit4SpringConte
     protected EntityManager em;
 
     @Test
-    @ExpectedDatabase(value = "classpath:dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
     public void testPreconditions() throws Exception {
         // do nothing, just load and check dataSet
     }
@@ -45,7 +45,7 @@ public abstract class BaseDaoTest extends AbstractTransactionalJUnit4SpringConte
 
         @Override
         public boolean accept(String tableName, Column column) {
-            return !column.getColumnName().equals("ID");
+            return !column.getColumnName().endsWith("ID");
         }
     }
 

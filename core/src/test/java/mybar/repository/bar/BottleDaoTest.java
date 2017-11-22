@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 /**
  * Tests Bottle DAO.
  */
-@DatabaseSetup("classpath:dataset.xml")
+@DatabaseSetup("classpath:datasets/dataset.xml")
 public class BottleDaoTest extends BaseDaoTest {
 
     private static final BigDecimal PRICE = new BigDecimal(119.00);
@@ -56,7 +56,7 @@ public class BottleDaoTest extends BaseDaoTest {
     public void testGetBottlesByBeverage() {
         Bottle bottle = bottleDao.read("bottle-000003");
 
-        assertEquals(3, bottle.getBeverage().getId());
+        assertTrue(3 == bottle.getBeverage().getId());
         assertEquals("Rum", bottle.getBeverage().getKind());
         assertEquals(BeverageType.DISTILLED, bottle.getBeverage().getBeverageType());
 
@@ -121,7 +121,7 @@ public class BottleDaoTest extends BaseDaoTest {
         em.flush();
 
         assertEquals("Johny Walker", updated.getBrandName());
-        assertEquals(6, updated.getBeverage().getId());
+        assertTrue(6 == updated.getBeverage().getId());
         assertTrue(updated.isInShelf());
         assertTrue(updated.getImageUrl().contains("whiskey"));
     }
@@ -135,7 +135,7 @@ public class BottleDaoTest extends BaseDaoTest {
 
     private void assertLast(Bottle bottle) {
         assertEquals("bottle-000007", bottle.getId());
-        assertEquals(3, bottle.getBeverage().getId());
+        assertTrue(3 == bottle.getBeverage().getId());
         assertEquals("Havana Club", bottle.getBrandName());
         assertEquals(0.5, bottle.getVolume(), 0);
         assertThat(PRICE, Matchers.comparesEqualTo(bottle.getPrice()));
