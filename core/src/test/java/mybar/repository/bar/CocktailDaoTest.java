@@ -241,7 +241,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         assertTrue("Ingredient class type should be same.", type.isInstance(cocktailToIngredient.getIngredient()));
         assertTrue("Ingredient ID should be same.", ingredientId == cocktailToIngredient.getIngredient().getId());
         assertEquals("Volume of ingredient should be same.", expectedVolume, cocktailToIngredient.getVolume(), 0);
-        assertEquals("Units value of ingredient should be same.", measurement, cocktailToIngredient.getMeasurement());
+        assertEquals("Measurement value of ingredient should be same.", measurement, cocktailToIngredient.getMeasurement());
     }
 
     public static CocktailToIngredient findCocktailToIngredientByIngredientName(List<CocktailToIngredient> cocktailToIngredientList,

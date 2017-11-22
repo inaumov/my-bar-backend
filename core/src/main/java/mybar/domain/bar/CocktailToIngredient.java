@@ -29,7 +29,7 @@ public class CocktailToIngredient {
 
     @Getter
     @Setter
-    @Column(name = "UNITS")
+    @Column(name = "MEASUREMENT")
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
 
