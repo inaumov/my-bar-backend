@@ -37,18 +37,18 @@ public final class RestBeanConverter {
         return bean;
     }
 
-    private static Map<String, Collection<CocktailIngredientBean>> transformIngredients(Map<String, ? extends Collection<? extends ICocktailIngredient>> map) {
+    private static Map<String, Collection<CocktailIngredientBean>> transformIngredients(Map<String, Collection<ICocktailIngredient>> map) {
         if (CollectionUtils.isEmpty(map)) {
             return Collections.emptyMap();
         }
         Map<String, Collection<CocktailIngredientBean>> transformedMap = Maps.newHashMap();
-        for (Map.Entry<String, ? extends Collection<? extends ICocktailIngredient>> entry : map.entrySet()) {
+        for (Map.Entry<String, Collection<ICocktailIngredient>> entry : map.entrySet()) {
             transformedMap.put(entry.getKey(), transformCocktailIngredients(entry.getValue()));
         }
         return transformedMap;
     }
 
-    private static ArrayList<CocktailIngredientBean> transformCocktailIngredients(Collection<? extends ICocktailIngredient> cocktailIngredients) {
+    private static ArrayList<CocktailIngredientBean> transformCocktailIngredients(Collection<ICocktailIngredient> cocktailIngredients) {
         ArrayList<CocktailIngredientBean> cocktailIngredientBeans = Lists.newArrayList();
         for (ICocktailIngredient cocktailIngredient : cocktailIngredients) {
             cocktailIngredientBeans.add(from(cocktailIngredient));

@@ -2,6 +2,9 @@ package mybar.service.bar;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.base.Suppliers;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.ICocktailIngredient;
@@ -21,9 +24,12 @@ import mybar.repository.history.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityExistsException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -43,41 +49,38 @@ public class CocktailsService {
     @Autowired(required = false)
     private OrderDao orderDao;
 
-    private Set<IMenu> allMenusCached = new HashSet<>();
-    private Map<String, List<ICocktail>> cocktailsCache = new HashMap<>();
+    private Supplier<List<IMenu>> allMenusCached = Suppliers.memoizeWithExpiration(
+            this::loadAllMenus, 30, TimeUnit.MINUTES);
+
+    private Cache<String, List<ICocktail>> cocktailsCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(30, TimeUnit.MINUTES)
+            .maximumSize(10)
+            .build();
 
     // menu
 
     public Collection<IMenu> getAllMenuItems() {
-        return allMenus();
+        return allMenusCached.get();
     }
 
-    private Set<IMenu> allMenus() {
-        if (allMenusCached == null || allMenusCached.isEmpty()) {
-            List<Menu> all = menuDao.findAll();
-            Set<IMenu> asDTOs = all
-                    .stream()
-                    .map(Menu::toDto)
-                    .collect(Collectors.toSet());
-            allMenusCached.addAll(asDTOs);
-        }
-        return allMenusCached;
+    private List<IMenu> loadAllMenus() {
+        List<Menu> all = menuDao.findAll();
+        return all
+                .stream()
+                .map(Menu::toDto)
+                .collect(Collectors.toList());
     }
 
     // cocktails
 
-    private Map<String, List<ICocktail>> allCocktails() {
-        if (cocktailsCache == null || cocktailsCache.isEmpty()) {
+    private void ensureAllCocktailsLoaded() {
+        if (cocktailsCache.size() == 0) {
             List<Menu> all = menuDao.findAll();
             for (final Menu menu : all) {
                 final String menuName = menu.getName();
-                if (cocktailsCache.containsKey(menuName)) {
-                    continue;
-                }
                 cocktailsCache.put(menuName, cocktailsToDtoList(menu, menuName));
             }
         }
-        return cocktailsCache;
     }
 
     private static List<ICocktail> cocktailsToDtoList(Menu menu, final String menuName) {
@@ -88,7 +91,7 @@ public class CocktailsService {
     }
 
     private IMenu findMenuById(final int menuId) {
-        Optional<IMenu> relatedMenu = allMenus()
+        Optional<IMenu> relatedMenu = allMenusCached.get()
                 .stream()
                 .filter(menu -> menu.getId() == menuId)
                 .findFirst();
@@ -99,7 +102,7 @@ public class CocktailsService {
     }
 
     private IMenu findMenuByName(final String menuName) {
-        Optional<IMenu> relatedMenu = allMenus()
+        Optional<IMenu> relatedMenu = allMenusCached.get()
                 .stream()
                 .filter(menu -> Objects.equals(menu.getName(), menuName))
                 .findFirst();
@@ -113,8 +116,8 @@ public class CocktailsService {
 
     public List<ICocktail> getAllCocktailsForMenu(final String menuName) {
 
-        if (cocktailsCache.containsKey(menuName)) {
-            return cocktailsCache.get(menuName);
+        if (cocktailsCache.asMap().containsKey(menuName)) {
+            return cocktailsCache.asMap().get(menuName);
         }
         IMenu menu = findMenuByName(menuName);
         List<ICocktail> cocktailDtoList = cocktailsToDtoList(menuDao.read(menu.getId()), menuName);
@@ -125,7 +128,8 @@ public class CocktailsService {
     // all cocktails per menu
 
     public Map<String, List<ICocktail>> getAllCocktails() {
-        return Collections.unmodifiableMap(allCocktails());
+        ensureAllCocktailsLoaded();
+        return Collections.unmodifiableMap(cocktailsCache.asMap());
     }
 
     public ICocktail saveCocktail(ICocktail cocktail) throws UniqueCocktailNameException {
@@ -161,8 +165,7 @@ public class CocktailsService {
         } catch (EntityExistsException e) {
             return null;
         } finally {
-            allMenusCached.clear();
-            cocktailsCache.clear();
+            cocktailsCache.cleanUp();
         }
     }
 
@@ -227,15 +230,18 @@ public class CocktailsService {
     public void deleteCocktailById(String id) throws CocktailNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
         cocktailDao.delete(id);
-        if (cocktailsCache == null || cocktailsCache.isEmpty()) {
+        if (cocktailsCache.size() == 0) {
             return;
         }
-        for (String menu : cocktailsCache.keySet()) {
-            Collection<ICocktail> cocktails = cocktailsCache.get(menu);
+        for (String menuName : cocktailsCache.asMap().keySet()) {
+            List<ICocktail> cocktails = cocktailsCache.getIfPresent(menuName);
+            if (CollectionUtils.isEmpty(cocktails)) {
+                continue;
+            }
             Iterator<ICocktail> iterator = cocktails.iterator();
             while (iterator.hasNext()) {
                 ICocktail next = iterator.next();
-                if (Strings.isNullOrEmpty(next.getId())) {
+                if (Objects.equals(next.getId(), id)) {
                     iterator.remove();
                     break;
                 }

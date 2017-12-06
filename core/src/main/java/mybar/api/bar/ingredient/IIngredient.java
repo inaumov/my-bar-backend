@@ -6,4 +6,8 @@ public interface IIngredient {
 
     String getKind();
 
+    default String getGroupName() {
+        return "";
+    }
+
 }

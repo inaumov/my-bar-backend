@@ -2,6 +2,8 @@ package mybar.service.bar;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import mybar.api.bar.IBottle;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.EntityFactory;
@@ -16,12 +18,13 @@ import mybar.repository.bar.IngredientDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityExistsException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static mybar.dto.DtoFactory.toDto;
@@ -35,20 +38,24 @@ public class ShelfService {
     @Autowired(required = false)
     private IngredientDao ingredientDao;
 
-    // kind of caching :)
-    private List<IBottle> bottleCache;
+    private Cache<String, IBottle> bottlesCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(30, TimeUnit.MINUTES)
+            .maximumSize(100)
+            .build();
 
     public IBottle findById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
-        return findAllBottles()
-                .stream()
-                .filter(bottle -> Objects.equals(bottle.getId(), id))
-                .findAny()
-                .orElseGet(() -> {
-                    BottleDto bottleDto = toDto(bottleDao.read(id));
-                    bottleCache.add(bottleDto);
-                    return bottleDto;
-                });
+        IBottle present = bottlesCache.getIfPresent(id);
+        if (present != null) {
+            return present;
+        }
+        present = loadById(id);
+        bottlesCache.put(present.getId(), present);
+        return present;
+    }
+
+    private BottleDto loadById(String id) {
+        return DtoFactory.toDto(bottleDao.read(id));
     }
 
     public IBottle saveBottle(IBottle bottle) {
@@ -95,27 +102,38 @@ public class ShelfService {
     public void deleteBottleById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
         bottleDao.delete(id);
-        findAllBottles()
-                .removeIf(bottle -> Objects.equals(bottle.getId(), id));
+        bottlesCache.invalidate(id);
     }
 
     public List<IBottle> findAllBottles() {
-        if (bottleCache == null || bottleCache.isEmpty()) {
-            bottleCache = bottleDao.findAll()
-                    .stream()
-                    .map(DtoFactory::toDto)
-                    .collect(Collectors.toList());
+        ensureAllBottlesLoaded();
+        return new ArrayList<>(bottlesCache.asMap().values());
+    }
+
+    private void ensureAllBottlesLoaded() {
+        if (bottlesCache.size() == 0) {
+            loadAllBottles();
         }
-        return bottleCache;
+    }
+
+    private void loadAllBottles() {
+        Map<String, BottleDto> allBottles = bottleDao.findAll()
+                .stream()
+                .collect(Collectors.toMap(Bottle::getId, DtoFactory::toDto));
+        bottlesCache.putAll(allBottles);
     }
 
     public int deleteAllBottles() {
-        clearCache();
-        return bottleDao.destroyAll();
+        int i = bottleDao.destroyAll();
+        if (i > 0) {
+            clearCache();
+        }
+        return i;
     }
 
     public boolean isBottleAvailable(final int ingredientId) {
-        Optional<IBottle> bottleOptional = findAllBottles()
+        ensureAllBottlesLoaded();
+        Optional<IBottle> bottleOptional = bottlesCache.asMap().values()
                 .stream()
                 .filter(bottle -> {
                     IBeverage beverage = bottle.getBeverage();
@@ -126,9 +144,7 @@ public class ShelfService {
     }
 
     private void clearCache() {
-        if (!CollectionUtils.isEmpty(bottleCache)) {
-            bottleCache.clear();
-        }
+        bottlesCache.cleanUp();
     }
 
 }

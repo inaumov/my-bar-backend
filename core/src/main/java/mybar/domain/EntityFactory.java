@@ -37,9 +37,9 @@ public class EntityFactory {
         entity.setName(cocktail.getName());
         entity.setDescription(cocktail.getDescription());
         entity.setImageUrl(cocktail.getImageUrl());
-        Map<String, ? extends Collection<? extends ICocktailIngredient>> allIngredients = cocktail.getIngredients();
+        Map<String, Collection<ICocktailIngredient>> allIngredients = cocktail.getIngredients();
         for (String groupName : allIngredients.keySet()) {
-            Collection<? extends ICocktailIngredient> ingredientsByGroup = allIngredients.get(groupName);
+            Collection<ICocktailIngredient> ingredientsByGroup = allIngredients.get(groupName);
             for (ICocktailIngredient cocktailToIngredient : ingredientsByGroup) {
                 entity.addCocktailToIngredient(from(groupName, cocktailToIngredient));
             }

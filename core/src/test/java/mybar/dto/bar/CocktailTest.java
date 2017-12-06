@@ -55,12 +55,12 @@ public class CocktailTest {
         assertEquals(NAME, dto.getName());
         assertEquals(DESCRIPTION, dto.getDescription());
 
-        Map<String, ? extends Collection<? extends ICocktailIngredient>> insideList = dto.getIngredients();
+        Map<String, Collection<ICocktailIngredient>> insideList = dto.getIngredients();
         assertEquals(2, insideList.size());
         assertTrue(insideList.containsKey("beverages"));
         assertTrue(insideList.containsKey("drinks"));
 
-        Collection<? extends ICocktailIngredient> beverages = insideList.get("beverages");
+        Collection<ICocktailIngredient> beverages = insideList.get("beverages");
         assertEquals(1, beverages.size());
 
         ICocktailIngredient beverageDto = beverages.iterator().next();
@@ -68,7 +68,7 @@ public class CocktailTest {
         assertEquals(50, beverageDto.getVolume(), 0);
         assertEquals(Measurement.ML, beverageDto.getMeasurement());
 
-        Collection<? extends ICocktailIngredient> drinks = insideList.get("drinks");
+        Collection<ICocktailIngredient> drinks = insideList.get("drinks");
         assertEquals(1, drinks.size());
 
         ICocktailIngredient juiceDto = drinks.iterator().next();
