@@ -1,38 +1,47 @@
 package mybar.repository.users;
 
-import mybar.api.users.WebRole;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.google.common.collect.Iterables;
+import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.*;
-@Ignore
-public class RoleDaoTest extends UmBaseDaoTest {
+
+@DatabaseSetup("classpath:datasets/usersDataSet.xml")
+public class RoleDaoTest extends UserBaseDaoTest {
 
     @Autowired
-    private RoleDaoImpl roleDAO;
+    private RoleDao roleDAO;
 
     @Test
     public void testSelectAllRoles() throws Exception {
-        int size = em.createQuery("select r from Role r", Role.class).getResultList().size();
+        int size = Iterables.size(roleDAO.findAll());
         assertTrue(size == ROLES_CNT);
     }
 
     @Test
     public void testGetRole() throws Exception {
-        WebRole[] webRoles = WebRole.values();
-        for (int i = 1; i <= webRoles.length; i++) {
-            Role role = roleDAO.getRole(i);
+        RoleName[] roleNames = RoleName.values();
+        for (RoleName roleName : roleNames) {
+            Role role = roleDAO.findOne(roleName.name());
             assertNotNull(role);
-            assertEquals(i, role.getId());
-            assertEquals(webRoles[i - 1], role.getWebRole());
+            assertEquals(roleName.name(), role.getRoleName());
         }
     }
 
     @Test
     public void testGetRoleWhenUnknownId() throws Exception {
-        assertNull(roleDAO.getRole(101));
+        assertNull(roleDAO.findOne("ROLE_UNKNOWN"));
     }
 
+    @Test
+    public void findByRoleNameIn() throws Exception {
+        List<Role> roles = roleDAO.findByRoleNameIn(Collections.singletonList(RoleName.ROLE_ADMIN.name()));
+        assertEquals(1, roles.size());
+    }
 }

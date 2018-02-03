@@ -18,6 +18,11 @@
         <class>mybar.domain.bar.CocktailToIngredientPk</class>
         <class>mybar.domain.bar.Bottle</class>
 
+        <class>mybar.domain.users.User</class>
+        <class>mybar.domain.users.Role</class>
+
+        <class>mybar.domain.rates.Rate</class>
+
         <properties>
             <!-- Configuring JDBC properties -->
             <property name="hibernate.connection.url" value="jdbc:hsqldb:c:/dev/MyBar-server/testDB;create=true"/>

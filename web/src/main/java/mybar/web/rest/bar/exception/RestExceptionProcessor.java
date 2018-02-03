@@ -1,19 +1,27 @@
 package mybar.web.rest.bar.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import mybar.exception.*;
+import mybar.exception.BottleNotFoundException;
+import mybar.exception.CocktailNotFoundException;
+import mybar.exception.UniqueCocktailNameException;
+import mybar.exception.UnknownBeverageException;
+import mybar.exception.UnknownIngredientsException;
+import mybar.exception.UnknownMenuException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.util.Locale;
 
 @Slf4j
-@ControllerAdvice(annotations = RestController.class)
+@ControllerAdvice(basePackages = "mybar.web.rest.bar")
 public class RestExceptionProcessor {
 
     @Autowired

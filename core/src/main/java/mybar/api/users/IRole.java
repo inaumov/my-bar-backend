@@ -4,6 +4,6 @@ public interface IRole {
 
     int getId();
 
-    WebRole getWebRole();
+    String getRoleName();
 
 }

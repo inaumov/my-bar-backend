@@ -1,37 +1,22 @@
 package mybar;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class History {
 
     private String name;
-    private int amount;
-
-    public History() {
-    }
-
-    public History(String name, int amount) {
-        this.setName(name);
-        this.setAmount(amount);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+    private int stars;
 
     @Override
     public String toString() {
-        return "History [name=" + name + ", amount=" + amount + "]";
+        return "History [name=" + name + ", stars=" + stars + "]";
     }
 
 }

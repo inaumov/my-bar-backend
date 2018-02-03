@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,11 @@ public class ShelfService {
     }
 
     private BottleDto loadById(String id) {
-        return DtoFactory.toDto(bottleDao.read(id));
+        Bottle read = bottleDao.read(id);
+        if (read != null) {
+            return DtoFactory.toDto(read);
+        }
+        throw new BottleNotFoundException(id);
     }
 
     public IBottle saveBottle(IBottle bottle) {
@@ -101,7 +106,11 @@ public class ShelfService {
 
     public void deleteBottleById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
-        bottleDao.delete(id);
+        try {
+            bottleDao.delete(id);
+        } catch (EntityNotFoundException e) {
+            return; // TODO: 1/12/2018 handle properly
+        }
         bottlesCache.invalidate(id);
     }
 

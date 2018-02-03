@@ -31,6 +31,12 @@ public class BottleDaoTest extends BaseDaoTest {
     private BottleDao bottleDao;
 
     @Test
+    @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void testPreconditions() throws Exception {
+        // do nothing, just load and check dataSet
+    }
+
+    @Test
     public void testFindAll() throws Exception {
         List<Bottle> all = bottleDao.findAll();
         assertEquals(7, all.size());

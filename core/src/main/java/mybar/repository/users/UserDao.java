@@ -1,40 +1,13 @@
 package mybar.repository.users;
 
-import mybar.repository.GenericDaoImpl;
-import org.springframework.stereotype.Repository;
 import mybar.domain.users.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.data.repository.query.Param;
 
-@Repository
-public class UserDao extends GenericDaoImpl<User> {
+public interface UserDao extends JpaRepository<User, String> {
 
-    public User findByEmail(String email) {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
-        query.setParameter("email", email);
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
-    }
-
-    public List<User> findAll() {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
-        return query.getResultList();
-    }
-
-    public User findByUsername(String username) {
-        List<User> userList = new ArrayList<User>();
-        TypedQuery<User> query = em.createQuery("SELECT u from User u where u.login = :login", User.class);
-        query.setParameter("login", username);
-        userList = query.getResultList();
-        if (!userList.isEmpty())
-            return userList.iterator().next();
-        else
-            return null;
-    }
+    @Query("SELECT user FROM User user WHERE LOWER(user.email) = LOWER(:email)")
+    User findByEmail(@Param("email") String email);
 }

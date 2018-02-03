@@ -2,11 +2,8 @@ package mybar.repository;
 
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
-import com.github.springtestdbunit.annotation.ExpectedDatabase;
-import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.filter.IColumnFilter;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -34,12 +31,6 @@ public abstract class BaseDaoTest extends AbstractTransactionalJUnit4SpringConte
 
     @PersistenceContext
     protected EntityManager em;
-
-    @Test
-    @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
-    public void testPreconditions() throws Exception {
-        // do nothing, just load and check dataSet
-    }
 
     public static class EntityIdExclusionFilter implements IColumnFilter {
 

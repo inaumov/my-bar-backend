@@ -1,9 +1,12 @@
 package mybar.api.users;
 
-import mybar.State;
+import java.util.List;
 
-public interface IUser extends IBasicUser {
+public interface IUser extends IUserDetails {
 
-    State getState();
+    boolean isActive();
 
+    List<String> getRoles();
+
+    String getPassword();
 }

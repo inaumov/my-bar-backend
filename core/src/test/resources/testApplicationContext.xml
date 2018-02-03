@@ -3,16 +3,20 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                            http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                           http://www.springframework.org/schema/context/spring-context-4.3.xsd
                            http://www.springframework.org/schema/jdbc
                            http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+                           http://www.springframework.org/schema/data/jpa
+                           http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
                            http://www.springframework.org/schema/tx
-                           http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+                           http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
+    <jpa:repositories base-package="mybar.repository.users"/>
     <context:component-scan base-package="mybar"/>
 
     <bean id="dbUnitDatabaseConfig" class="com.github.springtestdbunit.bean.DatabaseConfigBean">
@@ -48,6 +52,8 @@
 
     <jdbc:embedded-database id="dataSource" type="HSQL">
         <jdbc:script location="classpath:/schema.sql" encoding="UTF-8"/>
+        <jdbc:script location="classpath:/schema-users.sql" encoding="UTF-8"/>
+        <jdbc:script location="classpath:/schema-rates.sql" encoding="UTF-8"/>
     </jdbc:embedded-database>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

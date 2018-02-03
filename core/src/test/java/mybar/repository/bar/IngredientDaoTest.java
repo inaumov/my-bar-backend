@@ -1,6 +1,8 @@
 package mybar.repository.bar;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Lists;
@@ -60,6 +62,12 @@ public class IngredientDaoTest extends BaseDaoTest {
 
     @Autowired
     private IngredientDao ingredientDao;
+
+    @Test
+    @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void testPreconditions() throws Exception {
+        // do nothing, just load and check dataSet
+    }
 
     @Test
     public void testFindAllInCorrectOrder() throws Exception {

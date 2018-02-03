@@ -1,6 +1,8 @@
 package mybar.repository.bar;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;
 import mybar.repository.BaseDaoTest;
@@ -26,6 +28,12 @@ public class MenuDaoTest extends BaseDaoTest {
     private MenuDao menuDao;
     @Autowired
     private CocktailDao cocktailDao;
+
+    @Test
+    @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void testPreconditions() throws Exception {
+        // do nothing, just load and check dataSet
+    }
 
     @Test
     public void testSelectAllMenus() throws Exception {

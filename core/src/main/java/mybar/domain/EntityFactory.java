@@ -7,7 +7,6 @@ import mybar.api.bar.IMenu;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
-import mybar.api.history.IOrder;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
@@ -16,7 +15,6 @@ import mybar.domain.bar.ingredient.Additive;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
-import mybar.domain.history.Order;
 
 import java.util.Collection;
 import java.util.Map;
@@ -100,15 +98,6 @@ public class EntityFactory {
         entity.setBeverage(new Beverage(bottle.getBeverage().getId()));
         entity.setInShelf(bottle.isInShelf());
         entity.setImageUrl(bottle.getImageUrl());
-        return entity;
-    }
-
-    public static Order from(final IOrder order) {
-        Order entity = new Order();
-        entity.setId(order.getId());
-        entity.setAmount(order.getAmount());
-        entity.setSold(order.getSold());
-        entity.setOrderStatus(order.getOrderStatus());
         return entity;
     }
 

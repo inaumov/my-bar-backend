@@ -1,15 +1,18 @@
 package mybar.app.bean.users;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-@XmlRootElement(name = "user.list")
+@Getter
+@Setter
 public class UserList {
 
+    @JsonView(View.AdminView.class)
     private int count;
+    @JsonView(View.AdminView.class)
     private List<UserBean> users;
 
     public UserList() {
@@ -18,25 +21,6 @@ public class UserList {
     public UserList(List<UserBean> users) {
         this.users = users;
         this.count = users.size();
-    }
-
-    @XmlAttribute
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    @XmlElement(name = "user")
-    @XmlElementWrapper
-    public List<UserBean> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserBean> users) {
-        this.users = users;
     }
 
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+    <!-- rates history -->
+    <RATES USERNAME="JohnDoe" COCKTAIL_ID="cocktail-000001" RATED_AT="2013-08-16 17:51:11.808" STARS="9"/>
+    <RATES USERNAME="JohnDoe" COCKTAIL_ID="cocktail-000002" RATED_AT="2013-08-17" STARS="8"/>
+    <RATES USERNAME="JohnDoe" COCKTAIL_ID="cocktail-000003" RATED_AT="2013-08-17" STARS="7"/>
+    <RATES USERNAME="JohnDoe" COCKTAIL_ID="cocktail-000004" RATED_AT="2013-08-25" STARS="5"/>
+    <RATES USERNAME="JohnDoe" COCKTAIL_ID="cocktail-000005" RATED_AT="2013-08-27" STARS="7"/>
+    <RATES USERNAME="client" COCKTAIL_ID="cocktail-000001" RATED_AT="2013-08-27" STARS="10"/>
+    <RATES USERNAME="JohnDoe" COCKTAIL_ID="cocktail-000011" RATED_AT="2018-01-24" STARS="9"/>
+
+</dataset>

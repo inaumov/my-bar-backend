@@ -20,7 +20,7 @@ import mybar.exception.UnknownMenuException;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.bar.IngredientDao;
 import mybar.repository.bar.MenuDao;
-import mybar.repository.history.OrderDao;
+import mybar.repository.rates.RatesDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ public class CocktailsService {
     private IngredientDao ingredientDao;
 
     @Autowired(required = false)
-    private OrderDao orderDao;
+    private RatesDao ratesDao;
 
     private Supplier<List<IMenu>> allMenusCached = Suppliers.memoizeWithExpiration(
             this::loadAllMenus, 30, TimeUnit.MINUTES);
@@ -201,7 +201,7 @@ public class CocktailsService {
     public void removeCocktail(ICocktail cocktail) throws Exception {
         boolean hasRef = isCocktailInHistory(cocktail);
         if (hasRef) {
-            Cocktail entity = EntityFactory.from(cocktail, -1);
+            Cocktail entity = EntityFactory.from(cocktail, -1); // TODO: 1/12/2018
             cocktailDao.update(entity);
         } else {
             cocktailDao.delete(cocktail);
@@ -220,11 +220,14 @@ public class CocktailsService {
     public ICocktail findCocktailById(String id) throws CocktailNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
         Cocktail cocktail = cocktailDao.read(id);
-        return cocktail.toDto(findMenuById(cocktail.getMenuId()).getName());
+        if (cocktail != null) {
+            return cocktail.toDto(findMenuById(cocktail.getMenuId()).getName());
+        }
+        throw new CocktailNotFoundException(id);
     }
 
     public boolean isCocktailInHistory(ICocktail cocktail) {
-        return orderDao.findCocktailInHistory(cocktail);
+        return ratesDao.checkRateExistsForCocktail(cocktail);
     }
 
     public void deleteCocktailById(String id) throws CocktailNotFoundException {
