@@ -18,10 +18,8 @@ version 1.1
 
   todos:
   - validation of inputs like rate, passwords
-  - exception handler for rates service
   - rest tests with authentication for bar end-points from v1.0
   - obfuscate sensitive user data (username, emails)
-  - persist rates
 
 future version 1.2
 - history end-point

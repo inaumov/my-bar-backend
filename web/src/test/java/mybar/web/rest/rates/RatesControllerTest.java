@@ -1,7 +1,9 @@
 package mybar.web.rest.rates;
 
 import mybar.dto.RateDto;
+import mybar.exception.CocktailNotFoundException;
 import mybar.service.rates.RatesService;
+import mybar.web.rest.TestUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +26,13 @@ import javax.servlet.Filter;
 import java.util.Collections;
 import java.util.Date;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -154,6 +158,54 @@ public class RatesControllerTest {
                         .isOk())
                 .andExpect(authenticated().withUsername(USERNAME))
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void test_rateCocktail_when_unknown() throws Exception {
+        when(ratesService.rateCocktail(anyString(), eq("unknown"), anyInt())).thenThrow(new CocktailNotFoundException("unknown"));
+
+        // rate cocktail
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post("/rates")
+                        .with(user(USERNAME).password("abc123").roles("USER"))
+                        .with(httpBasic(USERNAME, "abc123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createRateInJson("unknown", 1));
+
+        this.mockMvc.perform(builder)
+                .andExpect(authenticated().withUsername(USERNAME))
+                .andExpect(MockMvcResultMatchers.status()
+                        .isForbidden())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Could not rate cocktail: " + "unknown")))
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(ratesService, times(1)).rateCocktail(anyString(), eq("unknown"), anyInt());
+        verifyNoMoreInteractions(ratesService);
+    }
+
+    @Test
+    public void test_rateCocktail_when_bad_request() throws Exception {
+        when(ratesService.rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null))).thenCallRealMethod();
+
+        // rate cocktail
+        MockHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.post("/rates")
+                        .with(user(USERNAME).password("abc123").roles("USER"))
+                        .with(httpBasic(USERNAME, "abc123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"cocktailId\":\"" + COCKTAIL_ID + "\"}");
+
+        this.mockMvc.perform(builder)
+                .andExpect(authenticated().withUsername(USERNAME))
+                .andExpect(MockMvcResultMatchers.status()
+                        .isBadRequest())
+                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().string(containsString("errorMessage\":\"Stars number should be from 1 to 10.")))
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(ratesService, times(1)).rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null));
+        verifyNoMoreInteractions(ratesService);
     }
 
 }

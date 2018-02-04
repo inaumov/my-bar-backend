@@ -8,6 +8,6 @@ public interface IRate {
 
     Date getRatedAt();
 
-    int getStars();
+    Integer getStars();
 
 }

@@ -11,5 +11,5 @@ import java.util.Date;
 public class RateDto implements IRate {
     private String cocktailId;
     private Date ratedAt;
-    private int stars;
+    private Integer stars;
 }

@@ -98,7 +98,7 @@ public class IngredientDaoTest extends BaseDaoTest {
         // make it sorted alphabetically so it is wrong
         String[] items = INGREDIENTS_BY_GROUP_NAME_AND_KIND.clone();
         Arrays.sort(items);
-        assertThat("All ingredients should be sorted by group name and kind.", ingredientsByKind, not(contains(items)));
+        assertTrue("All ingredients should be sorted by group name and kind.", ingredientsByKind.containsAll(Arrays.asList(items)));
     }
 
     @Test

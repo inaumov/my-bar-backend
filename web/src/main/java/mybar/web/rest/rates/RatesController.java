@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO: 2/6/2018 implement exception handler e.g. controller advice
 @Slf4j
 @RestController
 @RequestMapping("/rates")

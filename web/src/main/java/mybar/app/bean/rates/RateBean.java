@@ -14,7 +14,7 @@ public class RateBean implements IRate {
 
     private String cocktailId;
     private Date ratedAt;
-    private int stars;
+    private Integer stars;
 
     public RateBean(IRate rate) {
         this.cocktailId = rate.getCocktailId();
