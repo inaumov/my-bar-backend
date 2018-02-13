@@ -73,7 +73,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findAll()).thenReturn(Arrays.<IIngredient>asList(additive, drink, beverage));
 
-        mockMvc.perform(get("/ingredients").accept("application/json"))
+        mockMvc.perform(get("/ingredients"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -108,7 +108,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findByGroupName(ADDITIVES)).thenReturn(Arrays.<IIngredient>asList(additive1, additive2));
 
-        mockMvc.perform(get("/ingredients?filter=additives").accept("application/json"))
+        mockMvc.perform(get("/ingredients?filter=additives"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -141,7 +141,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findByGroupName(BEVERAGES)).thenReturn(Arrays.<IIngredient>asList(beverage3, beverage7));
 
-        mockMvc.perform(get("/ingredients?filter=beverages").accept("application/json"))
+        mockMvc.perform(get("/ingredients?filter=beverages"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -173,7 +173,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findByGroupName(DRINKS)).thenReturn(Arrays.asList(drink11, drink2));
 
-        mockMvc.perform(get("/ingredients?filter=drinks").accept("application/json"))
+        mockMvc.perform(get("/ingredients?filter=drinks"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -196,7 +196,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findByGroupName("drinks")).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/ingredients?filter=drinks").accept("application/json"))
+        mockMvc.perform(get("/ingredients?filter=drinks"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -214,7 +214,7 @@ public class IngredientsRestControllerTest {
 
         when(ingredientService.findByGroupName(UNKNOWN)).thenThrow(new IllegalArgumentException("Unknown group name: " + UNKNOWN));
 
-        mockMvc.perform(get("/ingredients?filter=unknown").accept("application/json"))
+        mockMvc.perform(get("/ingredients?filter=unknown"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(containsString("errorMessage\":\"Unknown group name: " + UNKNOWN)));

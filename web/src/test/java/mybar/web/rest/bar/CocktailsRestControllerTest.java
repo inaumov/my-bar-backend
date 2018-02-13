@@ -250,8 +250,7 @@ public class CocktailsRestControllerTest {
 
         ResultActions resultActions = mockMvc.perform(post("/cocktails")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-                .accept("application/json"))
+                .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -269,8 +268,7 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
 
         mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -287,8 +285,8 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
 
         mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"relatedToMenu\":\"test\"}")
-                .accept("application/json"))
+                .content("{\"relatedToMenu\":\"test\"}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -304,8 +302,8 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
 
         mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"test\"}")
-                .accept("application/json"))
+                .content("{\"name\":\"test\"}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -321,8 +319,8 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
 
         mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -342,8 +340,7 @@ public class CocktailsRestControllerTest {
 
         ResultActions resultActions = mockMvc.perform(put("/cocktails")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-                .accept("application/json"))
+                .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -377,8 +374,7 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -395,8 +391,7 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -413,8 +408,8 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"cocktail-test00\",\"relatedToMenu\":\"test\"}")
-                .accept("application/json"))
+                .content("{\"id\":\"cocktail-test00\",\"relatedToMenu\":\"test\"}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -430,8 +425,8 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"cocktail-test00\",\"name\":\"test\"}")
-                .accept("application/json"))
+                .content("{\"id\":\"cocktail-test00\",\"name\":\"test\"}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -447,8 +442,8 @@ public class CocktailsRestControllerTest {
         when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
 
         mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -463,7 +458,7 @@ public class CocktailsRestControllerTest {
 
         doNothing().when(cocktailsService).deleteCocktailById(TEST_ID_1);
 
-        mockMvc.perform(delete("/cocktails/" + TEST_ID_1).accept("application/json"))
+        mockMvc.perform(delete("/cocktails/" + TEST_ID_1))
 
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -477,7 +472,8 @@ public class CocktailsRestControllerTest {
 
         doThrow(new CocktailNotFoundException(TEST_ID_2)).when(cocktailsService).deleteCocktailById(TEST_ID_2);
 
-        mockMvc.perform(delete("/cocktails/" + TEST_ID_2).accept("application/json"))
+        mockMvc.perform(delete("/cocktails/" + TEST_ID_2))
+
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))

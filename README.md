@@ -18,7 +18,6 @@ version 1.1
 
   todos:
   - validation of inputs like rate, passwords
-  - rest tests with authentication for bar end-points from v1.0
   - obfuscate sensitive user data (username, emails)
 
 future version 1.2

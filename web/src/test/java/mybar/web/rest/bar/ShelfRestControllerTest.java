@@ -205,7 +205,7 @@ public class ShelfRestControllerTest {
 
         when(shelfService.findAllBottles()).thenReturn(Arrays.<IBottle>asList(first, second));
 
-        mockMvc.perform(get("/shelf/bottles").accept("application/json"))
+        mockMvc.perform(get("/shelf/bottles"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -232,8 +232,7 @@ public class ShelfRestControllerTest {
 
         mockMvc.perform(post("/shelf/bottles", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-                .accept("application/json"))
+                .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -260,8 +259,8 @@ public class ShelfRestControllerTest {
         when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenThrow(new UnknownBeverageException(beverage));
 
         mockMvc.perform(post("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -277,8 +276,8 @@ public class ShelfRestControllerTest {
         when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
 
         mockMvc.perform(post("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"ingredient\":{\"id\":6}}")
-                .accept("application/json"))
+                .content("{\"ingredient\":{\"id\":6}}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -294,8 +293,8 @@ public class ShelfRestControllerTest {
         when(shelfService.saveBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
 
         mockMvc.perform(post("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"brandName\":\"test\"}")
-                .accept("application/json"))
+                .content("{\"brandName\":\"test\"}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -315,8 +314,7 @@ public class ShelfRestControllerTest {
 
         mockMvc.perform(put("/shelf/bottles/", requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-                .accept("application/json"))
+                .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -361,8 +359,7 @@ public class ShelfRestControllerTest {
         String requestJson = toRequestJson(testBottle);
 
         mockMvc.perform(put("/shelf/bottles/", requestJson).contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-                .accept("application/json"))
+                .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -381,8 +378,8 @@ public class ShelfRestControllerTest {
         when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenThrow(new UnknownBeverageException(beverageBean));
 
         mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept("application/json"))
+                .content("{}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -398,8 +395,8 @@ public class ShelfRestControllerTest {
         when(shelfService.updateBottle(Matchers.any(IBottle.class))).thenCallRealMethod();
 
         mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"bottle-test00\",\"ingredient\":{\"id\":21}}")
-                .accept("application/json"))
+                .content("{\"id\":\"bottle-test00\",\"ingredient\":{\"id\":21}}"))
+
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -416,7 +413,7 @@ public class ShelfRestControllerTest {
 
         mockMvc.perform(put("/shelf/bottles").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":\"bottle-test00\",\"brandName\":\"test\"}")
-                .accept("application/json"))
+                )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
@@ -431,7 +428,7 @@ public class ShelfRestControllerTest {
 
         doNothing().when(shelfService).deleteBottleById(TEST_ID_1);
 
-        mockMvc.perform(delete("/shelf/bottles/" + TEST_ID_1).accept("application/json"))
+        mockMvc.perform(delete("/shelf/bottles/" + TEST_ID_1))
 
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -445,7 +442,7 @@ public class ShelfRestControllerTest {
 
         doThrow(new BottleNotFoundException(TEST_ID_2)).when(shelfService).deleteBottleById(TEST_ID_2);
 
-        mockMvc.perform(delete("/shelf/bottles/" + TEST_ID_2).accept("application/json"))
+        mockMvc.perform(delete("/shelf/bottles/" + TEST_ID_2))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))

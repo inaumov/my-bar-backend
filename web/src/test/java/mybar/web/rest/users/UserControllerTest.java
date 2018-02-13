@@ -53,6 +53,9 @@ public class UserControllerTest {
     public static final String EMAIL = "joe@example.com";
     public static final String PASSWORD = "joe.pwd";
 
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_ADMIN = "ADMIN";
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -173,7 +176,7 @@ public class UserControllerTest {
 
         // get all users
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/users")
-                .with(user(USERNAME).password("abc123").roles("ADMIN"))
+                .with(user(USERNAME).password("abc123").roles(ROLE_ADMIN))
                 .with(httpBasic(USERNAME, "abc123"))
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -208,7 +211,7 @@ public class UserControllerTest {
         when(userService.editUserInfo(any(IUser.class))).thenReturn(userDto);
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.put("/users")
-                .with(user(USERNAME).password("abc123").roles("USER"))
+                .with(user(USERNAME).password("abc123").roles(ROLE_USER))
                 .with(httpBasic(USERNAME, "abc123"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createUserInJson(
@@ -243,7 +246,7 @@ public class UserControllerTest {
         doNothing().when(userService).deactivateUser(eq(USERNAME));
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.delete("/users/" + USERNAME)
-                .with(user(USERNAME).password("abc123").roles("USER"))
+                .with(user(USERNAME).password("abc123").roles(ROLE_USER))
                 .with(httpBasic(USERNAME, "abc123"))
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -262,7 +265,7 @@ public class UserControllerTest {
         when(userService.findByUsername(eq(USERNAME))).thenReturn(userDto);
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/users/" + USERNAME)
-                .with(user(USERNAME).password("abc123").roles("USER"))
+                .with(user(USERNAME).password("abc123").roles(ROLE_USER))
                 .with(httpBasic(USERNAME, "abc123"))
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -304,7 +307,7 @@ public class UserControllerTest {
         when(userService.findByUsername(eq(USERNAME))).thenThrow(new UnknownUserException(USERNAME));
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/users/" + USERNAME)
-                .with(user(USERNAME).password("abc123").roles("USER"))
+                .with(user(USERNAME).password("abc123").roles(ROLE_USER))
                 .with(httpBasic(USERNAME, "abc123"))
                 .accept(MediaType.APPLICATION_JSON);
 
