@@ -18,7 +18,7 @@ version 1.1
 
   todos:
   - validation of inputs like rate, passwords
-  - obfuscate sensitive user data (username, emails)
+
 
 future version 1.2
 - history end-point

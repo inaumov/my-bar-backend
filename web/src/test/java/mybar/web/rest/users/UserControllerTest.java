@@ -48,9 +48,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     public static final String USERNAME = "joe";
+    public static final String USERNAME_OBFUSCATED = "jo***";
     public static final String NAME = "Joe";
     public static final String SURNAME = "Keery";
     public static final String EMAIL = "joe@example.com";
+    public static final String EMAIL_OBFUSCATED = "j***@e***e.com";
     public static final String PASSWORD = "joe.pwd";
 
     public static final String ROLE_USER = "USER";
@@ -189,8 +191,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.count", is(1)))
                 .andExpect(jsonPath("$.users", hasSize(1)))
 
-                .andExpect(jsonPath("$.users[0].username", is(USERNAME)))
-                .andExpect(jsonPath("$.users[0].email", is(EMAIL)))
+                .andExpect(jsonPath("$.users[0].username", is(USERNAME_OBFUSCATED)))
+                .andExpect(jsonPath("$.users[0].email", is(EMAIL_OBFUSCATED)))
                 .andExpect(jsonPath("$.users[0].name", is(NAME)))
                 .andExpect(jsonPath("$.users[0].surname", is(SURNAME)))
                 .andExpect(jsonPath("$.users[0].active", is(true)))

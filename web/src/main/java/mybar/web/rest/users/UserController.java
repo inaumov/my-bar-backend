@@ -13,6 +13,8 @@ import mybar.service.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,14 +66,19 @@ public class UserController {
         userService.deactivateUser(username);
     }
 
-    @JsonView(View.AdminView.class)
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public UserList getUsers() {
+    public ResponseEntity<MappingJacksonValue> getUsers() {
         List<IUser> users = userService.getAllRegisteredUsers();
-        return new UserList(BeanFactory.toFullUserList(users));
+
+        UserList userList = new UserList(BeanFactory.toFullUserList(users));
+
+        MappingJacksonValue wrapper = new MappingJacksonValue(userList);
+        wrapper.setSerializationView(View.AdminView.class);
+
+        return new ResponseEntity<>(wrapper, HttpStatus.OK);
     }
 
 }
