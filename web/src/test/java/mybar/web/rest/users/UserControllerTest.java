@@ -53,7 +53,7 @@ public class UserControllerTest {
     public static final String SURNAME = "Keery";
     public static final String EMAIL = "joe@example.com";
     public static final String EMAIL_OBFUSCATED = "j***@e***e.com";
-    public static final String PASSWORD = "joe.pwd";
+    public static final String PASSWORD = "am9lLnB3ZA==";
 
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ADMIN = "ADMIN";
@@ -118,10 +118,11 @@ public class UserControllerTest {
 
     private static String createUserInJson(String name, String email, String password) {
         return "{" +
-                "\"username\": \"" + name + "\", " +
-                "\"name\": \"" + name + "\", " +
-                "\"emailAddress\":\"" + email + "\"," +
-                "\"password\":\"" + password + "\"" +
+                "\"username\":\"" + name + "\"," +
+                "\"name\":\"" + name + "\"," +
+                "\"password\":\"" + password + "\"," +
+                "\"email\":\"" + email + "\"," +
+                "\"passwordConfirm\":\"" + password + "\"" +
                 "}";
     }
 

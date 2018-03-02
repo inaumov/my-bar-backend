@@ -16,10 +16,6 @@ version 1.1
 - implemented rate cocktails service
 - switched to latest spring core and spring security 4.x versions
 
-  todos:
-  - validation of inputs like rate, passwords
-
-
 future version 1.2
 - history end-point
 - investigate possibility to use messaging for rates service

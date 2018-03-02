@@ -67,4 +67,17 @@ public class UsersRestExceptionProcessor {
         return new ErrorInfo(errorURL, errorMessage);
     }
 
+    @ExceptionHandler(PasswordConfirmationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorInfo pwdConfirmation(HttpServletRequest req, PasswordConfirmationException ex) {
+        log.error("Password confirmation thrown", ex);
+
+        Locale locale = LocaleContextHolder.getLocale();
+        String errorMessage = messageSource.getMessage("error.pwd.confirmation", null, locale);
+        String errorURL = req.getRequestURL().toString();
+
+        return new ErrorInfo(errorURL, errorMessage);
+    }
+
 }

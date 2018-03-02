@@ -30,4 +30,9 @@
     </security:authentication-manager>
 
     <bean id="springSecurityFilterChain" class="org.springframework.web.filter.DelegatingFilterProxy"/>
+
+    <bean id="passwordEncoder" name="passwordEncoderMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.springframework.security.crypto.password.PasswordEncoder"/>
+    </bean>
+
 </beans>

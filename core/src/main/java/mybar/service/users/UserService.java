@@ -1,5 +1,7 @@
 package mybar.service.users;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import mybar.api.users.IUser;
 import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
@@ -32,7 +34,8 @@ public class UserService {
     // basic functions
 
     public IUser createUser(IUser user) throws UserExistsException, EmailDuplicatedException {
-
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getEmail()), "Email is required.");
         checkUsernameDuplicated(user.getUsername());
         checkEmailDuplicated(user.getEmail());
 
@@ -66,13 +69,33 @@ public class UserService {
     }
 
     public IUser editUserInfo(IUser user) {
-        User userEntity = toEntity(user);
-        return toUserDto(userDao.save(userEntity));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getEmail()), "Email is required.");
+        User userEntityByEmail = userDao.findByEmail(user.getEmail());
+        if (Objects.equals(userEntityByEmail.getEmail(), user.getEmail())) {
+            throw new UserExistsException("Email already belongs to another user");
+        }
+        User entity = new User();
+        entity.setUsername(user.getUsername());
+        entity.setEmail(user.getEmail());
+        entity.setName(user.getName());
+        entity.setSurname(user.getSurname());
+        if (CollectionUtils.isEmpty(user.getRoles())) {
+            Role roleUser = roleDAO.getOne(RoleName.ROLE_USER.name());
+            entity.addRole(roleUser);
+        } else {
+            List<Role> roles = roleDAO.findByRoleNameIn(user.getRoles());
+            entity.setRoles(roles);
+        }
+
+        return toUserDto(userDao.save(entity));
     }
 
     // admin functions
 
     public IUser findByUsername(String username) throws UnknownUserException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
+
         User userEntity = userDao.findOne(username);
         if (userEntity != null) {
             return toUserDto(userEntity);
@@ -97,6 +120,8 @@ public class UserService {
     }
 
     public void activateUser(String username) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
+
         User userEntity = userDao.findOne(username);
         if (userEntity != null) {
             userEntity.setActive(true);
@@ -105,6 +130,8 @@ public class UserService {
     }
 
     public void deactivateUser(String username) throws UnknownUserException {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
+
         User userEntity = userDao.findOne(username);
         if (userEntity != null) {
             userEntity.setActive(false);
