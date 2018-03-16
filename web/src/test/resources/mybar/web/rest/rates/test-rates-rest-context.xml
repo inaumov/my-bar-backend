@@ -30,6 +30,10 @@
         <constructor-arg value="mybar.service.rates.RatesService"/>
     </bean>
 
+    <bean id="historyService" name="historyServiceMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="mybar.service.rates.history.HistoryService"/>
+    </bean>
+
     <bean id="usersService" name="usersServiceMock" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="mybar.service.users.UserService"/>
     </bean>

@@ -7,7 +7,6 @@ import mybar.History;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
-import mybar.dto.bar.CocktailDto;
 import mybar.repository.BaseDaoTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -59,10 +59,18 @@ public class RatesDaoTest extends BaseDaoTest {
 
     @Test
     public void testFindAllRatesForCocktail() throws Exception {
-        CocktailDto cocktail = new CocktailDto();
+        Cocktail cocktail = new Cocktail();
         cocktail.setId("cocktail-000001");
         List<Rate> allRatesForCocktail = ratesDao.findAllRatesForCocktail(cocktail);
         assertEquals(2, allRatesForCocktail.size());
+    }
+
+    @Test
+    public void testFindAllRatesForUser() throws Exception {
+        User user = new User();
+        user.setUsername("JohnDoe");
+        List<Rate> allRatesForCocktail = ratesDao.findAllRatesForUser(user);
+        assertEquals(5, allRatesForCocktail.size());
     }
 
     @ExpectedDatabase(
@@ -82,6 +90,13 @@ public class RatesDaoTest extends BaseDaoTest {
         ratesDao.create(rate);
 
         em.flush();
+    }
+
+    @Test
+    public void testFindAllAverageRates() throws Exception {
+        Map<String, Double> allAverageRates = ratesDao.findAllAverageRates();
+        assertEquals(5, allAverageRates.size());
+        assertEquals(new Double(9.5), allAverageRates.get("cocktail-000001"));
     }
 
 }

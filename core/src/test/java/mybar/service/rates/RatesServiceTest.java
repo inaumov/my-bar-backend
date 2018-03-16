@@ -2,6 +2,7 @@ package mybar.service.rates;
 
 import mybar.api.rates.IRate;
 import mybar.domain.bar.Cocktail;
+import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.dto.RateDto;
 import mybar.repository.bar.CocktailDao;
@@ -18,6 +19,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -49,7 +51,7 @@ public class RatesServiceTest {
         ratesService.rateCocktail(USERNAME, COCKTAIL_ID, STARS);
         ratesService.rateCocktail("Garry", COCKTAIL_ID, 8);
         ratesService.rateCocktail("Evan777", COCKTAIL_ID, 6);
-        Map<String, IRate> rates = (Map<String, IRate>) Whitebox.getInternalState(ratesService, "rates");
+        Map<String, IRate> rates = (Map<String, IRate>) Whitebox.getInternalState(ratesService, "tempRates");
         Assert.assertNotNull(rates);
         Assert.assertEquals(3, rates.size());
         Assert.assertTrue(rates.containsKey(USERNAME + "@" + COCKTAIL_ID));
@@ -84,28 +86,34 @@ public class RatesServiceTest {
 
     @Test
     public void test_remove_cocktail_from_rates() throws Exception {
-        TreeMap<String, IRate> cacheMap = new TreeMap<>();
-        cacheMap.put(USERNAME + "@" + COCKTAIL_ID, new RateDto());
-        Whitebox.setInternalState(ratesService, "rates", cacheMap);
-        ratesService.removeCocktailFromRates(USERNAME, COCKTAIL_ID);
+        User user = new User();
+        user.setUsername(USERNAME);
+        Cocktail cocktail = new Cocktail();
+        cocktail.setId(COCKTAIL_ID);
 
-        Assert.assertTrue(cacheMap.isEmpty());
+        Rate rate = new Rate();
+        rate.setUser(user);
+        rate.setCocktail(cocktail);
+
+        Mockito.when(ratesDaoMock.findBy(USERNAME, COCKTAIL_ID)).thenReturn(rate);
+        ratesService.removeCocktailFromRates(USERNAME, COCKTAIL_ID);
     }
 
     @Test
-    public void test_get_rated_cocktails() throws Exception {
-        TreeMap<String, IRate> cacheMap = new TreeMap<>();
-        cacheMap.put(USERNAME + "@" + COCKTAIL_ID, new RateDto());
-        cacheMap.put(USERNAME + "@" + "cocktail-000002", new RateDto());
-        cacheMap.put(USERNAME + "@" + "cocktail-000350", new RateDto());
-        cacheMap.put(USERNAME + "@" + "cocktail-000350", new RateDto());
-        cacheMap.put("Garry" + "@" + COCKTAIL_ID, new RateDto());
-        cacheMap.put("Evan777" + "@" + COCKTAIL_ID, new RateDto());
+    public void test_get_my_rated_cocktails() throws Exception {
+        User user = new User();
+        user.setUsername(USERNAME);
+        Cocktail cocktail = new Cocktail();
+        cocktail.setId(COCKTAIL_ID);
 
-        Whitebox.setInternalState(ratesService, "rates", cacheMap);
+        Rate rate = new Rate();
+        rate.setUser(user);
+        rate.setCocktail(cocktail);
+
+        Mockito.when(ratesDaoMock.findAllRatesForUser(Mockito.any(User.class))).thenReturn(Collections.singletonList(rate));
         Collection<IRate> ratedCocktails = ratesService.getRatedCocktails(USERNAME);
 
-        Assert.assertTrue(ratedCocktails.size() == 3);
+        Assert.assertTrue(ratedCocktails.size() == 1);
     }
 
     @Test
@@ -120,7 +128,7 @@ public class RatesServiceTest {
         cacheMap.put("Garry" + "@" + COCKTAIL_ID, rateDto);
         cacheMap.put("Evan777" + "@" + COCKTAIL_ID, rateDto);
 
-        Whitebox.setInternalState(ratesService, "rates", cacheMap);
+        Whitebox.setInternalState(ratesService, "tempRates", cacheMap);
 
         ratesService.persistRates();
 

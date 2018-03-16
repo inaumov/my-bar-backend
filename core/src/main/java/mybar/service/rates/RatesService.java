@@ -35,7 +35,7 @@ public class RatesService {
 
     private static final Range<Integer> starsRange = new Range<>(1, 10);
 
-    private Map<String, IRate> rates = new TreeMap<>();
+    private Map<String, IRate> tempRates = new TreeMap<>();
 
     public IRate rateCocktail(String username, String cocktailId, Integer stars) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
@@ -47,13 +47,14 @@ public class RatesService {
         rate.setCocktailId(cocktailId);
         rate.setRatedAt(new Date());
         rate.setStars(stars);
-        rates.put(toCacheKey(username, cocktailId), rate);
+        tempRates.put(toCacheKey(username, cocktailId), rate);
 
         return rate;
     }
 
     public void removeCocktailFromRates(String userId, String cocktailId) {
-        rates.remove(toCacheKey(userId, cocktailId));
+        Rate rate = ratesDao.findBy(userId, cocktailId);
+        ratesDao.delete(rate);
     }
 
     private String toCacheKey(String userId, String cocktailId) {
@@ -62,19 +63,22 @@ public class RatesService {
 
     public Collection<IRate> getRatedCocktails(String userId) {
         List<IRate> userRates = new ArrayList<>();
-        for (String key : rates.keySet()) {
-            if (key.startsWith(userId)) {
-                userRates.add(rates.get(key));
-            }
+        List<Rate> allRatesForUser = ratesDao.findAllRatesForUser(userDao.findOne(userId));
+        for (Rate rate : allRatesForUser) {
+            RateDto rateDto = new RateDto();
+            rateDto.setCocktailId(rate.getCocktail().getId());
+            rateDto.setRatedAt(rate.getRatedAt());
+            rateDto.setStars(rate.getStars());
+            userRates.add(rateDto);
         }
         return Collections.unmodifiableCollection(userRates);
     }
 
     @Transactional
     public void persistRates() {
-        Set<String> orders = rates.keySet();
+        Set<String> orders = tempRates.keySet();
         for (String cacheKey : orders) {
-            IRate rateDto = rates.get(cacheKey);
+            IRate rateDto = tempRates.get(cacheKey);
             String[] strings = StringUtils.split(cacheKey, "@");
             User user = userDao.findOne(strings[0]);
             Cocktail cocktail = cocktailDao.read(strings[1]);
@@ -89,7 +93,7 @@ public class RatesService {
                 log.error("Could not persist rate for [{}]. It is either user or cocktail is unknown.", cacheKey);
             }
         }
-        rates.clear();
+        tempRates.clear();
     }
 
     private void checkCocktailExists(String cocktailId) {
@@ -97,6 +101,10 @@ public class RatesService {
         if (cocktail == null) {
             throw new CocktailNotFoundException(cocktailId);
         }
+    }
+
+    public Map<String, Double> findAllAverageRates() {
+        return ratesDao.findAllAverageRates();
     }
 
 }
