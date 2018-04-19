@@ -24,6 +24,7 @@
             /WEB-INF/applicationContext.xml
             /WEB-INF/rest-servlet.xml
             /WEB-INF/spring-security.xml
+            /WEB-INF/messaging-config.xml
         </param-value>
     </context-param>
 

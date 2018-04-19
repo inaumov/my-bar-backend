@@ -1,10 +1,12 @@
 package mybar.service.rates;
 
+import com.google.gson.Gson;
 import mybar.api.rates.IRate;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.dto.RateDto;
+import mybar.messaging.IMessageProducer;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.rates.RatesDao;
 import mybar.repository.users.UserDao;
@@ -15,12 +17,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.Date;
 import java.util.TreeMap;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,7 +30,7 @@ public class RatesServiceTest {
 
     public static final String USERNAME = "bill";
     public static final String COCKTAIL_ID = "cocktail-000099";
-    public static final int STARS = 7;
+    public static final Integer STARS = 7;
 
     @Mock
     private UserDao userDaoMock;
@@ -40,23 +42,25 @@ public class RatesServiceTest {
     @InjectMocks
     private RatesService ratesService;
 
+    @Mock
+    private IMessageProducer messageProducer;
+
     @Before
     public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
         Mockito.when(userDaoMock.findOne(Mockito.anyString())).thenReturn(new User());
         Mockito.when(cocktailDaoMock.read(COCKTAIL_ID)).thenReturn(new Cocktail());
     }
 
     @Test
     public void test_rate() throws Exception {
-        ratesService.rateCocktail(USERNAME, COCKTAIL_ID, STARS);
-        ratesService.rateCocktail("Garry", COCKTAIL_ID, 8);
-        ratesService.rateCocktail("Evan777", COCKTAIL_ID, 6);
-        Map<String, IRate> rates = (Map<String, IRate>) Whitebox.getInternalState(ratesService, "tempRates");
-        Assert.assertNotNull(rates);
-        Assert.assertEquals(3, rates.size());
-        Assert.assertTrue(rates.containsKey(USERNAME + "@" + COCKTAIL_ID));
-        Assert.assertTrue(rates.containsKey("Garry" + "@" + COCKTAIL_ID));
-        Assert.assertTrue(rates.containsKey("Evan777" + "@" + COCKTAIL_ID));
+        IRate iRate = ratesService.rateCocktail(USERNAME, COCKTAIL_ID, STARS);
+
+        Assert.assertEquals(COCKTAIL_ID, iRate.getCocktailId());
+        Assert.assertNotNull(iRate.getRatedAt());
+        Assert.assertEquals(STARS, iRate.getStars());
+
+        Mockito.verify(messageProducer, Mockito.atLeastOnce()).send(Mockito.eq(USERNAME + "@" + COCKTAIL_ID), Mockito.anyString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -118,21 +122,23 @@ public class RatesServiceTest {
 
     @Test
     public void test_persist_rates() throws Exception {
-        TreeMap<String, IRate> cacheMap = new TreeMap<>();
+        TreeMap<String, IRate> testMap = new TreeMap<>();
         RateDto rateDto = new RateDto();
+        rateDto.setRatedAt(new Date());
         rateDto.setStars(5);
-        cacheMap.put(USERNAME + "@" + COCKTAIL_ID, rateDto);
-        cacheMap.put(USERNAME + "@" + "cocktail-000002", rateDto);
-        cacheMap.put(USERNAME + "@" + "cocktail-000350", rateDto);
-        cacheMap.put(USERNAME + "@" + "cocktail-000350", rateDto);
-        cacheMap.put("Garry" + "@" + COCKTAIL_ID, rateDto);
-        cacheMap.put("Evan777" + "@" + COCKTAIL_ID, rateDto);
+        testMap.put(USERNAME + "@" + COCKTAIL_ID, rateDto);
+        testMap.put(USERNAME + "@" + "cocktail-000002", rateDto);
+        testMap.put(USERNAME + "@" + "cocktail-000350", rateDto);
+        testMap.put(USERNAME + "@" + "cocktail-000350", rateDto);
+        testMap.put("Garry" + "@" + COCKTAIL_ID, rateDto);
+        testMap.put("Evan777" + "@" + COCKTAIL_ID, rateDto);
 
-        Whitebox.setInternalState(ratesService, "tempRates", cacheMap);
-
-        ratesService.persistRates();
-
-        Assert.assertTrue(cacheMap.isEmpty());
+        Gson gson = new Gson();
+        for (String key : testMap.keySet()) {
+            ratesService.persistRates(key, gson.toJson(testMap.get(key)));
+        }
+        // persist only when cocktail exists
+        Mockito.verify(ratesDaoMock, Mockito.times(3)).update(Mockito.any(Rate.class));
     }
 
 }

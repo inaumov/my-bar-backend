@@ -60,5 +60,9 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
+    <bean id="messageProducerMock" name="messageProducerMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="mybar.messaging.IMessageProducer"/>
+    </bean>
+
     <!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
 </beans>
