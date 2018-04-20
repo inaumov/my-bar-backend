@@ -53,10 +53,10 @@ public class RatesService {
 
         RateDto rateDto = new RateDto();
         rateDto.setCocktailId(cocktailId);
-        rateDto.setRatedAt(new Date());
         rateDto.setStars(stars);
         Gson gson = new Gson();
-        messageProducer.send(toCacheKey(username, cocktailId), gson.toJson(rateDto));
+        Long send = messageProducer.send(toCacheKey(username, cocktailId), gson.toJson(rateDto));
+        rateDto.setRatedAt(new Date(send));
         return rateDto;
     }
 
@@ -83,7 +83,7 @@ public class RatesService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void persistRates(String cacheKey, String object) {
+    public void persistRates(String cacheKey, long timestamp, String object) {
         Gson gson = new Gson();
         IRate rateDto = gson.fromJson(object, RateDto.class);
         String[] strings = StringUtils.split(cacheKey, "@");
@@ -93,7 +93,7 @@ public class RatesService {
             Rate rate = new Rate();
             rate.setCocktail(cocktail);
             rate.setStars(rateDto.getStars());
-            rate.setRatedAt(rateDto.getRatedAt());
+            rate.setRatedAt(new Date(timestamp));
             rate.setUser(user);
             ratesDao.update(rate);
         } else {

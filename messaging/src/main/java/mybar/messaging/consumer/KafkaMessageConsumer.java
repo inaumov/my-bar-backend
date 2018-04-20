@@ -1,5 +1,6 @@
 package mybar.messaging.consumer;
 
+import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import mybar.service.rates.RatesService;
@@ -45,7 +46,7 @@ public class KafkaMessageConsumer {
         this.CLOSE_TIMEOUT = closeTimeout;
     }
 
-    private Map<String, String> tempRates = new TreeMap<>();
+    private Map<String, RecordObject> tempRates = new TreeMap<>();
 
     private Consumer<String, String> createConsumer() {
         final Properties props = new Properties();
@@ -58,8 +59,8 @@ public class KafkaMessageConsumer {
     }
 
     public void runConsumer() {
-        ScheduledExecutorService schd = Executors.newSingleThreadScheduledExecutor();
-        schd.scheduleAtFixedRate(this::poll, 30, 3600, TimeUnit.SECONDS);
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(this::poll, 30, 360, TimeUnit.SECONDS);
     }
 
     private void poll() {
@@ -67,7 +68,7 @@ public class KafkaMessageConsumer {
             // Subscribe to the topic.
             consumer.subscribe(Collections.singletonList(TOPIC));
 
-            final int giveUp = 100;
+            final int giveUp = 10;
             int noRecordsCount = 0;
 
             while (true) {
@@ -91,11 +92,12 @@ public class KafkaMessageConsumer {
                                 record.key(), record.value(),
                                 record.partition(), record.offset());
                         // consume all but keep the latest value
-                        tempRates.put(record.key(), record.value());
+                        tempRates.put(record.key(), RecordObject.of(record.timestamp(), record.value()));
                     });
 
-                    for (Map.Entry<String, String> entry : tempRates.entrySet()) {
-                        ratesService.persistRates(entry.getKey(), entry.getValue());
+                    for (String cacheKey : tempRates.keySet()) {
+                        RecordObject recordObject = tempRates.get(cacheKey);
+                        ratesService.persistRates(cacheKey, recordObject.timestamp, recordObject.value);
                     }
                     if (!offsets.isEmpty()) {
                         consumer.commitAsync(offsets, (map, exception) -> {
@@ -113,8 +115,14 @@ public class KafkaMessageConsumer {
                 log.info("Done consuming.");
             }
         } finally {
-            log.info("Closing Consumer withing default TIMEOUT: {} ms.", CLOSE_TIMEOUT);
-            consumer.close(CLOSE_TIMEOUT, TimeUnit.MILLISECONDS);
+            log.info("Closing Consumer automatically withing default TIMEOUT: {} ms.", 30000L);
         }
     }
+
+    @AllArgsConstructor(staticName = "of")
+    private static class RecordObject {
+        private long timestamp;
+        private String value;
+    }
+
 }

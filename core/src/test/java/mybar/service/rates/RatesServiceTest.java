@@ -135,7 +135,7 @@ public class RatesServiceTest {
 
         Gson gson = new Gson();
         for (String key : testMap.keySet()) {
-            ratesService.persistRates(key, gson.toJson(testMap.get(key)));
+            ratesService.persistRates(key, testMap.get(key).getRatedAt().getTime(), gson.toJson(testMap.get(key)));
         }
         // persist only when cocktail exists
         Mockito.verify(ratesDaoMock, Mockito.times(3)).update(Mockito.any(Rate.class));

@@ -37,7 +37,7 @@ public class KafkaMessageProducer implements IMessageProducer {
     }
 
     @Override
-    public void send(final String key, final String object) {
+    public Long send(final String key, final String object) {
         final Producer<String, String> producer = createProducer();
         long time = System.currentTimeMillis();
         try {
@@ -47,12 +47,14 @@ public class KafkaMessageProducer implements IMessageProducer {
             System.out.printf("sent record(key=%s value=%s) meta(partition=%d, offset=%d) time=%d\n",
                     record.key(), record.value(), metadata.partition(),
                     metadata.offset(), elapsedTime);
+            return record.timestamp();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } finally {
             producer.flush();
             producer.close();
         }
+        return null;
     }
 
 }
