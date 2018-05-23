@@ -15,7 +15,7 @@ version 1.1 :
 - implemented users management services
 - implemented rate cocktails service
 - switched to the spring core and spring security 4.x versions
-
-future version 1.2 :
 - history end-point
-- investigate possibility to use messaging for rates service
+
+version 1.2 :
+- added messaging for rates service

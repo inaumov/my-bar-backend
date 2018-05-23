@@ -12,7 +12,6 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,20 +29,18 @@ public class KafkaMessageConsumer {
     private final String CONSUMER_GROUP_ID;
     private final String BOOTSTRAP_SERVERS;
     private final long POLL_TIMEOUT;
-    private final long CLOSE_TIMEOUT;
 
     @Setter
     public Consumer<String, String> consumer;
 
-    @Autowired
     private RatesService ratesService;
 
-    public KafkaMessageConsumer(String topic, String servers, String consumerGroupId, long pollTimeout, long closeTimeout) {
+    public KafkaMessageConsumer(RatesService ratesService, String topic, String servers, String consumerGroupId, long pollTimeout) {
+        this.ratesService = ratesService;
         this.TOPIC = topic;
         this.CONSUMER_GROUP_ID = consumerGroupId;
         this.BOOTSTRAP_SERVERS = servers;
         this.POLL_TIMEOUT = pollTimeout;
-        this.CLOSE_TIMEOUT = closeTimeout;
     }
 
     private Map<String, RecordObject> tempRates = new TreeMap<>();
@@ -63,7 +60,7 @@ public class KafkaMessageConsumer {
         executorService.scheduleAtFixedRate(this::poll, 30, 360, TimeUnit.SECONDS);
     }
 
-    private void poll() {
+    void poll() {
         try (final Consumer<String, String> consumer = createConsumer()) {
             // Subscribe to the topic.
             consumer.subscribe(Collections.singletonList(TOPIC));

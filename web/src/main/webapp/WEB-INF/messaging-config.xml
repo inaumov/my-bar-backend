@@ -10,11 +10,11 @@
     </bean>
 
     <bean id="messageConsumer" name="messageConsumer" class="mybar.messaging.consumer.KafkaMessageConsumer" init-method="runConsumer">
+        <constructor-arg name="ratesService" ref="ratesService"/>
         <constructor-arg name="topic" value="my-bar-rates-topic"/>
         <constructor-arg name="consumerGroupId" value="MyBarRatesConsumer"/>
         <constructor-arg name="servers" value="localhost:9092"/>
         <constructor-arg name="pollTimeout" value="10000"/>
-        <constructor-arg name="closeTimeout" value="10000"/>
     </bean>
 
 </beans>
