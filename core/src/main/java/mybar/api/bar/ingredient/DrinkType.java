@@ -1,5 +1,5 @@
 package mybar.api.bar.ingredient;
 
 public enum DrinkType {
-    JUICE, SODA, TEA
+    JUICE, SODA, TEA, FRUIT_JUICE, SYRUP
 }
