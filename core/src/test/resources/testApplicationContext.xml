@@ -47,7 +47,7 @@
     </bean>
 
     <jdbc:embedded-database id="dataSource" type="HSQL">
-        <jdbc:script location="classpath:/schema.sql" encoding="UTF-8"/>
+        <jdbc:script location="classpath:/db/migration/V1_0__schema.sql" encoding="UTF-8"/>
     </jdbc:embedded-database>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

@@ -45,6 +45,7 @@
         <jackson-databind.version>2.5.3</jackson-databind.version>
         <mockito-core.version>1.9.5</mockito-core.version>
         <lombok.version>1.16.16</lombok.version>
+        <flyway-core.version>5.1.1</flyway-core.version>
         <mysql-connector-java.version>5.1.42</mysql-connector-java.version>
         <jetty-maven-plugin.latest>9.4.6.v20170531</jetty-maven-plugin.latest>
     </properties>
@@ -83,7 +84,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>${flyway-core.version}</version>
+            </dependency>
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
