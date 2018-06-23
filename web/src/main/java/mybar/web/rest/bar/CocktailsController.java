@@ -2,6 +2,7 @@ package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.Strings;
+import common.providers.availability.IAvailabilityCalculator;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.IMenu;
 import mybar.app.RestBeanConverter;
@@ -12,6 +13,7 @@ import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +37,8 @@ public class CocktailsController {
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    private AvailableCocktailsWrapper cocktailsWrapper;
+    @Qualifier("CocktailAvailabilityCalculator")
+    private IAvailabilityCalculator<CocktailBean> availabilityCalculator;
 
     //-------------------Retrieve Menu List--------------------------------------------------------
 
@@ -75,15 +78,9 @@ public class CocktailsController {
             return new ResponseEntity<>(Collections.<CocktailBean>emptyList(), HttpStatus.OK);
         }
 
-        List<CocktailBean> converted = convertWithAvailability(menuName, cocktailsList);
+        List<CocktailBean> converted = convertAndCalculateAvailability(cocktailsList);
+        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.size(), menuName));
         return new ResponseEntity<>(converted, HttpStatus.OK);
-    }
-
-    private static List<CocktailBean> toCocktailBeans(List<ICocktail> cocktails) {
-        return cocktails
-                .stream()
-                .map(RestBeanConverter::toCocktailBean)
-                .collect(Collectors.toList());
     }
 
     //-------------------Retrieve All Cocktails--------------------------------------------------------
@@ -99,21 +96,27 @@ public class CocktailsController {
             logger.info("Cocktail list is empty.");
             return new ResponseEntity<>(Collections.<String, List<CocktailBean>>emptyMap(), HttpStatus.OK);
         }
-        Map<String, List<CocktailBean>> map = convertWithAvailability(cocktailsMap);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        Map<String, List<CocktailBean>> responseMap = convertAndCalculateAvailability(cocktailsMap);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    private Map<String, List<CocktailBean>> convertWithAvailability(Map<String, List<ICocktail>> cocktailsMap) {
+    private Map<String, List<CocktailBean>> convertAndCalculateAvailability(Map<String, List<ICocktail>> cocktailsMap) {
         Map<String, List<CocktailBean>> newConvertedMap = new HashMap<>();
-        cocktailsMap.forEach((menuName, values) -> newConvertedMap.put(menuName, convertWithAvailability(menuName, values)));
+        for (String menuName : cocktailsMap.keySet()) {
+            List<ICocktail> cocktails = cocktailsMap.get(menuName);
+            List<CocktailBean> converted = convertAndCalculateAvailability(cocktails);
+            newConvertedMap.put(menuName, converted);
+            logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", cocktails.size(), menuName));
+        }
         return newConvertedMap;
     }
 
-    private List<CocktailBean> convertWithAvailability(String menuName, List<ICocktail> values) {
-        List<CocktailBean> converted = toCocktailBeans(values);
-        cocktailsWrapper.updateWithAvailability(converted);
-        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", values.size(), menuName));
-        return Collections.unmodifiableList(converted);
+    private List<CocktailBean> convertAndCalculateAvailability(List<ICocktail> cocktails) {
+        return cocktails
+                .stream()
+                .map(RestBeanConverter::toCocktailBean)
+                .peek(cocktail -> availabilityCalculator.doUpdate(cocktail))
+                .collect(Collectors.toList());
     }
 
     //-------------------Retrieve a cocktail with details--------------------------------------------------------
@@ -125,7 +128,7 @@ public class CocktailsController {
 
         ICocktail cocktail = cocktailsService.findCocktailById(id);
         CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(cocktail);
-        cocktailsWrapper.updateWithAvailability(cocktailBeanResponse);
+
         return new ResponseEntity<>(cocktailBeanResponse, HttpStatus.OK);
     }
 
@@ -140,7 +143,7 @@ public class CocktailsController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/cocktails/{id}").buildAndExpand(cocktailBean.getId()).toUri());
         CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(saved);
-        cocktailsWrapper.updateWithAvailability(cocktailBeanResponse);
+
         return new ResponseEntity<>(cocktailBeanResponse, headers, HttpStatus.CREATED);
     }
 
@@ -152,7 +155,7 @@ public class CocktailsController {
 
         ICocktail updated = cocktailsService.updateCocktail(cocktailBean);
         CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(updated);
-        cocktailsWrapper.updateWithAvailability(cocktailBeanResponse);
+
         return new ResponseEntity<>(cocktailBeanResponse, HttpStatus.OK);
     }
 

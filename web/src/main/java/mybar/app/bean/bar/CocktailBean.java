@@ -1,8 +1,10 @@
 package mybar.app.bean.bar;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.MoreObjects;
+import common.providers.availability.IAvailabilitySettable;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.api.bar.ICocktail;
@@ -13,7 +15,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class CocktailBean implements ICocktail {
+public class CocktailBean implements ICocktail, IAvailabilitySettable {
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private String id;
@@ -45,6 +47,21 @@ public class CocktailBean implements ICocktail {
                 .add("imageUrl", imageUrl)
                 .add("description", description)
                 .toString();
+    }
+
+    @JsonIgnore
+    @Override
+    public void setAvailable(Boolean isAvailable) {
+        this.hasAllIngredients = hasAllIngredients(isAvailable);
+    }
+
+    private YesNoEnum hasAllIngredients(Boolean isCocktailAvailable) {
+        if (isCocktailAvailable == Boolean.TRUE) {
+            return YesNoEnum.YES;
+        } else if (isCocktailAvailable == Boolean.FALSE) {
+            return YesNoEnum.NO;
+        }
+        return YesNoEnum.UNDEFINED;
     }
 
 }

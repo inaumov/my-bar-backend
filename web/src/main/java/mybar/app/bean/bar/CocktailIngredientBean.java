@@ -1,15 +1,17 @@
 package mybar.app.bean.bar;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import common.providers.availability.IAvailabilitySettable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import mybar.api.bar.Measurement;
 import mybar.api.bar.ICocktailIngredient;
+import mybar.api.bar.Measurement;
 
 @Getter
 @Setter
-public class CocktailIngredientBean implements ICocktailIngredient {
+public class CocktailIngredientBean implements ICocktailIngredient, IAvailabilitySettable {
 
     @JsonView({View.Cocktail.class, View.CocktailWithDetails.class})
     private int ingredientId;
@@ -26,6 +28,12 @@ public class CocktailIngredientBean implements ICocktailIngredient {
 
     public Boolean isMissing() {
         return missing;
+    }
+
+    @JsonIgnore
+    @Override
+    public void setAvailable(Boolean isAvailable) {
+        this.missing = isAvailable == null || !isAvailable;
     }
 
 }

@@ -2,6 +2,7 @@ package mybar.web.rest.bar;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import common.providers.availability.IAvailabilityCalculator;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
@@ -9,7 +10,6 @@ import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.CocktailIngredientBean;
 import mybar.app.bean.bar.YesNoEnum;
 import mybar.service.bar.ShelfService;
-import mybar.web.rest.bar.AvailableCocktailsWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,16 +32,18 @@ import static org.mockito.Mockito.reset;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("test-rest-context.xml")
-public class AvailableCocktailsWrapperTest {
+public class CocktailAvailabilityCalculatorTest {
 
     @Autowired
     private ShelfService shelfService;
-
-    private AvailableCocktailsWrapper cocktailsWrapper;
+    @Autowired
+    private IAvailabilityCalculator<CocktailBean> availabilityCalculator;
 
     @Before
     public void setUp() throws Exception {
-        cocktailsWrapper = new AvailableCocktailsWrapper(shelfService);
+        CocktailAvailabilityCalculator availabilityCalculator = new CocktailAvailabilityCalculator();
+        availabilityCalculator.setShelfService(shelfService);
+        this.availabilityCalculator = availabilityCalculator;
         Mockito.doAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -72,8 +74,9 @@ public class AvailableCocktailsWrapperTest {
         testNotEmptyBean.setId("cocktail-000004");
 
         ArrayList<CocktailBean> cocktails = Lists.newArrayList(emptyBean1, emptyBean2, addIngredients(testNotEmptyBean), prepareAvailableCocktail(testAvailableBean));
-
-        cocktailsWrapper.updateWithAvailability(cocktails);
+        for (CocktailBean cocktail : cocktails) {
+            availabilityCalculator.doUpdate(cocktail);
+        }
         assertEquals(4, cocktails.size());
 
         CocktailBean bean1 = cocktails.get(0);

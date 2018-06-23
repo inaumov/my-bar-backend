@@ -37,8 +37,8 @@
         <constructor-arg value="mybar.service.bar.CocktailsService"/>
     </bean>
 
-    <bean id="cocktailsWrapper" name="cocktailsWrapperMock" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="mybar.web.rest.bar.AvailableCocktailsWrapper"/>
+    <bean id="cocktailAvailabilityCalculator" name="cocktailAvailabilityCalculatorMock" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="mybar.web.rest.bar.CocktailAvailabilityCalculator"/>
     </bean>
 
     <bean id="shelfController" class="mybar.web.rest.bar.ShelfController"/>

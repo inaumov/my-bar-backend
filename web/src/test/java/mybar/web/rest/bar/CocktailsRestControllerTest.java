@@ -65,8 +65,6 @@ public class CocktailsRestControllerTest {
 
     @Autowired
     private CocktailsService cocktailsService;
-    @Autowired
-    private AvailableCocktailsWrapper cocktailsWrapper;
 
     @Before
     public void setUp() {
