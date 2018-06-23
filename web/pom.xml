@@ -149,7 +149,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
                     <webApp>
-                        <contextPath>/my-bar</contextPath>
+                        <contextPath>/dev/mybar</contextPath>
                     </webApp>
                     <httpConnector>
                         <port>8089</port>
