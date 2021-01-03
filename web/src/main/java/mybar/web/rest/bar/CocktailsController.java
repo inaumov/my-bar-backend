@@ -19,6 +19,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,13 +33,16 @@ public class CocktailsController {
 
     private Logger logger = LoggerFactory.getLogger(CocktailsController.class);
 
+    private final CocktailsService cocktailsService;
+    private final MessageSource messageSource;
+    private final IAvailabilityCalculator<CocktailBean> availabilityCalculator;
+
     @Autowired
-    private CocktailsService cocktailsService;
-    @Autowired
-    private MessageSource messageSource;
-    @Autowired
-    @Qualifier("CocktailAvailabilityCalculator")
-    private IAvailabilityCalculator<CocktailBean> availabilityCalculator;
+    public CocktailsController(CocktailsService cocktailsService, MessageSource messageSource, @Qualifier("CocktailAvailabilityCalculator") IAvailabilityCalculator<CocktailBean> availabilityCalculator) {
+        this.cocktailsService = cocktailsService;
+        this.messageSource = messageSource;
+        this.availabilityCalculator = availabilityCalculator;
+    }
 
     //-------------------Retrieve Menu List--------------------------------------------------------
 
@@ -70,6 +74,7 @@ public class CocktailsController {
 
     //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
 
+    @Secured("ROLE_USER")
     private ResponseEntity<List<CocktailBean>> findCocktailsForMenu(String menuName) {
         logger.info("Fetching cocktails for menu [{0}]...", menuName);
         List<ICocktail> cocktailsList = cocktailsService.getAllCocktailsForMenu(menuName);
@@ -85,6 +90,7 @@ public class CocktailsController {
 
     //-------------------Retrieve All Cocktails--------------------------------------------------------
 
+    @Secured("ROLE_USER")
     @JsonView(View.Cocktail.class)
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity allCocktails(@RequestParam(value = "filter", required = false) String menuNameParam) {
@@ -121,6 +127,7 @@ public class CocktailsController {
 
     //-------------------Retrieve a cocktail with details--------------------------------------------------------
 
+    @Secured("ROLE_USER")
     @JsonView(View.CocktailWithDetails.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<CocktailBean> getCocktail(@PathVariable("id") String id) {
@@ -134,6 +141,7 @@ public class CocktailsController {
 
     //-------------------Create a Cocktail--------------------------------------------------------
 
+    @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CocktailBean> addCocktail(@RequestBody CocktailBean cocktailBean, UriComponentsBuilder ucBuilder) {
         logger.info("Creating a new cocktail item " + cocktailBean);
@@ -149,6 +157,7 @@ public class CocktailsController {
 
     //------------------- Update a Cocktail --------------------------------------------------------
 
+    @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<CocktailBean> updateCocktail(@RequestBody CocktailBean cocktailBean) {
         logger.info("Updating a cocktail " + cocktailBean);
@@ -161,6 +170,7 @@ public class CocktailsController {
 
     //------------------- Delete a Cocktail --------------------------------------------------------
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CocktailBean> deleteCocktail(@PathVariable("id") String id) {
         logger.info("Deleting a cocktail with id " + id);

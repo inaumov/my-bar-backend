@@ -11,24 +11,18 @@
     <!--resource security-->
     <security:http pattern="/api/users/register" security="none"/>
     <security:http auto-config="true" use-expressions="true" create-session="stateless">
+        <security:intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <security:intercept-url pattern="/api/cocktails/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
         <security:intercept-url pattern="/api/ingredients/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
         <security:intercept-url pattern="/api/shelf/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
         <security:intercept-url pattern="/api/users/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/api/**" access="isAuthenticated()"/>
-        <security:intercept-url pattern="/api/users/register" access="isAnonymous()"/>
+
         <security:csrf disabled="true"/>
         <security:http-basic/>
     </security:http>
 
-    <!--manager responsible for loading user account with assigned roles-->
-
-    <security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider user-service-ref="userDetailsService">
-            <security:password-encoder hash="plaintext"/>
-        </security:authentication-provider>
+    <security:authentication-manager>
+        <security:authentication-provider ref="authProvider"/>
     </security:authentication-manager>
-
-    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
 </beans>
