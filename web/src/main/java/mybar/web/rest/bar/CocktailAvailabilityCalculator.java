@@ -24,23 +24,23 @@ public class CocktailAvailabilityCalculator implements IAvailabilityCalculator<C
 
     @Override
     public void doUpdate(CocktailBean cocktail) {
-        cocktail.setAvailable(calculateAvailability(cocktail.getIngredients()));
+        Boolean isAvailable = calculateAvailability(cocktail.getIngredients());
+        cocktail.setAvailable(isAvailable);
     }
 
     private Boolean calculateAvailability(Map<String, Collection<CocktailIngredientBean>> cocktailIngredients) {
-        Collection<Collection<CocktailIngredientBean>> values = cocktailIngredients.values();
-        Iterable<CocktailIngredientBean> beans = Iterables.concat(values);
-        if (!beans.iterator().hasNext()) {
+        Iterable<CocktailIngredientBean> allIngredients = Iterables.concat(cocktailIngredients.values());
+        Iterator<CocktailIngredientBean> ingredientsIterator = allIngredients.iterator();
+        if (!ingredientsIterator.hasNext()) {
             return null;
         }
         boolean isCocktailAvailable = true;
-        Iterator<Map.Entry<String, Collection<CocktailIngredientBean>>> entries = cocktailIngredients.entrySet().iterator();
-        for (; entries.hasNext(); ) {
-            for (CocktailIngredientBean cocktailIngredientBean : entries.next().getValue()) {
-                boolean isBottleAvailable = shelfService.isBottleAvailable(cocktailIngredientBean.getIngredientId());
-                cocktailIngredientBean.setAvailable(isBottleAvailable);
-                isCocktailAvailable &= isBottleAvailable;
-            }
+
+        while (ingredientsIterator.hasNext()) {
+            CocktailIngredientBean ingredientBean = ingredientsIterator.next();
+            boolean isBottleAvailable = shelfService.isBottleAvailable(ingredientBean.getIngredientId());
+            ingredientBean.setAvailable(isBottleAvailable);
+            isCocktailAvailable &= isBottleAvailable;
         }
         return isCocktailAvailable;
     }
