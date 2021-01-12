@@ -46,7 +46,7 @@
                 <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
             </bean>
         </property>
-        <property name="persistenceUnitName" value="dev_my_bar"/>
+        <property name="persistenceUnitName" value="my_bar_db"/>
     </bean>
 
     <bean id="transactionManager" depends-on="flyway" class="org.springframework.orm.jpa.JpaTransactionManager"/>
