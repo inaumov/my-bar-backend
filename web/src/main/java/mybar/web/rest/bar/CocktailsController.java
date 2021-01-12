@@ -4,18 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.Strings;
 import common.providers.availability.IAvailabilityCalculator;
 import mybar.api.bar.ICocktail;
-import mybar.api.bar.IMenu;
 import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.CocktailBean;
-import mybar.app.bean.bar.MenuBean;
 import mybar.app.bean.bar.View;
 import mybar.service.bar.CocktailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,69 +31,38 @@ public class CocktailsController {
     @Autowired
     private CocktailsService cocktailsService;
     @Autowired
-    private MessageSource messageSource;
-    @Autowired
     @Qualifier("CocktailAvailabilityCalculator")
     private IAvailabilityCalculator<CocktailBean> availabilityCalculator;
-
-    //-------------------Retrieve Menu List--------------------------------------------------------
-
-    @JsonView(View.Menu.class)
-    @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public ResponseEntity<List<MenuBean>> listAllMenuItems() {
-        logger.info("Fetching menu items list...");
-
-        Collection<IMenu> allMenuItems = cocktailsService.getAllMenuItems();
-        if (allMenuItems.isEmpty()) {
-            logger.info("Menu list is empty.");
-            return new ResponseEntity<>(Collections.<MenuBean>emptyList(), HttpStatus.OK);
-        }
-        List<MenuBean> convertedList = convertWithTranslations(allMenuItems);
-        return new ResponseEntity<>(convertedList, HttpStatus.OK);
-    }
-
-    private List<MenuBean> convertWithTranslations(Collection<IMenu> menuItems) {
-        List<MenuBean> convertedList = new ArrayList<>();
-        Locale locale = LocaleContextHolder.getLocale();
-        for (IMenu menu : menuItems) {
-            MenuBean from = RestBeanConverter.toMenuBean(menu);
-            from.setTranslation(messageSource.getMessage(menu.getName(), null, locale));
-            convertedList.add(from);
-        }
-        logger.info(MessageFormat.format("Found {0} items in menu list.", menuItems.size()));
-        return convertedList;
-    }
-
-    //-------------------Retrieve All Cocktails For Menu--------------------------------------------------------
-
-    private ResponseEntity<List<CocktailBean>> findCocktailsForMenu(String menuName) {
-        logger.info("Fetching cocktails for menu [{0}]...", menuName);
-        List<ICocktail> cocktailsList = cocktailsService.getAllCocktailsForMenu(menuName);
-        if (cocktailsList.isEmpty()) {
-            logger.info(MessageFormat.format("Cocktails list for menu [{0}] is empty.", menuName));
-            return new ResponseEntity<>(Collections.<CocktailBean>emptyList(), HttpStatus.OK);
-        }
-
-        List<CocktailBean> converted = convertAndCalculateAvailability(cocktailsList);
-        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.size(), menuName));
-        return new ResponseEntity<>(converted, HttpStatus.OK);
-    }
 
     //-------------------Retrieve All Cocktails--------------------------------------------------------
 
     @JsonView(View.Cocktail.class)
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity allCocktails(@RequestParam(value = "filter", required = false) String menuNameParam) {
+    public ResponseEntity<Map<String, List<CocktailBean>>> allCocktails(@RequestParam(value = "filter", required = false) String menuNameParam) {
         if (!Strings.isNullOrEmpty(menuNameParam)) {
-            return findCocktailsForMenu(menuNameParam);
+            Map<String, List<CocktailBean>> cocktailsForMenu = findCocktailsForMenu(menuNameParam);
+            return new ResponseEntity<>(cocktailsForMenu, HttpStatus.OK);
         }
         Map<String, List<ICocktail>> cocktailsMap = cocktailsService.getAllCocktails();
         if (cocktailsMap.isEmpty()) {
             logger.info("Cocktail list is empty.");
-            return new ResponseEntity<>(Collections.<String, List<CocktailBean>>emptyMap(), HttpStatus.OK);
+            return new ResponseEntity<>(Collections.emptyMap(), HttpStatus.OK);
         }
         Map<String, List<CocktailBean>> responseMap = convertAndCalculateAvailability(cocktailsMap);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    private Map<String, List<CocktailBean>> findCocktailsForMenu(String menuName) {
+        logger.info("Fetching cocktails for menu [{}]...", menuName);
+        List<ICocktail> cocktailsList = cocktailsService.getAllCocktailsForMenu(menuName);
+        if (cocktailsList.isEmpty()) {
+            logger.info(MessageFormat.format("Cocktails list for menu [{0}] is empty.", menuName));
+            return Collections.emptyMap();
+        }
+
+        List<CocktailBean> converted = convertAndCalculateAvailability(cocktailsList);
+        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.size(), menuName));
+        return Collections.singletonMap(menuName, converted);
     }
 
     private Map<String, List<CocktailBean>> convertAndCalculateAvailability(Map<String, List<ICocktail>> cocktailsMap) {
@@ -115,7 +80,7 @@ public class CocktailsController {
         return cocktails
                 .stream()
                 .map(RestBeanConverter::toCocktailBean)
-                .peek(cocktail -> availabilityCalculator.doUpdate(cocktail))
+                .peek(availabilityCalculator::doUpdate)
                 .collect(Collectors.toList());
     }
 

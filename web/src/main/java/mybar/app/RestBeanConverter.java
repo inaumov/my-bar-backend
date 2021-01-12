@@ -17,10 +17,7 @@ import mybar.app.bean.bar.ingredient.DrinkBean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 public final class RestBeanConverter {
 
@@ -48,8 +45,8 @@ public final class RestBeanConverter {
         return transformedMap;
     }
 
-    private static ArrayList<CocktailIngredientBean> transformCocktailIngredients(Collection<ICocktailIngredient> cocktailIngredients) {
-        ArrayList<CocktailIngredientBean> cocktailIngredientBeans = Lists.newArrayList();
+    private static List<CocktailIngredientBean> transformCocktailIngredients(Collection<ICocktailIngredient> cocktailIngredients) {
+        List<CocktailIngredientBean> cocktailIngredientBeans = Lists.newArrayList();
         for (ICocktailIngredient cocktailIngredient : cocktailIngredients) {
             cocktailIngredientBeans.add(from(cocktailIngredient));
         }

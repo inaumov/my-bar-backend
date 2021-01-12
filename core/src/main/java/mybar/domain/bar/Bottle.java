@@ -34,7 +34,7 @@ public class Bottle {
     @Column(name = "PRICE", scale = 2)
     private BigDecimal price;
 
-    @Column(name = "IN_SHELF")
+    @Column(name = "IN_SHELF", columnDefinition = "boolean default false")
     private boolean inShelf;
 
     @Column(name = "IMAGE_URL", nullable = true)

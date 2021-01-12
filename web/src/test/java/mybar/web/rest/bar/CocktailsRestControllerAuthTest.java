@@ -67,18 +67,6 @@ public class CocktailsRestControllerAuthTest {
     }
 
     @Test
-    public void test_listAllMenuItems() throws Exception {
-        when(cocktailsService.getAllMenuItems()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/cocktails/menu")
-                .with(user(USERNAME).password("abc123").roles(ROLE_USER))
-                .with(httpBasic(USERNAME, "abc123")))
-
-                .andExpect(authenticated().withUsername(USERNAME))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     public void test_findById() throws Exception {
         when(cocktailsService.findCocktailById(TEST_ID_1)).thenReturn(new CocktailDto());
 

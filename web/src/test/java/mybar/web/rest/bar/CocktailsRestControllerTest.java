@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import mybar.api.bar.ICocktail;
-import mybar.api.bar.IMenu;
 import mybar.api.bar.Measurement;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.dto.bar.CocktailDto;
 import mybar.dto.bar.CocktailToIngredientDto;
-import mybar.dto.bar.MenuDto;
 import mybar.exception.CocktailNotFoundException;
 import mybar.exception.UnknownIngredientsException;
 import mybar.exception.UnknownMenuException;
@@ -74,33 +72,6 @@ public class CocktailsRestControllerTest {
     @After
     public void tearDown() throws Exception {
         reset(cocktailsService);
-    }
-
-    @Test
-    public void listAllMenuItems_Should_ReturnAllMenuEntries() throws Exception {
-
-        final MenuDto first = new MenuDto();
-        first.setId(1);
-        first.setName("shot");
-
-        final MenuDto second = new MenuDto();
-        second.setId(2);
-        second.setName("long");
-
-        when(cocktailsService.getAllMenuItems()).thenReturn(Lists.<IMenu>newArrayList(first, second));
-
-        mockMvc.perform(get("/cocktails/menu"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-
-                .andExpect(jsonPath("$[0].name", is("shot")))
-                .andExpect(jsonPath("$[0].translation", equalTo("Test Shot")))
-                .andExpect(jsonPath("$[1].name", is("long")))
-                .andExpect(jsonPath("$[1].translation", equalTo("Test Long")));
-
-        verify(cocktailsService, times(1)).getAllMenuItems();
-        verifyNoMoreInteractions(cocktailsService);
     }
 
     @Test
@@ -218,22 +189,22 @@ public class CocktailsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].id", is("cocktail-000005")))
-                .andExpect(jsonPath("$[0].available", is("UNDEFINED")))
-                .andExpect(jsonPath("$[1].id", is("cocktail-000010")))
-                .andExpect(jsonPath("$[2].id", is(TEST_ID_1)))
-                .andExpect(jsonPath("$[2].name", is(NAME)))
-                .andExpect(jsonPath("$[2].description").doesNotExist())
-                .andExpect(jsonPath("$[2].imageUrl", is(IMAGE_URL)))
-                .andExpect(jsonPath("$[2].available", is("UNDEFINED")))
-                .andExpect(jsonPath("$[2].relatedToMenu").doesNotExist())
+                .andExpect(jsonPath("$.any", hasSize(3)))
+                .andExpect(jsonPath("$.any[0].id", is("cocktail-000005")))
+                .andExpect(jsonPath("$.any[0].available", is("UNDEFINED")))
+                .andExpect(jsonPath("$.any[1].id", is("cocktail-000010")))
+                .andExpect(jsonPath("$.any[2].id", is(TEST_ID_1)))
+                .andExpect(jsonPath("$.any[2].name", is(NAME)))
+                .andExpect(jsonPath("$.any[2].description").doesNotExist())
+                .andExpect(jsonPath("$.any[2].imageUrl", is(IMAGE_URL)))
+                .andExpect(jsonPath("$.any[2].available", is("UNDEFINED")))
+                .andExpect(jsonPath("$.any[2].relatedToMenu").doesNotExist())
 
-                .andExpect(jsonPath("$[2].ingredients.beverages", hasSize(1)))
-                .andExpect(jsonPath("$[2].ingredients.beverages[0].ingredientId", is(5)))
-                .andExpect(jsonPath("$[2].ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
-                .andExpect(jsonPath("$[2].ingredients.beverages[0].measurement", is(Measurement.ML.name())))
-                .andExpect(jsonPath("$[2].ingredients.beverages[0].missing").doesNotExist());
+                .andExpect(jsonPath("$.any[2].ingredients.beverages", hasSize(1)))
+                .andExpect(jsonPath("$.any[2].ingredients.beverages[0].ingredientId", is(5)))
+                .andExpect(jsonPath("$.any[2].ingredients.beverages[0].volume", is(TEST_VOLUME_VALUE)))
+                .andExpect(jsonPath("$.any[2].ingredients.beverages[0].measurement", is(Measurement.ML.name())))
+                .andExpect(jsonPath("$.any[2].ingredients.beverages[0].missing").doesNotExist());
 
         verify(cocktailsService, times(1)).getAllCocktailsForMenu("any");
         verifyNoMoreInteractions(cocktailsService);
