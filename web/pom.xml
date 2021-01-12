@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.inaumov.mybar</groupId>
         <artifactId>MyBar-server</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1.0</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.inaumov.mybar</groupId>
             <artifactId>mybar-core</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
