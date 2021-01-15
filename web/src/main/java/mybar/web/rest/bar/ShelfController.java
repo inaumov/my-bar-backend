@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,12 +21,17 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/shelf")
+@Secured("ROLE_USER")
 public class ShelfController {
 
     private Logger logger = LoggerFactory.getLogger(ShelfController.class);
 
+    private final ShelfService shelfService;
+
     @Autowired
-    private ShelfService shelfService;
+    public ShelfController(ShelfService shelfService) {
+        this.shelfService = shelfService;
+    }
 
     //-------------------Retrieve All Bottles--------------------------------------------------------
 

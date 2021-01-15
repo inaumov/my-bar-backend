@@ -38,7 +38,7 @@ public class RatesService {
 
     private static final Range<Integer> starsRange = new Range<>(1, 10);
 
-    private IMessageProducer messageProducer;
+    private final IMessageProducer messageProducer;
 
     @Autowired
     public RatesService(IMessageProducer messageProducer) {

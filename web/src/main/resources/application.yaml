@@ -1,0 +1,28 @@
+server:
+  contextPath: /api/bar
+  port: 8089
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/my_bar_db?autoReconnect=true&useSSL=false
+    username: root
+    password: check001
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+kafka:
+  events:
+    topic: my_bar.rates-topic
+    producerClientId: my_bar.rates-producer
+    servers: localhost:9092
+    consumerGroupId: my_bar.rates-consumer
+    pollTimeout: 10000

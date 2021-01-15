@@ -151,11 +151,11 @@ public class CocktailsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
-                .andExpect(jsonPath("$.shot.", hasSize(2)))
+                .andExpect(jsonPath("$.shot", hasSize(2)))
                 .andExpect(jsonPath("$.shot[0].id", is("cocktail-000005")))
                 .andExpect(jsonPath("$.shot[1].id", is("cocktail-000010")))
 
-                .andExpect(jsonPath("$.other.", hasSize(1)))
+                .andExpect(jsonPath("$.other", hasSize(1)))
                 .andExpect(jsonPath("$.other[0].id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$.other[0].name", is(NAME)))
                 .andExpect(jsonPath("$.other[0].description").doesNotExist())

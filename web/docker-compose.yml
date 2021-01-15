@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  db:
+    container_name: my-bar-db
+    image: mysql:5.6.49
+    environment:
+      - MYSQL_DATABASE=my_bar_db
+      - MYSQL_ROOT_PASSWORD=check001
+    ports:
+      - 3307:3306
+
+  app:
+    image: my-bar-backend:latest
+    container_name: my-bar-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8092:8089
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://my-bar-db:3306/my_bar_db?autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: check001
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+    depends_on:
+      - db

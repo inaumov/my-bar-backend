@@ -27,18 +27,18 @@ public class RestExceptionProcessor {
     @Autowired
     private MessageSource messageSource;
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Throwable.class)
-    @ResponseBody
-    public ErrorInfo handleThrowable(HttpServletRequest req, final Throwable ex) {
-        log.error("Unexpected error", ex);
-
-        Locale locale = LocaleContextHolder.getLocale();
-        String errorMessage = messageSource.getMessage("internal.server.error", null, locale);
-
-        String errorURL = req.getRequestURL().toString();
-        return new ErrorInfo(errorURL, errorMessage);
-    }
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler(Throwable.class)
+//    @ResponseBody
+//    public ErrorInfo handleThrowable(HttpServletRequest req, final Throwable ex) {
+//        log.error("Unexpected error", ex);
+//
+//        Locale locale = LocaleContextHolder.getLocale();
+//        String errorMessage = messageSource.getMessage("internal.server.error", null, locale);
+//
+//        String errorURL = req.getRequestURL().toString();
+//        return new ErrorInfo(errorURL, errorMessage);
+//    }
 
     @ExceptionHandler(BottleNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

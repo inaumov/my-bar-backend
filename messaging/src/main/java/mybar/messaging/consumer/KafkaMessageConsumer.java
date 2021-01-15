@@ -33,7 +33,7 @@ public class KafkaMessageConsumer {
     @Setter
     public Consumer<String, String> consumer;
 
-    private RatesService ratesService;
+    private final RatesService ratesService;
 
     public KafkaMessageConsumer(RatesService ratesService, String topic, String servers, String consumerGroupId, long pollTimeout) {
         this.ratesService = ratesService;
@@ -43,7 +43,7 @@ public class KafkaMessageConsumer {
         this.POLL_TIMEOUT = pollTimeout;
     }
 
-    private Map<String, RecordObject> tempRates = new TreeMap<>();
+    private final Map<String, RecordObject> tempRates = new TreeMap<>();
 
     private Consumer<String, String> createConsumer() {
         final Properties props = new Properties();
@@ -118,8 +118,8 @@ public class KafkaMessageConsumer {
 
     @AllArgsConstructor(staticName = "of")
     private static class RecordObject {
-        private long timestamp;
-        private String value;
+        private final long timestamp;
+        private final String value;
     }
 
 }

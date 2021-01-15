@@ -28,11 +28,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-@RestController
+//@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -67,9 +68,8 @@ public class UserController {
                                     @RequestBody RegisterUserBean registerUserBean) {
         validatePasswordConfirmation(registerUserBean);
 
-        String pwd = new String(Base64.getDecoder().decode(registerUserBean.getPassword()),
-                Charset.forName("UTF-8"));
-        registerUserBean.setPassword(passwordEncoder.encode(pwd));
+//        String pwd = new String(Base64.getDecoder().decode(registerUserBean.getPassword()), StandardCharsets.UTF_8);
+        registerUserBean.setPassword(passwordEncoder.encode(registerUserBean.getPassword()));
 
         IUserDetails user = userService.createUser(registerUserBean);
         return BeanFactory.fromDetails(user);
