@@ -3,14 +3,14 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>mybar-core</artifactId>
+    <artifactId>core</artifactId>
     <packaging>jar</packaging>
     <name>MyBar :: Modules :: Core</name>
 
     <parent>
         <groupId>com.inaumov.mybar</groupId>
-        <artifactId>MyBar-server</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <artifactId>parent</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.10.1.RELEASE</version>
+            <version>${spring-data-jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway-core.version}</version>
+            <version>${flyway.version}</version>
         </dependency>
 
         <dependency>
@@ -114,7 +114,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
             <scope>test</scope>
         </dependency>
 
