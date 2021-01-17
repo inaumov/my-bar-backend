@@ -28,11 +28,15 @@ public class IngredientService {
             IAdditive.GROUP_NAME
     ));
 
-    @Autowired(required = false)
-    private IngredientDao ingredientDao;
+    private final IngredientDao ingredientDao;
 
     private Supplier<List<IIngredient>> allIngredientsCached = Suppliers.memoizeWithExpiration(
             this::loadAllIngredients, 30, TimeUnit.MINUTES);
+
+    @Autowired
+    public IngredientService(IngredientDao ingredientDao) {
+        this.ingredientDao = ingredientDao;
+    }
 
     public List<IIngredient> findByGroupName(String groupName) throws IllegalArgumentException {
         Preconditions.checkArgument(GROUP_NAMES.contains(groupName), "Unknown group name: " + groupName);

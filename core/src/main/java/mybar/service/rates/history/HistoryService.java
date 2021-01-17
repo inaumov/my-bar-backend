@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class HistoryService {
 
-    @Autowired(required = false)
-    private RatesDao ratesDao;
+    private final RatesDao ratesDao;
+
+    @Autowired
+    public HistoryService(RatesDao ratesDao) {
+        this.ratesDao = ratesDao;
+    }
 
     @Transactional
     public List<History> getHistoryForPeriod(Date startDate, Date endDate) {

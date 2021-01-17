@@ -37,17 +37,13 @@ import java.util.stream.StreamSupport;
 @Transactional
 public class CocktailsService {
 
-    @Autowired(required = false)
-    private MenuDao menuDao;
+    private final MenuDao menuDao;
 
-    @Autowired(required = false)
-    private CocktailDao cocktailDao;
+    private final CocktailDao cocktailDao;
 
-    @Autowired(required = false)
-    private IngredientDao ingredientDao;
+    private final IngredientDao ingredientDao;
 
-    @Autowired(required = false)
-    private RatesDao ratesDao;
+    private final RatesDao ratesDao;
 
     private Supplier<List<IMenu>> allMenusCached = Suppliers.memoizeWithExpiration(
             this::loadAllMenus, 30, TimeUnit.MINUTES);
@@ -56,6 +52,14 @@ public class CocktailsService {
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .maximumSize(10)
             .build();
+
+    @Autowired
+    public CocktailsService(MenuDao menuDao, CocktailDao cocktailDao, IngredientDao ingredientDao, RatesDao ratesDao) {
+        this.menuDao = menuDao;
+        this.cocktailDao = cocktailDao;
+        this.ingredientDao = ingredientDao;
+        this.ratesDao = ratesDao;
+    }
 
     // menu
 

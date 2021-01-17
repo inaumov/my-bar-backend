@@ -34,15 +34,20 @@ import static mybar.dto.DtoFactory.toDto;
 @Transactional
 public class ShelfService {
 
-    @Autowired(required = false)
     private BottleDao bottleDao;
-    @Autowired(required = false)
+
     private IngredientDao ingredientDao;
 
     private Cache<String, IBottle> bottlesCache = CacheBuilder.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .maximumSize(100)
             .build();
+
+    @Autowired
+    public ShelfService(BottleDao bottleDao, IngredientDao ingredientDao) {
+        this.bottleDao = bottleDao;
+        this.ingredientDao = ingredientDao;
+    }
 
     public IBottle findById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");

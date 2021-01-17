@@ -27,22 +27,22 @@ import java.util.*;
 @Service
 public class RatesService {
 
-    @Autowired(required = false)
-    private RatesDao ratesDao;
+    private final RatesDao ratesDao;
 
-    @Autowired(required = false)
-    private UserDao userDao;
+    private final UserDao userDao;
 
-    @Autowired(required = false)
-    private CocktailDao cocktailDao;
+    private final CocktailDao cocktailDao;
 
     private static final Range<Integer> starsRange = new Range<>(1, 10);
 
     private final IMessageProducer messageProducer;
 
     @Autowired
-    public RatesService(IMessageProducer messageProducer) {
+    public RatesService(IMessageProducer messageProducer, RatesDao ratesDao, UserDao userDao, CocktailDao cocktailDao) {
         this.messageProducer = messageProducer;
+        this.ratesDao = ratesDao;
+        this.userDao = userDao;
+        this.cocktailDao = cocktailDao;
     }
 
     public IRate rateCocktail(String username, String cocktailId, Integer stars) {

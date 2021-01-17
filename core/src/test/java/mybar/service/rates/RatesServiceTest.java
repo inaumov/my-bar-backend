@@ -38,16 +38,14 @@ public class RatesServiceTest {
     private RatesDao ratesDaoMock;
     @Mock
     private CocktailDao cocktailDaoMock;
+    @Mock
+    private IMessageProducer messageProducer;
 
     @InjectMocks
     private RatesService ratesService;
 
-    @Mock
-    private IMessageProducer messageProducer;
-
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
         Mockito.when(userDaoMock.findOne(Mockito.anyString())).thenReturn(new User());
         Mockito.when(cocktailDaoMock.read(COCKTAIL_ID)).thenReturn(new Cocktail());
     }
