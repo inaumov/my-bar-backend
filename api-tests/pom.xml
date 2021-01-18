@@ -9,21 +9,26 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>itests</artifactId>
-    <name>MyBar :: Integration tests</name>
+    <artifactId>api-tests</artifactId>
+    <name>MyBar :: API tests</name>
 
     <properties>
-        <rest-assured.version>1.4</rest-assured.version>
+        <rest-assured.version>3.3.0</rest-assured.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.jayway.restassured</groupId>
+            <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured.version}</version>
             <scope>test</scope>

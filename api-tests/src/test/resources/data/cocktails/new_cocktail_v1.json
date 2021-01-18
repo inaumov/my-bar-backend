@@ -1,0 +1,9 @@
+{
+  "name" : "Random name",
+  "relatedToMenu" : "shots",
+  "imageUrl": "",
+  "description" : "This is a good one to start.",
+  "ingredients" : {
+
+  }
+}

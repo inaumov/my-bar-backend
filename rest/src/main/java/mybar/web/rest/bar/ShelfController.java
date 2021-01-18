@@ -82,7 +82,7 @@ public class ShelfController {
         logger.info("Updating a bottle " + bottleBean);
 
         final IBottle updated = shelfService.updateBottle(bottleBean);
-        return new ResponseEntity<>(RestBeanConverter.from(updated), HttpStatus.OK);
+        return new ResponseEntity<>(RestBeanConverter.from(updated), HttpStatus.ACCEPTED);
     }
 
     //------------------- Delete a Bottle --------------------------------------------------------

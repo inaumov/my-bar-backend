@@ -129,7 +129,7 @@ public class CocktailsController {
         ICocktail updated = cocktailsService.updateCocktail(cocktailBean);
         CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(updated);
 
-        return new ResponseEntity<>(cocktailBeanResponse, HttpStatus.OK);
+        return new ResponseEntity<>(cocktailBeanResponse, HttpStatus.ACCEPTED);
     }
 
     //------------------- Delete a Cocktail --------------------------------------------------------

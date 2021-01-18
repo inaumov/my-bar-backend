@@ -53,7 +53,7 @@
         <module>core</module>
         <module>kafka-events</module>
         <module>rest</module>
-        <module>itests</module>
+        <module>api-tests</module>
     </modules>
 
     <dependencyManagement>
