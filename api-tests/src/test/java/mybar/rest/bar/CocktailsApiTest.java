@@ -1,80 +1,117 @@
 package mybar.rest.bar;
 
-import com.google.common.io.CharStreams;
-import io.restassured.http.ContentType;
-import mybar.rest.Um;
-import org.junit.Assert;
-import org.junit.Test;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import mybar.JsonUtil;
+import mybar.rest.Um;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.regex.Pattern;
+
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 public class CocktailsApiTest {
 
+    public static final String RESOURCE_ID_PATTERN = "^[a-z]+(-[a-zA-Z0-9]{6}+)*$";
+    public static Pattern RESOURCE_ID = Pattern.compile(RESOURCE_ID_PATTERN);
+
+    private final JsonUtil jsonUtil = new JsonUtil();
+
+    private static String cocktailId;
+
+    private static RequestSpecification givenAuthenticated() {
+        return RestAssured
+                .given()
+                .auth()
+                .preemptive()
+                .basic(Um.TEST_USERNAME, Um.USER_PASS);
+    }
+
     @Test
     public void testGetAllCocktails() {
-        RequestSpecification basicAuth = RestAssured.given().auth().preemptive().basic(Um.TEST_USERNAME, Um.USER_PASS);
-        Response res = basicAuth.get("http://localhost:8089/api/bar/cocktails");
-        Assert.assertEquals(200, res.getStatusCode());
-        String json = res.asString();
-//        JsonPath jp = new JsonPath(json);
+        givenAuthenticated()
+                .get("http://localhost:8089/api/bar/cocktails")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body("longs", Matchers.hasSize(1));
     }
 
     @Test
     public void testGetCocktailsByMenu() {
-        RequestSpecification basicAuth = RestAssured.given().auth().preemptive().basic(Um.TEST_USERNAME, Um.USER_PASS);
-        Response res = basicAuth.get("http://localhost:8089/api/bar/cocktails" + "?filter=shots");
-        Assert.assertEquals(200, res.getStatusCode());
-        String json = res.asString();
-//        JsonPath jp = new JsonPath(json);
+        givenAuthenticated()
+                .when()
+                .param("filter", "shooters")
+                .get("http://localhost:8089/api/bar/cocktails")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body("shooters", Matchers.hasSize(6));
     }
 
     @Test
     public void testGetCocktailDetailsById() {
-        RequestSpecification basicAuth = RestAssured.given().auth().preemptive().basic(Um.TEST_USERNAME, Um.USER_PASS);
-        Response res = basicAuth.get("http://localhost:8089/api/bar/cocktails/cocktail-000001");
-        Assert.assertEquals(200, res.getStatusCode());
-        String json = res.asString();
-//        JsonPath jp = new JsonPath(json);
+        givenAuthenticated()
+                .when()
+                .pathParam("id", "cocktail-000001")
+                .get("http://localhost:8089/api/bar/cocktails/{id}")
+                .then()
+                .statusCode(200)
+                .and()
+                .body("id", Matchers.equalTo("cocktail-000001"));
     }
 
     @Test
-    public void testAddNewCocktail() throws IOException {
-        String resourceAsString = resourceAsString("/data/cocktails/new_cocktail_v1.json");
+    public void testAddNewCocktail() {
 
-        RequestSpecification basicAuth = RestAssured.given().auth().preemptive().basic(Um.TEST_USERNAME, Um.USER_PASS);
-        Response res = basicAuth.contentType(ContentType.JSON).body(resourceAsString).post("http://localhost:8089/api/bar/cocktails");
-        Assert.assertEquals(201, res.getStatusCode());
-        String json = res.asString();
-//        JsonPath jp = new JsonPath(json);
+        JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/cocktails/new_cocktail_v1.json");
+        resourceAsJSON.put("name", resourceAsJSON.get("name") + " - " + RandomStringUtils.randomAlphabetic(6));
+
+        String id = givenAuthenticated()
+                .when()
+                .contentType(ContentType.JSON)
+                .and()
+                .body(resourceAsJSON.toString())
+                .post("http://localhost:8089/api/bar/cocktails")
+                .then()
+                .statusCode(201)
+                .body("id", matchesPattern(RESOURCE_ID))
+                .extract()
+                .path("id");
+
+        CocktailsApiTest.cocktailId = id;
     }
 
     @Test
-    public void testUpdateExistedCocktail() throws IOException {
-        String resourceAsString = resourceAsString("/data/cocktails/cocktail_v1.json");
-        RequestSpecification basicAuth = RestAssured.given().auth().preemptive().basic(Um.TEST_USERNAME, Um.USER_PASS);
-        Response res = basicAuth.contentType(ContentType.JSON).body(resourceAsString).put("http://localhost:8089/api/bar/cocktails");
-        Assert.assertEquals(202, res.getStatusCode());
-        String json = res.asString();
-//        JsonPath jp = new JsonPath(json);
-    }
+    public void testUpdateExistedCocktail() {
 
-    private String resourceAsString(String jsonFilePath) throws IOException {
-        InputStream resourceAsStream = getClass().getResourceAsStream(jsonFilePath);
-        return CharStreams.toString(new InputStreamReader(resourceAsStream));
+        String resourceAsString = jsonUtil.resourceAsString("/data/cocktails/cocktail_v1.json");
+
+        givenAuthenticated()
+                .when()
+                .contentType(ContentType.JSON)
+                .and()
+                .body(resourceAsString)
+                .put("http://localhost:8089/api/bar/cocktails")
+                .then()
+                .statusCode(202)
+                .body("id", matchesPattern(RESOURCE_ID));
     }
 
     @Test
     public void testRemoveExistedCocktail() {
-        RequestSpecification basicAuth = RestAssured.given().auth().preemptive().basic(Um.TEST_USERNAME, Um.USER_PASS);
-        Response res = basicAuth.delete("http://localhost:8089/api/bar/cocktails/" + "cocktail-000012");
-        Assert.assertEquals(204, res.getStatusCode());
-        String json = res.asString();
-//        JsonPath jp = new JsonPath(json);
+        givenAuthenticated()
+                .when()
+                .pathParam("id", cocktailId)
+                .delete("http://localhost:8089/api/bar/cocktails/{id}")
+                .then()
+                .statusCode(204);
     }
 
 }
