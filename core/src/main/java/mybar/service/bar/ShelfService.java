@@ -158,7 +158,7 @@ public class ShelfService {
     }
 
     private void clearCache() {
-        bottlesCache.cleanUp();
+        bottlesCache.invalidateAll();
     }
 
 }

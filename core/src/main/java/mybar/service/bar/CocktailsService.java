@@ -169,7 +169,7 @@ public class CocktailsService {
         } catch (EntityExistsException e) {
             return null;
         } finally {
-            cocktailsCache.cleanUp();
+            cocktailsCache.invalidateAll();
         }
     }
 
