@@ -1,28 +1,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.inaumov.mybar</groupId>
+
     <artifactId>rest</artifactId>
     <version>2.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <name>MyBar :: Modules :: REST Services</name>
 
-    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.22.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>my.bar</groupId>
+        <artifactId>parent</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <properties>
-        <java.version>1.8</java.version>
-        <spring-boot-starter-security.version>1.5.22.RELEASE</spring-boot-starter-security.version>
-        <spring.security.version>4.2.13.RELEASE</spring.security.version>
-        <spring-security-test.version>${spring.security.version}</spring-security-test.version>
         <flyway.version>5.1.1</flyway.version>
     </properties>
 
     <dependencies>
+
+        <!-- internal -->
+
+        <dependency>
+            <groupId>my.bar</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>my.bar</groupId>
+            <artifactId>kafka-events</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- spring boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -32,23 +43,26 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <!-- security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>${spring-boot-starter-security.version}</version>
         </dependency>
 
-        <!-- core -->
         <dependency>
-            <groupId>com.inaumov.mybar</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
         </dependency>
-        <!-- kafka events -->
+
         <dependency>
-            <groupId>com.inaumov.mybar</groupId>
-            <artifactId>kafka-events</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
         </dependency>
 
         <!-- 3rd party -->
@@ -74,19 +88,16 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
-            <version>${spring-security-test.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>${json-path.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path-assert</artifactId>
-            <version>${json-path.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
