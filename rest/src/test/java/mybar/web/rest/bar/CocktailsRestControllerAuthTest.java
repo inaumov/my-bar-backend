@@ -115,7 +115,7 @@ public class CocktailsRestControllerAuthTest {
                 .content("{}"))
 
                 .andExpect(authenticated().withUsername(USERNAME))
-                .andExpect(status().isOk());
+                .andExpect(status().isAccepted());
     }
 
     @Test

@@ -317,7 +317,7 @@ public class ShelfRestControllerTest {
                 .content(requestJson))
 
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isAccepted())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
 
                 .andExpect(jsonPath("$.id", is(TEST_ID_3)))

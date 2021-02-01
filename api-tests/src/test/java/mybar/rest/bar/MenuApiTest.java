@@ -7,7 +7,7 @@ import org.junit.Test;
 public class MenuApiTest {
 
     @Test
-    public void testGetMenu() {
+    public void testGetMenu_no_auth_required() {
         RestAssured.
                 get("http://localhost:8089/api/bar/menu")
                 .then()

@@ -312,7 +312,7 @@ public class CocktailsRestControllerTest {
                 .content(requestJson))
 
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isAccepted())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
 
         assertCocktailResponseBody(resultActions);

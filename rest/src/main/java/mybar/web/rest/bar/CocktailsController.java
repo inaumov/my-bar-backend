@@ -3,13 +3,12 @@ package mybar.web.rest.bar;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.base.Strings;
 import common.providers.availability.IAvailabilityCalculator;
+import lombok.extern.slf4j.Slf4j;
 import mybar.api.bar.ICocktail;
 import mybar.app.RestBeanConverter;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.View;
 import mybar.service.bar.CocktailsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -25,9 +24,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cocktails")
+@Slf4j
 public class CocktailsController {
-
-    private Logger logger = LoggerFactory.getLogger(CocktailsController.class);
 
     private final CocktailsService cocktailsService;
     private final IAvailabilityCalculator<CocktailBean> availabilityCalculator;
@@ -50,7 +48,7 @@ public class CocktailsController {
         }
         Map<String, List<ICocktail>> cocktailsMap = cocktailsService.getAllCocktails();
         if (cocktailsMap.isEmpty()) {
-            logger.info("Cocktail list is empty.");
+            log.info("Cocktail list is empty.");
             return new ResponseEntity<>(Collections.emptyMap(), HttpStatus.OK);
         }
         Map<String, List<CocktailBean>> responseMap = convertAndCalculateAvailability(cocktailsMap);
@@ -58,15 +56,15 @@ public class CocktailsController {
     }
 
     private Map<String, List<CocktailBean>> findCocktailsForMenu(String menuName) {
-        logger.info("Fetching cocktails for menu [{}]...", menuName);
+        log.info("Fetching cocktails for menu [{}]...", menuName);
         List<ICocktail> cocktailsList = cocktailsService.getAllCocktailsForMenu(menuName);
         if (cocktailsList.isEmpty()) {
-            logger.info(MessageFormat.format("Cocktails list for menu [{0}] is empty.", menuName));
+            log.info(MessageFormat.format("Cocktails list for menu [{0}] is empty.", menuName));
             return Collections.emptyMap();
         }
 
         List<CocktailBean> converted = convertAndCalculateAvailability(cocktailsList);
-        logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.size(), menuName));
+        log.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", converted.size(), menuName));
         return Collections.singletonMap(menuName, converted);
     }
 
@@ -76,7 +74,7 @@ public class CocktailsController {
             List<ICocktail> cocktails = cocktailsMap.get(menuName);
             List<CocktailBean> converted = convertAndCalculateAvailability(cocktails);
             newConvertedMap.put(menuName, converted);
-            logger.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", cocktails.size(), menuName));
+            log.info(MessageFormat.format("Found {0} cocktails for menu [{1}]", cocktails.size(), menuName));
         }
         return newConvertedMap;
     }
@@ -95,7 +93,7 @@ public class CocktailsController {
     @JsonView(View.CocktailWithDetails.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<CocktailBean> getCocktail(@PathVariable("id") String id) {
-        logger.info("Fetching cocktail with id " + id);
+        log.info("Fetching cocktail with id " + id);
 
         ICocktail cocktail = cocktailsService.findCocktailById(id);
         CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(cocktail);
@@ -108,7 +106,7 @@ public class CocktailsController {
     @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CocktailBean> addCocktail(@RequestBody CocktailBean cocktailBean, UriComponentsBuilder ucBuilder) {
-        logger.info("Creating a new cocktail item " + cocktailBean);
+        log.info("Creating a new cocktail item " + cocktailBean);
 
         ICocktail saved = cocktailsService.saveCocktail(cocktailBean);
 
@@ -124,7 +122,7 @@ public class CocktailsController {
     @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<CocktailBean> updateCocktail(@RequestBody CocktailBean cocktailBean) {
-        logger.info("Updating a cocktail " + cocktailBean);
+        log.info("Updating a cocktail " + cocktailBean);
 
         ICocktail updated = cocktailsService.updateCocktail(cocktailBean);
         CocktailBean cocktailBeanResponse = RestBeanConverter.toCocktailBean(updated);
@@ -137,7 +135,7 @@ public class CocktailsController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CocktailBean> deleteCocktail(@PathVariable("id") String id) {
-        logger.info("Deleting a cocktail with id " + id);
+        log.info("Deleting a cocktail with id " + id);
 
         cocktailsService.deleteCocktailById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

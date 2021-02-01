@@ -1,19 +1,34 @@
 package mybar.rest.bar;
 
 import io.restassured.RestAssured;
+import io.restassured.authentication.OAuthSignature;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import mybar.JsonUtil;
+import mybar.OAuthAuthenticator;
+import mybar.spring.ApiTestsContextConfiguration;
 import mybar.rest.Um;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
 
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {ApiTestsContextConfiguration.class}, loader = AnnotationConfigContextLoader.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CocktailsApiTest {
 
     public static final String RESOURCE_ID_PATTERN = "^[a-z]+(-[a-zA-Z0-9]{6}+)*$";
@@ -21,14 +36,19 @@ public class CocktailsApiTest {
 
     private final JsonUtil jsonUtil = new JsonUtil();
 
+    @Autowired
+    private OAuthAuthenticator authenticator;
+
     private static String cocktailId;
 
-    private static RequestSpecification givenAuthenticated() {
+    private RequestSpecification givenAuthenticated() {
+
+        final String accessToken = authenticator.getAccessToken(Um.TEST_USERNAME, Um.USER_PASS);
+
         return RestAssured
                 .given()
                 .auth()
-                .preemptive()
-                .basic(Um.TEST_USERNAME, Um.USER_PASS);
+                .oauth2(accessToken, OAuthSignature.HEADER);
     }
 
     @Test
@@ -106,6 +126,8 @@ public class CocktailsApiTest {
 
     @Test
     public void testRemoveExistedCocktail() {
+        Assert.isTrue(StringUtils.contains(cocktailId, "cocktail-"), "Cocktail Id from the previous step is missing.");
+
         givenAuthenticated()
                 .when()
                 .pathParam("id", cocktailId)

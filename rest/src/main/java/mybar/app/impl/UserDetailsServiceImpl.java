@@ -32,8 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         IUser myBarUser = userService.findByUsername(username);
 
         if (myBarUser == null) {
-            throw new UsernameNotFoundException("My bar user=["
-                    + username + "]is not found.");
+            throw new UsernameNotFoundException("My Bar user=[" + username + "] was not found.");
         }
 
         boolean enabled = myBarUser.isActive();
