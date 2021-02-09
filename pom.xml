@@ -37,7 +37,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>8</java.version>
+        <java.version>11</java.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <spring-test-dbunit.version>1.3.0</spring-test-dbunit.version>
