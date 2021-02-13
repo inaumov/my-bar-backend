@@ -1,12 +1,13 @@
 package mybar.service.rates.history;
 
+import mybar.History;
+import mybar.repository.rates.RatesDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import mybar.History;
-import mybar.repository.rates.RatesDao;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 
 @Service
@@ -20,10 +21,12 @@ public class HistoryService {
     }
 
     @Transactional
-    public List<History> getHistoryForPeriod(Date startDate, Date endDate) {
-        java.sql.Date start = new java.sql.Date(startDate.getTime());
-        java.sql.Date end = new java.sql.Date(endDate.getTime());
-        return ratesDao.getRatedCocktailsForPeriod(start, end);
+    public List<History> getHistoryForPeriod(LocalDate startDate, LocalDate endDate) {
+
+        startDate = startDate != null ? startDate : Year.parse("2008").atDay(1);
+        endDate = endDate != null ? endDate : LocalDate.now();
+
+        return ratesDao.getRatedCocktailsForPeriod(startDate, endDate);
     }
 
 }

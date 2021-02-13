@@ -8,17 +8,16 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.repository.BaseDaoTest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DatabaseSetup("classpath:datasets/dataset.xml")
 @DatabaseSetup("classpath:datasets/usersDataSet.xml")
@@ -39,8 +38,10 @@ public class RatesDaoTest extends BaseDaoTest {
 
     @Test
     public void testGetHistoryForPeriod() throws Exception {
-        Date startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(START_DATE_STR);
-        Date endDate = new Date(System.currentTimeMillis());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LocalDate startDate = LocalDate.parse(START_DATE_STR, formatter);
+        LocalDate endDate = LocalDate.now();
 
         List<History> result = ratesDao.getRatedCocktailsForPeriod(startDate, endDate);
         assertFalse(result.isEmpty());

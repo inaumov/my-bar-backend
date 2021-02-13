@@ -12,8 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -51,9 +51,12 @@ public class HistoryControllerTest extends ARestControllerTest {
         history.setStars(STARS);
         history.setUsername(USERNAME);
 
-        when(historyServiceMock.getHistoryForPeriod(any(Date.class), any(Date.class))).thenReturn(Collections.singletonList(history));
+        when(historyServiceMock.getHistoryForPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(Collections.singletonList(history));
 
-        this.mockMvc.perform(makePreAuthorizedRequest(ANALYST, ANALYST, get("/rates/history")))
+        this.mockMvc.perform(makePreAuthorizedRequest(ANALYST, ANALYST,
+                get("/rates/history")
+                        .param("startDate", "2020-12-31")
+                        .param("endDate", "2021-02-13")))
 
                 .andDo(print())
                 .andExpect(status()

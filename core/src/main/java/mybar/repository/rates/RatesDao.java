@@ -1,16 +1,17 @@
 package mybar.repository.rates;
 
+import mybar.History;
+import mybar.api.bar.ICocktail;
 import mybar.domain.bar.Cocktail;
+import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.repository.GenericDaoImpl;
 import org.springframework.stereotype.Repository;
-import mybar.History;
-import mybar.api.bar.ICocktail;
-import mybar.domain.rates.Rate;
 
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +39,10 @@ public class RatesDao extends GenericDaoImpl<Rate> {
         return q.getResultList();
     }
 
-    public List<History> getRatedCocktailsForPeriod(Date startDate, Date endDate) {
+    public List<History> getRatedCocktailsForPeriod(LocalDate startDate, LocalDate endDate) {
         TypedQuery<History> q = em.createQuery("SELECT new mybar.History(c.name, r.stars, r.pk.user.id) FROM Cocktail c, Rate r WHERE r.pk.cocktail.id = c.id AND r.ratedAt >= :startDate AND r.ratedAt <= :endDate", History.class);
-        q.setParameter("startDate", startDate);
-        q.setParameter("endDate", endDate);
+        q.setParameter("startDate", Date.valueOf(startDate));
+        q.setParameter("endDate", Date.valueOf(endDate));
         return q.getResultList();
     }
 
