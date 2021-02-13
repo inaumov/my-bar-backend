@@ -1,9 +1,8 @@
-package mybar.web.rest.rates;
+package mybar.web.rest.rates.history;
 
 import mybar.History;
 import mybar.service.rates.history.HistoryService;
-import mybar.web.rest.bar.ARestControllerTest;
-import mybar.web.rest.rates.history.HistoryController;
+import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

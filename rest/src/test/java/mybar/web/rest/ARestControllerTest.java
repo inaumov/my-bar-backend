@@ -1,9 +1,8 @@
-package mybar.web.rest.bar;
+package mybar.web.rest;
 
 import mybar.web.config.auth.AuthenticationManagerConfiguration;
 import mybar.web.config.auth.AuthorizationServerConfiguration;
 import mybar.web.config.auth.ResourceServerConfiguration;
-import mybar.web.rest.TestConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

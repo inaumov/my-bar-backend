@@ -3,6 +3,7 @@ package mybar.web.rest.bar;
 import com.google.common.collect.Lists;
 import mybar.dto.bar.MenuDto;
 import mybar.service.bar.CocktailsService;
+import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

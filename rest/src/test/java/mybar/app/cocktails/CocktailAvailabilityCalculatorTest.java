@@ -1,4 +1,4 @@
-package mybar.web.rest.bar;
+package mybar.app.cocktails;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;

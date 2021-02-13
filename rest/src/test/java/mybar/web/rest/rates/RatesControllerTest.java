@@ -3,7 +3,7 @@ package mybar.web.rest.rates;
 import mybar.dto.RateDto;
 import mybar.exception.CocktailNotFoundException;
 import mybar.service.rates.RatesService;
-import mybar.web.rest.bar.ARestControllerTest;
+import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

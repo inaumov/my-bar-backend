@@ -5,6 +5,7 @@ import mybar.dto.bar.ingredient.AdditiveDto;
 import mybar.dto.bar.ingredient.BeverageDto;
 import mybar.dto.bar.ingredient.DrinkDto;
 import mybar.service.bar.IngredientService;
+import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

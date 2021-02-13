@@ -14,6 +14,7 @@ import mybar.dto.bar.ingredient.BeverageDto;
 import mybar.exception.BottleNotFoundException;
 import mybar.exception.UnknownBeverageException;
 import mybar.service.bar.ShelfService;
+import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
