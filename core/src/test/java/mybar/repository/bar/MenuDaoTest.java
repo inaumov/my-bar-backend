@@ -6,7 +6,7 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;
 import mybar.repository.BaseDaoTest;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.MessageFormat;
@@ -14,9 +14,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Basic Tests of Menu DAO.
@@ -57,7 +57,7 @@ public class MenuDaoTest extends BaseDaoTest {
 
         // test first menu
         Collection<Cocktail> cocktails = menuIterator.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 4, cocktails.size());
+        assertEquals(4, cocktails.size(), MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()));
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
         assertExistedCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
         assertExistedCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
@@ -66,11 +66,11 @@ public class MenuDaoTest extends BaseDaoTest {
 
         // second menu
         cocktails = menuIterator.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the second [{0}] menu should be same.", menuList.get(1).getName()), 7, cocktails.size());
+        assertEquals(7, cocktails.size(), MessageFormat.format("Number of cocktails in the second [{0}] menu should be same.", menuList.get(1).getName()));
 
         // third menu
         cocktails = menuIterator.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()), 1, cocktails.size());
+        assertEquals(1, cocktails.size(), MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()));
         cocktailIterator = cocktails.iterator();
         assertExistedCocktail(cocktailIterator.next(), "cocktail-000012", 3, "Banana Blast II");
     }
@@ -92,7 +92,7 @@ public class MenuDaoTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = cocktailDao.findAllFor(firstMenu);
 
         // test first menu
-        assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", firstMenu.getName()), 5, cocktails.size());
+        assertEquals(5, cocktails.size(), MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", firstMenu.getName()));
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
         assertExistedCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
         assertExistedCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
@@ -102,19 +102,19 @@ public class MenuDaoTest extends BaseDaoTest {
 
         // second menu
         cocktails = it.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the second [{0}] menu should be same.", firstMenu.getName()), 7, cocktails.size());
+        assertEquals(7, cocktails.size(), MessageFormat.format("Number of cocktails in the second [{0}] menu should be same.", firstMenu.getName()));
 
         // third menu
         cocktails = it.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", firstMenu.getName()), 1, cocktails.size());
+        assertEquals(1, cocktails.size(), MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", firstMenu.getName()));
         cocktailIterator = cocktails.iterator();
         assertExistedCocktail(cocktailIterator.next(), "cocktail-", 3, "Banana Blast II");
     }
 
     public static void assertExistedCocktail(Cocktail cocktail, String id, int menuId, String name) {
         assertThat("Cocktail ID should be same.", cocktail.getId(), either(equalTo(id)).or(containsString(id)));
-        assertEquals("Menu ID related to cocktail should be same.", menuId, cocktail.getMenuId());
-        assertEquals("Cocktail name should same.", name, cocktail.getName());
+        assertEquals(menuId, cocktail.getMenuId(), "Menu ID related to cocktail should be same.");
+        assertEquals(name, cocktail.getName(), "Cocktail name should same.");
     }
 
 }

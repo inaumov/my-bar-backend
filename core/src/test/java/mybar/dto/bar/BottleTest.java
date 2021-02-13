@@ -4,13 +4,12 @@ import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.dto.DtoFactory;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BottleTest {
 
@@ -35,11 +34,11 @@ public class BottleTest {
 
         BottleDto dto = DtoFactory.toDto(bottleEntity);
         assertEquals(TEST_REFERENCE, dto.getId());
-        assertTrue(1 == dto.getBeverage().getId());
+        assertEquals(1, dto.getBeverage().getId().intValue());
         assertEquals(BRAND_NAME, dto.getBrandName());
-        assertEquals(true, dto.isInShelf());
+        assertTrue(dto.isInShelf());
         assertThat(PRICE,  Matchers.comparesEqualTo(dto.getPrice()));
-        assertEquals(VOLUME, dto.getVolume(), 0);
+        assertEquals(VOLUME, dto.getVolume());
         assertEquals(IMAGE_URL, dto.getImageUrl());
     }
 

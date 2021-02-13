@@ -17,14 +17,18 @@ import java.util.Collection;
 import java.util.List;
 
 /*
- * Spring-security requires an implementation of UserDetailService. 
+ * Spring-security requires an implementation of UserDetailService.
  */
 @Service("userDetailsService")
 @Transactional(readOnly = true)
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserDetailsServiceImpl(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,10 +39,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("My Bar user=[" + username + "] was not found.");
         }
 
-        boolean enabled = myBarUser.isActive();
-        boolean accountNonExpired = true;
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
+        final boolean enabled = myBarUser.isActive();
+        final boolean accountNonExpired = true;
+        final boolean credentialsNonExpired = true;
+        final boolean accountNonLocked = true;
 
         return new User(
                 myBarUser.getUsername(),

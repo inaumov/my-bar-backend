@@ -8,12 +8,12 @@ import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DatabaseSetup("classpath:datasets/usersDataSet.xml")
 public class UserDaoTest extends UserBaseDaoTest {
@@ -23,7 +23,7 @@ public class UserDaoTest extends UserBaseDaoTest {
 
     @Test
     public void testFindUserById() throws Exception {
-        User user = userDao.findOne(CLIENT2_ID);
+        User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
         assertTrue(user.isActive());
         assertEquals("JohnDoe", user.getUsername());
@@ -66,7 +66,7 @@ public class UserDaoTest extends UserBaseDaoTest {
             value = "classpath:datasets/expected/users-update.xml", table = "USERS")
     @Test
     public void testUpdateUser() throws Exception {
-        User user = userDao.findOne("analyst");
+        User user = userDao.getOne("analyst");
         assertNotNull(user);
         user.setName("Johny");
         user.setSurname("Walker");
@@ -83,20 +83,14 @@ public class UserDaoTest extends UserBaseDaoTest {
             value = "classpath:datasets/expected/users-delete.xml", table = "USERS")
     @Test
     public void testDeleteUser() throws Exception {
-        userDao.delete(CLIENT2_ID);
+        userDao.deleteById(CLIENT2_ID);
         em.flush();
     }
 
     @Ignore // TODO
     @Test
     public void testThrowUserHasOrdersExceptionWhenDelete() throws Exception {
-        userDao.delete(CLIENT1_ID);
-    }
-
-    @Test
-    public void testFindByUserName_when_unknown() throws Exception {
-        User user = userDao.findOne("unknown");
-        assertNull(user);
+        userDao.deleteById(CLIENT1_ID);
     }
 
     @Test

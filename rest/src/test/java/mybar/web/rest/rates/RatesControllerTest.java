@@ -3,94 +3,68 @@ package mybar.web.rest.rates;
 import mybar.dto.RateDto;
 import mybar.exception.CocktailNotFoundException;
 import mybar.service.rates.RatesService;
-import mybar.web.rest.TestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import mybar.web.rest.bar.ARestControllerTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.Filter;
 import java.util.Collections;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration({"test-rates-rest-context.xml", "test-security-context.xml"})
-public class RatesControllerTest {
+@WebMvcTest(RatesController.class)
+public class RatesControllerTest extends ARestControllerTest {
 
-    public static final String USERNAME = "bill";
     public static final String COCKTAIL_ID = "cocktail-000099";
     public static final int STARS = 7;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
     private MockMvc mockMvc;
 
-    @Autowired
-    private RatesService ratesService;
+    @MockBean
+    private RatesService ratesServiceMock;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Filter springSecurityFilterChain = (Filter) webApplicationContext.getBean("springSecurityFilterChain");
-
-        DefaultMockMvcBuilder builder = MockMvcBuilders
-                .webAppContextSetup(this.webApplicationContext);
-        this.mockMvc = builder
-                .addFilters(springSecurityFilterChain)
-                .apply(springSecurity())
-                .build();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        reset(ratesService);
+    @AfterEach
+    public void tearDown() {
+        reset(ratesServiceMock);
     }
 
     @Test
     public void test_rateCocktail_create() throws Exception {
+
         RateDto resultDto = new RateDto();
         resultDto.setCocktailId(COCKTAIL_ID);
         resultDto.setStars(STARS);
         resultDto.setRatedAt(new Date());
-        when(ratesService.rateCocktail(eq(USERNAME), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
+
+        when(ratesServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
 
         // rate cocktail
         MockHttpServletRequestBuilder builder =
-                MockMvcRequestBuilders.post("/rates")
-                        .with(user(USERNAME).password("abc123").roles("USER"))
-                        .with(httpBasic(USERNAME, "abc123"))
-                        .contentType(MediaType.APPLICATION_JSON)
+                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.post("/rates"))
                         .content(createRateInJson(COCKTAIL_ID, STARS));
 
         this.mockMvc.perform(builder)
-                .andExpect(authenticated().withUsername(USERNAME))
                 .andExpect(MockMvcResultMatchers.status()
                         .isCreated());
 
-        verify(ratesService, times(1)).rateCocktail(eq(USERNAME), eq(COCKTAIL_ID), eq(STARS));
-        verifyNoMoreInteractions(ratesService);
+        verify(ratesServiceMock, times(1)).rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS));
+        verifyNoMoreInteractions(ratesServiceMock);
     }
 
     private static String createRateInJson(String cocktailId, int stars) {
@@ -99,113 +73,100 @@ public class RatesControllerTest {
 
     @Test
     public void test_updateRate() throws Exception {
+
         RateDto resultDto = new RateDto();
         resultDto.setCocktailId(COCKTAIL_ID);
         resultDto.setStars(STARS);
         resultDto.setRatedAt(new Date());
-        when(ratesService.rateCocktail(eq(USERNAME), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
+
+        when(ratesServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
 
         // rate cocktail
         MockHttpServletRequestBuilder builder =
-                MockMvcRequestBuilders.put("/rates")
-                        .with(user(USERNAME).password("abc123").roles("USER"))
-                        .with(httpBasic(USERNAME, "abc123"))
-                        .contentType(MediaType.APPLICATION_JSON)
+                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/rates"))
                         .content(createRateInJson(COCKTAIL_ID, STARS));
 
         this.mockMvc.perform(builder)
-                .andExpect(authenticated().withUsername(USERNAME))
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk());
 
-        verify(ratesService, times(1)).rateCocktail(eq(USERNAME), eq(COCKTAIL_ID), eq(STARS));
-        verifyNoMoreInteractions(ratesService);
+        verify(ratesServiceMock, times(1)).rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS));
+        verifyNoMoreInteractions(ratesServiceMock);
     }
 
     @Test
     public void test_removeFromRates() throws Exception {
-        doNothing().when(ratesService).removeCocktailFromRates(eq(USERNAME), eq(COCKTAIL_ID));
+        doNothing().when(ratesServiceMock).removeCocktailFromRates(eq(USER), eq(COCKTAIL_ID));
 
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.delete("/rates/" + COCKTAIL_ID)
-                .with(user(USERNAME).password("abc123").roles("USER"))
-                .with(httpBasic(USERNAME, "abc123"));
+        MockHttpServletRequestBuilder builder = makePreAuthorizedRequest(USER, USER,
+                MockMvcRequestBuilders.delete("/rates/{0}", COCKTAIL_ID));
 
         this.mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isNoContent())
-                .andExpect(authenticated().withUsername(USERNAME))
                 .andDo(MockMvcResultHandlers.print());
 
-        verify(ratesService, atLeastOnce()).removeCocktailFromRates(eq(USERNAME), eq(COCKTAIL_ID));
+        verify(ratesServiceMock, atLeastOnce()).removeCocktailFromRates(eq(USER), eq(COCKTAIL_ID));
     }
 
     @Test
     public void test_getRatedCocktails() throws Exception {
+
         RateDto resultDto = new RateDto();
         resultDto.setCocktailId(COCKTAIL_ID);
         resultDto.setStars(STARS);
         resultDto.setRatedAt(new Date());
 
-        when(ratesService.getRatedCocktails(eq(USERNAME))).thenReturn(Collections.singletonList(resultDto));
+        when(ratesServiceMock.getRatedCocktails(eq(USER))).thenReturn(Collections.singletonList(resultDto));
 
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .get("/rates/ratedCocktails")
-                .with(user(USERNAME).password("abc123").roles("USER"))
-                .with(httpBasic(USERNAME, "abc123"));
+        MockHttpServletRequestBuilder builder =
+                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders
+                .get("/rates/ratedCocktails"));
 
         this.mockMvc.perform(builder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk())
-                .andExpect(authenticated().withUsername(USERNAME))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     public void test_rateCocktail_when_unknown() throws Exception {
-        when(ratesService.rateCocktail(anyString(), eq("unknown"), anyInt())).thenThrow(new CocktailNotFoundException("unknown"));
+        when(ratesServiceMock.rateCocktail(anyString(), eq("unknown"), anyInt())).thenThrow(new CocktailNotFoundException("unknown"));
 
         // rate cocktail
-        MockHttpServletRequestBuilder builder =
-                MockMvcRequestBuilders.post("/rates")
-                        .with(user(USERNAME).password("abc123").roles("USER"))
-                        .with(httpBasic(USERNAME, "abc123"))
-                        .contentType(MediaType.APPLICATION_JSON)
+        MockHttpServletRequestBuilder builder = makePreAuthorizedRequest(USER, USER,
+                MockMvcRequestBuilders.post("/rates"))
                         .content(createRateInJson("unknown", 1));
 
         this.mockMvc.perform(builder)
-                .andExpect(authenticated().withUsername(USERNAME))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Could not rate cocktail: " + "unknown")))
                 .andDo(MockMvcResultHandlers.print());
 
-        verify(ratesService, times(1)).rateCocktail(anyString(), eq("unknown"), anyInt());
-        verifyNoMoreInteractions(ratesService);
+        verify(ratesServiceMock, times(1)).rateCocktail(anyString(), eq("unknown"), anyInt());
+        verifyNoMoreInteractions(ratesServiceMock);
     }
 
     @Test
     public void test_rateCocktail_when_bad_request() throws Exception {
-        when(ratesService.rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null))).thenCallRealMethod();
+        when(ratesServiceMock.rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null))).thenCallRealMethod();
 
         // rate cocktail
-        MockHttpServletRequestBuilder builder =
-                MockMvcRequestBuilders.post("/rates")
-                        .with(user(USERNAME).password("abc123").roles("USER"))
-                        .with(httpBasic(USERNAME, "abc123"))
-                        .contentType(MediaType.APPLICATION_JSON)
+        MockHttpServletRequestBuilder builder = makePreAuthorizedRequest(USER, USER,
+                MockMvcRequestBuilders.post("/rates"))
                         .content("{\"cocktailId\":\"" + COCKTAIL_ID + "\"}");
 
         this.mockMvc.perform(builder)
-                .andExpect(authenticated().withUsername(USERNAME))
                 .andExpect(MockMvcResultMatchers.status()
                         .isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Stars number should be from 1 to 10.")))
                 .andDo(MockMvcResultHandlers.print());
 
-        verify(ratesService, times(1)).rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null));
-        verifyNoMoreInteractions(ratesService);
+        verify(ratesServiceMock, times(1)).rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null));
+        verifyNoMoreInteractions(ratesServiceMock);
     }
 
 }

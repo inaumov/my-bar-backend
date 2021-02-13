@@ -1,5 +1,6 @@
 server:
-  contextPath: /api/bar
+  servlet:
+    contextPath: /api/bar
   port: 8089
 spring:
   datasource:
@@ -12,17 +13,19 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
 logging:
   level:
     org:
       springframework:
-        security: DEBUG
+        security: INFO
 kafka:
   events:
     topic: my_bar.rates-topic
-    producerClientId: my_bar.rates-producer
+    producer-client-id: my_bar.rates-producer
     servers: localhost:9092
-    consumerGroupId: my_bar.rates-consumer
-    pollTimeout: 10000
+    consumer-group-id: my_bar.rates-consumer
+    pollTimeout: 60000

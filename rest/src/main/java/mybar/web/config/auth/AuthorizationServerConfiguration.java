@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -22,14 +23,16 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
+    private PasswordEncoder passwordEncoder;
 
     @Value("signing-key:some-pretty-key")
     private String signingKey;
 
     @Autowired
-    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
+    public AuthorizationServerConfiguration(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AuthorizationServerConfiguration() {
@@ -75,7 +78,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         clients.inMemory()
                 // 1.
                 .withClient("api-tests")
-                .secret("bGl2ZS10ZXN0")
+                .secret(passwordEncoder.encode("bGl2ZS10ZXN0"))
                 .authorizedGrantTypes("password")
                 .scopes("my-bar")
                 .autoApprove("my-bar")
@@ -83,7 +86,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 // 2.
                 .and()
                 .withClient("my-bar-app")
-                .secret("secret001")
+                .secret(passwordEncoder.encode("secret001"))
                 .authorizedGrantTypes("password", "refresh_token")
                 .refreshTokenValiditySeconds(3600 * 24)
                 .scopes("my-bar")

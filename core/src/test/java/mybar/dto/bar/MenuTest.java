@@ -2,9 +2,9 @@ package mybar.dto.bar;
 
 import mybar.domain.bar.Menu;
 import mybar.dto.DtoFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MenuTest {
 

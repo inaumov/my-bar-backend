@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 @Slf4j
 public class OAuthAuthenticator {
 
-    private static final String CLIENT_ID = "api-test";
+    private static final String CLIENT_ID = "api-tests";
     private static final String CLIENT_SECRET = "bGl2ZS10ZXN0";
 
     @Autowired

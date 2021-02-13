@@ -8,8 +8,8 @@ import mybar.domain.users.Role;
 import mybar.domain.users.User;
 import mybar.dto.users.UserDto;
 import mybar.exception.users.EmailDuplicatedException;
-import mybar.exception.users.UserExistsException;
 import mybar.exception.users.UnknownUserException;
+import mybar.exception.users.UserExistsException;
 import mybar.repository.users.RoleDao;
 import mybar.repository.users.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,15 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserService {
 
-    @Autowired(required = false)
-    private UserDao userDao;
+    private final UserDao userDao;
 
-    @Autowired(required = false)
-    private RoleDao roleDAO;
+    private final RoleDao roleDAO;
 
-    // basic functions
+    @Autowired
+    public UserService(UserDao userDao, RoleDao roleDAO) {
+        this.userDao = userDao;
+        this.roleDAO = roleDAO;
+    }
 
     public IUser createUser(IUser user) throws UserExistsException, EmailDuplicatedException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
@@ -63,10 +65,13 @@ public class UserService {
     }
 
     private void checkUsernameDuplicated(String username) {
-        if (userDao.exists(username)) {
+        boolean exists = userDao.existsById(username);
+        if (exists) {
             throw new UserExistsException(username);
         }
     }
+
+    // admin functions
 
     public IUser editUserInfo(IUser user) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
@@ -91,12 +96,10 @@ public class UserService {
         return toUserDto(userDao.save(entity));
     }
 
-    // admin functions
-
     public IUser findByUsername(String username) throws UnknownUserException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
 
-        User userEntity = userDao.findOne(username);
+        User userEntity = userDao.getOne(username);
         if (userEntity != null) {
             return toUserDto(userEntity);
         }
@@ -122,7 +125,7 @@ public class UserService {
     public void activateUser(String username) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
 
-        User userEntity = userDao.findOne(username);
+        User userEntity = userDao.getOne(username);
         if (userEntity != null) {
             userEntity.setActive(true);
             userDao.save(userEntity);
@@ -132,7 +135,7 @@ public class UserService {
     public void deactivateUser(String username) throws UnknownUserException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
 
-        User userEntity = userDao.findOne(username);
+        User userEntity = userDao.getOne(username);
         if (userEntity != null) {
             userEntity.setActive(false);
             userDao.save(userEntity);
@@ -155,10 +158,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // util functions
+    // util methods
 
     private Collection<User> filterUsers(Iterable<User> users) {
-        Role role = roleDAO.findOne(RoleName.ROLE_USER.name());
+        Role role = roleDAO.getOne(RoleName.ROLE_USER.name());
         if (role != null) {
             Predicate<User> predicate = user -> user.getRoles().contains(role);
             return filter(users, predicate);

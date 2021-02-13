@@ -10,36 +10,37 @@ import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.CocktailIngredientBean;
 import mybar.app.bean.bar.YesNoEnum;
 import mybar.service.bar.ShelfService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.reset;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("test-rest-context.xml")
+@ExtendWith(SpringExtension.class)
 public class CocktailAvailabilityCalculatorTest {
 
-    @Autowired
+    @MockBean
     private ShelfService shelfService;
-    @Autowired
+    @MockBean
     private IAvailabilityCalculator<CocktailBean> availabilityCalculator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CocktailAvailabilityCalculator availabilityCalculator = new CocktailAvailabilityCalculator();
         availabilityCalculator.setShelfService(shelfService);
@@ -52,7 +53,7 @@ public class CocktailAvailabilityCalculatorTest {
         }).when(shelfService).isBottleAvailable(Matchers.anyInt());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         reset(shelfService);
     }
@@ -81,23 +82,23 @@ public class CocktailAvailabilityCalculatorTest {
 
         CocktailBean bean1 = cocktails.get(0);
         assertEquals(YesNoEnum.UNDEFINED, bean1.getHasAllIngredients());
-        assertThat(bean1.getIngredients().get(IDrink.GROUP_NAME), is(empty()));
+        MatcherAssert.assertThat(bean1.getIngredients().get(IDrink.GROUP_NAME), is(empty()));
 
         CocktailBean bean2 = cocktails.get(1);
         assertEquals(YesNoEnum.UNDEFINED, bean2.getHasAllIngredients());
-        assertThat(bean2.getIngredients().get(IAdditive.GROUP_NAME), is(empty()));
+        MatcherAssert.assertThat(bean2.getIngredients().get(IAdditive.GROUP_NAME), is(empty()));
 
         CocktailBean bean3 = cocktails.get(2);
         Iterator<CocktailIngredientBean> ingredients3It = bean3.getIngredients().get(IBeverage.GROUP_NAME).iterator();
-        assertThat(ingredients3It.next().isMissing(), is(false));
-        assertThat(ingredients3It.next().isMissing(), is(true));
-        assertThat(ingredients3It.next().isMissing(), is(false));
+        MatcherAssert.assertThat(ingredients3It.next().isMissing(), is(false));
+        MatcherAssert.assertThat(ingredients3It.next().isMissing(), is(true));
+        MatcherAssert.assertThat(ingredients3It.next().isMissing(), is(false));
         assertEquals(YesNoEnum.NO, bean3.getHasAllIngredients());
 
         CocktailBean bean4 = cocktails.get(3);
         Iterator<CocktailIngredientBean> ingredients4It = bean4.getIngredients().get(IBeverage.GROUP_NAME).iterator();
-        assertThat(ingredients4It.next().isMissing(), is(false));
-        assertThat(ingredients4It.next().isMissing(), is(false));
+        MatcherAssert.assertThat(ingredients4It.next().isMissing(), is(false));
+        MatcherAssert.assertThat(ingredients4It.next().isMissing(), is(false));
         assertEquals(YesNoEnum.YES, bean4.getHasAllIngredients());
     }
 

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
@@ -21,11 +22,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ResourceServerConfiguration(UserDetailsService userDetailsService) {
+    public ResourceServerConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         super();
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // global security concerns
@@ -34,6 +37,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public AuthenticationProvider authenticationProvider() {
         final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
 
@@ -48,8 +52,15 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(final HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests()
+                .antMatchers("/menu").permitAll()
+                .antMatchers("/cocktails/**").hasRole("USER")
+                .antMatchers("/ingredients/**").hasRole("USER")
+                .antMatchers("/shelf/**").hasRole("USER")
+                .antMatchers("/rates/history").hasRole("ANALYST")
+                .antMatchers("/rates/**").hasRole("USER")
+                .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers("/api/bar/**").authenticated()
-                .antMatchers("/api/bar/menu").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

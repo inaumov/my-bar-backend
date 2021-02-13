@@ -71,7 +71,8 @@ public class RatesService {
 
     public Collection<IRate> getRatedCocktails(String userId) {
         List<IRate> userRates = new ArrayList<>();
-        List<Rate> allRatesForUser = ratesDao.findAllRatesForUser(userDao.findOne(userId));
+        User user = userDao.getOne(userId);
+        List<Rate> allRatesForUser = ratesDao.findAllRatesForUser(user);
         for (Rate rate : allRatesForUser) {
             RateDto rateDto = new RateDto();
             rateDto.setCocktailId(rate.getCocktail().getId());
@@ -87,8 +88,10 @@ public class RatesService {
         Gson gson = new Gson();
         IRate rateDto = gson.fromJson(object, RateDto.class);
         String[] strings = StringUtils.split(cacheKey, "@");
-        User user = userDao.findOne(strings[0]);
-        Cocktail cocktail = cocktailDao.read(strings[1]);
+        String userId = strings[0];
+        User user = userDao.getOne(userId);
+        String cocktailId = strings[1];
+        Cocktail cocktail = cocktailDao.read(cocktailId);
         if (user != null && cocktail != null) {
             Rate rate = new Rate();
             rate.setCocktail(cocktail);

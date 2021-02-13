@@ -4,13 +4,12 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DatabaseSetup("classpath:datasets/usersDataSet.xml")
 public class UserToRoleRelationsTest extends UserBaseDaoTest {
@@ -23,21 +22,21 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
 
     @Test
     public void testUserHasMoreThenOneRole() throws Exception {
-        User user = userDao.findOne(CLIENT2_ID);
+        User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
         Collection<Role> roles = user.getRoles();
         assertEquals(3, roles.size());
         for (Role role : roles) {
-            assertEquals(role, roleDAO.findOne(role.getRoleName()));
+            assertEquals(role, roleDAO.getOne(role.getRoleName()));
         }
     }
 
     @Test
     public void testAddRole() throws Exception {
-        User user = userDao.findOne(CLIENT2_ID);
+        User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
 
-        Role role = roleDAO.findOne(RoleName.ROLE_ANALYST.name());
+        Role role = roleDAO.getOne(RoleName.ROLE_ANALYST.name());
         assertNotNull(role);
         user.addRole(role);
         userDao.save(user);
@@ -50,7 +49,7 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
 
     @Test
     public void testRemoveRole() throws Exception {
-        User user = userDao.findOne(CLIENT2_ID);
+        User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
 
         int nmbOfRoles = user.getRoles().size();
@@ -66,7 +65,7 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
 
     @Test
     public void testAddNullRole() throws Exception {
-        User user = userDao.findOne(CLIENT2_ID);
+        User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
         user.addRole(null);
         userDao.save(user);

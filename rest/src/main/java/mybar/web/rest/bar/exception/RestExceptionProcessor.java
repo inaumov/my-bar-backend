@@ -24,8 +24,12 @@ import java.util.Locale;
 @ControllerAdvice(basePackages = "mybar.web.rest.bar")
 public class RestExceptionProcessor {
 
+    private final MessageSource messageSource;
+
     @Autowired
-    private MessageSource messageSource;
+    public RestExceptionProcessor(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    @ExceptionHandler(Throwable.class)
@@ -44,7 +48,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorInfo bottleNotFound(HttpServletRequest req, BottleNotFoundException ex) {
-        log.error("Bottle not found thrown", ex);
+        log.debug("Bottle not found thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.no.bottle.id", null, locale);
@@ -59,7 +63,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorInfo cocktailNotFound(HttpServletRequest req, CocktailNotFoundException ex) {
-        log.error("Cocktail not found thrown", ex);
+        log.debug("Cocktail not found thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.no.cocktail.id", null, locale);
@@ -74,7 +78,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo cocktailUniqueName(HttpServletRequest req, UniqueCocktailNameException ex) {
-        log.error("Unique cocktail name thrown", ex);
+        log.debug("Unique cocktail name thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.unique.cocktail.name", null, locale);
@@ -88,7 +92,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo unknownMenuName(HttpServletRequest req, UnknownMenuException ex) {
-        log.error("Unknown menu name thrown", ex);
+        log.debug("Unknown menu name thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.unknown.menu.name", null, locale);
@@ -102,7 +106,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo unknownBeverage(HttpServletRequest req, UnknownBeverageException ex) {
-        log.error("Unknown beverage thrown", ex);
+        log.debug("Unknown beverage thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.beverage.unknown", null, locale);
@@ -116,7 +120,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo unknownIngredients(HttpServletRequest req, UnknownIngredientsException ex) {
-        log.error("Unknown ingredient thrown", ex);
+        log.debug("Unknown ingredient thrown", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.ingredients.unknown", null, locale);
@@ -130,7 +134,7 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo requiredFields(HttpServletRequest req, IllegalArgumentException ex) {
-        log.error("Invalid property value", ex);
+        log.debug("Invalid property value", ex);
 
         String errorURL = req.getRequestURL().toString();
         return new ErrorInfo(errorURL, ex.getMessage());

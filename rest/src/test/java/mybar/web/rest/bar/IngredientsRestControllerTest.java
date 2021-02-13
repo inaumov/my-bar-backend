@@ -5,19 +5,14 @@ import mybar.dto.bar.ingredient.AdditiveDto;
 import mybar.dto.bar.ingredient.BeverageDto;
 import mybar.dto.bar.ingredient.DrinkDto;
 import mybar.service.bar.IngredientService;
-import mybar.web.rest.TestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,31 +22,52 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration("test-rest-context.xml")
-public class IngredientsRestControllerTest {
+@WebMvcTest(IngredientsController.class)
+public class IngredientsRestControllerTest extends ARestControllerTest {
 
     public static final String ADDITIVES = IAdditive.GROUP_NAME;
     public static final String BEVERAGES = IBeverage.GROUP_NAME;
     public static final String DRINKS = IDrink.GROUP_NAME;
     public static final String UNKNOWN = "unknown";
-    @Autowired
-    private WebApplicationContext webApplicationContext;
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private IngredientService ingredientService;
+    @MockBean
+    private IngredientService ingredientServiceMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
-        Mockito.reset(ingredientService);
+        Mockito.reset(ingredientServiceMock);
+    }
+
+    @Test
+    public void test_findAll_notAuthorized() throws Exception {
+        String accessToken = "not_a_real_token";
+
+        when(ingredientServiceMock.findAll()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/ingredients")
+                .header("Authorization", "Bearer " + accessToken)
+                .accept(CONTENT_TYPE))
+
+                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void test_findAll_wrongRole() throws Exception {
+
+        when(ingredientServiceMock.findAll()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get("/ingredients")))
+
+                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -71,12 +87,12 @@ public class IngredientsRestControllerTest {
         beverage.setKind("Whiskey");
         beverage.setBeverageType(BeverageType.DISTILLED);
 
-        when(ingredientService.findAll()).thenReturn(Arrays.<IIngredient>asList(additive, drink, beverage));
+        when(ingredientServiceMock.findAll()).thenReturn(Arrays.<IIngredient>asList(additive, drink, beverage));
 
-        mockMvc.perform(get("/ingredients"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/ingredients")))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("additives.items", hasSize(1)))
                 .andExpect(jsonPath("additives.items.[0].id", is(1)))
@@ -92,8 +108,8 @@ public class IngredientsRestControllerTest {
                 .andExpect(jsonPath("beverages.items.[0].kind", is("Whiskey")))
                 .andExpect(jsonPath("beverages.items.[0].beverageType", is(BeverageType.DISTILLED.name())));
 
-        verify(ingredientService, times(1)).findAll();
-        verifyNoMoreInteractions(ingredientService);
+        verify(ingredientServiceMock, times(1)).findAll();
+        verifyNoMoreInteractions(ingredientServiceMock);
     }
 
     @Test
@@ -106,12 +122,14 @@ public class IngredientsRestControllerTest {
         additive2.setId(2);
         additive2.setKind("Lime");
 
-        when(ingredientService.findByGroupName(ADDITIVES)).thenReturn(Arrays.<IIngredient>asList(additive1, additive2));
+        when(ingredientServiceMock.findByGroupName(ADDITIVES)).thenReturn(Arrays.<IIngredient>asList(additive1, additive2));
 
-        mockMvc.perform(get("/ingredients?filter=additives"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get("/ingredients")
+                        .param("filter", ADDITIVES)))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("measurements").exists())
                 .andExpect(jsonPath("items", hasSize(2)))
@@ -122,8 +140,8 @@ public class IngredientsRestControllerTest {
                 .andExpect(jsonPath("items.[1].id", is(2)))
                 .andExpect(jsonPath("items.[1].kind", is("Lime")));
 
-        verify(ingredientService, times(1)).findByGroupName(ADDITIVES);
-        verifyNoMoreInteractions(ingredientService);
+        verify(ingredientServiceMock, times(1)).findByGroupName(ADDITIVES);
+        verifyNoMoreInteractions(ingredientServiceMock);
     }
 
     @Test
@@ -139,12 +157,14 @@ public class IngredientsRestControllerTest {
         beverage7.setKind("Rum");
         beverage7.setBeverageType(BeverageType.DISTILLED);
 
-        when(ingredientService.findByGroupName(BEVERAGES)).thenReturn(Arrays.<IIngredient>asList(beverage3, beverage7));
+        when(ingredientServiceMock.findByGroupName(BEVERAGES)).thenReturn(Arrays.<IIngredient>asList(beverage3, beverage7));
 
-        mockMvc.perform(get("/ingredients?filter=beverages"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get("/ingredients")
+                        .param("filter", BEVERAGES)))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("measurements").exists())
                 .andExpect(jsonPath("items", hasSize(2)))
@@ -155,8 +175,8 @@ public class IngredientsRestControllerTest {
                 .andExpect(jsonPath("items.[1].id", is(7)))
                 .andExpect(jsonPath("items.[1].kind", is("Rum")));
 
-        verify(ingredientService, times(1)).findByGroupName(BEVERAGES);
-        verifyNoMoreInteractions(ingredientService);
+        verify(ingredientServiceMock, times(1)).findByGroupName(BEVERAGES);
+        verifyNoMoreInteractions(ingredientServiceMock);
     }
 
     @Test
@@ -171,12 +191,14 @@ public class IngredientsRestControllerTest {
         drink11.setKind("Golden tips");
         drink11.setDrinkType(DrinkType.TEA);
 
-        when(ingredientService.findByGroupName(DRINKS)).thenReturn(Arrays.asList(drink11, drink2));
+        when(ingredientServiceMock.findByGroupName(DRINKS)).thenReturn(Arrays.asList(drink11, drink2));
 
-        mockMvc.perform(get("/ingredients?filter=drinks"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get("/ingredients")
+                        .param("filter", DRINKS)))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("measurements").exists())
                 .andExpect(jsonPath("items", hasSize(2)))
@@ -187,40 +209,45 @@ public class IngredientsRestControllerTest {
                 .andExpect(jsonPath("items.[1].id", is(2)))
                 .andExpect(jsonPath("items.[1].kind", is("Black tea")));
 
-        verify(ingredientService, times(1)).findByGroupName(DRINKS);
-        verifyNoMoreInteractions(ingredientService);
+        verify(ingredientServiceMock, times(1)).findByGroupName(DRINKS);
+        verifyNoMoreInteractions(ingredientServiceMock);
     }
 
     @Test
     public void findByGroupName_Should_ReturnEmptyResponse_When_FilterByGroup() throws Exception {
 
-        when(ingredientService.findByGroupName("drinks")).thenReturn(Collections.emptyList());
+        when(ingredientServiceMock.findByGroupName(DRINKS)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/ingredients?filter=drinks"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get("/ingredients")
+                        .param("filter", DRINKS)))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("measurements", empty()))
                 .andExpect(jsonPath("items", empty()))
                 .andExpect(jsonPath("isLiquid").doesNotExist());
 
-        verify(ingredientService, times(1)).findByGroupName("drinks");
-        verifyNoMoreInteractions(ingredientService);
+        verify(ingredientServiceMock, times(1)).findByGroupName("drinks");
+        verifyNoMoreInteractions(ingredientServiceMock);
     }
 
     @Test
     public void findByGroupName_Should_ThrowIllegalArgumentException_When_FilterByUnknown() throws Exception {
 
-        when(ingredientService.findByGroupName(UNKNOWN)).thenThrow(new IllegalArgumentException("Unknown group name: " + UNKNOWN));
+        when(ingredientServiceMock.findByGroupName(UNKNOWN)).thenThrow(new IllegalArgumentException("Unknown group name: " + UNKNOWN));
 
-        mockMvc.perform(get("/ingredients?filter=unknown"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get("/ingredients")
+                        .param("filter", UNKNOWN)))
+
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Unknown group name: " + UNKNOWN)));
 
-        verify(ingredientService, times(1)).findByGroupName("unknown");
-        verifyNoMoreInteractions(ingredientService);
+        verify(ingredientServiceMock, times(1)).findByGroupName("unknown");
+        verifyNoMoreInteractions(ingredientServiceMock);
     }
 
 }

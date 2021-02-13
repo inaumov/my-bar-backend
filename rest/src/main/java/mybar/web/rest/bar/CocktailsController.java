@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,7 +37,6 @@ public class CocktailsController {
 
     //-------------------Retrieve All Cocktails--------------------------------------------------------
 
-    @Secured("ROLE_USER")
     @JsonView(View.Cocktail.class)
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<CocktailBean>>> allCocktails(@RequestParam(value = "filter", required = false) String menuNameParam) {
@@ -89,7 +87,6 @@ public class CocktailsController {
 
     //-------------------Retrieve a cocktail with details--------------------------------------------------------
 
-    @Secured("ROLE_USER")
     @JsonView(View.CocktailWithDetails.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<CocktailBean> getCocktail(@PathVariable("id") String id) {
@@ -103,7 +100,6 @@ public class CocktailsController {
 
     //-------------------Create a Cocktail--------------------------------------------------------
 
-    @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CocktailBean> addCocktail(@RequestBody CocktailBean cocktailBean, UriComponentsBuilder ucBuilder) {
         log.info("Creating a new cocktail item " + cocktailBean);
@@ -119,7 +115,6 @@ public class CocktailsController {
 
     //------------------- Update a Cocktail --------------------------------------------------------
 
-    @Secured("ROLE_USER")
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<CocktailBean> updateCocktail(@RequestBody CocktailBean cocktailBean) {
         log.info("Updating a cocktail " + cocktailBean);
@@ -132,7 +127,6 @@ public class CocktailsController {
 
     //------------------- Delete a Cocktail --------------------------------------------------------
 
-    @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CocktailBean> deleteCocktail(@PathVariable("id") String id) {
         log.info("Deleting a cocktail with id " + id);

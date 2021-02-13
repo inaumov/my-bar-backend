@@ -12,7 +12,7 @@ import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
 import mybar.repository.BaseDaoTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Deep Tests of Cocktail DAO.
@@ -118,15 +119,15 @@ public class CocktailDaoTest extends BaseDaoTest {
 
         // test first menu
         Collection<Cocktail> cocktails = it.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()), 4, cocktails.size());
+        assertEquals(4, cocktails.size(), MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()));
 
         // test second menu
         cocktails = it.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the second [{0}] menu should be same.", menuList.get(1).getName()), 6, cocktails.size());
+        assertEquals(6, cocktails.size(), MessageFormat.format("Number of cocktails in the second [{0}] menu should be same.", menuList.get(1).getName()));
 
         // test third menu
         cocktails = it.next().getCocktails();
-        assertEquals(MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()), 1, cocktails.size());
+        assertEquals(1, cocktails.size(), MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()));
     }
 
     @Test
@@ -245,10 +246,10 @@ public class CocktailDaoTest extends BaseDaoTest {
     }
 
     private static void assertCocktailToIngredient(int ingredientId, int expectedVolume, Measurement measurement, Class type, CocktailToIngredient cocktailToIngredient) {
-        assertTrue("Ingredient class type should be same.", type.isInstance(cocktailToIngredient.getIngredient()));
-        assertTrue("Ingredient ID should be same.", ingredientId == cocktailToIngredient.getIngredient().getId());
-        assertEquals("Volume of ingredient should be same.", expectedVolume, cocktailToIngredient.getVolume(), 0);
-        assertEquals("Measurement value of ingredient should be same.", measurement, cocktailToIngredient.getMeasurement());
+        assertTrue(type.isInstance(cocktailToIngredient.getIngredient()), "Ingredient class type should be same.");
+        assertEquals(ingredientId, cocktailToIngredient.getIngredient().getId().intValue(), "Ingredient ID should be same.");
+        assertEquals(expectedVolume, cocktailToIngredient.getVolume(), "Volume of ingredient should be same.");
+        assertEquals(measurement, cocktailToIngredient.getMeasurement(), "Measurement value of ingredient should be same.");
     }
 
     public static CocktailToIngredient findCocktailToIngredientByIngredientName(List<CocktailToIngredient> cocktailToIngredientList,
@@ -257,7 +258,7 @@ public class CocktailDaoTest extends BaseDaoTest {
                 .stream()
                 .filter(cocktailToIngredient -> cocktailToIngredient.getIngredient().getKind().equals(ingredientName))
                 .findFirst();
-        assertTrue(MessageFormat.format("Cocktail to ingredient should be present for ingredientName = {0}.", ingredientName), cocktailToIngredientOptional.isPresent());
+        assertTrue(cocktailToIngredientOptional.isPresent(), MessageFormat.format("Cocktail to ingredient should be present for ingredientName = {0}.", ingredientName));
         return cocktailToIngredientOptional.get();
     }
 

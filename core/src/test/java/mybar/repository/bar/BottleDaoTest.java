@@ -9,7 +9,7 @@ import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.repository.BaseDaoTest;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests Bottle DAO.
@@ -62,7 +62,7 @@ public class BottleDaoTest extends BaseDaoTest {
     public void testGetBottlesByBeverage() {
         Bottle bottle = bottleDao.read("bottle-000003");
 
-        assertTrue(3 == bottle.getBeverage().getId());
+        assertEquals(3, bottle.getBeverage().getId().intValue());
         assertEquals("Rum", bottle.getBeverage().getKind());
         assertEquals(BeverageType.DISTILLED, bottle.getBeverage().getBeverageType());
 
@@ -127,7 +127,7 @@ public class BottleDaoTest extends BaseDaoTest {
         em.flush();
 
         assertEquals("Johny Walker", updated.getBrandName());
-        assertTrue(6 == updated.getBeverage().getId());
+        assertEquals(updated.getBeverage().getId().intValue(), 6);
         assertTrue(updated.isInShelf());
         assertTrue(updated.getImageUrl().contains("whiskey"));
     }
@@ -141,9 +141,9 @@ public class BottleDaoTest extends BaseDaoTest {
 
     private void assertLast(Bottle bottle) {
         assertEquals("bottle-000007", bottle.getId());
-        assertTrue(3 == bottle.getBeverage().getId());
+        assertEquals(3, bottle.getBeverage().getId().intValue());
         assertEquals("Havana Club", bottle.getBrandName());
-        assertEquals(0.5, bottle.getVolume(), 0);
+        assertEquals(0.5, bottle.getVolume());
         assertThat(PRICE, Matchers.comparesEqualTo(bottle.getPrice()));
         assertFalse(bottle.isInShelf());
         assertTrue(bottle.getImageUrl().contains("rum"));

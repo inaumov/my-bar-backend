@@ -3,7 +3,7 @@ package mybar.repository.users;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import mybar.repository.BaseDaoTest;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 public abstract class UserBaseDaoTest extends BaseDaoTest {
 

@@ -8,13 +8,12 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Collection;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CocktailTest {
 
@@ -65,7 +64,7 @@ public class CocktailTest {
 
         ICocktailIngredient beverageDto = beverages.iterator().next();
         assertEquals(1, beverageDto.getIngredientId());
-        assertEquals(50, beverageDto.getVolume(), 0);
+        assertEquals(50, beverageDto.getVolume());
         assertEquals(Measurement.ML, beverageDto.getMeasurement());
 
         Collection<ICocktailIngredient> drinks = insideList.get("drinks");
@@ -73,7 +72,7 @@ public class CocktailTest {
 
         ICocktailIngredient juiceDto = drinks.iterator().next();
         assertEquals(25, juiceDto.getIngredientId());
-        assertEquals(150, juice.getVolume(), 0);
+        assertEquals(150, juice.getVolume());
         assertEquals(Measurement.ML, beverageDto.getMeasurement());
     }
 

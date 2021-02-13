@@ -3,6 +3,7 @@ package mybar.domain;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
     private static final int LENGTH = 6;
 
     @Override
-    public Serializable generate(SessionImplementor sessionImplementor, Object entity) throws HibernateException {
+    public Serializable generate(SharedSessionContractImplementor sharedSessionContractImplementor, Object entity) throws HibernateException {
         String entityClassName = entity.getClass().getSimpleName();
         String prefix = entityClassName.toLowerCase() + "-";
         String generatedId = prefix + randomSalt(LENGTH);

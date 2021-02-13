@@ -21,8 +21,12 @@ import java.util.List;
 @RestController
 public class HistoryController {
 
+    private final HistoryService historyService;
+
     @Autowired
-    private HistoryService historyService;
+    public HistoryController(HistoryService historyService) {
+        this.historyService = historyService;
+    }
 
     @RequestMapping(value = "/history", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)

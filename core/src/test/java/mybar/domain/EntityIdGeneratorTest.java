@@ -1,10 +1,11 @@
 package mybar.domain;
 
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EntityIdGeneratorTest {
 
@@ -14,8 +15,8 @@ public class EntityIdGeneratorTest {
         EntityIdGenerator entityIdGenerator = new EntityIdGenerator();
         Serializable generate = entityIdGenerator.generate(null, new Object());
         String cocktailId = generate.toString();
-        Assert.assertThat(cocktailId, Matchers.startsWith("object-"));
-        Assert.assertThat(cocktailId.length(), Matchers.equalTo("object-".length() + 6));
+        assertThat(cocktailId, Matchers.startsWith("object-"));
+        assertThat(cocktailId.length(), Matchers.equalTo("object-".length() + 6));
     }
 
 }

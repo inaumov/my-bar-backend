@@ -17,21 +17,13 @@ import mybar.exception.CocktailNotFoundException;
 import mybar.exception.UnknownIngredientsException;
 import mybar.exception.UnknownMenuException;
 import mybar.service.bar.CocktailsService;
-import mybar.web.rest.TestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -43,10 +35,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration("test-rest-context.xml")
-public class CocktailsRestControllerTest {
+@WebMvcTest(CocktailsController.class)
+public class CocktailsRestControllerTest extends ARestControllerTest {
 
     public static final String TEST_ID_1 = "cocktail-000001";
     public static final String TEST_ID_2 = "cocktail-000002";
@@ -56,33 +46,55 @@ public class CocktailsRestControllerTest {
     public static final String IMAGE_URL = "http://cocktail-image.jpg";
     public static final double TEST_VOLUME_VALUE = 25; // TODO
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    @MockBean
+    private CocktailsService cocktailsServiceMock;
+    @MockBean
+    private CocktailAvailabilityCalculator availabilityCalculatorMock;
 
-    private MockMvc mockMvc;
-
-    @Autowired
-    private CocktailsService cocktailsService;
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        reset(cocktailsService);
+    @AfterEach
+    public void tearDown() {
+        reset(cocktailsServiceMock);
+    }
+
+    @Test
+    public void test_findById_notAuthorized() throws Exception {
+        String accessToken = "not_a_real_token";
+
+        when(cocktailsServiceMock.findCocktailById(TEST_ID_1)).thenReturn(new CocktailDto());
+
+        mockMvc.perform(get("/cocktails/{0}", TEST_ID_1)
+                .header("Authorization", "Bearer " + accessToken)
+                .accept(CONTENT_TYPE))
+
+                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void test_findById_wrongRole() throws Exception {
+
+        when(cocktailsServiceMock.findCocktailById(TEST_ID_1)).thenReturn(new CocktailDto());
+
+        mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get("/cocktails/{0}", TEST_ID_1)))
+
+                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(status().isForbidden());
     }
 
     @Test
     public void findById_Should_ReturnCocktailEntry() throws Exception {
 
-        when(cocktailsService.findCocktailById(TEST_ID_1)).thenReturn(createCocktailDto());
+        when(cocktailsServiceMock.findCocktailById(TEST_ID_1)).thenReturn(createCocktailDto());
 
-        mockMvc.perform(get("/cocktails/" + TEST_ID_1))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails/{0}", TEST_ID_1)))
+
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("$.id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$.relatedToMenu", is(MENU_NAME)))
@@ -97,38 +109,41 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.ingredients.beverages[0].measurement", is(Measurement.ML.name())))
                 .andExpect(jsonPath("$.ingredients.beverages[0].missing", is(nullValue())));
 
-        verify(cocktailsService, times(1)).findCocktailById(anyString());
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).findCocktailById(anyString());
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void findById_Should_ThrowNotFound() throws Exception {
-        when(cocktailsService.findCocktailById(TEST_ID_2)).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
-        mockMvc.perform(get("/cocktails/" + TEST_ID_2))
+        when(cocktailsServiceMock.findCocktailById(TEST_ID_2)).thenThrow(new CocktailNotFoundException(TEST_ID_2));
+
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails/{0}", TEST_ID_2)))
+
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
-        verify(cocktailsService, times(1)).findCocktailById(anyString());
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).findCocktailById(anyString());
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void findAll_Should_ReturnEmptyArray() throws Exception {
 
-        when(cocktailsService.getAllCocktails()).thenReturn(Collections.<String, List<ICocktail>>emptyMap());
+        when(cocktailsServiceMock.getAllCocktails()).thenReturn(Collections.emptyMap());
 
-        mockMvc.perform(get("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails")))
+
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("$.*", hasSize(0)));
 
-        verify(cocktailsService, times(1)).getAllCocktails();
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).getAllCocktails();
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
@@ -144,12 +159,13 @@ public class CocktailsRestControllerTest {
                 "shot", Lists.<ICocktail>newArrayList(first, second),
                 "other", Lists.<ICocktail>newArrayList(createCocktailDto())
         );
-        when(cocktailsService.getAllCocktails()).thenReturn(cocktails);
+        when(cocktailsServiceMock.getAllCocktails()).thenReturn(cocktails);
 
-        mockMvc.perform(get("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails")))
+
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("$.shot", hasSize(2)))
                 .andExpect(jsonPath("$.shot[0].id", is("cocktail-000005")))
@@ -169,8 +185,8 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.other[0].ingredients.beverages[0].measurement", is(Measurement.ML.name())))
                 .andExpect(jsonPath("$.other[0].ingredients.beverages[0].missing").doesNotExist());
 
-        verify(cocktailsService, times(1)).getAllCocktails();
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).getAllCocktails();
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
@@ -182,12 +198,15 @@ public class CocktailsRestControllerTest {
         final CocktailDto second = new CocktailDto();
         second.setId("cocktail-000010");
 
-        when(cocktailsService.getAllCocktailsForMenu("any")).thenReturn(Lists.<ICocktail>newArrayList(first, second, createCocktailDto()));
+        when(cocktailsServiceMock.getAllCocktailsForMenu("any")).thenReturn(Lists.<ICocktail>newArrayList(first, second, createCocktailDto()));
 
-        mockMvc.perform(get("/cocktails?filter=any"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get("/cocktails")
+                        .param("filter", "any")))
+
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
 
                 .andExpect(jsonPath("$.any", hasSize(3)))
                 .andExpect(jsonPath("$.any[0].id", is("cocktail-000005")))
@@ -206,119 +225,117 @@ public class CocktailsRestControllerTest {
                 .andExpect(jsonPath("$.any[2].ingredients.beverages[0].measurement", is(Measurement.ML.name())))
                 .andExpect(jsonPath("$.any[2].ingredients.beverages[0].missing").doesNotExist());
 
-        verify(cocktailsService, times(1)).getAllCocktailsForMenu("any");
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).getAllCocktailsForMenu("any");
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void create_Should_CreateNewCocktail() throws Exception {
         CocktailDto cocktailDto = createCocktailDto();
 
-        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenReturn(cocktailDto);
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
-        ResultActions resultActions = mockMvc.perform(post("/cocktails")
-                .contentType(MediaType.APPLICATION_JSON)
+        ResultActions resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
                 .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
+                .andExpect(content().contentType(CONTENT_TYPE));
 
         assertCocktailResponseBody(resultActions);
 
-        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void create_Should_ThrowMenuUnknown() throws Exception {
 
-        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
 
-        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
                 .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
 
-        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void create_Should_ValidateCocktailNameRequired() throws Exception {
 
-        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
                 .content("{\"relatedToMenu\":\"test\"}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Cocktail name is required.")));
 
-        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void create_Should_ValidateMenuNameRequired() throws Exception {
 
-        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
                 .content("{\"name\":\"test\"}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
 
-        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void create_Should_ValidateIngredientsUnknown() throws Exception {
 
-        when(cocktailsService.saveCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
 
-        mockMvc.perform(post("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
                 .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Provided ingredients [15, 20, 40] are unknown.")));
 
-        verify(cocktailsService, times(1)).saveCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void update_Should_UpdateCocktail() throws Exception {
         final CocktailDto cocktailDto = createCocktailDto();
 
-        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenReturn(cocktailDto);
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenReturn(cocktailDto);
 
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
-        ResultActions resultActions = mockMvc.perform(put("/cocktails")
-                .contentType(MediaType.APPLICATION_JSON)
+        ResultActions resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
                 .content(requestJson))
 
                 .andDo(print())
                 .andExpect(status().isAccepted())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8));
+                .andExpect(content().contentType(CONTENT_TYPE));
 
         assertCocktailResponseBody(resultActions);
 
-        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     private void assertCocktailResponseBody(ResultActions resultActions) throws Exception {
@@ -340,116 +357,116 @@ public class CocktailsRestControllerTest {
     @Test
     public void update_Should_ThrowNotFound() throws Exception {
 
-        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
-        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
                 .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
-        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void update_Should_ThrowMenuUnknown() throws Exception {
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
 
-        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
-
-        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
                 .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
 
-        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void update_Should_ValidateCocktailNameRequired() throws Exception {
 
-        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+
                 .content("{\"id\":\"cocktail-test00\",\"relatedToMenu\":\"test\"}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Cocktail name is required.")));
 
-        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void update_Should_ValidateMenuNameRequired() throws Exception {
 
-        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenCallRealMethod();
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
                 .content("{\"id\":\"cocktail-test00\",\"name\":\"test\"}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
 
-        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void update_Should_ValidateIngredientsUnknown() throws Exception {
 
-        when(cocktailsService.updateCocktail(Matchers.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
 
-        mockMvc.perform(put("/cocktails").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
                 .content("{}"))
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"Provided ingredients [15, 20, 40] are unknown.")));
 
-        verify(cocktailsService, times(1)).updateCocktail(Matchers.any(ICocktail.class));
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void delete_Should_DeleteCocktail() throws Exception {
 
-        doNothing().when(cocktailsService).deleteCocktailById(TEST_ID_1);
+        doNothing().when(cocktailsServiceMock).deleteCocktailById(TEST_ID_1);
 
-        mockMvc.perform(delete("/cocktails/" + TEST_ID_1))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, delete("/cocktails/{0}", TEST_ID_1)))
 
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(cocktailsService, times(1)).deleteCocktailById(TEST_ID_1);
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).deleteCocktailById(TEST_ID_1);
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     @Test
     public void delete_Should_ThrowNotFound() throws Exception {
 
-        doThrow(new CocktailNotFoundException(TEST_ID_2)).when(cocktailsService).deleteCocktailById(TEST_ID_2);
+        doThrow(new CocktailNotFoundException(TEST_ID_2)).when(cocktailsServiceMock).deleteCocktailById(TEST_ID_2);
 
-        mockMvc.perform(delete("/cocktails/" + TEST_ID_2))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, delete("/cocktails/{0}", TEST_ID_2)))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
-        verify(cocktailsService, times(1)).deleteCocktailById(TEST_ID_2);
-        verifyNoMoreInteractions(cocktailsService);
+        verify(cocktailsServiceMock, times(1)).deleteCocktailById(TEST_ID_2);
+        verifyNoMoreInteractions(cocktailsServiceMock);
     }
 
     private String toRequestJson(CocktailBean testCocktail) throws JsonProcessingException {

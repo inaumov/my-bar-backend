@@ -8,7 +8,7 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.repository.BaseDaoTest;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DatabaseSetup("classpath:datasets/dataset.xml")
 @DatabaseSetup("classpath:datasets/usersDataSet.xml")
