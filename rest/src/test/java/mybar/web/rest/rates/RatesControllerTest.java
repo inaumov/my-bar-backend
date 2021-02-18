@@ -55,11 +55,11 @@ public class RatesControllerTest extends ARestControllerTest {
         when(ratesServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
 
         // rate cocktail
-        MockHttpServletRequestBuilder builder =
+        MockHttpServletRequestBuilder requestBuilder =
                 makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.post("/rates"))
                         .content(createRateInJson(COCKTAIL_ID, STARS));
 
-        this.mockMvc.perform(builder)
+        this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isCreated());
 
@@ -82,11 +82,11 @@ public class RatesControllerTest extends ARestControllerTest {
         when(ratesServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
 
         // rate cocktail
-        MockHttpServletRequestBuilder builder =
+        MockHttpServletRequestBuilder requestBuilder =
                 makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/rates"))
                         .content(createRateInJson(COCKTAIL_ID, STARS));
 
-        this.mockMvc.perform(builder)
+        this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk());
 
@@ -98,10 +98,10 @@ public class RatesControllerTest extends ARestControllerTest {
     public void test_removeFromRates() throws Exception {
         doNothing().when(ratesServiceMock).removeCocktailFromRates(eq(USER), eq(COCKTAIL_ID));
 
-        MockHttpServletRequestBuilder builder = makePreAuthorizedRequest(USER, USER,
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
                 MockMvcRequestBuilders.delete("/rates/{0}", COCKTAIL_ID));
 
-        this.mockMvc.perform(builder)
+        this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isNoContent())
                 .andDo(MockMvcResultHandlers.print());
@@ -119,11 +119,11 @@ public class RatesControllerTest extends ARestControllerTest {
 
         when(ratesServiceMock.getRatedCocktails(eq(USER))).thenReturn(Collections.singletonList(resultDto));
 
-        MockHttpServletRequestBuilder builder =
+        MockHttpServletRequestBuilder requestBuilder =
                 makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders
                 .get("/rates/ratedCocktails"));
 
-        this.mockMvc.perform(builder)
+        this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk())
                 .andDo(MockMvcResultHandlers.print());
@@ -134,11 +134,11 @@ public class RatesControllerTest extends ARestControllerTest {
         when(ratesServiceMock.rateCocktail(anyString(), eq("unknown"), anyInt())).thenThrow(new CocktailNotFoundException("unknown"));
 
         // rate cocktail
-        MockHttpServletRequestBuilder builder = makePreAuthorizedRequest(USER, USER,
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
                 MockMvcRequestBuilders.post("/rates"))
                         .content(createRateInJson("unknown", 1));
 
-        this.mockMvc.perform(builder)
+        this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
                 .andExpect(content().contentType(CONTENT_TYPE))
@@ -154,11 +154,11 @@ public class RatesControllerTest extends ARestControllerTest {
         when(ratesServiceMock.rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null))).thenCallRealMethod();
 
         // rate cocktail
-        MockHttpServletRequestBuilder builder = makePreAuthorizedRequest(USER, USER,
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
                 MockMvcRequestBuilders.post("/rates"))
                         .content("{\"cocktailId\":\"" + COCKTAIL_ID + "\"}");
 
-        this.mockMvc.perform(builder)
+        this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
                         .isBadRequest())
                 .andExpect(content().contentType(CONTENT_TYPE))

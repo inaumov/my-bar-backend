@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @Configuration
 @EnableResourceServer
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -58,7 +58,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/shelf/**").hasRole("USER")
                 .antMatchers("/rates/history").hasRole("ANALYST")
                 .antMatchers("/rates/**").hasRole("USER")
-                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers("/users/register").permitAll()
                 .antMatchers("/api/bar/**").authenticated()
                 .anyRequest().authenticated()
                 .and()

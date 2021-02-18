@@ -1,10 +1,10 @@
 package mybar.web.rest.users.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import mybar.app.bean.ErrorInfo;
 import mybar.exception.users.EmailDuplicatedException;
 import mybar.exception.users.UnknownUserException;
 import mybar.exception.users.UserExistsException;
-import mybar.web.rest.bar.exception.ErrorInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -22,14 +22,18 @@ import java.util.Locale;
 @ControllerAdvice(basePackages = "mybar.web.rest.users")
 public class UsersRestExceptionProcessor {
 
+    private final MessageSource messageSource;
+
     @Autowired
-    private MessageSource messageSource;
+    public UsersRestExceptionProcessor(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ExceptionHandler(EmailDuplicatedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorInfo duplicatedEmail(HttpServletRequest req, EmailDuplicatedException ex) {
-        log.error("Duplicated email thrown", ex);
+        log.warn("Duplicated email thrown:", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.duplicated.email", null, locale);
@@ -43,7 +47,7 @@ public class UsersRestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorInfo userExists(HttpServletRequest req, UserExistsException ex) {
-        log.error("User exists thrown", ex);
+        log.warn("User exists thrown:", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.user.exists", null, locale);
@@ -57,7 +61,7 @@ public class UsersRestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorInfo userUnknown(HttpServletRequest req, UnknownUserException ex) {
-        log.error("User unknown thrown", ex);
+        log.warn("User unknown thrown:", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.unknown.user", null, locale);
@@ -71,10 +75,23 @@ public class UsersRestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo pwdConfirmation(HttpServletRequest req, PasswordConfirmationException ex) {
-        log.error("Password confirmation thrown", ex);
+        log.warn("Password confirmation thrown:", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.pwd.confirmation", null, locale);
+        String errorURL = req.getRequestURL().toString();
+
+        return new ErrorInfo(errorURL, errorMessage);
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorInfo pwdCheck(HttpServletRequest req, InvalidPasswordException ex) {
+        log.warn("Password check thrown:", ex);
+
+        Locale locale = LocaleContextHolder.getLocale();
+        String errorMessage = messageSource.getMessage("error.pwd.invalid", null, locale);
         String errorURL = req.getRequestURL().toString();
 
         return new ErrorInfo(errorURL, errorMessage);

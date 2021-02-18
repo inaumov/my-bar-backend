@@ -91,7 +91,7 @@ public class CocktailsApiTest {
     public void testAddNewCocktail() {
 
         JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/cocktails/new_cocktail_v1.json");
-        resourceAsJSON.put("name", resourceAsJSON.get("name") + " - " + RandomStringUtils.randomAlphabetic(6));
+        resourceAsJSON.put("name", resourceAsJSON.getString("name") + " - " + RandomStringUtils.randomAlphabetic(6));
 
         String id = givenAuthenticated()
                 .when()

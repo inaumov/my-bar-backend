@@ -79,7 +79,7 @@ public class ShelfApiTest {
     public void testAddNewBottle() {
 
         JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/shelf/new_bottle_v1.json");
-        resourceAsJSON.put("brandName", resourceAsJSON.get("brandName") + " - " + RandomStringUtils.randomAlphabetic(6));
+        resourceAsJSON.put("brandName", resourceAsJSON.getString("brandName") + " - " + RandomStringUtils.randomAlphabetic(6));
 
         String id = givenAuthenticated()
                 .when()

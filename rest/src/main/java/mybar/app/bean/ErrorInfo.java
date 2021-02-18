@@ -1,4 +1,4 @@
-package mybar.web.rest.bar.exception;
+package mybar.app.bean;
 
 public class ErrorInfo {
 

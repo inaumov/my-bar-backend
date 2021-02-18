@@ -2,7 +2,7 @@ package mybar.web.rest.rates.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import mybar.exception.CocktailNotFoundException;
-import mybar.web.rest.bar.exception.ErrorInfo;
+import mybar.app.bean.ErrorInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -20,14 +20,18 @@ import java.util.Locale;
 @ControllerAdvice(basePackages = "mybar.web.rest.rates")
 public class RatesRestExceptionProcessor {
 
+    private final MessageSource messageSource;
+
     @Autowired
-    private MessageSource messageSource;
+    public RatesRestExceptionProcessor(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ExceptionHandler(CocktailNotFoundException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorInfo cocktailNotFound(HttpServletRequest req, CocktailNotFoundException ex) {
-        log.error("Cocktail not found thrown", ex);
+        log.warn("Cocktail not found thrown:", ex);
 
         Locale locale = LocaleContextHolder.getLocale();
         String errorMessage = messageSource.getMessage("error.could.not.rate.unknown.cocktail", null, locale);
@@ -41,7 +45,7 @@ public class RatesRestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo requiredFields(HttpServletRequest req, IllegalArgumentException ex) {
-        log.error("Invalid property value", ex);
+        log.warn("Invalid property value:", ex);
 
         String errorURL = req.getRequestURL().toString();
         return new ErrorInfo(errorURL, ex.getMessage());
