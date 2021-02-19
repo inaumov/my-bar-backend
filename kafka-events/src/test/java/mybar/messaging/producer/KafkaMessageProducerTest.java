@@ -3,8 +3,8 @@ package mybar.messaging.producer;
 import org.apache.kafka.clients.producer.MockProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class KafkaMessageProducerTest {
     private static final String MY_TOPIC = "my_topic";
 
     @Test
-    public void testProducer() throws IOException {
+    public void testProducer() {
         KafkaMessageProducer kafkaMessageProducer = new KafkaMessageProducer(MY_TOPIC, "localhost", "clientId");
 
         List<ProducerRecord<String, String>> history = new ArrayList<>();
@@ -34,7 +34,7 @@ public class KafkaMessageProducerTest {
                 new ProducerRecord<>(MY_TOPIC, MY_KEY, "value3"),
                 new ProducerRecord<>(MY_TOPIC, MY_KEY, "value4"));
 
-        Assert.assertEquals("Sent didn't match expected", expected, history);
+        Assertions.assertEquals(expected, history);
     }
 
     private List<ProducerRecord<String, String>> sendAndGetProducerRecords(KafkaMessageProducer kafkaMessageProducer, String key, String object) {
