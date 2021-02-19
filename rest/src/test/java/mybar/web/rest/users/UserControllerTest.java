@@ -9,9 +9,9 @@ import mybar.exception.users.UserExistsException;
 import mybar.service.users.UserService;
 import mybar.web.rest.ARestControllerTest;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -39,7 +39,7 @@ public class UserControllerTest extends ARestControllerTest {
     public static final String SURNAME = "Keery";
     public static final String EMAIL = "joe@example.com";
     public static final String EMAIL_OBFUSCATED = "j***@e***e.com";
-    public static final String PASSWORD = "am9lLnB3ZA==";
+    public static final String PASSWORD = "joe.pwd";
 
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ADMIN = "ADMIN";
@@ -120,8 +120,6 @@ public class UserControllerTest extends ARestControllerTest {
                 .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
-
-                .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(content().string(containsString("errorMessage\":\"There is an account with that email: " + EMAIL)));
 
         verify(userService, atLeastOnce()).createUser(Mockito.any(IUser.class));
@@ -146,8 +144,7 @@ public class UserControllerTest extends ARestControllerTest {
                 .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
-
-                .andExpect(content().string(containsString("errorMessage\":\"Username [" + USERNAME + "] already occupied.")));
+                .andExpect(content().string(containsString("errorMessage\":\"Username [" + USERNAME + "] has been already occupied.")));
 
         verify(userService, atLeastOnce()).createUser(Mockito.any(IUser.class));
     }
@@ -227,6 +224,60 @@ public class UserControllerTest extends ARestControllerTest {
                 .andExpect(jsonPath("$.roles").doesNotExist());
 
         verify(userService, atLeastOnce()).editUserInfo(Mockito.any(IUser.class));
+    }
+
+    @Nested
+    @DisplayName("test_change_password")
+    class ChangePassword {
+        @Test
+        public void own_password_accepted() throws Exception {
+            final IUser user = mock(IUser.class);
+            when(user.getUsername()).thenReturn(USER);
+            when(userService.findByUsername(Mockito.eq(USER))).thenReturn(user);
+            doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
+
+            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users/{0}/changePassword", USER))
+                    .content("{\"newPassword\":\"changeit\"}");
+
+            mockMvc.perform(requestBuilder)
+                    .andExpect(MockMvcResultMatchers.status()
+                            .isAccepted());
+
+            verify(userService, atLeastOnce()).changePassword(Mockito.same(user), Mockito.eq("changeit"));
+        }
+
+        @Test
+        public void not_own_user_access_denied() throws Exception {
+            final IUser user = mock(IUser.class);
+            when(user.getUsername()).thenReturn(USERNAME);
+            when(userService.findByUsername(Mockito.eq(USERNAME))).thenReturn(user);
+            doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
+
+            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users/{0}/changePassword", USERNAME))
+                    .content("{\"newPassword\":\"changeit\"}");
+
+            mockMvc.perform(requestBuilder)
+                    .andExpect(MockMvcResultMatchers.status()
+                            .isForbidden());
+
+            verify(userService, never()).changePassword(Mockito.same(user), Mockito.eq("changeit"));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "lol"})
+        public void bad_value(String password) throws Exception {
+            final IUser user = mock(IUser.class);
+            when(user.getUsername()).thenReturn(USER);
+            when(userService.findByUsername(Mockito.eq(USER))).thenReturn(user);
+            doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
+
+            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users/{0}/changePassword", USER))
+                    .content(String.format("{\"newPassword\":\"%s\"}", password));
+
+            mockMvc.perform(requestBuilder)
+                    .andExpect(MockMvcResultMatchers.status()
+                            .isBadRequest());
+        }
     }
 
     @Test

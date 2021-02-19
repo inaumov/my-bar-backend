@@ -192,4 +192,12 @@ public class UserService {
         return entity;
     }
 
+    public void changePassword(IUser user, String password) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(password), "Password must not be empty.");
+
+        final User one = userDao.getOne(user.getUsername());
+        one.setPassword(password);
+    }
+
 }

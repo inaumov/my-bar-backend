@@ -65,8 +65,8 @@ public class UsersApiTest {
     }
 
     @Test
-    public void test_register_new_user_passwords_not_encoded() {
-        JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/users/new_user_v1_password_not_encoded.json");
+    public void test_register_user_email_occupied() {
+        JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/users/new_user_v1_email_occupied.json");
 
         RestAssured
                 .given()
@@ -76,8 +76,8 @@ public class UsersApiTest {
                 .post("http://localhost:8089/api/bar/users/register")
                 .then()
                 .assertThat()
-                .statusCode(400)
-                .body("errorMessage", Matchers.equalTo("Invalid password value."));
+                .statusCode(403)
+                .body("errorMessage", Matchers.equalTo("There is an account with that email: pavluxa@gmail.com ."));
     }
 
     @Test
@@ -91,9 +91,32 @@ public class UsersApiTest {
                 .body("size()", Matchers.greaterThan(1));
     }
 
+    @Test
+    public void test_change_password() {
+        givenAuthenticated()
+                .given()
+                .body("{\"newPassword\":\"user\"})")
+                .when()
+                .contentType(ContentType.JSON)
+                .put("http://localhost:8089/api/bar/users/{0}/changePassword", Um.TEST_USERNAME)
+                .then()
+                .assertThat()
+                .statusCode(202);
+    }
+
     private RequestSpecification givenAuthenticatedAsAdmin() {
 
         final String accessToken = authenticator.getAccessToken(Um.ADMIN, Um.ADMIN_PASS);
+
+        return RestAssured
+                .given()
+                .auth()
+                .oauth2(accessToken, OAuthSignature.HEADER);
+    }
+
+    private RequestSpecification givenAuthenticated() {
+
+        final String accessToken = authenticator.getAccessToken(Um.TEST_USERNAME, Um.USER_PASS);
 
         return RestAssured
                 .given()

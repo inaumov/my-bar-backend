@@ -5,18 +5,18 @@ import mybar.api.users.IUser;
 import mybar.api.users.IUserDetails;
 import mybar.app.bean.users.*;
 import mybar.service.users.UserService;
-import mybar.web.rest.users.exception.InvalidPasswordException;
 import mybar.web.rest.users.exception.PasswordConfirmationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +50,20 @@ public class UserController {
         return BeanFactory.fromDetails(user);
     }
 
+    @PutMapping("/{username}/changePassword")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @RolesAllowed("ROLE_USER")
+    void changePassword(@PathVariable String username, @RequestBody @Valid ChangePasswordBean passwordBean, Authentication authentication) {
+
+        IUser user = userService.findByUsername(username);
+        if (Objects.equals(user.getUsername(), authentication.getPrincipal())) {
+            final String encodedPassword = passwordEncoder.encode(passwordBean.getNewPassword());
+            userService.changePassword(user, encodedPassword);
+        } else {
+            throw new AccessDeniedException("The requester is not of hte same identity as password owner.");
+        }
+    }
+
     @JsonView(View.UserView.class)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,19 +71,10 @@ public class UserController {
                                     @RequestBody RegisterUserBean registerUserBean) {
         validatePasswordConfirmation(registerUserBean);
 
-        String pwd = new String(tryDecodeBase64(registerUserBean.getPassword()), StandardCharsets.UTF_8);
-        registerUserBean.setPassword(passwordEncoder.encode(pwd));
+        registerUserBean.setPassword(passwordEncoder.encode(registerUserBean.getPassword()));
 
         IUserDetails user = userService.createUser(registerUserBean);
         return BeanFactory.fromDetails(user);
-    }
-
-    public byte[] tryDecodeBase64(String pwd) {
-        try {
-            return Base64.getDecoder().decode(pwd);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidPasswordException("Password is not Base64 encoded.");
-        }
     }
 
     private void validatePasswordConfirmation(RegisterUserBean user) {
