@@ -6,24 +6,23 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.dto.RateDto;
-import mybar.messaging.IMessageProducer;
+import mybar.events.api.IMessageProducer;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.rates.RatesDao;
 import mybar.repository.users.UserDao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 public class RatesServiceTest {
 
@@ -44,23 +43,13 @@ public class RatesServiceTest {
     private RatesService ratesService;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @Test
-    public void test_rate() throws Exception {
+    public void test_rate() {
         Mockito.when(cocktailDaoMock.read(COCKTAIL_ID)).thenReturn(new Cocktail());
 
-        ratesService.rateCocktail(USERNAME, COCKTAIL_ID, STARS);
-        ratesService.rateCocktail("Garry", COCKTAIL_ID, 8);
-        ratesService.rateCocktail("Evan777", COCKTAIL_ID, 6);
-
-        Map<String, IRate> rates = (Map<String, IRate>) ReflectionTestUtils.getField(ratesService, "tempRates");
-        Assertions.assertNotNull(rates);
-        Assertions.assertEquals(3, rates.size());
-        Assertions.assertTrue(rates.containsKey(USERNAME + "@" + COCKTAIL_ID));
-        Assertions.assertTrue(rates.containsKey("Garry" + "@" + COCKTAIL_ID));
-        Assertions.assertTrue(rates.containsKey("Evan777" + "@" + COCKTAIL_ID));
         IRate iRate = ratesService.rateCocktail(USERNAME, COCKTAIL_ID, STARS);
 
         Assertions.assertEquals(COCKTAIL_ID, iRate.getCocktailId());
@@ -71,42 +60,42 @@ public class RatesServiceTest {
     }
 
     @Test
-    public void test_rate_when_null_username() throws Exception {
+    public void test_rate_when_null_username() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             ratesService.rateCocktail(null, COCKTAIL_ID, STARS);
         });
     }
 
     @Test
-    public void test_rate_when_missing_stars() throws Exception {
+    public void test_rate_when_missing_stars() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             ratesService.rateCocktail(USERNAME, COCKTAIL_ID, null);
         });
     }
 
     @Test
-    public void test_rate_when_null_cocktail_id() throws Exception {
+    public void test_rate_when_null_cocktail_id() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             ratesService.rateCocktail(USERNAME, null, STARS);
         });
     }
 
     @Test
-    public void test_rate_when_stars_value_below_range() throws Exception {
+    public void test_rate_when_stars_value_below_range() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             ratesService.rateCocktail(USERNAME, COCKTAIL_ID, 0);
         });
     }
 
     @Test
-    public void test_rate_when_stars_value_above_range() throws Exception {
+    public void test_rate_when_stars_value_above_range() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             ratesService.rateCocktail(USERNAME, COCKTAIL_ID, 11);
         });
     }
 
     @Test
-    public void test_remove_cocktail_from_rates() throws Exception {
+    public void test_remove_cocktail_from_rates() {
         User user = new User();
         user.setUsername(USERNAME);
         Cocktail cocktail = new Cocktail();
@@ -121,7 +110,7 @@ public class RatesServiceTest {
     }
 
     @Test
-    public void test_get_my_rated_cocktails() throws Exception {
+    public void test_get_my_rated_cocktails() {
         Mockito.when(userDaoMock.getOne(Mockito.anyString())).thenReturn(new User());
 
         User user = new User();
@@ -140,27 +129,21 @@ public class RatesServiceTest {
     }
 
     @Test
-    public void test_persist_rates() throws Exception {
-        TreeMap<String, IRate> testMap = new TreeMap<>();
+    public void test_persist_rate() {
+        Mockito.when(userDaoMock.getOne(Mockito.anyString())).thenReturn(new User());
+        Mockito.when(cocktailDaoMock.read(COCKTAIL_ID)).thenReturn(new Cocktail());
+
+        Gson gson = new Gson();
+
         RateDto rateDto = new RateDto();
         rateDto.setRatedAt(new Date());
         rateDto.setStars(5);
-        testMap.put(USERNAME + "@" + COCKTAIL_ID, rateDto);
-        testMap.put(USERNAME + "@" + "cocktail-000002", rateDto);
-        testMap.put(USERNAME + "@" + "cocktail-000350", rateDto);
-        testMap.put("Garry" + "@" + COCKTAIL_ID, rateDto);
-        testMap.put("Evan777" + "@" + COCKTAIL_ID, rateDto);
+        String key = USERNAME + "@" + COCKTAIL_ID;
+        String object = gson.toJson(rateDto);
 
-        ReflectionTestUtils.setField(ratesService, "tempRates", testMap);
-
-        Gson gson = new Gson();
-        for (String key : testMap.keySet()) {
-            ratesService.persistRates(key, testMap.get(key).getRatedAt().getTime(), gson.toJson(testMap.get(key)));
-        }
+        ratesService.persistRate(key, System.currentTimeMillis(), object);
         // persist only when cocktail exists
-        Mockito.verify(ratesDaoMock, Mockito.times(3)).update(Mockito.any(Rate.class));
-
-        Assertions.assertTrue(testMap.isEmpty());
+        Mockito.verify(ratesDaoMock, Mockito.atLeastOnce()).update(Mockito.any(Rate.class));
     }
 
 }

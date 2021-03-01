@@ -16,17 +16,10 @@
 
     <dependencies>
 
-        <!-- internal -->
-
+        <!-- internals -->
         <dependency>
             <groupId>my.bar</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>my.bar</groupId>
-            <artifactId>kafka-events</artifactId>
             <version>${project.version}</version>
         </dependency>
 

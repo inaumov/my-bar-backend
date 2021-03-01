@@ -2,6 +2,7 @@ server:
   servlet:
     contextPath: /api/bar
   port: 8089
+
 spring:
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/my_bar_db?autoReconnect=true&useSSL=false
@@ -17,15 +18,18 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+
 logging:
   level:
     org:
       springframework:
         security: INFO
+
 kafka:
   events:
-    topic: my-bar-rates
-    producer-client-id: my_bar.rates-producer
     servers: localhost:9093
-    consumer-group-id: my_bar.rates-consumer
-    pollTimeout: 10000
+    poll_timeout: 10000
+    rates:
+      topic: my_bar_cocktails.RATED
+      producer_client_id: my_bar_app.Rates_Producer
+      consumer_group_id: my_bar_app.Rates_Consumer

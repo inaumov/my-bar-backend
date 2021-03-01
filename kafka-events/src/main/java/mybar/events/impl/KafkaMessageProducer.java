@@ -1,8 +1,8 @@
-package mybar.messaging.producer;
+package mybar.events.impl;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import mybar.messaging.IMessageProducer;
+import mybar.events.api.IMessageProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;

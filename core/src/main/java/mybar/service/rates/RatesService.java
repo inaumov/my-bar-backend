@@ -10,11 +10,12 @@ import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.dto.RateDto;
 import mybar.exception.CocktailNotFoundException;
-import mybar.messaging.IMessageProducer;
+import mybar.events.api.IMessageProducer;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.rates.RatesDao;
 import mybar.repository.users.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Range;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,13 +36,14 @@ public class RatesService {
 
     private static final Range<Integer> starsRange = new Range<>(1, 10);
 
+    @Qualifier("ratesEventProducer")
     private final IMessageProducer messageProducer;
 
     private final Gson gson = new Gson();
 
     @Autowired
-    public RatesService(IMessageProducer messageProducer, RatesDao ratesDao, UserDao userDao, CocktailDao cocktailDao) {
-        this.messageProducer = messageProducer;
+    public RatesService(IMessageProducer eventProducer, RatesDao ratesDao, UserDao userDao, CocktailDao cocktailDao) {
+        this.messageProducer = eventProducer;
         this.ratesDao = ratesDao;
         this.userDao = userDao;
         this.cocktailDao = cocktailDao;
@@ -84,7 +86,7 @@ public class RatesService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void persistRates(String cacheKey, long timestamp, String object) {
+    public void persistRate(String cacheKey, long timestamp, String object) {
         Gson gson = new Gson();
         IRate rateDto = gson.fromJson(object, RateDto.class);
         String[] strings = StringUtils.split(cacheKey, "@");

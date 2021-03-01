@@ -1,37 +1,35 @@
-package mybar.messaging.consumer;
+package mybar.events.api;
 
-import mybar.messaging.ServiceMockProvider;
-import mybar.service.rates.RatesService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.MockConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ServiceMockProvider.class, loader = AnnotationConfigContextLoader.class)
 public class KafkaMessageConsumerTest {
 
     private static final String MY_KEY = "my@key";
     private static final String MY_TOPIC = "my_topic";
 
-    @Autowired
-    private RatesService ratesService;
-
     @Test
     public void testConsumer() {
         // This is YOUR consumer object
-        KafkaMessageConsumer myTestConsumer = new KafkaMessageConsumer(ratesService, MY_TOPIC, "localhost", "testGroupId", 10L);
+        KafkaMessageConsumer myTestConsumer = new KafkaMessageConsumer(MY_TOPIC, "localhost", "testGroupId", 10L) {
+            @Override
+            public void aggregate(String key, RecordObject recordObject) {
+                //
+            }
+
+            @Override
+            public void consume() {
+                //
+            }
+        };
         // Inject the MockConsumer into your consumer
         // instead of using a KafkaConsumer
         MockConsumer<String, String> mockConsumer = new MockConsumer<>(OffsetResetStrategy.EARLIEST);

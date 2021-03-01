@@ -1,4 +1,4 @@
-package mybar.web.config.kafka;
+package mybar.events.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,14 +17,7 @@ import javax.validation.constraints.NotBlank;
 @ConfigurationProperties(prefix = "kafka.events")
 public class PropertyHolder {
     @NotBlank
-    private String topic;
-    @NotBlank
-    private String producerClientId;
-    @NotBlank
     private String servers;
-    @NotBlank
-    private String consumerGroupId;
-
     @Min(5000)
     @Max(60000)
     private long pollTimeout;
