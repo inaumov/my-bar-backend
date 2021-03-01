@@ -1,5 +1,6 @@
 package mybar.events.api;
 
+import mybar.events.impl.KafkaMessageConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.MockConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;

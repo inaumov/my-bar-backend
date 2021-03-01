@@ -1,9 +1,10 @@
-package mybar.events.config;
+package mybar.events.config.rates;
 
 import lombok.Getter;
 import lombok.Setter;
 import mybar.events.RatesEventConsumer;
-import mybar.events.api.MyBarEventConsumer;
+import mybar.events.api.IEventConsumer;
+import mybar.events.config.PropertyHolder;
 import mybar.service.rates.RatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +18,8 @@ import javax.validation.constraints.NotBlank;
 @Configuration
 public class ConsumerConfiguration {
 
-    private final PropertyHolder propertyHolder;
     private final RatesService ratesService;
+    private final PropertyHolder propertyHolder;
 
     @Value("${kafka.events.rates.topic:}")
     @NotBlank
@@ -35,7 +36,7 @@ public class ConsumerConfiguration {
     }
 
     @Bean(initMethod = "runConsumer")
-    public MyBarEventConsumer ratesEventConsumer() {
+    public IEventConsumer ratesEventConsumer() {
         return new RatesEventConsumer(ratesService, ratesTopic, propertyHolder.getServers(), consumerGroupId, propertyHolder.getPollTimeout());
     }
 

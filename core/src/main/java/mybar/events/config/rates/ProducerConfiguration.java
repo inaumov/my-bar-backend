@@ -1,9 +1,10 @@
-package mybar.events.config;
+package mybar.events.config.rates;
 
 import lombok.Getter;
 import lombok.Setter;
-import mybar.events.api.IMessageProducer;
-import mybar.events.impl.KafkaMessageProducer;
+import mybar.events.api.IEventProducer;
+import mybar.events.config.PropertyHolder;
+import mybar.events.impl.MyBarEventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +33,8 @@ public class ProducerConfiguration {
     }
 
     @Bean
-    public IMessageProducer ratesEventProducer() {
-        return new KafkaMessageProducer(ratesTopic, propertyHolder.getServers(), producerClientId);
+    public IEventProducer ratesEventProducer() {
+        return new MyBarEventProducer(ratesTopic, propertyHolder.getServers(), producerClientId);
     }
 
 }

@@ -1,7 +1,9 @@
-package mybar.events.api;
+package mybar.events.impl;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import mybar.events.api.IEventConsumer;
+import mybar.events.api.RecordObject;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -21,7 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public abstract class KafkaMessageConsumer implements MyBarEventConsumer {
+public abstract class KafkaMessageConsumer implements IEventConsumer {
 
     private final String TOPIC;
     private final String CONSUMER_GROUP_ID;

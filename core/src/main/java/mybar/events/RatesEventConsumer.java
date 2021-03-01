@@ -1,6 +1,6 @@
 package mybar.events;
 
-import mybar.events.api.KafkaMessageConsumer;
+import mybar.events.impl.KafkaMessageConsumer;
 import mybar.events.api.RecordObject;
 import mybar.service.rates.RatesService;
 

@@ -10,7 +10,7 @@ import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.dto.RateDto;
 import mybar.exception.CocktailNotFoundException;
-import mybar.events.api.IMessageProducer;
+import mybar.events.api.IEventProducer;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.rates.RatesDao;
 import mybar.repository.users.UserDao;
@@ -37,12 +37,12 @@ public class RatesService {
     private static final Range<Integer> starsRange = new Range<>(1, 10);
 
     @Qualifier("ratesEventProducer")
-    private final IMessageProducer messageProducer;
+    private final IEventProducer messageProducer;
 
     private final Gson gson = new Gson();
 
     @Autowired
-    public RatesService(IMessageProducer eventProducer, RatesDao ratesDao, UserDao userDao, CocktailDao cocktailDao) {
+    public RatesService(IEventProducer eventProducer, RatesDao ratesDao, UserDao userDao, CocktailDao cocktailDao) {
         this.messageProducer = eventProducer;
         this.ratesDao = ratesDao;
         this.userDao = userDao;

@@ -6,7 +6,7 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.rates.Rate;
 import mybar.domain.users.User;
 import mybar.dto.RateDto;
-import mybar.events.api.IMessageProducer;
+import mybar.events.api.IEventProducer;
 import mybar.repository.bar.CocktailDao;
 import mybar.repository.rates.RatesDao;
 import mybar.repository.users.UserDao;
@@ -37,7 +37,7 @@ public class RatesServiceTest {
     @Mock
     private CocktailDao cocktailDaoMock;
     @Mock
-    private IMessageProducer messageProducer;
+    private IEventProducer messageProducer;
 
     @InjectMocks
     private RatesService ratesService;

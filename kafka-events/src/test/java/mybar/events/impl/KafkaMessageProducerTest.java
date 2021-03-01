@@ -17,7 +17,7 @@ public class KafkaMessageProducerTest {
 
     @Test
     public void testProducer() {
-        KafkaMessageProducer kafkaMessageProducer = new KafkaMessageProducer(MY_TOPIC, "localhost", "clientId");
+        MyBarEventProducer kafkaMessageProducer = new MyBarEventProducer(MY_TOPIC, "localhost", "clientId");
 
         List<ProducerRecord<String, String>> history = new ArrayList<>();
         history.addAll(sendAndGetProducerRecords(kafkaMessageProducer, MY_KEY, "value0"));
@@ -36,7 +36,7 @@ public class KafkaMessageProducerTest {
         Assertions.assertEquals(expected, history);
     }
 
-    private List<ProducerRecord<String, String>> sendAndGetProducerRecords(KafkaMessageProducer kafkaMessageProducer, String key, String object) {
+    private List<ProducerRecord<String, String>> sendAndGetProducerRecords(MyBarEventProducer kafkaMessageProducer, String key, String object) {
         MockProducer<String, String> producer = new MockProducer<>(true, new StringSerializer(), new StringSerializer());
         kafkaMessageProducer.setProducer(producer);
         kafkaMessageProducer.send(key, object);

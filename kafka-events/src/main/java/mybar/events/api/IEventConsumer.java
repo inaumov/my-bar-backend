@@ -1,6 +1,6 @@
 package mybar.events.api;
 
-public interface MyBarEventConsumer {
+public interface IEventConsumer {
 
     void runConsumer();
 

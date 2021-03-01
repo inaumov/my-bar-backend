@@ -1,5 +1,5 @@
 package mybar.events.api;
 
-public interface IMessageProducer {
+public interface IEventProducer {
     Long send(String key, String object);
 }

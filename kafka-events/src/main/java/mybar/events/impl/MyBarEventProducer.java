@@ -2,7 +2,7 @@ package mybar.events.impl;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import mybar.events.api.IMessageProducer;
+import mybar.events.api.IEventProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,7 +14,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
-public class KafkaMessageProducer implements IMessageProducer {
+public class MyBarEventProducer implements IEventProducer {
 
     private final String TOPIC;
     private final String BOOTSTRAP_SERVERS;
@@ -23,7 +23,7 @@ public class KafkaMessageProducer implements IMessageProducer {
     @Setter
     public Producer<String, String> producer;
 
-    public KafkaMessageProducer(String topic, String servers, String producerClientId) {
+    public MyBarEventProducer(String topic, String servers, String producerClientId) {
         this.TOPIC = topic;
         this.PRODUCER_CLIENT_ID = producerClientId;
         this.BOOTSTRAP_SERVERS = servers;
