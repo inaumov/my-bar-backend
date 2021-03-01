@@ -52,7 +52,7 @@ public class UserController {
 
     @PutMapping("/{username}/changePassword")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RolesAllowed("ROLE_USER")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     void changePassword(@PathVariable String username, @RequestBody @Valid ChangePasswordBean passwordBean, Authentication authentication) {
 
         IUser user = userService.findByUsername(username);
