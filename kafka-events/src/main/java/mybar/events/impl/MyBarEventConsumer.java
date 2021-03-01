@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public abstract class KafkaMessageConsumer implements IEventConsumer {
+public abstract class MyBarEventConsumer implements IEventConsumer {
 
     private final String TOPIC;
     private final String CONSUMER_GROUP_ID;
@@ -33,7 +33,7 @@ public abstract class KafkaMessageConsumer implements IEventConsumer {
     @Setter
     public Consumer<String, String> consumer;
 
-    public KafkaMessageConsumer(String topic, String servers, String consumerGroupId, long pollTimeout) {
+    public MyBarEventConsumer(String topic, String servers, String consumerGroupId, long pollTimeout) {
         this.TOPIC = topic;
         this.CONSUMER_GROUP_ID = consumerGroupId;
         this.BOOTSTRAP_SERVERS = servers;

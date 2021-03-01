@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Configuration
-public class ProducerConfiguration {
+public class RatesProducerConfiguration {
 
     private final PropertyHolder propertyHolder;
 
@@ -28,7 +28,7 @@ public class ProducerConfiguration {
     private String producerClientId;
 
     @Autowired
-    public ProducerConfiguration(PropertyHolder propertyHolder) {
+    public RatesProducerConfiguration(PropertyHolder propertyHolder) {
         this.propertyHolder = propertyHolder;
     }
 

@@ -1,6 +1,7 @@
-package mybar.events.api;
+package mybar.events.impl;
 
-import mybar.events.impl.KafkaMessageConsumer;
+import mybar.events.api.RecordObject;
+import mybar.events.impl.MyBarEventConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.MockConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class KafkaMessageConsumerTest {
+public class MyBarEventConsumerTest {
 
     private static final String MY_KEY = "my@key";
     private static final String MY_TOPIC = "my_topic";
@@ -20,7 +21,7 @@ public class KafkaMessageConsumerTest {
     @Test
     public void testConsumer() {
         // This is YOUR consumer object
-        KafkaMessageConsumer myTestConsumer = new KafkaMessageConsumer(MY_TOPIC, "localhost", "testGroupId", 10L) {
+        MyBarEventConsumer myTestConsumer = new MyBarEventConsumer(MY_TOPIC, "localhost", "testGroupId", 10L) {
             @Override
             public void aggregate(String key, RecordObject recordObject) {
                 //

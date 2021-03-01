@@ -1,13 +1,13 @@
 package mybar.events;
 
-import mybar.events.impl.KafkaMessageConsumer;
+import mybar.events.impl.MyBarEventConsumer;
 import mybar.events.api.RecordObject;
 import mybar.service.rates.RatesService;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class RatesEventConsumer extends KafkaMessageConsumer {
+public class RatesEventConsumer extends MyBarEventConsumer {
 
     private final Map<String, RecordObject> tempRates = new TreeMap<>();
 

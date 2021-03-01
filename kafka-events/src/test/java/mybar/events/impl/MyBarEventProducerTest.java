@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class KafkaMessageProducerTest {
+public class MyBarEventProducerTest {
 
     private static final String MY_KEY = "my@key";
     private static final String MY_TOPIC = "my_topic";

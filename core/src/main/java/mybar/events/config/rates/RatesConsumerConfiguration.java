@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Configuration
-public class ConsumerConfiguration {
+public class RatesConsumerConfiguration {
 
     private final RatesService ratesService;
     private final PropertyHolder propertyHolder;
@@ -30,7 +30,7 @@ public class ConsumerConfiguration {
     private String consumerGroupId;
 
     @Autowired
-    public ConsumerConfiguration(RatesService ratesService, PropertyHolder propertyHolder) {
+    public RatesConsumerConfiguration(RatesService ratesService, PropertyHolder propertyHolder) {
         this.propertyHolder = propertyHolder;
         this.ratesService = ratesService;
     }
