@@ -12,7 +12,7 @@ public abstract class UserBaseDaoTest extends BaseDaoTest {
     public static final String CLIENT1_NAME = "client";
     public static final String CLIENT2_NAME = "JohnDoe";
 
-    protected final int ROLES_CNT = 4;
+    protected final int ROLES_CNT = 3;
     protected final int USERS_CNT = 5;
     protected final int USER_HAS_ROLES_CNT = 7;
 

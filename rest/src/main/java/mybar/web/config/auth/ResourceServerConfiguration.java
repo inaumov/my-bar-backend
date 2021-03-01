@@ -56,7 +56,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/cocktails/**").hasRole("USER")
                 .antMatchers("/ingredients/**").hasRole("USER")
                 .antMatchers("/shelf/**").hasRole("USER")
-                .antMatchers("/rates/history").hasRole("ANALYST")
+                .antMatchers("/rates/history").hasRole("ADMIN")
                 .antMatchers("/rates/**").hasRole("USER")
                 .antMatchers("/users/register").permitAll()
                 .antMatchers("/api/bar/**").authenticated()

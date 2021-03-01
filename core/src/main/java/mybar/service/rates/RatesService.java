@@ -37,6 +37,8 @@ public class RatesService {
 
     private final IMessageProducer messageProducer;
 
+    private final Gson gson = new Gson();
+
     @Autowired
     public RatesService(IMessageProducer messageProducer, RatesDao ratesDao, UserDao userDao, CocktailDao cocktailDao) {
         this.messageProducer = messageProducer;
@@ -51,11 +53,9 @@ public class RatesService {
         Preconditions.checkArgument(stars != null && starsRange.contains(stars), "Stars number should be from 1 to 10.");
         checkCocktailExists(cocktailId);
 
-        RateDto rateDto = new RateDto();
-        rateDto.setCocktailId(cocktailId);
-        rateDto.setStars(stars);
-        Gson gson = new Gson();
+        RateDto rateDto = RateDto.ofStars(stars);
         Long send = messageProducer.send(toCacheKey(username, cocktailId), gson.toJson(rateDto));
+        rateDto.setCocktailId(cocktailId);
         rateDto.setRatedAt(new Date(send));
         return rateDto;
     }

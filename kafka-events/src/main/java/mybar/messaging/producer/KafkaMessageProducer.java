@@ -1,6 +1,7 @@
 package mybar.messaging.producer;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import mybar.messaging.IMessageProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -12,6 +13,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
+@Slf4j
 public class KafkaMessageProducer implements IMessageProducer {
 
     private final String TOPIC;
@@ -43,11 +45,11 @@ public class KafkaMessageProducer implements IMessageProducer {
         try {
             final ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, object);
             RecordMetadata metadata = producer.send(record).get();
-            long elapsedTime = System.currentTimeMillis() - time;
-            System.out.printf("sent record(key=%s value=%s) meta(partition=%d, offset=%d) time=%d\n",
+            long elapsedTime = metadata.timestamp() - time;
+            log.debug("Record sent: record(key={}, value={}) meta(partition={}, offset={}) elapsed time={}.",
                     record.key(), record.value(), metadata.partition(),
                     metadata.offset(), elapsedTime);
-            return record.timestamp();
+            return metadata.timestamp();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } finally {

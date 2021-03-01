@@ -25,7 +25,7 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
         User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
         Collection<Role> roles = user.getRoles();
-        assertEquals(3, roles.size());
+        assertEquals(ROLES_CNT, roles.size());
         for (Role role : roles) {
             assertEquals(role, roleDAO.getOne(role.getRoleName()));
         }
@@ -36,7 +36,7 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
         User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
 
-        Role role = roleDAO.getOne(RoleName.ROLE_ANALYST.name());
+        Role role = roleDAO.getOne(RoleName.ROLE_ADMIN.name());
         assertNotNull(role);
         user.addRole(role);
         userDao.save(user);

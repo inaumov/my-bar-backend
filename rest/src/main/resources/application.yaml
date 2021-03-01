@@ -24,8 +24,8 @@ logging:
         security: INFO
 kafka:
   events:
-    topic: my_bar.rates-topic
+    topic: my-bar-rates
     producer-client-id: my_bar.rates-producer
-    servers: localhost:9092
+    servers: localhost:9093
     consumer-group-id: my_bar.rates-consumer
-    pollTimeout: 60000
+    pollTimeout: 10000

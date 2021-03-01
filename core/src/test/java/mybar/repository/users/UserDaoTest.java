@@ -52,7 +52,7 @@ public class UserDaoTest extends UserBaseDaoTest {
         user.setSurname("Prescott");
         user.setEmail("mail@prescott.com");
         user.setActive(true);
-        Role roleRefAnalyst = em.getReference(Role.class, RoleName.ROLE_ANALYST.name());
+        Role roleRefAnalyst = em.getReference(Role.class, RoleName.ROLE_ADMIN.name());
         user.setRoles(Collections.singletonList(roleRefAnalyst));
 
         User saved = userDao.save(user);

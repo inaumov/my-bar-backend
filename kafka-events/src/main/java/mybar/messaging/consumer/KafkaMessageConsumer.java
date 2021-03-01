@@ -13,6 +13,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class KafkaMessageConsumer {
     private final String TOPIC;
     private final String CONSUMER_GROUP_ID;
     private final String BOOTSTRAP_SERVERS;
-    private final long POLL_TIMEOUT;
+    private final Duration POLL_TIMEOUT;
 
     @Setter
     public Consumer<String, String> consumer;
@@ -40,7 +41,7 @@ public class KafkaMessageConsumer {
         this.TOPIC = topic;
         this.CONSUMER_GROUP_ID = consumerGroupId;
         this.BOOTSTRAP_SERVERS = servers;
-        this.POLL_TIMEOUT = pollTimeout;
+        this.POLL_TIMEOUT = Duration.ofMillis(pollTimeout);
     }
 
     private final Map<String, RecordObject> tempRates = new TreeMap<>();
@@ -85,9 +86,7 @@ public class KafkaMessageConsumer {
                     Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>(records.partitions().size());
 
                     records.forEach(record -> {
-                        System.out.printf("Consumer Record:(%s, %s, %d, %d)\n",
-                                record.key(), record.value(),
-                                record.partition(), record.offset());
+                        log.debug("Consumed record: ({}, {}, {}, {})", record.key(), record.value(), record.partition(), record.offset());
                         // consume all but keep the latest value
                         tempRates.put(record.key(), RecordObject.of(record.timestamp(), record.value()));
                     });

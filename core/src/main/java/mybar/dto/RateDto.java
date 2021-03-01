@@ -12,4 +12,11 @@ public class RateDto implements IRate {
     private String cocktailId;
     private Date ratedAt;
     private Integer stars;
+
+    public static RateDto ofStars(int stars) {
+        RateDto rateDto = new RateDto();
+        rateDto.setStars(stars);
+        return rateDto;
+    }
+
 }

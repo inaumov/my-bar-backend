@@ -9,13 +9,12 @@
     <USERS USERNAME="JohnDoe" PASSWORD="JhnD" NAME="John" SURNAME="Doe" EMAIL="john.doe@mybar.com" ACTIVE="1"></USERS>
 
     <ROLES ROLE_NAME="ROLE_SUPER" DESCRIPTION="Full-powered administrator."></ROLES>
-    <ROLES ROLE_NAME="ROLE_ADMIN" DESCRIPTION="User administrator role."></ROLES>
-    <ROLES ROLE_NAME="ROLE_ANALYST" DESCRIPTION="Audit Management view/read-only access. View reports."></ROLES>
+    <ROLES ROLE_NAME="ROLE_ADMIN" DESCRIPTION="User administrator role. Audit. View reports."></ROLES>
     <ROLES ROLE_NAME="ROLE_USER" DESCRIPTION="Regular user role. Create/manage individual cocktails. Manage personal shelf."></ROLES>
 
     <USER_HAS_ROLES USERNAME="super" ROLE_NAME="ROLE_SUPER"></USER_HAS_ROLES>
     <USER_HAS_ROLES USERNAME="admin" ROLE_NAME="ROLE_ADMIN"></USER_HAS_ROLES>
-    <USER_HAS_ROLES USERNAME="analyst" ROLE_NAME="ROLE_ANALYST"></USER_HAS_ROLES>
+    <USER_HAS_ROLES USERNAME="analyst" ROLE_NAME="ROLE_ADMIN"></USER_HAS_ROLES>
     <USER_HAS_ROLES USERNAME="client" ROLE_NAME="ROLE_USER"></USER_HAS_ROLES>
 
     <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_SUPER"></USER_HAS_ROLES>

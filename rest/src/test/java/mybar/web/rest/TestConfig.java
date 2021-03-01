@@ -58,13 +58,13 @@ public class TestConfig {
                 .roles("ADMIN");
         UserDetails adminUser = buildActive(adminUserBuilder);
 
-        User.UserBuilder analystUserBuilder = User
-                .withUsername("analyst")
-                .password("analyst")
-                .roles("ANALYST");
-        UserDetails analystUser = buildActive(analystUserBuilder);
+        User.UserBuilder superUserBuilder = User
+                .withUsername("super")
+                .password("super")
+                .roles("SUPER");
+        UserDetails superUser = buildActive(superUserBuilder);
 
-        return new InMemoryUserDetailsManager(Arrays.asList(testUser, adminUser, analystUser));
+        return new InMemoryUserDetailsManager(Arrays.asList(testUser, adminUser, superUser));
     }
 
     @Bean
