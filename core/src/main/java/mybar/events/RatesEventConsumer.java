@@ -1,15 +1,25 @@
 package mybar.events;
 
-import mybar.events.impl.MyBarEventConsumer;
+import com.google.common.base.Splitter;
+import lombok.extern.slf4j.Slf4j;
+import mybar.dto.RateDto;
 import mybar.events.api.RecordObject;
+import mybar.events.impl.MyBarEventConsumer;
 import mybar.service.rates.RatesService;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class RatesEventConsumer extends MyBarEventConsumer {
+@Slf4j
+public class RatesEventConsumer extends MyBarEventConsumer<RateDto> {
 
-    private final Map<String, RecordObject> tempRates = new TreeMap<>();
+    private final Splitter splitter = Splitter.on("@");
+
+    private final Map<String, RecordObject<RateDto>> tempRates = new TreeMap<>();
 
     private final RatesService ratesService;
 
@@ -19,7 +29,7 @@ public class RatesEventConsumer extends MyBarEventConsumer {
     }
 
     @Override
-    public void aggregate(String key, RecordObject recordObject) {
+    public void prepare(String key, RecordObject<RateDto> recordObject) {
         // consume all but keep the latest value
         tempRates.put(key, recordObject);
     }
@@ -27,8 +37,22 @@ public class RatesEventConsumer extends MyBarEventConsumer {
     @Override
     public void consume() {
         for (String cacheKey : tempRates.keySet()) {
-            RecordObject recordObject = tempRates.get(cacheKey);
-            ratesService.persistRate(cacheKey, recordObject.timestamp, recordObject.value);
+            RecordObject<RateDto> recordObject = tempRates.get(cacheKey);
+            try {
+                RateDto rateDto = recordObject.value;
+                Iterable<String> keyStrings = splitter.split(cacheKey);
+                Iterator<String> stringsIt = keyStrings.iterator();
+                String userId = stringsIt.next();
+                String cocktailId = stringsIt.next();
+                LocalDateTime dateTime =
+                        LocalDateTime.ofInstant(Instant.ofEpochMilli(recordObject.timestamp), ZoneId.systemDefault());
+                rateDto.setRatedAt(dateTime);
+                rateDto.setCocktailId(cocktailId);
+
+                ratesService.persistRate(userId, rateDto);
+            } catch (Throwable throwable) {
+                log.error("Could not persist rate for [{}].", cacheKey, throwable);
+            }
         }
     }
 

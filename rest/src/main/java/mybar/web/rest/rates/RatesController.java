@@ -3,6 +3,7 @@ package mybar.web.rest.rates;
 import lombok.extern.slf4j.Slf4j;
 import mybar.api.rates.IRate;
 import mybar.app.bean.rates.RateBean;
+import mybar.service.rates.RatesEventService;
 import mybar.service.rates.RatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,12 @@ import java.util.stream.Collectors;
 public class RatesController {
 
     private final RatesService ratesService;
+    private final RatesEventService ratesEventService;
 
     @Autowired
-    public RatesController(RatesService ratesService) {
+    public RatesController(RatesService ratesService, RatesEventService ratesEventService) {
         this.ratesService = ratesService;
+        this.ratesEventService = ratesEventService;
     }
 
     @RequestMapping(value = "/average", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +45,7 @@ public class RatesController {
     @ResponseStatus(HttpStatus.CREATED)
     public RateBean rate(@RequestBody RateBean rateBean) {
         String principal = getPrincipalName();
-        IRate rate = ratesService.rateCocktail(principal, rateBean.getCocktailId(), rateBean.getStars());
+        IRate rate = ratesEventService.rateCocktail(principal, rateBean.getCocktailId(), rateBean.getStars());
         return new RateBean(rate);
     }
 
@@ -50,7 +53,7 @@ public class RatesController {
     @ResponseStatus(HttpStatus.OK)
     public RateBean update(@RequestBody RateBean rateBean) {
         String principal = getPrincipalName();
-        IRate rate = ratesService.rateCocktail(principal, rateBean.getCocktailId(), rateBean.getStars());
+        IRate rate = ratesEventService.rateCocktail(principal, rateBean.getCocktailId(), rateBean.getStars());
         return new RateBean(rate);
     }
 

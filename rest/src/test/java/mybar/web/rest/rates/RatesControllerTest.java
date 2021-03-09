@@ -2,6 +2,7 @@ package mybar.web.rest.rates;
 
 import mybar.dto.RateDto;
 import mybar.exception.CocktailNotFoundException;
+import mybar.service.rates.RatesEventService;
 import mybar.service.rates.RatesService;
 import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.AfterEach;
@@ -16,8 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
@@ -35,6 +36,9 @@ public class RatesControllerTest extends ARestControllerTest {
     @MockBean
     private RatesService ratesServiceMock;
 
+    @MockBean
+    private RatesEventService ratesEventServiceMock;
+
     @BeforeEach
     public void setup() {
     }
@@ -50,9 +54,9 @@ public class RatesControllerTest extends ARestControllerTest {
         RateDto resultDto = new RateDto();
         resultDto.setCocktailId(COCKTAIL_ID);
         resultDto.setStars(STARS);
-        resultDto.setRatedAt(new Date());
+        resultDto.setRatedAt(LocalDateTime.now());
 
-        when(ratesServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
+        when(ratesEventServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder =
@@ -63,8 +67,8 @@ public class RatesControllerTest extends ARestControllerTest {
                 .andExpect(MockMvcResultMatchers.status()
                         .isCreated());
 
-        verify(ratesServiceMock, times(1)).rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS));
-        verifyNoMoreInteractions(ratesServiceMock);
+        verify(ratesEventServiceMock, times(1)).rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS));
+        verifyNoMoreInteractions(ratesEventServiceMock);
     }
 
     private static String createRateInJson(String cocktailId, int stars) {
@@ -77,9 +81,9 @@ public class RatesControllerTest extends ARestControllerTest {
         RateDto resultDto = new RateDto();
         resultDto.setCocktailId(COCKTAIL_ID);
         resultDto.setStars(STARS);
-        resultDto.setRatedAt(new Date());
+        resultDto.setRatedAt(LocalDateTime.now());
 
-        when(ratesServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
+        when(ratesEventServiceMock.rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS))).thenReturn(resultDto);
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder =
@@ -90,8 +94,8 @@ public class RatesControllerTest extends ARestControllerTest {
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk());
 
-        verify(ratesServiceMock, times(1)).rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS));
-        verifyNoMoreInteractions(ratesServiceMock);
+        verify(ratesEventServiceMock, times(1)).rateCocktail(eq(USER), eq(COCKTAIL_ID), eq(STARS));
+        verifyNoMoreInteractions(ratesEventServiceMock);
     }
 
     @Test
@@ -115,7 +119,7 @@ public class RatesControllerTest extends ARestControllerTest {
         RateDto resultDto = new RateDto();
         resultDto.setCocktailId(COCKTAIL_ID);
         resultDto.setStars(STARS);
-        resultDto.setRatedAt(new Date());
+        resultDto.setRatedAt(LocalDateTime.now());
 
         when(ratesServiceMock.getRatedCocktails(eq(USER))).thenReturn(Collections.singletonList(resultDto));
 
@@ -131,7 +135,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
     @Test
     public void test_rateCocktail_when_unknown() throws Exception {
-        when(ratesServiceMock.rateCocktail(anyString(), eq("unknown"), anyInt())).thenThrow(new CocktailNotFoundException("unknown"));
+        when(ratesEventServiceMock.rateCocktail(anyString(), eq("unknown"), anyInt())).thenThrow(new CocktailNotFoundException("unknown"));
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
@@ -145,13 +149,13 @@ public class RatesControllerTest extends ARestControllerTest {
                 .andExpect(content().string(containsString("errorMessage\":\"Could not rate cocktail: " + "unknown")))
                 .andDo(MockMvcResultHandlers.print());
 
-        verify(ratesServiceMock, times(1)).rateCocktail(anyString(), eq("unknown"), anyInt());
-        verifyNoMoreInteractions(ratesServiceMock);
+        verify(ratesEventServiceMock, times(1)).rateCocktail(anyString(), eq("unknown"), anyInt());
+        verifyNoMoreInteractions(ratesEventServiceMock);
     }
 
     @Test
     public void test_rateCocktail_when_bad_request() throws Exception {
-        when(ratesServiceMock.rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null))).thenCallRealMethod();
+        when(ratesEventServiceMock.rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null))).thenCallRealMethod();
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
@@ -165,8 +169,8 @@ public class RatesControllerTest extends ARestControllerTest {
                 .andExpect(content().string(containsString("errorMessage\":\"Stars number should be from 1 to 10.")))
                 .andDo(MockMvcResultHandlers.print());
 
-        verify(ratesServiceMock, times(1)).rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null));
-        verifyNoMoreInteractions(ratesServiceMock);
+        verify(ratesEventServiceMock, times(1)).rateCocktail(anyString(), eq(COCKTAIL_ID), eq(null));
+        verifyNoMoreInteractions(ratesEventServiceMock);
     }
 
 }

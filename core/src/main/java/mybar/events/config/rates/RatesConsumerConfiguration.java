@@ -2,6 +2,7 @@ package mybar.events.config.rates;
 
 import lombok.Getter;
 import lombok.Setter;
+import mybar.dto.RateDto;
 import mybar.events.RatesEventConsumer;
 import mybar.events.api.IEventConsumer;
 import mybar.events.config.PropertyHolder;
@@ -21,12 +22,12 @@ public class RatesConsumerConfiguration {
     private final RatesService ratesService;
     private final PropertyHolder propertyHolder;
 
-    @Value("${kafka.events.rates.topic:}")
+    @Value("${kafka.events.rates.topic}")
     @NotBlank
     private String ratesTopic;
 
     @NotBlank
-    @Value("${kafka.events.rates.consumer_group_id:}")
+    @Value("${kafka.events.rates.consumer_group_id}")
     private String consumerGroupId;
 
     @Autowired
@@ -36,7 +37,7 @@ public class RatesConsumerConfiguration {
     }
 
     @Bean(initMethod = "runConsumer")
-    public IEventConsumer ratesEventConsumer() {
+    public IEventConsumer<RateDto> ratesEventConsumer() {
         return new RatesEventConsumer(ratesService, ratesTopic, propertyHolder.getServers(), consumerGroupId, propertyHolder.getPollTimeout());
     }
 

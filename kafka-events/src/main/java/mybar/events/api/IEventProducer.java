@@ -1,5 +1,7 @@
 package mybar.events.api;
 
+import java.time.Instant;
+
 public interface IEventProducer {
-    Long send(String key, String object);
+    Instant send(String key, Object object);
 }

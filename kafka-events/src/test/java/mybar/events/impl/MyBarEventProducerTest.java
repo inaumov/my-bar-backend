@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ public class MyBarEventProducerTest {
     public void testProducer() {
         MyBarEventProducer kafkaMessageProducer = new MyBarEventProducer(MY_TOPIC, "localhost", "clientId");
 
-        List<ProducerRecord<String, String>> history = new ArrayList<>();
+        List<ProducerRecord<String, Object>> history = new ArrayList<>();
         history.addAll(sendAndGetProducerRecords(kafkaMessageProducer, MY_KEY, "value0"));
         history.addAll(sendAndGetProducerRecords(kafkaMessageProducer, MY_KEY, "value1"));
         history.addAll(sendAndGetProducerRecords(kafkaMessageProducer, MY_KEY, "value2"));
@@ -36,8 +37,8 @@ public class MyBarEventProducerTest {
         Assertions.assertEquals(expected, history);
     }
 
-    private List<ProducerRecord<String, String>> sendAndGetProducerRecords(MyBarEventProducer kafkaMessageProducer, String key, String object) {
-        MockProducer<String, String> producer = new MockProducer<>(true, new StringSerializer(), new StringSerializer());
+    private List<ProducerRecord<String, Object>> sendAndGetProducerRecords(MyBarEventProducer kafkaMessageProducer, String key, String object) {
+        MockProducer<String, Object> producer = new MockProducer<>(true, new StringSerializer(), new JsonSerializer<>());
         kafkaMessageProducer.setProducer(producer);
         kafkaMessageProducer.send(key, object);
         return producer.history();

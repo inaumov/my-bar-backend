@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mybar.api.rates.IRate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ import java.util.Date;
 public class RateBean implements IRate {
 
     private String cocktailId;
-    private Date ratedAt;
+    private LocalDateTime ratedAt;
     private Integer stars;
 
     public RateBean(IRate rate) {

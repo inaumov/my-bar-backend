@@ -1,12 +1,12 @@
 package mybar.api.rates;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public interface IRate {
 
     String getCocktailId();
 
-    Date getRatedAt();
+    LocalDateTime getRatedAt();
 
     Integer getStars();
 

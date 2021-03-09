@@ -19,11 +19,11 @@ public class RatesProducerConfiguration {
 
     private final PropertyHolder propertyHolder;
 
-    @Value("${kafka.events.rates.topic:}")
+    @Value("${kafka.events.rates.topic}")
     @NotBlank
     private String ratesTopic;
 
-    @Value("${kafka.events.rates.producer_client_id:}")
+    @Value("${kafka.events.rates.producer_client_id}")
     @NotBlank
     private String producerClientId;
 

@@ -1,13 +1,13 @@
 package mybar.events.impl;
 
 import mybar.events.api.RecordObject;
-import mybar.events.impl.MyBarEventConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.MockConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,9 +21,9 @@ public class MyBarEventConsumerTest {
     @Test
     public void testConsumer() {
         // This is YOUR consumer object
-        MyBarEventConsumer myTestConsumer = new MyBarEventConsumer(MY_TOPIC, "localhost", "testGroupId", 10L) {
+        MyBarEventConsumer<String> myTestConsumer = new MyBarEventConsumer<>(MY_TOPIC, "localhost", "testGroupId", 10L) {
             @Override
-            public void aggregate(String key, RecordObject recordObject) {
+            public void prepare(String key, RecordObject<String> recordObject) {
                 //
             }
 
@@ -55,10 +55,8 @@ public class MyBarEventConsumerTest {
 
         // This is where you run YOUR consumer's code
         // This code will consume from the Consumer and do your logic on it
+        myTestConsumer.shutdownAfter(Duration.ofSeconds(5));
         myTestConsumer.poll();
-
-        // This just tests for exceptions
-        // Somehow test what happens with the consume()
     }
 
 }
