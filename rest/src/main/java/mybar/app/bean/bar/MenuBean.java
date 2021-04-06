@@ -1,18 +1,15 @@
 package mybar.app.bean.bar;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.hateoas.ResourceSupport;
 import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MenuBean {
+public class MenuBean extends ResourceSupport {
 
-    @JsonView(View.Menu.class)
     private String name;
-
-    @JsonView(View.Menu.class)
     private String translation;
 
     @Override
