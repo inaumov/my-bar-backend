@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,7 +39,7 @@ public class IngredientsController {
     //-------------------Retrieve Ingredients--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity listIngredients(
+    public ResponseEntity<Map<String, GroupedIngredientsBean>> listIngredients(
             @RequestParam(value = "filter", required = false) String groupNameParam) {
 
         if (Strings.isNullOrEmpty(groupNameParam)) {
@@ -47,7 +48,7 @@ public class IngredientsController {
         }
 
         List<IIngredient> ingredientsByGroupName = ingredientService.findByGroupName(groupNameParam);
-        GroupedIngredientsBean groupedIngredientsBean = toMapByGroup(ingredientsByGroupName).get(groupNameParam);
+        ImmutableMap<String, GroupedIngredientsBean> groupedIngredientsBean = toMapByGroup(groupNameParam, ingredientsByGroupName);
         return new ResponseEntity<>(groupedIngredientsBean, HttpStatus.OK);
     }
 
@@ -61,6 +62,31 @@ public class IngredientsController {
         putIfPresent(builder, IBeverage.GROUP_NAME, true, beverages);
         putIfPresent(builder, IDrink.GROUP_NAME, true, drinks);
         putIfPresent(builder, IAdditive.GROUP_NAME, false, additives);
+
+        return builder.build();
+    }
+
+    private static ImmutableMap<String, GroupedIngredientsBean> toMapByGroup(String groupNameParam, List<IIngredient> ingredients) {
+
+        ImmutableMap.Builder<String, GroupedIngredientsBean> builder = ImmutableMap.builder();
+
+        switch (groupNameParam) {
+            case IBeverage.GROUP_NAME: {
+                List<IBeverage> beverages = filter(ingredients, IBeverage.class);
+                putIfPresent(builder, IBeverage.GROUP_NAME, true, beverages);
+                break;
+            }
+            case IDrink.GROUP_NAME: {
+                List<IDrink> drinks = filter(ingredients, IDrink.class);
+                putIfPresent(builder, IDrink.GROUP_NAME, true, drinks);
+                break;
+            }
+            case IAdditive.GROUP_NAME: {
+                List<IAdditive> additives = filter(ingredients, IAdditive.class);
+                putIfPresent(builder, IAdditive.GROUP_NAME, false, additives);
+                break;
+            }
+        }
 
         return builder.build();
     }
