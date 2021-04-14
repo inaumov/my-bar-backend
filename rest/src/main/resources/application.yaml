@@ -3,6 +3,12 @@ server:
     contextPath: /api/bar
   port: 8089
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics
+
 spring:
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/my_bar_db?autoReconnect=true&useSSL=false
