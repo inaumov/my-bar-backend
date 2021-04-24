@@ -4,12 +4,14 @@ import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
+import static mybar.CommonPaths.API_PATH;
+
 public class MenuApiTest {
 
     @Test
     public void testGetMenu_no_auth_required() {
         RestAssured.
-                get("http://localhost:8089/api/bar/menu")
+                get(API_PATH + "menu")
                 .then()
                 .assertThat()
                 .statusCode(200)

@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
 
+import static mybar.CommonPaths.API_PATH;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 @ExtendWith(SpringExtension.class)
@@ -54,7 +55,7 @@ public class CocktailsApiTest {
     @Test
     public void testGetAllCocktails() {
         givenAuthenticated()
-                .get("http://localhost:8089/api/bar/cocktails")
+                .get(API_PATH + "cocktails")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -67,7 +68,7 @@ public class CocktailsApiTest {
         givenAuthenticated()
                 .when()
                 .param("filter", "shooters")
-                .get("http://localhost:8089/api/bar/cocktails")
+                .get(API_PATH + "cocktails")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -80,7 +81,7 @@ public class CocktailsApiTest {
         givenAuthenticated()
                 .when()
                 .pathParam("id", "cocktail-000001")
-                .get("http://localhost:8089/api/bar/cocktails/{id}")
+                .get(API_PATH + "cocktails/{id}")
                 .then()
                 .statusCode(200)
                 .and()
@@ -98,7 +99,7 @@ public class CocktailsApiTest {
                 .contentType(ContentType.JSON)
                 .and()
                 .body(resourceAsJSON.toString())
-                .post("http://localhost:8089/api/bar/cocktails")
+                .post(API_PATH + "cocktails")
                 .then()
                 .statusCode(201)
                 .body("id", matchesPattern(RESOURCE_ID))
@@ -118,7 +119,7 @@ public class CocktailsApiTest {
                 .contentType(ContentType.JSON)
                 .and()
                 .body(resourceAsString)
-                .put("http://localhost:8089/api/bar/cocktails")
+                .put(API_PATH + "cocktails")
                 .then()
                 .statusCode(202)
                 .body("id", matchesPattern(RESOURCE_ID));
@@ -131,7 +132,7 @@ public class CocktailsApiTest {
         givenAuthenticated()
                 .when()
                 .pathParam("id", cocktailId)
-                .delete("http://localhost:8089/api/bar/cocktails/{id}")
+                .delete(API_PATH + "cocktails/{id}")
                 .then()
                 .statusCode(204);
     }

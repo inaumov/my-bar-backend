@@ -20,6 +20,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import static mybar.CommonPaths.API_PATH;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ApiTestsContextConfiguration.class}, loader = AnnotationConfigContextLoader.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
@@ -42,7 +44,7 @@ public class UsersApiTest {
                 .body(resourceAsJSON.toString())
                 .when()
                 .contentType(ContentType.JSON)
-                .post("http://localhost:8089/api/bar/users/register")
+                .post(API_PATH + "users/register")
                 .then()
                 .assertThat()
                 .statusCode(201);
@@ -57,7 +59,7 @@ public class UsersApiTest {
                 .body(resourceAsJSON.toString())
                 .when()
                 .contentType(ContentType.JSON)
-                .post("http://localhost:8089/api/bar/users/register")
+                .post(API_PATH + "users/register")
                 .then()
                 .assertThat()
                 .statusCode(403)
@@ -73,7 +75,7 @@ public class UsersApiTest {
                 .body(resourceAsJSON.toString())
                 .when()
                 .contentType(ContentType.JSON)
-                .post("http://localhost:8089/api/bar/users/register")
+                .post(API_PATH + "users/register")
                 .then()
                 .assertThat()
                 .statusCode(403)
@@ -83,7 +85,7 @@ public class UsersApiTest {
     @Test
     public void test_get_all_users_as_admin() {
         givenAuthenticatedAsAdmin()
-                .get("http://localhost:8089/api/bar/users")
+                .get(API_PATH + "users")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -98,7 +100,7 @@ public class UsersApiTest {
                 .body("{\"newPassword\":\"user\"})")
                 .when()
                 .contentType(ContentType.JSON)
-                .put("http://localhost:8089/api/bar/users/{0}/changePassword", Um.TEST_USERNAME)
+                .put(API_PATH + "users/{0}/changePassword", Um.TEST_USERNAME)
                 .then()
                 .assertThat()
                 .statusCode(202);

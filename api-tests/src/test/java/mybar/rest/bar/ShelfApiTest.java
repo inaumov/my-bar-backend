@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
 
+import static mybar.CommonPaths.API_PATH;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 @ExtendWith(SpringExtension.class)
@@ -33,13 +34,10 @@ public class ShelfApiTest {
 
     public static final String RESOURCE_ID_PATTERN = "^[a-z]+(-[a-zA-Z0-9]{6}+)*$";
     public static Pattern RESOURCE_ID = Pattern.compile(RESOURCE_ID_PATTERN);
-
+    private static String bottleId;
     private final JsonUtil jsonUtil = new JsonUtil();
-
     @Autowired
     private OAuthAuthenticator authenticator;
-
-    private static String bottleId;
 
     private RequestSpecification givenAuthenticated() {
 
@@ -54,7 +52,7 @@ public class ShelfApiTest {
     @Test
     public void testGetAllBottles() {
         givenAuthenticated()
-                .get("http://localhost:8089/api/bar/shelf/bottles")
+                .get(API_PATH + "shelf/bottles")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -67,7 +65,7 @@ public class ShelfApiTest {
         givenAuthenticated()
                 .when()
                 .pathParam("id", "bottle-000001")
-                .get("http://localhost:8089/api/bar/shelf/bottles/{id}")
+                .get(API_PATH + "shelf/bottles/{id}")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -86,7 +84,7 @@ public class ShelfApiTest {
                 .contentType(ContentType.JSON)
                 .and()
                 .body(resourceAsJSON.toString())
-                .post("http://localhost:8089/api/bar/shelf/bottles")
+                .post(API_PATH + "shelf/bottles")
                 .then()
                 .statusCode(201)
                 .body("id", matchesPattern(RESOURCE_ID))
@@ -106,7 +104,7 @@ public class ShelfApiTest {
                 .contentType(ContentType.JSON)
                 .and()
                 .body(resourceAsString)
-                .put("http://localhost:8089/api/bar/shelf/bottles")
+                .put(API_PATH + "shelf/bottles")
                 .then()
                 .statusCode(202)
                 .body("id", matchesPattern(RESOURCE_ID));
@@ -119,7 +117,7 @@ public class ShelfApiTest {
         givenAuthenticated()
                 .when()
                 .pathParam("id", bottleId)
-                .delete("http://localhost:8089/api/bar/shelf/bottles/{id}")
+                .delete(API_PATH + "shelf/bottles/{id}")
                 .then()
                 .statusCode(204);
     }
