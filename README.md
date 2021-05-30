@@ -19,3 +19,10 @@ version 1.1 :
 
 version 1.2 :
 - added messaging for rates service
+
+version 2.0 :
+- swith to JDK 11
+- switch to spring boot 2.x and Spring 5
+- migrate to Oauth2 flow (with JWT)
+- cover all resources with API tests (rest assured 3.0)
+- switch to Junit5
