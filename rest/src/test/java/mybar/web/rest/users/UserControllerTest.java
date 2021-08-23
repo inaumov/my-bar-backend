@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 public class UserControllerTest extends ARestControllerTest {
+    public static final String basePath = "/v1/users";
 
     public static final String USERNAME = "joe";
     public static final String USERNAME_OBFUSCATED = "jo***";
@@ -65,7 +66,7 @@ public class UserControllerTest extends ARestControllerTest {
         when(userService.createUser(Mockito.any(IUser.class))).thenReturn(userDto);
 
         MockHttpServletRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.post("/users/register")
+                MockMvcRequestBuilders.post(basePath + "/register")
                         .contentType(CONTENT_TYPE)
                         .content(createUserInJson(
                                 USERNAME,
@@ -106,7 +107,7 @@ public class UserControllerTest extends ARestControllerTest {
         when(userService.createUser(Mockito.any(IUser.class))).thenThrow(new EmailDuplicatedException(EMAIL));
 
         MockHttpServletRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.post("/users/register")
+                MockMvcRequestBuilders.post(basePath + "/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createUserInJson(
                                 USERNAME,
@@ -130,7 +131,7 @@ public class UserControllerTest extends ARestControllerTest {
         when(userService.createUser(Mockito.any(IUser.class))).thenThrow(new UserExistsException(USERNAME));
 
         MockHttpServletRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.post("/users/register")
+                MockMvcRequestBuilders.post(basePath + "/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createUserInJson(
                                 USERNAME,
@@ -155,7 +156,7 @@ public class UserControllerTest extends ARestControllerTest {
         when(userService.getAllRegisteredUsers()).thenReturn(Collections.singletonList(userDto));
 
         // get all users
-        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(ADMIN, ADMIN, MockMvcRequestBuilders.get("/users"));
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(ADMIN, ADMIN, MockMvcRequestBuilders.get(basePath));
 
         this.mockMvc.perform(requestBuilder)
 
@@ -186,7 +187,7 @@ public class UserControllerTest extends ARestControllerTest {
         when(userService.getAllRegisteredUsers()).thenReturn(Collections.singletonList(userDto));
 
         // get all users
-        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.get("/users"));
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.get(basePath));
 
         this.mockMvc.perform(requestBuilder)
 
@@ -201,7 +202,7 @@ public class UserControllerTest extends ARestControllerTest {
         userDto.setEmail("joe@gmail.com");
         when(userService.editUserInfo(Mockito.any(IUser.class))).thenReturn(userDto);
 
-        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users"))
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put(basePath))
                 .content(createUserInJson(
                         USERNAME,
                         "joe@gmail.com",
@@ -236,7 +237,7 @@ public class UserControllerTest extends ARestControllerTest {
             when(userService.findByUsername(Mockito.eq(USER))).thenReturn(user);
             doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
 
-            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users/{0}/changePassword", USER))
+            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put(basePath + "/{0}/changePassword", USER))
                     .content("{\"newPassword\":\"changeit\"}");
 
             mockMvc.perform(requestBuilder)
@@ -253,7 +254,7 @@ public class UserControllerTest extends ARestControllerTest {
             when(userService.findByUsername(Mockito.eq(USERNAME))).thenReturn(user);
             doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
 
-            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users/{0}/changePassword", USERNAME))
+            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put(basePath + "/{0}/changePassword", USERNAME))
                     .content("{\"newPassword\":\"changeit\"}");
 
             mockMvc.perform(requestBuilder)
@@ -271,7 +272,7 @@ public class UserControllerTest extends ARestControllerTest {
             when(userService.findByUsername(Mockito.eq(USER))).thenReturn(user);
             doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
 
-            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/users/{0}/changePassword", USER))
+            MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put(basePath + "/{0}/changePassword", USER))
                     .content(String.format("{\"newPassword\":\"%s\"}", password));
 
             mockMvc.perform(requestBuilder)
@@ -284,7 +285,7 @@ public class UserControllerTest extends ARestControllerTest {
     public void test_deactivate_user_authenticated_with_role_user() throws Exception {
         doNothing().when(userService).deactivateUser(eq(USERNAME));
 
-        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.delete("/users/" + USERNAME));
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.delete(basePath + "/" + USERNAME));
 
         this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
@@ -299,7 +300,7 @@ public class UserControllerTest extends ARestControllerTest {
         UserDto userDto = prepareUserDto();
         when(userService.findByUsername(eq(USERNAME))).thenReturn(userDto);
 
-        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.get("/users/" + USERNAME));
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.get(basePath + "/" + USERNAME));
 
         this.mockMvc.perform(requestBuilder)
 
@@ -337,7 +338,7 @@ public class UserControllerTest extends ARestControllerTest {
 
         when(userService.findByUsername(eq(USERNAME))).thenThrow(new UnknownUserException(USERNAME));
 
-        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.get("/users/" + USERNAME));
+        MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.get(basePath + "/" + USERNAME));
 
         this.mockMvc.perform(requestBuilder)
                 .andDo(MockMvcResultHandlers.print())

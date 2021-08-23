@@ -39,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(CocktailsController.class)
 public class CocktailsRestControllerTest extends ARestControllerTest {
+    public static final String basePath = "/v1/cocktails";
 
     public static final String TEST_ID_1 = "cocktail-000001";
     public static final String TEST_ID_2 = "cocktail-000002";
@@ -68,7 +69,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.findCocktailById(TEST_ID_1)).thenReturn(new CocktailDto());
 
-        mockMvc.perform(get("/cocktails/{0}", TEST_ID_1)
+        mockMvc.perform(get(basePath + "/{0}", TEST_ID_1)
                 .header("Authorization", "Bearer " + accessToken)
                 .accept(CONTENT_TYPE))
 
@@ -81,7 +82,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.findCocktailById(TEST_ID_1)).thenReturn(new CocktailDto());
 
-        mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get("/cocktails/{0}", TEST_ID_1)))
+        mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get(basePath + "/{0}", TEST_ID_1)))
 
                 .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(status().isForbidden());
@@ -92,7 +93,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.findCocktailById(TEST_ID_1)).thenReturn(createCocktailDto());
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails/{0}", TEST_ID_1)))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath + "/{0}", TEST_ID_1)))
 
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -120,7 +121,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.findCocktailById(TEST_ID_2)).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails/{0}", TEST_ID_2)))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath + "/{0}", TEST_ID_2)))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -136,7 +137,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.getAllCocktails()).thenReturn(Collections.emptyMap());
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails")))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath)))
 
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -163,7 +164,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
         );
         when(cocktailsServiceMock.getAllCocktails()).thenReturn(cocktails);
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/cocktails")))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath)))
 
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -203,7 +204,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
         when(cocktailsServiceMock.getAllCocktailsForMenu("any")).thenReturn(Lists.<ICocktail>newArrayList(first, second, createCocktailDto()));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER,
-                get("/cocktails")
+                get(basePath)
                         .param("filter", "any")))
 
                 .andDo(print())
@@ -238,7 +239,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
         when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenReturn(cocktailDto);
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
-        ResultActions resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
+        ResultActions resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content(requestJson))
 
                 .andDo(print())
@@ -256,7 +257,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content("{}"))
 
                 .andDo(print())
@@ -273,7 +274,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content("{\"relatedToMenu\":\"test\"}"))
 
                 .andDo(print())
@@ -290,7 +291,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content("{\"name\":\"test\"}"))
 
                 .andDo(print())
@@ -307,7 +308,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content("{}"))
 
                 .andDo(print())
@@ -327,7 +328,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         String requestJson = toRequestJson(RestBeanConverter.toCocktailBean(cocktailDto));
 
-        ResultActions resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+        ResultActions resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content(requestJson))
 
                 .andDo(print())
@@ -361,7 +362,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{}"))
 
                 .andDo(print())
@@ -377,7 +378,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
     public void update_Should_ThrowMenuUnknown() throws Exception {
         when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{}"))
 
                 .andDo(print())
@@ -394,7 +395,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
 
                 .content("{\"id\":\"cocktail-test00\",\"relatedToMenu\":\"test\"}"))
 
@@ -412,7 +413,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenCallRealMethod();
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{\"id\":\"cocktail-test00\",\"name\":\"test\"}"))
 
                 .andDo(print())
@@ -429,7 +430,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put("/cocktails"))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{}"))
 
                 .andDo(print())
@@ -446,7 +447,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         doNothing().when(cocktailsServiceMock).deleteCocktailById(TEST_ID_1);
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, delete("/cocktails/{0}", TEST_ID_1)))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, delete(basePath + "/{0}", TEST_ID_1)))
 
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -460,7 +461,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         doThrow(new CocktailNotFoundException(TEST_ID_2)).when(cocktailsServiceMock).deleteCocktailById(TEST_ID_2);
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, delete("/cocktails/{0}", TEST_ID_2)))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, delete(basePath + "/{0}", TEST_ID_2)))
 
                 .andDo(print())
                 .andExpect(status().isNotFound())

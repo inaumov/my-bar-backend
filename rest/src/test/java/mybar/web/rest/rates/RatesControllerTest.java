@@ -29,6 +29,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
     public static final String COCKTAIL_ID = "cocktail-000099";
     public static final int STARS = 7;
+    public static final String basePath = "/v1/rates";
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,7 +61,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder =
-                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.post("/rates"))
+                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.post(basePath))
                         .content(createRateInJson(COCKTAIL_ID, STARS));
 
         this.mockMvc.perform(requestBuilder)
@@ -87,7 +88,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder =
-                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put("/rates"))
+                makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put(basePath))
                         .content(createRateInJson(COCKTAIL_ID, STARS));
 
         this.mockMvc.perform(requestBuilder)
@@ -103,7 +104,7 @@ public class RatesControllerTest extends ARestControllerTest {
         doNothing().when(ratesServiceMock).removeCocktailFromRates(eq(USER), eq(COCKTAIL_ID));
 
         MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
-                MockMvcRequestBuilders.delete("/rates/{0}", COCKTAIL_ID));
+                MockMvcRequestBuilders.delete(basePath + "/{0}", COCKTAIL_ID));
 
         this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
@@ -125,7 +126,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
         MockHttpServletRequestBuilder requestBuilder =
                 makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders
-                .get("/rates/ratedCocktails"));
+                        .get(basePath + "/ratedCocktails"));
 
         this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status()
@@ -139,7 +140,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
-                MockMvcRequestBuilders.post("/rates"))
+                MockMvcRequestBuilders.post(basePath))
                         .content(createRateInJson("unknown", 1));
 
         this.mockMvc.perform(requestBuilder)
@@ -159,7 +160,7 @@ public class RatesControllerTest extends ARestControllerTest {
 
         // rate cocktail
         MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER,
-                MockMvcRequestBuilders.post("/rates"))
+                MockMvcRequestBuilders.post(basePath))
                         .content("{\"cocktailId\":\"" + COCKTAIL_ID + "\"}");
 
         this.mockMvc.perform(requestBuilder)

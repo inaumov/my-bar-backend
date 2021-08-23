@@ -9,6 +9,9 @@ import mybar.web.rest.ARestControllerTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -25,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(IngredientsController.class)
 public class IngredientsRestControllerTest extends ARestControllerTest {
+    public static final String basePath = "/v1/ingredients";
 
     public static final String ADDITIVES = IAdditive.GROUP_NAME;
     public static final String BEVERAGES = IBeverage.GROUP_NAME;
@@ -52,7 +58,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
 
         when(ingredientServiceMock.findAll()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/ingredients")
+        mockMvc.perform(get(basePath)
                 .header("Authorization", "Bearer " + accessToken)
                 .accept(CONTENT_TYPE))
 
@@ -65,7 +71,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
 
         when(ingredientServiceMock.findAll()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get("/ingredients")))
+        mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get(basePath)))
 
                 .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(status().isForbidden());
@@ -90,7 +96,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
 
         when(ingredientServiceMock.findAll()).thenReturn(Arrays.<IIngredient>asList(additive, drink, beverage));
 
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get("/ingredients")))
+        mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath)))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
@@ -113,104 +119,32 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
         verifyNoMoreInteractions(ingredientServiceMock);
     }
 
-    @Test
-    public void findByGroupName_Should_ReturnOnlyAdditives() throws Exception {
+    @ParameterizedTest(name = "[{index}] {0}: {1}")
+    @MethodSource("provideIngredientsTestData")
+    public void findByGroupName_Should_ReturnFiltered(String ingredientType, List<IIngredient> ingredients) throws Exception {
 
-        AdditiveDto additive1 = new AdditiveDto();
-        AdditiveDto additive2 = new AdditiveDto();
-        additive1.setId(1);
-        additive1.setKind("Ice");
-        additive2.setId(2);
-        additive2.setKind("Lime");
+        when(ingredientServiceMock.findByGroupName(ingredientType)).thenReturn(ingredients);
 
-        when(ingredientServiceMock.findByGroupName(ADDITIVES)).thenReturn(Arrays.<IIngredient>asList(additive1, additive2));
-
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
-                get("/ingredients")
-                        .param("filter", ADDITIVES)))
-
+        String items = String.format("%s.items", ingredientType);
+        var resultActions = mockMvc.perform(makePreAuthorizedRequest(USER, USER,
+                get(basePath)
+                        .param("filter", ingredientType)));
+        resultActions
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
 
-                .andExpect(jsonPath("measurements").exists())
-                .andExpect(jsonPath("items", hasSize(2)))
+                .andExpect(jsonPath("%s.measurements", ingredientType).exists())
+                .andExpect(jsonPath(items, hasSize(2)));
 
-                .andExpect(jsonPath("items.[0].id", is(1)))
-                .andExpect(jsonPath("items.[0].kind", is("Ice")))
+        for (int i = 0; i < ingredients.size(); i++) {
+            var ingredient = ingredients.get(i);
+            String item = String.format(items + "[%s]", i);
+            resultActions
+                    .andExpect(jsonPath(item + ".id", is(ingredient.getId())))
+                    .andExpect(jsonPath(item + ".kind", is(ingredient.getKind())));
+        }
 
-                .andExpect(jsonPath("items.[1].id", is(2)))
-                .andExpect(jsonPath("items.[1].kind", is("Lime")));
-
-        verify(ingredientServiceMock, times(1)).findByGroupName(ADDITIVES);
-        verifyNoMoreInteractions(ingredientServiceMock);
-    }
-
-    @Test
-    public void findByGroupName_Should_ReturnOnlyBeverages() throws Exception {
-
-        BeverageDto beverage3 = new BeverageDto();
-        beverage3.setId(3);
-        beverage3.setKind("Whiskey");
-        beverage3.setBeverageType(BeverageType.DISTILLED);
-
-        BeverageDto beverage7 = new BeverageDto();
-        beverage7.setId(7);
-        beverage7.setKind("Rum");
-        beverage7.setBeverageType(BeverageType.DISTILLED);
-
-        when(ingredientServiceMock.findByGroupName(BEVERAGES)).thenReturn(Arrays.<IIngredient>asList(beverage3, beverage7));
-
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
-                get("/ingredients")
-                        .param("filter", BEVERAGES)))
-
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
-
-                .andExpect(jsonPath("measurements").exists())
-                .andExpect(jsonPath("items", hasSize(2)))
-
-                .andExpect(jsonPath("items.[0].id", is(3)))
-                .andExpect(jsonPath("items.[0].kind", is("Whiskey")))
-
-                .andExpect(jsonPath("items.[1].id", is(7)))
-                .andExpect(jsonPath("items.[1].kind", is("Rum")));
-
-        verify(ingredientServiceMock, times(1)).findByGroupName(BEVERAGES);
-        verifyNoMoreInteractions(ingredientServiceMock);
-    }
-
-    @Test
-    public void findByGroupName_Should_ReturnOnlyDrinks() throws Exception {
-
-        DrinkDto drink2 = new DrinkDto();
-        drink2.setId(2);
-        drink2.setKind("Black tea");
-        drink2.setDrinkType(DrinkType.TEA);
-        DrinkDto drink11 = new DrinkDto();
-        drink11.setId(11);
-        drink11.setKind("Golden tips");
-        drink11.setDrinkType(DrinkType.TEA);
-
-        when(ingredientServiceMock.findByGroupName(DRINKS)).thenReturn(Arrays.asList(drink11, drink2));
-
-        mockMvc.perform(makePreAuthorizedRequest(USER, USER,
-                get("/ingredients")
-                        .param("filter", DRINKS)))
-
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
-
-                .andExpect(jsonPath("measurements").exists())
-                .andExpect(jsonPath("items", hasSize(2)))
-
-                .andExpect(jsonPath("items.[0].id", is(11)))
-                .andExpect(jsonPath("items.[0].kind", is("Golden tips")))
-
-                .andExpect(jsonPath("items.[1].id", is(2)))
-                .andExpect(jsonPath("items.[1].kind", is("Black tea")));
-
-        verify(ingredientServiceMock, times(1)).findByGroupName(DRINKS);
+        verify(ingredientServiceMock, times(1)).findByGroupName(ingredientType);
         verifyNoMoreInteractions(ingredientServiceMock);
     }
 
@@ -220,15 +154,15 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
         when(ingredientServiceMock.findByGroupName(DRINKS)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER,
-                get("/ingredients")
+                get(basePath)
                         .param("filter", DRINKS)))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
 
-                .andExpect(jsonPath("measurements", empty()))
-                .andExpect(jsonPath("items", empty()))
-                .andExpect(jsonPath("isLiquid").doesNotExist());
+                .andExpect(jsonPath("drinks.measurements", empty()))
+                .andExpect(jsonPath("drinks.items", empty()))
+                .andExpect(jsonPath("drinks.isLiquid").doesNotExist());
 
         verify(ingredientServiceMock, times(1)).findByGroupName("drinks");
         verifyNoMoreInteractions(ingredientServiceMock);
@@ -240,7 +174,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
         when(ingredientServiceMock.findByGroupName(UNKNOWN)).thenThrow(new IllegalArgumentException("Unknown group name: " + UNKNOWN));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER,
-                get("/ingredients")
+                get(basePath)
                         .param("filter", UNKNOWN)))
 
                 .andExpect(status().isBadRequest())
@@ -249,6 +183,42 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
 
         verify(ingredientServiceMock, times(1)).findByGroupName("unknown");
         verifyNoMoreInteractions(ingredientServiceMock);
+    }
+
+    private static Stream<Arguments> provideIngredientsTestData() {
+        AdditiveDto additive1 = new AdditiveDto();
+        additive1.setId(1);
+        additive1.setKind("Ice");
+
+        AdditiveDto additive2 = new AdditiveDto();
+        additive2.setId(2);
+        additive2.setKind("Lime");
+
+        BeverageDto beverage3 = new BeverageDto();
+        beverage3.setId(3);
+        beverage3.setKind("Whiskey");
+        beverage3.setBeverageType(BeverageType.DISTILLED);
+
+        BeverageDto beverage7 = new BeverageDto();
+        beverage7.setId(7);
+        beverage7.setKind("Rum");
+        beverage7.setBeverageType(BeverageType.DISTILLED);
+
+        DrinkDto drink2 = new DrinkDto();
+        drink2.setId(2);
+        drink2.setKind("Black tea");
+        drink2.setDrinkType(DrinkType.TEA);
+
+        DrinkDto drink11 = new DrinkDto();
+        drink11.setId(11);
+        drink11.setKind("Golden tips");
+        drink11.setDrinkType(DrinkType.TEA);
+
+        return Stream.of(
+                Arguments.of(ADDITIVES, Arrays.asList(additive1, additive2)),
+                Arguments.of(BEVERAGES, Arrays.asList(beverage3, beverage7)),
+                Arguments.of(DRINKS, Arrays.asList(drink11, drink2))
+        );
     }
 
 }

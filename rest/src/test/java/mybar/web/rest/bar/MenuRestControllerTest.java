@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MenuController.class)
 public class MenuRestControllerTest extends ARestControllerTest {
+    public static final String basePath = "/v1/menu";
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +51,7 @@ public class MenuRestControllerTest extends ARestControllerTest {
 
         when(cocktailsServiceMock.getAllMenuItems()).thenReturn(Lists.newArrayList(first, second));
 
-        mockMvc.perform(get("/menu"))
+        mockMvc.perform(get(basePath))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))

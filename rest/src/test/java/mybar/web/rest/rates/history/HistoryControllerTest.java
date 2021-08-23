@@ -53,7 +53,7 @@ public class HistoryControllerTest extends ARestControllerTest {
         when(historyServiceMock.getHistoryForPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(Collections.singletonList(history));
 
         this.mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN,
-                get("/rates/history")
+                get("/v1/rates/history")
                         .param("startDate", "2020-12-31")
                         .param("endDate", "2021-02-13")))
 
