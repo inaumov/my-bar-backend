@@ -51,8 +51,8 @@
     </properties>
 
     <modules>
-        <module>kafka-events</module>
         <module>core</module>
+        <module>kafka-events</module>
         <module>rest</module>
         <module>api-tests</module>
     </modules>

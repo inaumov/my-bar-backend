@@ -2,12 +2,14 @@ package mybar.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import mybar.api.rates.IRate;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 public class RateDto implements IRate {
     private String cocktailId;
     private LocalDateTime ratedAt;

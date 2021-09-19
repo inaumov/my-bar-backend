@@ -22,6 +22,11 @@
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>my.bar</groupId>
+            <artifactId>kafka-events</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- spring boot starters -->
         <dependency>

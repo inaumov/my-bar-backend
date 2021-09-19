@@ -5,9 +5,9 @@ import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import mybar.api.rates.IRate;
 import mybar.dto.RateDto;
-import mybar.events.api.IEventProducer;
+import common.events.api.IEventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Range;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +21,14 @@ public class RatesEventService {
 
     private static final Range<Integer> starsRange = Range.of(Range.Bound.inclusive(1), Range.Bound.inclusive(10));
 
-    @Qualifier("ratesEventProducer")
-    private final IEventProducer eventProducer;
+    @Value(value = "${kafka.events.rates-topic-name}")
+    private String ratesTopicName;
 
+    private final IEventProducer<RateDto> eventProducer;
     private final RatesService ratesService;
 
     @Autowired
-    public RatesEventService(IEventProducer eventProducer, RatesService ratesService) {
+    public RatesEventService(IEventProducer<RateDto> eventProducer, RatesService ratesService) {
         this.eventProducer = eventProducer;
         this.ratesService = ratesService;
     }
@@ -39,15 +40,10 @@ public class RatesEventService {
         ratesService.checkCocktailExists(cocktailId);
 
         RateDto rateDto = RateDto.ofStars(stars);
-        String key = toCacheKey(username, cocktailId);
-        Instant send = eventProducer.send(key, rateDto);
+        Instant send = eventProducer.send(ratesTopicName, username, cocktailId, rateDto);
         rateDto.setCocktailId(cocktailId);
         rateDto.setRatedAt(LocalDateTime.ofInstant(send, ZoneId.systemDefault()));
         return rateDto;
-    }
-
-    private String toCacheKey(String userId, String cocktailId) {
-        return userId + "@" + cocktailId;
     }
 
 }

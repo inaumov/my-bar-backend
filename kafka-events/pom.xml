@@ -16,6 +16,13 @@
     </parent>
 
     <dependencies>
+        <!-- internals -->
+        <dependency>
+            <groupId>my.bar</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>

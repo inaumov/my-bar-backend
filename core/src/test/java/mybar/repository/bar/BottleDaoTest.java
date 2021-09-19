@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DatabaseSetup("classpath:datasets/dataset.xml")
 public class BottleDaoTest extends BaseDaoTest {
 
-    private static final BigDecimal PRICE = new BigDecimal(119.00);
+    private static final BigDecimal PRICE = new BigDecimal("119.00");
     @Autowired
     private BottleDao bottleDao;
 

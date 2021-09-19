@@ -1,4 +1,4 @@
-package mybar.events.serializer;
+package common.events.serializer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.kafka.support.serializer.JsonSerializer;

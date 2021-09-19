@@ -16,16 +16,6 @@
     </parent>
 
     <dependencies>
-        <!-- internals -->
-        <dependency>
-            <groupId>my.bar</groupId>
-            <artifactId>kafka-events</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
         <!-- core / jpa -->
         <dependency>

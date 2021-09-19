@@ -32,10 +32,6 @@ logging:
         security: INFO
 
 kafka:
+  bootstrap-address: localhost:9093
   events:
-    servers: localhost:9093
-    poll_timeout: 10000
-    rates:
-      topic: my_bar_cocktails.RATED
-      producer_client_id: my_bar_app.Rates_Producer
-      consumer_group_id: my_bar_app.Rates_Consumer
+    rates-topic-name: my_bar_cocktails.RATED
