@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +47,7 @@ public class MenuController {
         // converted into response beans
         List<MenuBean> menuBeans = convertWithTranslations(allMenuItems);
         for (MenuBean menuBean : menuBeans) {
-            Link link = ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(CocktailsController.class)
+            Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CocktailsController.class)
             .allCocktails(menuBean.getName())).withRel("allCocktails");
             menuBean.add(link);
         }

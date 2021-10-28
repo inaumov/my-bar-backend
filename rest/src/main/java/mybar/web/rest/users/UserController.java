@@ -13,10 +13,10 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,7 +53,7 @@ public class UserController {
     @PutMapping("/{username}/changePassword")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    void changePassword(@PathVariable String username, @RequestBody @Valid ChangePasswordBean passwordBean, Authentication authentication) {
+    void changePassword(@PathVariable String username, @RequestBody @Validated ChangePasswordBean passwordBean, Authentication authentication) {
 
         IUser user = userService.findByUsername(username);
         if (Objects.equals(user.getUsername(), authentication.getPrincipal())) {
