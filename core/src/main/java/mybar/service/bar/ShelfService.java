@@ -61,7 +61,7 @@ public class ShelfService {
     }
 
     private BottleDto loadById(String id) {
-        Bottle read = bottleDao.read(id);
+        Bottle read = bottleDao.getOne(id);
         if (read != null) {
             return DtoFactory.toDto(read);
         }
@@ -77,7 +77,7 @@ public class ShelfService {
         newEntity.setBeverage(getBeverageById(bottle.getBeverage()));
 
         try {
-            Bottle entity = bottleDao.create(newEntity);
+            Bottle entity = bottleDao.save(newEntity);
             BottleDto dto = toDto(entity);
             clearCache();
             return dto;
@@ -94,7 +94,7 @@ public class ShelfService {
 
         Bottle newEntity = EntityFactory.from(bottle);
         newEntity.setBeverage(getBeverageById(bottle.getBeverage()));
-        Bottle entity = bottleDao.update(newEntity);
+        Bottle entity = bottleDao.save(newEntity);
         clearCache();
         return toDto(entity);
     }
@@ -112,7 +112,7 @@ public class ShelfService {
     public void deleteBottleById(final String id) throws BottleNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
         try {
-            bottleDao.delete(id);
+            bottleDao.deleteById(id);
         } catch (EntityNotFoundException e) {
             return; // TODO: 1/12/2018 handle properly
         }
@@ -137,12 +137,9 @@ public class ShelfService {
         bottlesCache.putAll(allBottles);
     }
 
-    public int deleteAllBottles() {
-        int i = bottleDao.destroyAll();
-        if (i > 0) {
-            clearCache();
-        }
-        return i;
+    public void deleteAllBottles() {
+        bottleDao.deleteAll();
+        clearCache();
     }
 
     public boolean isBottleAvailable(final int ingredientId) {

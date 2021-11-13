@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Tuple;
+import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -49,7 +52,7 @@ public class RatesService {
             rateDto.setCocktailId(rateEntity.getCocktail().getId());
             rateDto.setStars(rateEntity.getStars());
 
-            rateDto.setRatedAt(rateEntity.getRatedAt().toInstant()
+            rateDto.setRatedAt(rateEntity.getRatedAt()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime());
             userRates.add(rateDto);
@@ -60,30 +63,28 @@ public class RatesService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void persistRate(String userId, IRate iRate) {
 
-        User user = userDao.getOne(userId);
-        Cocktail cocktail = cocktailDao.read(iRate.getCocktailId());
-        checkCocktailExists(iRate.getCocktailId());
+        Cocktail cocktail = cocktailDao.findById(iRate.getCocktailId())
+                .orElseThrow(() -> new CocktailNotFoundException(iRate.getCocktailId()));
 
         Rate rate = new Rate();
         rate.setCocktail(cocktail);
         rate.setStars(iRate.getStars());
 
-        rate.setRatedAt(Date.from(iRate.getRatedAt()
-                .atZone(ZoneId.systemDefault())
-                .toInstant()));
+        rate.setRatedAt(iRate.getRatedAt());
+        User user = userDao.getOne(userId);
         rate.setUser(user);
-        ratesDao.update(rate);
+        ratesDao.save(rate);
     }
 
     void checkCocktailExists(String cocktailId) {
-        Cocktail cocktail = cocktailDao.read(cocktailId);
-        if (cocktail == null) {
-            throw new CocktailNotFoundException(cocktailId);
-        }
+        cocktailDao.findById(cocktailId)
+                .orElseThrow(() -> new CocktailNotFoundException(cocktailId));
     }
 
-    public Map<String, Double> findAllAverageRates() {
-        return ratesDao.findAllAverageRates();
+    public Map<String, BigDecimal> findAllAverageRates() {
+        List<Tuple> allAverageRates = ratesDao.findAllAverageRates();
+        return allAverageRates.stream()
+                .collect(Collectors.toMap(x -> x.get("cocktail_id", String.class), x -> BigDecimal.valueOf(x.get("avg_stars", Double.class))));
     }
 
 }

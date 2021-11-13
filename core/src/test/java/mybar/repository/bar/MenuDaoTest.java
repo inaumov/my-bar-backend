@@ -6,22 +6,25 @@ import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.Menu;
 import mybar.repository.BaseDaoTest;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.anyOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Basic Tests of Menu DAO.
  */
 @DatabaseSetup("classpath:datasets/dataset.xml")
+@ContextConfiguration(classes = {MenuDao.class, CocktailDao.class})
 public class MenuDaoTest extends BaseDaoTest {
 
     @Autowired
@@ -31,12 +34,14 @@ public class MenuDaoTest extends BaseDaoTest {
 
     @Test
     @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
-    public void testPreconditions() throws Exception {
-        // do nothing, just load and check dataSet
+    public void testPreconditions() {
+        // do nothing, just load and check dataSet and context loads
+        assertThat(menuDao).isNotNull();
+        assertThat(cocktailDao).isNotNull();
     }
 
     @Test
-    public void testSelectAllMenus() throws Exception {
+    public void testSelectAllMenus() {
         List<Menu> list = menuDao.findAll();
         assertEquals(3, list.size());
         Iterator<Menu> it = list.iterator();
@@ -51,7 +56,7 @@ public class MenuDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void testMenuHasCocktails() throws Exception {
+    public void testMenuHasCocktails() {
         List<Menu> menuList = menuDao.findAll();
         Iterator<Menu> menuIterator = menuList.iterator();
 
@@ -59,10 +64,10 @@ public class MenuDaoTest extends BaseDaoTest {
         Collection<Cocktail> cocktails = menuIterator.next().getCocktails();
         assertEquals(4, cocktails.size(), MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", menuList.get(0).getName()));
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000003", 1, "Green Mexican");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000004", 1, "Blow Job");
+        assertCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
+        assertCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
+        assertCocktail(cocktailIterator.next(), "cocktail-000003", 1, "Green Mexican");
+        assertCocktail(cocktailIterator.next(), "cocktail-000004", 1, "Blow Job");
 
         // second menu
         cocktails = menuIterator.next().getCocktails();
@@ -72,11 +77,11 @@ public class MenuDaoTest extends BaseDaoTest {
         cocktails = menuIterator.next().getCocktails();
         assertEquals(1, cocktails.size(), MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", menuList.get(2).getName()));
         cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000012", 3, "Banana Blast II");
+        assertCocktail(cocktailIterator.next(), "cocktail-000012", 3, "Banana Blast II");
     }
 
     @Test
-    public void testAddCocktailToMenu() throws Exception {
+    public void testAddCocktailToMenu() {
         List<Menu> menuList = menuDao.findAll();
 
         Cocktail cocktail = new Cocktail();
@@ -84,21 +89,21 @@ public class MenuDaoTest extends BaseDaoTest {
         Iterator<Menu> it = menuList.iterator();
         Menu firstMenu = it.next();
         cocktail.setMenuId(firstMenu.getId());
-        cocktailDao.create(cocktail);
+        cocktailDao.save(cocktail);
 
         menuList = menuDao.findAll();
         it = menuList.iterator();
         it.next();
-        Collection<Cocktail> cocktails = cocktailDao.findAllFor(firstMenu);
+        Collection<Cocktail> cocktails = cocktailDao.findByMenuId(firstMenu.getId());
 
         // test first menu
         assertEquals(5, cocktails.size(), MessageFormat.format("Number of cocktails in the first [{0}] menu should be same.", firstMenu.getName()));
         Iterator<Cocktail> cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000003", 1, "Green Mexican");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-000004", 1, "Blow Job");
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-", 1, "New Cocktail");
+        assertCocktail(cocktailIterator.next(), "cocktail-000001", 1, "B52");
+        assertCocktail(cocktailIterator.next(), "cocktail-000002", 1, "B53");
+        assertCocktail(cocktailIterator.next(), "cocktail-000003", 1, "Green Mexican");
+        assertCocktail(cocktailIterator.next(), "cocktail-000004", 1, "Blow Job");
+        assertCocktail(cocktailIterator.next(), "cocktail-", 1, "New Cocktail");
 
         // second menu
         cocktails = it.next().getCocktails();
@@ -108,13 +113,23 @@ public class MenuDaoTest extends BaseDaoTest {
         cocktails = it.next().getCocktails();
         assertEquals(1, cocktails.size(), MessageFormat.format("Number of cocktails in the third [{0}] menu should be same.", firstMenu.getName()));
         cocktailIterator = cocktails.iterator();
-        assertExistedCocktail(cocktailIterator.next(), "cocktail-", 3, "Banana Blast II");
+        assertCocktail(cocktailIterator.next(), "cocktail-", 3, "Banana Blast II");
     }
 
-    public static void assertExistedCocktail(Cocktail cocktail, String id, int menuId, String name) {
-        assertThat("Cocktail ID should be same.", cocktail.getId(), either(equalTo(id)).or(containsString(id)));
-        assertEquals(menuId, cocktail.getMenuId(), "Menu ID related to cocktail should be same.");
-        assertEquals(name, cocktail.getName(), "Cocktail name should same.");
+    public static void assertCocktail(Cocktail cocktail, String id, int menuId, String name) {
+        Condition<String> existed = new Condition<>(
+                s -> s.equals(id), "existed");
+        Condition<String> added = new Condition<>(
+                s -> s.startsWith(id), "added");
+        assertThat(cocktail.getId())
+                .withFailMessage("Cocktail ID should be same.")
+                .is(anyOf(existed, added));
+        assertThat(cocktail.getMenuId())
+                .withFailMessage("Menu ID related to cocktail should be same.")
+                .isEqualTo(menuId);
+        assertThat(cocktail.getName())
+                .withFailMessage("Cocktail name should same.")
+                .isEqualTo(name);
     }
 
 }

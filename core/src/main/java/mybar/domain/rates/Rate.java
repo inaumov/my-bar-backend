@@ -6,7 +6,7 @@ import mybar.domain.bar.Cocktail;
 import mybar.domain.users.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,8 +24,7 @@ public class Rate {
     private CocktailToUserPk pk = new CocktailToUserPk();
 
     @Column(name = "RATED_AT")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date ratedAt;
+    private LocalDateTime ratedAt;
 
     @Column(name = "STARS")
     private int stars;
