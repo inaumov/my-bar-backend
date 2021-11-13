@@ -4,43 +4,45 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DatabaseSetup("classpath:datasets/usersDataSet.xml")
+@ContextConfiguration(classes = {RoleDao.class, UserDao.class})
 public class UserToRoleRelationsTest extends UserBaseDaoTest {
 
     @Autowired
-    private RoleDao roleDAO;
-
+    private RoleDao roleDao;
     @Autowired
     private UserDao userDao;
 
     @Test
-    public void testUserHasMoreThenOneRole() throws Exception {
+    public void testUserHasMoreThenOneRole() {
         User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
         Collection<Role> roles = user.getRoles();
         assertEquals(ROLES_CNT, roles.size());
         for (Role role : roles) {
-            assertEquals(role, roleDAO.getOne(role.getRoleName()));
+            assertEquals(role, roleDao.getOne(role.getRoleName()));
         }
     }
 
     @Test
-    public void testAddRole() throws Exception {
+    public void testAddRole() {
         User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
 
-        Role role = roleDAO.getOne(RoleName.ROLE_ADMIN.name());
+        Role role = roleDao.getOne(RoleName.ROLE_ADMIN.name());
         assertNotNull(role);
         user.addRole(role);
         userDao.save(user);
-        em.flush();
+        commit();
 
         assertEquals(USERS_CNT, countRowsInTable("USERS"));
         assertEquals(ROLES_CNT, countRowsInTable("ROLES"));
@@ -48,7 +50,7 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
     }
 
     @Test
-    public void testRemoveRole() throws Exception {
+    public void testRemoveRole() {
         User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
 
@@ -56,7 +58,7 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
         assertEquals(3, nmbOfRoles);
         user.getRoles().clear();
         userDao.save(user);
-        em.flush();
+        commit();
 
         assertEquals(USERS_CNT, countRowsInTable("USERS"));
         assertEquals(ROLES_CNT, countRowsInTable("ROLES"));
@@ -64,12 +66,12 @@ public class UserToRoleRelationsTest extends UserBaseDaoTest {
     }
 
     @Test
-    public void testAddNullRole() throws Exception {
+    public void testAddNullRole() {
         User user = userDao.getOne(CLIENT2_ID);
         assertNotNull(user);
         user.addRole(null);
         userDao.save(user);
-        em.flush();
+        commit();
 
         assertEquals(USERS_CNT, countRowsInTable("USERS"));
         assertEquals(ROLES_CNT, countRowsInTable("ROLES"));

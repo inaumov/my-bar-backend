@@ -124,7 +124,7 @@ public class CocktailsService {
             return cocktailsCache.asMap().get(menuName);
         }
         IMenu menu = findMenuByName(menuName);
-        List<ICocktail> cocktailDtoList = cocktailsToDtoList(menuDao.read(menu.getId()), menuName);
+        List<ICocktail> cocktailDtoList = cocktailsToDtoList(menuDao.getOne(menu.getId()), menuName);
         cocktailsCache.put(menuName, cocktailDtoList);
         return cocktailDtoList;
     }
@@ -159,15 +159,8 @@ public class CocktailsService {
 
         Cocktail cocktailEntity = EntityFactory.from(cocktail, menu.getId());
         try {
-            Cocktail result;
-            if (Strings.isNullOrEmpty(cocktailEntity.getId())) {
-                result = cocktailDao.create(cocktailEntity);
-            } else {
-                result = cocktailDao.update(cocktailEntity);
-            }
+            Cocktail result = cocktailDao.save(cocktailEntity);
             return result.toDto(menuName);
-        } catch (EntityExistsException e) {
-            return null;
         } finally {
             cocktailsCache.invalidateAll();
         }
@@ -197,7 +190,7 @@ public class CocktailsService {
     }
 
     private void checkCocktailExists(String name) throws UniqueCocktailNameException {
-        if (cocktailDao.findCocktailByName(name)) {
+        if (cocktailDao.existsByName(name)) {
             throw new UniqueCocktailNameException(name);
         }
     }
@@ -206,9 +199,9 @@ public class CocktailsService {
         boolean hasRef = isCocktailInHistory(cocktail);
         if (hasRef) {
             Cocktail entity = EntityFactory.from(cocktail, -1); // TODO: 1/12/2018
-            cocktailDao.update(entity);
+            cocktailDao.save(entity);
         } else {
-            cocktailDao.delete(cocktail);
+            cocktailDao.deleteById(cocktail.getId());
         }
     }
 
@@ -223,20 +216,19 @@ public class CocktailsService {
 
     public ICocktail findCocktailById(String id) throws CocktailNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
-        Cocktail cocktail = cocktailDao.read(id);
-        if (cocktail != null) {
-            return cocktail.toDto(findMenuById(cocktail.getMenuId()).getName());
-        }
-        throw new CocktailNotFoundException(id);
+        Optional<Cocktail> cocktail = cocktailDao.findById(id);
+        return cocktail
+                .map(c -> c.toDto(findMenuById(c.getMenuId()).getName()))
+                .orElseThrow(() -> new CocktailNotFoundException(id));
     }
 
     public boolean isCocktailInHistory(ICocktail cocktail) {
-        return ratesDao.checkRateExistsForCocktail(cocktail);
+        return ratesDao.checkRateExistsForCocktail(cocktail.getId());
     }
 
     public void deleteCocktailById(String id) throws CocktailNotFoundException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
-        cocktailDao.delete(id);
+        cocktailDao.deleteById(id);
         if (cocktailsCache.size() == 0) {
             return;
         }

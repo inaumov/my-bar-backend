@@ -27,12 +27,12 @@ public class UserService {
 
     private final UserDao userDao;
 
-    private final RoleDao roleDAO;
+    private final RoleDao roleDao;
 
     @Autowired
-    public UserService(UserDao userDao, RoleDao roleDAO) {
+    public UserService(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
-        this.roleDAO = roleDAO;
+        this.roleDao = roleDao;
     }
 
     public IUser createUser(IUser user) throws UserExistsException, EmailDuplicatedException {
@@ -44,10 +44,10 @@ public class UserService {
         User userEntity = toEntity(user);
         userEntity.setActive(true);
         if (CollectionUtils.isEmpty(user.getRoles())) {
-            Role roleUser = roleDAO.getOne(RoleName.ROLE_USER.name());
+            Role roleUser = roleDao.getOne(RoleName.ROLE_USER.name());
             userEntity.addRole(roleUser);
         } else {
-            List<Role> assignedRoles = roleDAO.findByRoleNameIn(user.getRoles());
+            List<Role> assignedRoles = roleDao.findByRoleNameIn(user.getRoles());
             assignedRoles.forEach(userEntity::addRole);
         }
         return toUserDto(userDao.save(userEntity));
@@ -86,10 +86,10 @@ public class UserService {
         entity.setName(user.getName());
         entity.setSurname(user.getSurname());
         if (CollectionUtils.isEmpty(user.getRoles())) {
-            Role roleUser = roleDAO.getOne(RoleName.ROLE_USER.name());
+            Role roleUser = roleDao.getOne(RoleName.ROLE_USER.name());
             entity.addRole(roleUser);
         } else {
-            List<Role> roles = roleDAO.findByRoleNameIn(user.getRoles());
+            List<Role> roles = roleDao.findByRoleNameIn(user.getRoles());
             entity.setRoles(roles);
         }
 
@@ -99,11 +99,9 @@ public class UserService {
     public IUser findByUsername(String username) throws UnknownUserException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
 
-        User userEntity = userDao.getOne(username);
-        if (userEntity != null) {
-            return toUserDto(userEntity);
-        }
-        throw new UnknownUserException(username);
+        return userDao.findById(username)
+                .map(this::toUserDto)
+                .orElseThrow(() -> new UnknownUserException(username));
     }
 
     private UserDto toUserDto(User userEntity) {
@@ -130,6 +128,7 @@ public class UserService {
             userEntity.setActive(true);
             userDao.save(userEntity);
         }
+        throw new UnknownUserException(username);
     }
 
     public void deactivateUser(String username) throws UnknownUserException {
@@ -145,7 +144,7 @@ public class UserService {
 
     public void assignRole(IUser user, RoleName roleName) {
         User userEntity = toEntity(user);
-        Role role = roleDAO.getOne(roleName.name());
+        Role role = roleDao.getOne(roleName.name());
         userEntity.addRole(role);
         userDao.save(userEntity);
     }
@@ -161,7 +160,7 @@ public class UserService {
     // util methods
 
     private Collection<User> filterUsers(Iterable<User> users) {
-        Role role = roleDAO.getOne(RoleName.ROLE_USER.name());
+        Role role = roleDao.getOne(RoleName.ROLE_USER.name());
         if (role != null) {
             Predicate<User> predicate = user -> user.getRoles().contains(role);
             return filter(users, predicate);
@@ -186,7 +185,7 @@ public class UserService {
         entity.setEmail(user.getEmail());
         entity.setName(user.getName());
         entity.setSurname(user.getSurname());
-        List<Role> roles = roleDAO.findByRoleNameIn(user.getRoles());
+        List<Role> roles = roleDao.findByRoleNameIn(user.getRoles());
         entity.setRoles(roles);
         entity.setActive(user.isActive());
         return entity;

@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class RatesServiceTest {
@@ -69,7 +69,7 @@ public class RatesServiceTest {
         Rate rate = new Rate();
         rate.setUser(user);
         rate.setCocktail(cocktail);
-        rate.setRatedAt(new Date());
+        rate.setRatedAt(LocalDateTime.now());
 
         Mockito.when(ratesDaoMock.findAllRatesForUser(Mockito.any(User.class))).thenReturn(Collections.singletonList(rate));
         Collection<IRate> ratedCocktails = ratesService.getRatedCocktails(USERNAME);
@@ -80,7 +80,7 @@ public class RatesServiceTest {
     @Test
     public void test_persist_rate() {
         Mockito.when(userDaoMock.getOne(Mockito.anyString())).thenReturn(new User());
-        Mockito.when(cocktailDaoMock.read(COCKTAIL_ID)).thenReturn(new Cocktail());
+        Mockito.when(cocktailDaoMock.findById(COCKTAIL_ID)).thenReturn(Optional.of(new Cocktail()));
 
         RateDto rateDto = new RateDto();
         rateDto.setCocktailId(COCKTAIL_ID);
@@ -89,7 +89,7 @@ public class RatesServiceTest {
 
         ratesService.persistRate(USERNAME, rateDto);
         // persist only when cocktail exists
-        Mockito.verify(ratesDaoMock, Mockito.atLeastOnce()).update(Mockito.any(Rate.class));
+        Mockito.verify(ratesDaoMock, Mockito.atLeastOnce()).save(Mockito.any(Rate.class));
     }
 
 }

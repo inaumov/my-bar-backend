@@ -12,8 +12,10 @@ import mybar.domain.bar.ingredient.Beverage;
 import mybar.domain.bar.ingredient.Drink;
 import mybar.domain.bar.ingredient.Ingredient;
 import mybar.repository.BaseDaoTest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
@@ -23,14 +25,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Deep Tests of Cocktail DAO.
  */
 @DatabaseSetup("classpath:datasets/dataset.xml")
+@ContextConfiguration(classes = {CocktailDao.class, MenuDao.class, IngredientDao.class})
 public class CocktailDaoTest extends BaseDaoTest {
 
     private static final String COCKTAIL_WITH_INGREDIENTS_ID = "cocktail-000001";
@@ -45,8 +47,11 @@ public class CocktailDaoTest extends BaseDaoTest {
 
     @Test
     @ExpectedDatabase(value = "classpath:datasets/dataset.xml", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
-    public void testPreconditions() throws Exception {
-        // do nothing, just load and check dataSet
+    public void testPreconditions() {
+        // do nothing, just load and check dataSet and context loads
+        Assertions.assertThat(menuDao).isNotNull();
+        Assertions.assertThat(cocktailDao).isNotNull();
+        Assertions.assertThat(ingredientDao).isNotNull();
     }
 
     @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-create-all-ingredients.xml",
@@ -68,7 +73,7 @@ public class CocktailDaoTest extends BaseDaoTest {
     )
     @Test
     @Transactional
-    public void testCreateCocktail_WithAllIngredients() throws Exception {
+    public void testCreateCocktail_WithAllIngredients() {
 
         Cocktail cocktail = new Cocktail();
         cocktail.setName("New Cocktail");
@@ -77,7 +82,9 @@ public class CocktailDaoTest extends BaseDaoTest {
         cocktail.setMenuId(2);
 
         List<Ingredient> all = ingredientDao.findAll();
-        assertThat("Number of ingredients should be 18.", all, hasSize(18));
+        assertThat(all)
+                .withFailMessage("Number of ingredients should be 18.")
+                .hasSize(18);
 
         for (Ingredient ingredient : all) {
             // add cocktail to ingredients relation
@@ -87,11 +94,11 @@ public class CocktailDaoTest extends BaseDaoTest {
             cocktailToIngredient.setMeasurement(Measurement.ML);
             cocktail.addCocktailToIngredient(cocktailToIngredient);
         }
-        Cocktail created = cocktailDao.create(cocktail);
-        em.flush();
+        Cocktail created = cocktailDao.save(cocktail);
+        commit();
 
         // refresh
-        created = cocktailDao.read(created.getId());
+        created = cocktailDao.getOne(created.getId());
         assertNotNull(created);
         assertTrue(created.getId().contains("cocktail-"));
         assertEquals(all.size(), created.getCocktailToIngredientList().size());
@@ -110,9 +117,9 @@ public class CocktailDaoTest extends BaseDaoTest {
     )
     @Test
     @Transactional
-    public void testRemoveCocktailFromMenuWhenNoLikes() throws Exception {
-        cocktailDao.delete("cocktail-000007");
-        em.flush();
+    public void testRemoveCocktailFromMenuWhenNoLikes() {
+        cocktailDao.deleteById("cocktail-000007");
+        commit();
 
         List<Menu> menuList = menuDao.findAll();
         Iterator<Menu> it = menuList.iterator();
@@ -131,7 +138,7 @@ public class CocktailDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void testThrowLikesExistExceptionWhenRemove() throws Exception {
+    public void testThrowLikesExistExceptionWhenRemove() {
         // TODO not for the first release
     }
 
@@ -148,7 +155,7 @@ public class CocktailDaoTest extends BaseDaoTest {
     )
     @Test
     @Transactional
-    public void testUpdateCocktail_when_AddNewIngredients() throws Exception {
+    public void testUpdateCocktail_when_AddNewIngredients() {
         // Edit 'Mai Tai' cocktail and put it into 'smoothie' menu
         Cocktail cocktail = new Cocktail();
         cocktail.setId(COCKTAIL_WITH_NO_INGREDIENTS_ID);
@@ -164,8 +171,8 @@ public class CocktailDaoTest extends BaseDaoTest {
         cocktail.addCocktailToIngredient(juice);
         cocktail.addCocktailToIngredient(grenadine);
 
-        cocktailDao.update(cocktail);
-        em.flush();
+        cocktailDao.save(cocktail);
+        commit();
     }
 
     @ExpectedDatabase(value = "classpath:datasets/expected/cocktails-update-change-ingredients.xml",
@@ -181,9 +188,9 @@ public class CocktailDaoTest extends BaseDaoTest {
     )
     @Test
     @Transactional
-    public void testUpdateCocktail_when_ChangeIngredients() throws Exception {
+    public void testUpdateCocktail_when_ChangeIngredients() {
         // Edit 'B52' cocktail and add more ingredients
-        Cocktail cocktail = cocktailDao.read(COCKTAIL_WITH_INGREDIENTS_ID);
+        Cocktail cocktail = cocktailDao.getOne(COCKTAIL_WITH_INGREDIENTS_ID);
         assertNotNull(cocktail);
 
         Cocktail cocktailForUpdate = new Cocktail();
@@ -199,8 +206,8 @@ public class CocktailDaoTest extends BaseDaoTest {
         cocktailForUpdate.addCocktailToIngredient(juice);
         cocktailForUpdate.addCocktailToIngredient(grenadine);
 
-        cocktailDao.update(cocktailForUpdate);
-        em.flush();
+        cocktailDao.save(cocktailForUpdate);
+        commit();
     }
 
     private CocktailToIngredient prepareCocktailToAdditiveRel(int id, String kind) {
@@ -226,8 +233,8 @@ public class CocktailDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void testGetIngredientsForCocktail() throws Exception {
-        Cocktail longIsland = cocktailDao.read("cocktail-000005");
+    public void testGetIngredientsForCocktail() {
+        Cocktail longIsland = cocktailDao.getOne("cocktail-000005");
         assertNotNull(longIsland);
 
         List<CocktailToIngredient> ingredients = longIsland.getCocktailToIngredientList();
@@ -245,7 +252,7 @@ public class CocktailDaoTest extends BaseDaoTest {
         assertCocktailToIngredient(18, 5, Measurement.PCS, Additive.class, findCocktailToIngredientByIngredientName(ingredients, "Lime"));
     }
 
-    private static void assertCocktailToIngredient(int ingredientId, int expectedVolume, Measurement measurement, Class type, CocktailToIngredient cocktailToIngredient) {
+    private static void assertCocktailToIngredient(int ingredientId, int expectedVolume, Measurement measurement, Class<?> type, CocktailToIngredient cocktailToIngredient) {
         assertTrue(type.isInstance(cocktailToIngredient.getIngredient()), "Ingredient class type should be same.");
         assertEquals(ingredientId, cocktailToIngredient.getIngredient().getId().intValue(), "Ingredient ID should be same.");
         assertEquals(expectedVolume, cocktailToIngredient.getVolume(), "Volume of ingredient should be same.");
@@ -263,13 +270,13 @@ public class CocktailDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void testFindCocktailByName_when_exists() throws Exception {
-        assertTrue(cocktailDao.findCocktailByName("Mai Tai"));
+    public void testFindCocktailByName_when_exists() {
+        assertTrue(cocktailDao.existsByName("Mai Tai"));
     }
 
     @Test
-    public void testFindCocktailByName_when_not_found() throws Exception {
-        assertFalse(cocktailDao.findCocktailByName("Blue Lagoon"));
+    public void testFindCocktailByName_when_not_found() {
+        assertFalse(cocktailDao.existsByName("Blue Lagoon"));
     }
 
 }
