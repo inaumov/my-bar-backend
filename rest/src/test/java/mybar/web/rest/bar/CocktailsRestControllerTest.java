@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collection;
@@ -71,9 +72,9 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         mockMvc.perform(get(basePath + "/{0}", TEST_ID_1)
                 .header("Authorization", "Bearer " + accessToken)
-                .accept(CONTENT_TYPE))
+                .accept(MediaType.APPLICATION_JSON))
 
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -84,7 +85,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
         mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get(basePath + "/{0}", TEST_ID_1)))
 
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
@@ -97,7 +98,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("$.id", is(TEST_ID_1)))
                 .andExpect(jsonPath("$.relatedToMenu", is(MENU_NAME)))
@@ -125,7 +126,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
         verify(cocktailsServiceMock, times(1)).findCocktailById(anyString());
@@ -141,7 +142,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("$.*", hasSize(0)));
 
@@ -168,7 +169,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("$.shot", hasSize(2)))
                 .andExpect(jsonPath("$.shot[0].id", is("cocktail-000005")))
@@ -209,7 +210,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("$.any", hasSize(3)))
                 .andExpect(jsonPath("$.any[0].id", is("cocktail-000005")))
@@ -244,7 +245,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(CONTENT_TYPE));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         assertCocktailResponseBody(resultActions);
 
@@ -262,7 +263,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
 
         verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
@@ -279,7 +280,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Cocktail name is required.")));
 
         verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
@@ -296,7 +297,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
 
         verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
@@ -313,7 +314,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Provided ingredients [15, 20, 40] are unknown.")));
 
         verify(cocktailsServiceMock, times(1)).saveCocktail(Mockito.any(ICocktail.class));
@@ -333,7 +334,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isAccepted())
-                .andExpect(content().contentType(CONTENT_TYPE));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         assertCocktailResponseBody(resultActions);
 
@@ -367,7 +368,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
         verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
@@ -383,7 +384,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name [unknown] is unknown.")));
 
         verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
@@ -401,7 +402,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Cocktail name is required.")));
 
         verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
@@ -418,7 +419,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Menu name is required.")));
 
         verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
@@ -435,7 +436,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Provided ingredients [15, 20, 40] are unknown.")));
 
         verify(cocktailsServiceMock, times(1)).updateCocktail(Mockito.any(ICocktail.class));
@@ -465,7 +466,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"There is no cocktail with id: " + TEST_ID_2)));
 
         verify(cocktailsServiceMock, times(1)).deleteCocktailById(TEST_ID_2);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.common.util.JacksonJsonParser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,8 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @Import({AuthenticationManagerConfiguration.class, AuthorizationServerConfiguration.class, TestConfig.class, ResourceServerConfiguration.class})
 public abstract class ARestControllerTest {
-
-    public static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
     public static final String USER = "user";
     public static final String ADMIN = "admin";
@@ -43,9 +42,9 @@ public abstract class ARestControllerTest {
                 = mockMvc.perform(post("/oauth/token")
                 .params(params)
                 .with(httpBasic("api-tests", "bGl2ZS10ZXN0"))
-                .accept(CONTENT_TYPE))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
         String resultString = result.andReturn().getResponse().getContentAsString();
 
@@ -57,7 +56,7 @@ public abstract class ARestControllerTest {
         String accessToken = obtainAccessToken(user, password);
         return mockHttpServletRequestBuilder
                 .header("Authorization", "Bearer " + accessToken)
-                .contentType(CONTENT_TYPE);
+                .contentType(MediaType.APPLICATION_JSON);
     }
 
 }

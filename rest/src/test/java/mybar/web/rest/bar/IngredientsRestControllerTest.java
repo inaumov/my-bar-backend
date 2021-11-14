@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -60,9 +61,9 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
 
         mockMvc.perform(get(basePath)
                 .header("Authorization", "Bearer " + accessToken)
-                .accept(CONTENT_TYPE))
+                .accept(MediaType.APPLICATION_JSON))
 
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -73,7 +74,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
 
         mockMvc.perform(makePreAuthorizedRequest(ADMIN, ADMIN, get(basePath)))
 
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
@@ -99,7 +100,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath)))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("additives.items", hasSize(1)))
                 .andExpect(jsonPath("additives.items.[0].id", is(1)))
@@ -131,7 +132,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
                         .param("filter", ingredientType)));
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("%s.measurements", ingredientType).exists())
                 .andExpect(jsonPath(items, hasSize(2)));
@@ -158,7 +159,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
                         .param("filter", DRINKS)))
 
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(jsonPath("drinks.measurements", empty()))
                 .andExpect(jsonPath("drinks.items", empty()))
@@ -178,7 +179,7 @@ public class IngredientsRestControllerTest extends ARestControllerTest {
                         .param("filter", UNKNOWN)))
 
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("errorMessage\":\"Unknown group name: " + UNKNOWN)));
 
         verify(ingredientServiceMock, times(1)).findByGroupName("unknown");

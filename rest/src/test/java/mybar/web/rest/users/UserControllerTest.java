@@ -67,7 +67,7 @@ public class UserControllerTest extends ARestControllerTest {
 
         MockHttpServletRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.post(basePath + "/register")
-                        .contentType(CONTENT_TYPE)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(createUserInJson(
                                 USERNAME,
                                 EMAIL,
@@ -76,7 +76,7 @@ public class UserControllerTest extends ARestControllerTest {
 
         this.mockMvc.perform(requestBuilder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isCreated())
 
@@ -118,7 +118,7 @@ public class UserControllerTest extends ARestControllerTest {
         this.mockMvc.perform(requestBuilder)
 
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
                 .andExpect(content().string(containsString("errorMessage\":\"There is an account with that email: " + EMAIL)));
@@ -142,7 +142,7 @@ public class UserControllerTest extends ARestControllerTest {
         this.mockMvc.perform(requestBuilder)
 
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
                 .andExpect(content().string(containsString("errorMessage\":\"Username [" + USERNAME + "] has been already occupied.")));
@@ -161,7 +161,7 @@ public class UserControllerTest extends ARestControllerTest {
         this.mockMvc.perform(requestBuilder)
 
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk())
 
@@ -191,7 +191,7 @@ public class UserControllerTest extends ARestControllerTest {
 
         this.mockMvc.perform(requestBuilder)
 
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden());
     }
@@ -211,7 +211,7 @@ public class UserControllerTest extends ARestControllerTest {
 
         this.mockMvc.perform(requestBuilder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk())
 
@@ -270,7 +270,7 @@ public class UserControllerTest extends ARestControllerTest {
             final IUser user = mock(IUser.class);
             when(user.getUsername()).thenReturn(USER);
             when(userService.findByUsername(Mockito.eq(USER))).thenReturn(user);
-            doNothing().when(userService).changePassword(Mockito.same(user), Mockito.anyString());
+            doNothing().when(userService).changePassword(Mockito.same(user), Mockito.eq(password));
 
             MockHttpServletRequestBuilder requestBuilder = makePreAuthorizedRequest(USER, USER, MockMvcRequestBuilders.put(basePath + "/{0}/changePassword", USER))
                     .content(String.format("{\"newPassword\":\"%s\"}", password));
@@ -305,7 +305,7 @@ public class UserControllerTest extends ARestControllerTest {
         this.mockMvc.perform(requestBuilder)
 
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk())
 
@@ -342,7 +342,7 @@ public class UserControllerTest extends ARestControllerTest {
 
         this.mockMvc.perform(requestBuilder)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(content().contentType(CONTENT_TYPE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isNotFound())
 
