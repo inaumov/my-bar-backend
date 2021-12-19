@@ -22,7 +22,7 @@ public class MyBarEventProducer<T> implements IEventProducer<T> {
         long time = System.currentTimeMillis();
         String key = asKey(userId, entityId);
         var recordObject = RecordObject.of(time, dto);
-        var send = kafkaTemplate.send(topicName, key, recordObject);
+        var send = kafkaTemplate.send(topicName, 0, time, key, recordObject);
         send.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onSuccess(SendResult<String, RecordObject<?>> result) {
@@ -43,7 +43,7 @@ public class MyBarEventProducer<T> implements IEventProducer<T> {
         return Instant.ofEpochMilli(time);
     }
 
-    private String asKey(String userId, String entityId) {
+    private static String asKey(String userId, String entityId) {
         return userId + "@" + entityId;
     }
 

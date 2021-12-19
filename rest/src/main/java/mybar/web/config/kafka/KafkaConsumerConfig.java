@@ -23,9 +23,7 @@ public class KafkaConsumerConfig {
 
     public ConsumerFactory<String, RecordObject<?>> consumerFactory() {
         Map<String, Object> props = Map.of(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress,
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress
         );
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(RecordObject.class));
     }
