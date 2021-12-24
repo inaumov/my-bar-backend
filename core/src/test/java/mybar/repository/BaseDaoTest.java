@@ -29,7 +29,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -51,14 +50,18 @@ import java.time.Duration;
         inheritListeners = false)
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
 @DataJpaTest
-@Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public abstract class BaseDaoTest {
     protected final JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @Container
     private static final MySQLContainer<?> MYSQL = new MySQLContainer<>("mysql:8.0.25")
+            .withReuse(true)
             .withCommand("mysqld", "--lower_case_table_names=1");
+
+    static {
+        MYSQL.start();
+    }
 
     @Autowired
     protected TestEntityManager testEntityManager;
