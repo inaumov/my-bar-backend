@@ -55,7 +55,7 @@ public abstract class BaseDaoTest {
     protected final JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @Container
-    private static final MySQLContainer<?> MYSQL = new MySQLContainer<>("mysql:8.0.25")
+    private static final MySQLContainer<?> MYSQL = new MySQLContainer<>("mysql:8.0.27")
             .withReuse(true)
             .withCommand("mysqld", "--lower_case_table_names=1");
 

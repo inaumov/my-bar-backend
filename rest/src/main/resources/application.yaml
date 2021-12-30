@@ -14,7 +14,7 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/my_bar_db?autoReconnect=true&useSSL=false
     username: root
     password: check001
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: MYSQL
     show-sql: true
