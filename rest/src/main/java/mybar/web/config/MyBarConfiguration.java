@@ -13,11 +13,7 @@ public class MyBarConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("PUT", "DELETE")
-                .exposedHeaders("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
-                .allowCredentials(false)
-                .maxAge(3600);
+                .allowedOrigins("*");
     }
 
     @Override
