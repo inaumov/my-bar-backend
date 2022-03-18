@@ -12,10 +12,14 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableAuthorizationServer
@@ -92,6 +96,23 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .scopes("my-bar")
                 .autoApprove("my-bar")
                 .accessTokenValiditySeconds(3600);
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) {
+        security.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.applyPermitDefaultValues();
+
+        // add allow-origin to the headers
+        config.addAllowedHeader("access-control-allow-origin");
+
+        source.registerCorsConfiguration("/oauth/token", config);
+        CorsFilter filter = new CorsFilter(source);
+        security.addTokenEndpointAuthenticationFilter(filter);
     }
 
 }
