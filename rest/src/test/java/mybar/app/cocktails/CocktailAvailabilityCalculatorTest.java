@@ -15,7 +15,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -50,7 +49,7 @@ public class CocktailAvailabilityCalculatorTest {
             public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
                 return (Integer) invocationOnMock.getArguments()[0] % 2 == 0; // not available = ingredient is missing
             }
-        }).when(shelfService).isBottleAvailable(Matchers.anyInt());
+        }).when(shelfService).isBottleAvailable(Mockito.anyInt());
     }
 
     @AfterEach
