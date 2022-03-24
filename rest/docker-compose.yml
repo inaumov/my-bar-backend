@@ -3,7 +3,7 @@ version: '3.3'
 services:
   db:
     container_name: mysql-dev
-    image: mysql:8.0.27
+    image: mysql:8.0.28
     environment:
       - MYSQL_DATABASE=my_bar_db
       - MYSQL_ROOT_PASSWORD=check001
@@ -11,8 +11,8 @@ services:
       - 3306:3306
 
   app:
-    image: my-bar-backend:dev
-    container_name: my-bar-backend-dev
+    image: my-bar-backend:latest
+    container_name: my-bar-backend
     build:
       context: .
       dockerfile: Dockerfile
