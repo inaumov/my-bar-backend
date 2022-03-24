@@ -11,7 +11,7 @@ management:
 
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/my_bar_db?autoReconnect=true&useSSL=false
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/my_bar_db?autoReconnect=true&useSSL=false
     username: root
     password: check001
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,6 +24,8 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  flyway:
+    fail-on-missing-locations: true
 
 logging:
   level:

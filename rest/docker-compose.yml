@@ -1,15 +1,18 @@
-version: '3.3'
+version: '3.9'
 
 services:
   db:
-    container_name: mysql-dev
+    container_name: my-bar-db
     image: mysql:8.0.28
     environment:
       - MYSQL_DATABASE=my_bar_db
       - MYSQL_ROOT_PASSWORD=check001
     ports:
-      - 3306:3306
-
+      - 3308:3306
+    expose:
+      - 3308
+    volumes:
+      - db:/var/lib/mysql
   app:
     image: my-bar-backend:latest
     container_name: my-bar-backend
@@ -19,9 +22,11 @@ services:
     ports:
       - 8089:8089
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/my_bar_db?autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/my_bar_db?autoReconnect=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: check001
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
     depends_on:
       - db
+volumes:
+  db:
