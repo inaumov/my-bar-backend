@@ -4,7 +4,7 @@ my-bar-backend
 Cocktails Management System
 
 version 2.0 :
-- switch to JDK 11
+- switch to JDK 17
 - switch to spring boot 2.x and Spring 5
 - migrate to Oauth2 flow (with JWT)
 - cover all resources with API tests (rest assured 3.0)
