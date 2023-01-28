@@ -1,0 +1,7 @@
+{
+  "timestamp": 1639939320588,
+  "value": {
+    "@class": "mybar.dto.RateDto",
+    "stars": 10
+  }
+}

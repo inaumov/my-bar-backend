@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:8.0.29:///
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+    hibernate.show-sql: false
+    hibernate.use_sql_comments: false
+    hibernate.format_sql: false
+    properties.hibernate.format_sql: false
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: my-bar
+
+logging:
+  level.org.hibernate.type.descriptor.sql: trace
+
+kafka:
+  events:
+    rates-topic-name: rates-test-topic

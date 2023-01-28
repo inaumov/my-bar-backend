@@ -1,9 +1,0 @@
-spring:
-  kafka:
-    consumer:
-      auto-offset-reset: earliest
-      group-id: my-bar-backend
-
-kafka:
-  events:
-    rates-topic-name: embedded-test-topic
