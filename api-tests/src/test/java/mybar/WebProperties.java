@@ -22,23 +22,23 @@ public final class WebProperties {
 
     // API
 
-    public final String getPath() {
+    public String getPath() {
         return path;
     }
 
-    public final String getOauthPath() {
+    public String getOauthPath() {
         return oauthPath;
     }
 
-    public final String getProtocol() {
+    public String getProtocol() {
         return commonPaths.getProtocol();
     }
 
-    public final String getHost() {
+    public String getHost() {
         return commonPaths.getHost();
     }
 
-    public final int getPort() {
+    public int getPort() {
         return commonPaths.getPort();
     }
 

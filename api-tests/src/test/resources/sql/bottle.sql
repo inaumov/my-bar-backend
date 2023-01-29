@@ -1,3 +1,5 @@
+TRUNCATE TABLE bottle;
+
 INSERT INTO bottle (ID, BRAND_NAME, IMAGE_URL, PRICE, VOLUME, INGREDIENT_ID)
 VALUES ('bottle-000001',
         'De Kuyper',

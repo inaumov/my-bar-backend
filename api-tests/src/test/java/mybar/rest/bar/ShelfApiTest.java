@@ -1,57 +1,37 @@
 package mybar.rest.bar;
 
-import io.restassured.RestAssured;
-import io.restassured.authentication.OAuthSignature;
 import io.restassured.http.ContentType;
-import io.restassured.specification.RequestSpecification;
-import mybar.JsonUtil;
-import mybar.OAuthAuthenticator;
-import mybar.rest.Um;
-import mybar.spring.ApiTestsContextConfiguration;
+import mybar.rest.ApiTest;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
 
 import static mybar.CommonPaths.API_PATH;
+import static mybar.rest.Constants.TEST_USERNAME;
+import static mybar.rest.Constants.USER_PASS;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ApiTestsContextConfiguration.class}, loader = AnnotationConfigContextLoader.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class ShelfApiTest {
+class ShelfApiTest extends ApiTest {
 
     public static final String RESOURCE_ID_PATTERN = "^[a-z]+(-[a-zA-Z0-9]{6}+)*$";
     public static Pattern RESOURCE_ID = Pattern.compile(RESOURCE_ID_PATTERN);
-    private static String bottleId;
-    private final JsonUtil jsonUtil = new JsonUtil();
-    @Autowired
-    private OAuthAuthenticator authenticator;
 
-    private RequestSpecification givenAuthenticated() {
-
-        final String accessToken = authenticator.getAccessToken(Um.TEST_USERNAME, Um.USER_PASS);
-
-        return RestAssured
-                .given()
-                .auth()
-                .oauth2(accessToken, OAuthSignature.HEADER);
+    @BeforeEach
+    void setUp() {
+        runSql("/bottle.sql");
     }
 
     @Test
-    public void testGetAllBottles() {
-        givenAuthenticated()
+    void testGetAllBottles() {
+        givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .get(API_PATH + "shelf/bottles")
                 .then()
                 .assertThat()
@@ -61,8 +41,8 @@ public class ShelfApiTest {
     }
 
     @Test
-    public void testGetBottleById() {
-        givenAuthenticated()
+    void testGetBottleById() {
+        givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .when()
                 .pathParam("id", "bottle-000001")
                 .get(API_PATH + "shelf/bottles/{id}")
@@ -74,12 +54,12 @@ public class ShelfApiTest {
     }
 
     @Test
-    public void testAddNewBottle() {
+    void testAddNewBottle() {
 
         JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/shelf/new_bottle_v1.json");
         resourceAsJSON.put("brandName", resourceAsJSON.getString("brandName") + " - " + RandomStringUtils.randomAlphabetic(6));
 
-        String id = givenAuthenticated()
+        String id = givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .when()
                 .contentType(ContentType.JSON)
                 .and()
@@ -91,15 +71,15 @@ public class ShelfApiTest {
                 .extract()
                 .path("id");
 
-        ShelfApiTest.bottleId = id;
+        Assert.notNull(id, "Id should be created");
     }
 
     @Test
-    public void testUpdateBottle() {
+    void testUpdateBottle() {
 
         String resourceAsString = jsonUtil.resourceAsString("/data/shelf/bottle_v1.json");
 
-        givenAuthenticated()
+        givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .when()
                 .contentType(ContentType.JSON)
                 .and()
@@ -111,12 +91,10 @@ public class ShelfApiTest {
     }
 
     @Test
-    public void testRemoveBottle() {
-        Assert.isTrue(StringUtils.contains(bottleId, "bottle-"), "Bottle Id from the previous step is missing.");
-
-        givenAuthenticated()
+    void testRemoveBottle() {
+        givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .when()
-                .pathParam("id", bottleId)
+                .pathParam("id", "bottle-000011")
                 .delete(API_PATH + "shelf/bottles/{id}")
                 .then()
                 .statusCode(204);

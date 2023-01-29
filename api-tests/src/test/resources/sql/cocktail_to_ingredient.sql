@@ -1,3 +1,4 @@
+TRUNCATE TABLE cocktail_to_ingredient;
 INSERT INTO cocktail_to_ingredient (MEASUREMENT, VOLUME, INGREDIENT_ID, COCKTAIL_ID) VALUES ('ML', 20, 8, 'cocktail-000001');
 INSERT INTO cocktail_to_ingredient (MEASUREMENT, VOLUME, INGREDIENT_ID, COCKTAIL_ID) VALUES ('ML', 20, 11, 'cocktail-000001');
 INSERT INTO cocktail_to_ingredient (MEASUREMENT, VOLUME, INGREDIENT_ID, COCKTAIL_ID) VALUES ('ML', 20, 16, 'cocktail-000001');
