@@ -1,4 +1,5 @@
-CREATE TABLE bottle (
+CREATE TABLE bottle
+(
     id            VARCHAR(255) NOT NULL,
     brand_name    VARCHAR(255),
     image_url     VARCHAR(255),
@@ -9,7 +10,8 @@ CREATE TABLE bottle (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE cocktail (
+CREATE TABLE cocktail
+(
     id          VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     image_url   VARCHAR(255),
@@ -18,7 +20,8 @@ CREATE TABLE cocktail (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE cocktail_to_ingredient (
+CREATE TABLE cocktail_to_ingredient
+(
     measurement   VARCHAR(255),
     volume        DOUBLE PRECISION,
     ingredient_id INTEGER,
@@ -26,7 +29,8 @@ CREATE TABLE cocktail_to_ingredient (
     PRIMARY KEY (cocktail_id, ingredient_id)
 );
 
-CREATE TABLE ingredient (
+CREATE TABLE ingredient
+(
     group_name VARCHAR(31) NOT NULL,
     id         INTEGER     NOT NULL,
     kind       VARCHAR(255),
@@ -34,7 +38,8 @@ CREATE TABLE ingredient (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE menu (
+CREATE TABLE menu
+(
     id   INTEGER NOT NULL,
     name VARCHAR(255),
     PRIMARY KEY (id)

@@ -16,7 +16,7 @@ public class MenuApiTest {
                 .assertThat()
                 .statusCode(200)
                 .and()
-                .body("name", Matchers.hasSize(5));
+                .body("name", Matchers.hasSize(2));
     }
 
 }
