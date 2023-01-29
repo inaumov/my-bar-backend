@@ -24,15 +24,15 @@ import org.testcontainers.utility.DockerImageName;
 public class KafkaTestContext {
 
     @Container
-    protected static final KafkaContainer KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+    protected static final KafkaContainer KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.0"))
             .withEnv(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    @Value("${kafka.events.rates-topic-name}")
+    @Value("${my-bar.events.rates-topic-name}")
     protected String topic;
 
     @DynamicPropertySource
     public static void properties(DynamicPropertyRegistry propertyRegistry) {
-        propertyRegistry.add("kafka.bootstrap-address", KAFKA::getBootstrapServers);
+        propertyRegistry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
     }
 
 }

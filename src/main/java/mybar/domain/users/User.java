@@ -34,7 +34,7 @@ public class User {
     private String email;
 
     @Column(name = "ACTIVE")
-    @Type(type = "org.hibernate.type.NumericBooleanType")
+    @Type(type = "org.hibernate.type.BooleanType")
     private boolean active;
 
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

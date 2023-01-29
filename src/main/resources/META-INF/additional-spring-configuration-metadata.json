@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "my-bar.events.rates-topic-name",
+      "type": "java.lang.String",
+      "description": "Description for my-bar.events.rates-topic-name."
+    }
+  ]
+}

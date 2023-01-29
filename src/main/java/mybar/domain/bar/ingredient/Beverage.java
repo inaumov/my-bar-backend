@@ -19,7 +19,7 @@ import java.util.List;
 )
 public class Beverage extends Ingredient implements IBeverage {
 
-    @Column(name = "TYPE")
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private BeverageType beverageType;
 

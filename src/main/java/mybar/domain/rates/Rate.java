@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "RATES")
+@Table(name = "rates")
 @AssociationOverrides({
-        @AssociationOverride(name = "pk.cocktail", joinColumns = @JoinColumn(name = "COCKTAIL_ID")),
-        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "USERNAME"))
+        @AssociationOverride(name = "pk.cocktail", joinColumns = @JoinColumn(name = "cocktail_id")),
+        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "username"))
 })
 public class Rate {
 
@@ -23,10 +23,10 @@ public class Rate {
     @EmbeddedId
     private CocktailToUserPk pk = new CocktailToUserPk();
 
-    @Column(name = "RATED_AT")
+    @Column(name = "rated_at")
     private LocalDateTime ratedAt;
 
-    @Column(name = "STARS")
+    @Column(name = "stars")
     private int stars;
 
     @Transient

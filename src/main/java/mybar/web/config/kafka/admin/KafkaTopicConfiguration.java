@@ -12,16 +12,16 @@ import java.util.Map;
 @Configuration
 public class KafkaTopicConfiguration {
 
-    @Value(value = "${kafka.bootstrap-address}")
-    private String bootstrapAddress;
+    @Value(value = "${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
-    @Value(value = "${kafka.events.rates-topic-name}")
+    @Value(value = "${my-bar.events.rates-topic-name}")
     private String ratesTopicName;
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = Map.of(
-                AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+                AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return new KafkaAdmin(configs);
     }
 
