@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 @Component
 @Slf4j
@@ -53,7 +54,7 @@ public class OAuthAuthenticator {
                     .add(new StringHttpMessageConverter());
 
             final TokenResponse tokenResponse = restTemplate.postForObject(url, request, TokenResponse.class);
-            String accessToken = tokenResponse.getAccessToken();
+            String accessToken = Objects.requireNonNull(tokenResponse).accessToken();
             log.info("An access token has been obtained = {}", accessToken);
             return accessToken;
         } catch (final HttpClientErrorException e) {

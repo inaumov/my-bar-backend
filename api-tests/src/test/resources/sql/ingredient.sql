@@ -1,4 +1,5 @@
-# beverages
+TRUNCATE TABLE ingredient CASCADE;
+-- beverages
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 1, 'Creme de Menthe', 'LIQUEUR');
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 2, 'Rum', 'DISTILLED');
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 3, 'Triple Sec', 'LIQUEUR');
@@ -15,10 +16,10 @@ INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 13, 'Bra
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 14, 'Banana liqueur', 'LIQUEUR');
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 15, 'Irish cream', 'LIQUEUR');
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Beverage', 16, 'Coffee liqueur', 'LIQUEUR');
-# drinks
+-- drinks
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Drink', 17, 'Coca Cola', 'SODA');
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Drink', 18, 'Orange Juice', 'FRUIT_JUICE');
-# additives
+-- additives
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Additive', 19, 'Grenadine', 'SYRUP');
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Additive', 20, 'Ice', NULL);
 INSERT INTO ingredient (GROUP_NAME, ID, KIND, TYPE) VALUES ('Additive', 21, 'Sugar', NULL);

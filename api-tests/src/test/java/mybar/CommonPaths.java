@@ -1,6 +1,6 @@
 package mybar;
 
-import com.google.common.base.Preconditions;
+import org.junit.platform.commons.util.Preconditions;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,22 +29,22 @@ public final class CommonPaths implements InitializingBean {
 
     // API
 
-    public final String getServerRoot() {
+    public String getServerRoot() {
         if (port == 80) {
             return protocol + "://" + host;
         }
         return protocol + "://" + host + ":" + port;
     }
 
-    public final String getProtocol() {
+    public String getProtocol() {
         return protocol;
     }
 
-    public final String getHost() {
+    public String getHost() {
         return host;
     }
 
-    public final int getPort() {
+    public int getPort() {
         return port;
     }
 
@@ -53,12 +53,13 @@ public final class CommonPaths implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         if (protocol == null || protocol.equals("${http.protocol}")) {
-            protocol = Preconditions.checkNotNull(env.getProperty("http.protocol"));
+            protocol = Preconditions.notBlank(env.getProperty("http.protocol"), "protocol should not be empty");
         }
         if (host == null || host.equals("${http.host}")) {
-            host = Preconditions.checkNotNull(env.getProperty("http.host"));
+            host = Preconditions.notBlank(env.getProperty("http.host"), "host should not be empty");
         }
-        port = Preconditions.checkNotNull(env.getProperty("http.port", Integer.class));
+        var portVar = Preconditions.notNull(env.getProperty("http.port"), "port should not be empty");
+        this.port = Integer.parseInt(portVar);
     }
 
 }

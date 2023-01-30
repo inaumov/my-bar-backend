@@ -145,7 +145,7 @@ public class UserControllerTest extends ARestControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isForbidden())
-                .andExpect(content().string(containsString("errorMessage\":\"Username [" + USERNAME + "] has been already occupied.")));
+                .andExpect(content().string(containsString("errorMessage\":\"Username [" + USERNAME + "] has been already occupied")));
 
         verify(userService, atLeastOnce()).createUser(Mockito.any(IUser.class));
     }

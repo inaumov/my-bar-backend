@@ -1,3 +1,4 @@
+TRUNCATE TABLE cocktail CASCADE;
 INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000001', 'The B-52 cocktail is a layered shot composed of a coffee liqueur, an Irish cream, and a triple sec. When prepared properly, the ingredients separate into three distinctly visible layers.', 'http://www.allcocktails.net/gallery/b-52-cocktail/b52-cocktail.png', 1, 'B52');
 INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000002', null, null, 1, 'B53');
 INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000003', null, null, 1, 'Green Mexican');
@@ -9,4 +10,3 @@ INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cockta
 INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000009', null, null, 2, 'Mai Tai');
 INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000010', 'The margarita is a cocktail consisting of tequila, triple sec and lime or lemon juice, often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice.', 'http://liquor.s3.amazonaws.com/wp-content/uploads/2013/02/Margarita-new.jpg', 2, 'Margarita');
 INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000011', null, null, 2, 'Sex on the beach');
-INSERT INTO cocktail (ID, DESCRIPTION, IMAGE_URL, MENU_ID, NAME) VALUES ('cocktail-000012', null, null, 3, 'Banana Blast II');
