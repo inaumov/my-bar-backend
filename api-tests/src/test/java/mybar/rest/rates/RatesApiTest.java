@@ -12,7 +12,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
 import static mybar.CommonPaths.API_PATH;
 import static mybar.rest.Constants.TEST_USERNAME;
@@ -20,9 +19,6 @@ import static mybar.rest.Constants.USER_PASS;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class RatesApiTest extends ApiTest {
-
-    public static final String RESOURCE_ID_PATTERN = "^[a-z]+(-[a-zA-Z0-9]{6}+)*$";
-    public static Pattern RESOURCE_ID = Pattern.compile(RESOURCE_ID_PATTERN);
 
     @BeforeEach
     void setUp() {
@@ -70,8 +66,9 @@ class RatesApiTest extends ApiTest {
                 .post(API_PATH + "rates")
                 .then()
                 .statusCode(201)
+                .and()
+                .body("stars", Matchers.is(10))
                 .body("ratedAt", Matchers.notNullValue())
-                .and().body("stars", Matchers.is(10))
                 .extract()
                 .jsonPath()
                 .getString("ratedAt");
@@ -93,8 +90,9 @@ class RatesApiTest extends ApiTest {
                 .put(API_PATH + "rates")
                 .then()
                 .statusCode(200)
+                .and()
+                .body("stars", Matchers.is(10))
                 .body("ratedAt", Matchers.notNullValue())
-                .and().body("stars", Matchers.is(10))
                 .extract()
                 .jsonPath()
                 .getString("ratedAt");
