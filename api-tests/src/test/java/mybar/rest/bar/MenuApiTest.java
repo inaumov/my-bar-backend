@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import static mybar.CommonPaths.API_PATH;
 
-public class MenuApiTest {
+class MenuApiTest {
 
     @Test
-    public void testGetMenu_no_auth_required() {
+    void testGetMenu_no_auth_required() {
         RestAssured.
                 get(API_PATH + "menu")
                 .then()
