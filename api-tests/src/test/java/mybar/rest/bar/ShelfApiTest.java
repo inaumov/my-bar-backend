@@ -26,7 +26,7 @@ class ShelfApiTest extends ApiTest {
 
     @BeforeEach
     void setUp() {
-        runSql("/bottle.sql");
+        runSql("sql/ingredient.sql", "sql/bottle.sql");
     }
 
     @Test

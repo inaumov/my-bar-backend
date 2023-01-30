@@ -28,7 +28,7 @@ class CocktailsApiTest extends ApiTest {
 
     @BeforeEach
     void setUp() {
-        runSql("/cocktail.sql", "/ingredient.sql", "/cocktail_to_ingredient.sql");
+        runSql("sql/cocktail.sql", "sql/ingredient.sql", "sql/cocktail_to_ingredient.sql");
     }
 
     @Test

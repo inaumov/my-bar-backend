@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 import static mybar.CommonPaths.API_PATH;
@@ -58,9 +59,10 @@ class RatesApiTest extends ApiTest {
     @Test
     void rate_cocktail() {
 
-        JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/rates/rate.json");
+        JSONObject resourceAsJSON = jsonUtil.resourceAsJSON("/data/rates/new_rate.json");
 
-        String id = givenAuthenticated(TEST_USERNAME, USER_PASS)
+        LocalDateTime now = LocalDateTime.now();
+        String ratedAt = givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .when()
                 .contentType(ContentType.JSON)
                 .and()
@@ -69,26 +71,35 @@ class RatesApiTest extends ApiTest {
                 .then()
                 .statusCode(201)
                 .body("ratedAt", Matchers.notNullValue())
+                .and().body("stars", Matchers.is(10))
                 .extract()
-                .path("id");
+                .jsonPath()
+                .getString("ratedAt");
 
-        Assert.notNull(id, "Id should be created");
+        Assert.isTrue(LocalDateTime.parse(ratedAt).isAfter(now), "DateTime should not be earlier then request time");
     }
 
     @Test
     void update_my_rate() {
 
-        String resourceAsString = jsonUtil.resourceAsString("/data/rates/rates.json");
+        String resourceAsString = jsonUtil.resourceAsString("/data/rates/update_rate.json");
 
-        givenAuthenticated(TEST_USERNAME, USER_PASS)
+        LocalDateTime now = LocalDateTime.now();
+        String ratedAt = givenAuthenticated(TEST_USERNAME, USER_PASS)
                 .when()
                 .contentType(ContentType.JSON)
                 .and()
                 .body(resourceAsString)
                 .put(API_PATH + "rates")
                 .then()
-                .statusCode(202)
-                .body("ratedAt", Matchers.notNullValue());
+                .statusCode(200)
+                .body("ratedAt", Matchers.notNullValue())
+                .and().body("stars", Matchers.is(10))
+                .extract()
+                .jsonPath()
+                .getString("ratedAt");
+
+        Assert.isTrue(LocalDateTime.parse(ratedAt).isAfter(now), "DateTime should not be earlier then request time");
     }
 
     @Test

@@ -19,7 +19,7 @@ class UsersApiTest extends ApiTest {
 
     @BeforeEach
     void setUp() {
-        runSql("/um/insert_um_test_data.sql");
+        runSql("sql/um/insert_um_test_data.sql");
     }
 
     @Test
