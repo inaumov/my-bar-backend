@@ -1,33 +1,33 @@
-create table roles
+CREATE TABLE roles
 (
-    ROLE_NAME   varchar(255) not null,
-    DESCRIPTION varchar(255),
-    primary key (ROLE_NAME)
+    role_name   VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    PRIMARY KEY (role_name)
 );
 
-create table users
+CREATE TABLE users
 (
-    USERNAME varchar(255) not null,
-    ACTIVE   tinyint,
-    EMAIL    varchar(255),
-    NAME     varchar(255),
-    PASSWORD varchar(255),
-    SURNAME  varchar(255),
-    primary key (USERNAME)
+    username VARCHAR(255) NOT NULL,
+    active   BOOLEAN DEFAULT TRUE,
+    email    VARCHAR(255),
+    name     VARCHAR(255),
+    password VARCHAR(255),
+    surname  VARCHAR(255),
+    PRIMARY KEY (username)
 );
 
-create table user_has_roles
+CREATE TABLE user_has_roles
 (
-    USERNAME  varchar(255) not null,
-    ROLE_NAME varchar(255) not null
+    username  VARCHAR(255) NOT NULL,
+    role_name VARCHAR(255) NOT NULL
 );
 
-alter table user_has_roles
-    add constraint FK_USER_HAS_ROLES_ROLE_NAME
-        foreign key (ROLE_NAME)
-            references roles (ROLE_NAME);
+ALTER TABLE user_has_roles
+    ADD CONSTRAINT fk_user_has_roles_role_name
+        FOREIGN KEY (role_name)
+            REFERENCES roles (role_name);
 
-alter table user_has_roles
-    add constraint FK_USER_HAS_ROLES_USERNAME
-        foreign key (USERNAME)
-            references users (USERNAME);
+ALTER TABLE user_has_roles
+    ADD CONSTRAINT fk_user_has_roles_username
+        FOREIGN KEY (username)
+            REFERENCES users (username);

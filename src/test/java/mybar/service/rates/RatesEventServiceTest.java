@@ -18,7 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.Instant;
 
 @TestPropertySource(properties = {
-        "kafka.events.rates-topic-name=rates",
+        "my-bar.events.rates-topic-name=rates",
 })
 @ExtendWith(SpringExtension.class)
 public class RatesEventServiceTest {
@@ -31,7 +31,7 @@ public class RatesEventServiceTest {
     private IEventProducer<RateDto> eventProducerMock;
     @Mock
     private RatesService ratesServiceMock;
-    @Value(value = "${kafka.events.rates-topic-name}")
+    @Value(value = "${my-bar.events.rates-topic-name}")
     private String ratesTopicName;
 
     @InjectMocks
@@ -60,37 +60,27 @@ public class RatesEventServiceTest {
 
     @Test
     public void test_rate_when_null_username() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ratesEventService.rateCocktail(null, COCKTAIL_ID, STARS);
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ratesEventService.rateCocktail(null, COCKTAIL_ID, STARS));
     }
 
     @Test
     public void test_rate_when_missing_stars() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ratesEventService.rateCocktail(USERNAME, COCKTAIL_ID, null);
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ratesEventService.rateCocktail(USERNAME, COCKTAIL_ID, null));
     }
 
     @Test
     public void test_rate_when_null_cocktail_id() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ratesEventService.rateCocktail(USERNAME, null, STARS);
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ratesEventService.rateCocktail(USERNAME, null, STARS));
     }
 
     @Test
     public void test_rate_when_stars_value_below_range() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ratesEventService.rateCocktail(USERNAME, COCKTAIL_ID, 0);
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ratesEventService.rateCocktail(USERNAME, COCKTAIL_ID, 0));
     }
 
     @Test
     public void test_rate_when_stars_value_above_range() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ratesEventService.rateCocktail(USERNAME, COCKTAIL_ID, 11);
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ratesEventService.rateCocktail(USERNAME, COCKTAIL_ID, 11));
     }
 
 }

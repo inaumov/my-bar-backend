@@ -12,32 +12,32 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "BOTTLE")
+@Table(name = "bottle")
 @GenericGenerator(name = "bottle_id", strategy = "mybar.domain.EntityIdGenerator")
 public class Bottle {
 
     @Id
     @GeneratedValue(generator = "bottle_id")
-    @Column(name = "ID")
+    @Column(name = "id")
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "INGREDIENT_ID", nullable = false)
+    @JoinColumn(name = "ingredient_id", nullable = false)
     public Beverage beverage;
 
-    @Column(name = "BRAND_NAME")
+    @Column(name = "brand_name")
     private String brandName;
 
-    @Column(name = "VOLUME")
+    @Column(name = "volume")
     private double volume;
 
-    @Column(name = "PRICE", scale = 2)
+    @Column(name = "price", scale = 2)
     private BigDecimal price;
 
-    @Column(name = "IN_SHELF", columnDefinition = "boolean default false")
+    @Column(name = "in_shelf", columnDefinition = "boolean default false")
     private boolean inShelf;
 
-    @Column(name = "IMAGE_URL", nullable = true)
+    @Column(name = "image_url")
     private String imageUrl;
 
     @Override

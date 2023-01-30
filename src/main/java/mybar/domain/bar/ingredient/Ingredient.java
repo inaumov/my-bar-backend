@@ -9,13 +9,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "INGREDIENT")
+@Table(name = "ingredient")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "GROUP_NAME")
+@DiscriminatorColumn(name = "group_name")
 @NamedQueries({
         @NamedQuery(
                 name = "Ingredient.findAll",
-                query = "SELECT i FROM Ingredient i order by i.class, i.kind"
+                query = "SELECT i FROM Ingredient i order by i.groupName, i.kind"
         ),
         @NamedQuery(
                 name = "Ingredient.findIn",
@@ -29,10 +29,13 @@ import javax.persistence.*;
 public class Ingredient implements IIngredient {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "KIND")
+    @Column(name = "kind")
     private String kind;
+
+    @Column(name = "group_name", insertable = false, updatable = false)
+    private String groupName;
 
 }

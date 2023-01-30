@@ -18,13 +18,13 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfiguration {
 
-    @Value(value = "${kafka.bootstrap-address}")
-    private String bootstrapAddress;
+    @Value(value = "${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     @Bean
     public ConsumerFactory<String, RecordObject<?>> consumerFactory() {
         Map<String, Object> props = Map.of(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress,
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
                 ConsumerConfig.GROUP_ID_CONFIG, "my-bar"
         );

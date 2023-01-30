@@ -9,7 +9,7 @@ version 2.0 :
 - migrate to Oauth2 flow (with JWT)
 - cover all resources with API tests (rest assured 3.0)
 - switch to Junit5
-- use mysql and kafka testcontainers
+- use postgres and kafka testcontainers
 
 version 1.2 :
 - added messaging for rates service

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @DiscriminatorValue(value = "Drink")
 public class Drink extends Ingredient implements IDrink {
 
-    @Column(name = "TYPE")
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private DrinkType drinkType;
 

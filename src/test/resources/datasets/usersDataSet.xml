@@ -2,23 +2,23 @@
 <dataset>
 
     <!-- user management -->
-    <USERS USERNAME="super" PASSWORD="super" NAME="super" SURNAME="super" EMAIL="super@mybar.com" ACTIVE="1"></USERS>
-    <USERS USERNAME="admin" PASSWORD="admin" NAME="admin" SURNAME="admin" EMAIL="admin@mybar.com" ACTIVE="1"></USERS>
-    <USERS USERNAME="analyst" PASSWORD="analyst" NAME="analyst" SURNAME="analyst" EMAIL="analyst@mybar.com" ACTIVE="1"></USERS>
-    <USERS USERNAME="client" PASSWORD="client" NAME="client" SURNAME="client" EMAIL="client@mybar.com" ACTIVE="0"></USERS>
-    <USERS USERNAME="JohnDoe" PASSWORD="JhnD" NAME="John" SURNAME="Doe" EMAIL="john.doe@mybar.com" ACTIVE="1"></USERS>
+    <USERS USERNAME="super" PASSWORD="super" NAME="super" SURNAME="super" EMAIL="super@mybar.com" ACTIVE="true"/>
+    <USERS USERNAME="admin" PASSWORD="admin" NAME="admin" SURNAME="admin" EMAIL="admin@mybar.com" ACTIVE="true"/>
+    <USERS USERNAME="analyst" PASSWORD="analyst" NAME="analyst" SURNAME="analyst" EMAIL="analyst@mybar.com" ACTIVE="true"/>
+    <USERS USERNAME="client" PASSWORD="client" NAME="client" SURNAME="client" EMAIL="client@mybar.com" ACTIVE="false"/>
+    <USERS USERNAME="JohnDoe" PASSWORD="JhnD" NAME="John" SURNAME="Doe" EMAIL="john.doe@mybar.com" ACTIVE="true"/>
 
-    <ROLES ROLE_NAME="ROLE_SUPER" DESCRIPTION="Full-powered administrator."></ROLES>
-    <ROLES ROLE_NAME="ROLE_ADMIN" DESCRIPTION="User administrator role. Audit. View reports."></ROLES>
-    <ROLES ROLE_NAME="ROLE_USER" DESCRIPTION="Regular user role. Create/manage individual cocktails. Manage personal shelf."></ROLES>
+    <ROLES ROLE_NAME="ROLE_SUPER" DESCRIPTION="Full-powered administrator."/>
+    <ROLES ROLE_NAME="ROLE_ADMIN" DESCRIPTION="User administrator role. Audit. View reports."/>
+    <ROLES ROLE_NAME="ROLE_USER" DESCRIPTION="Regular user role. Create/manage individual cocktails. Manage personal shelf."/>
 
-    <USER_HAS_ROLES USERNAME="super" ROLE_NAME="ROLE_SUPER"></USER_HAS_ROLES>
-    <USER_HAS_ROLES USERNAME="admin" ROLE_NAME="ROLE_ADMIN"></USER_HAS_ROLES>
-    <USER_HAS_ROLES USERNAME="analyst" ROLE_NAME="ROLE_ADMIN"></USER_HAS_ROLES>
-    <USER_HAS_ROLES USERNAME="client" ROLE_NAME="ROLE_USER"></USER_HAS_ROLES>
+    <USER_HAS_ROLES USERNAME="super" ROLE_NAME="ROLE_SUPER"/>
+    <USER_HAS_ROLES USERNAME="admin" ROLE_NAME="ROLE_ADMIN"/>
+    <USER_HAS_ROLES USERNAME="analyst" ROLE_NAME="ROLE_ADMIN"/>
+    <USER_HAS_ROLES USERNAME="client" ROLE_NAME="ROLE_USER"/>
 
-    <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_SUPER"></USER_HAS_ROLES>
-    <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_ADMIN"></USER_HAS_ROLES>
-    <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_USER"></USER_HAS_ROLES>
+    <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_SUPER"/>
+    <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_ADMIN"/>
+    <USER_HAS_ROLES USERNAME="JohnDoe" ROLE_NAME="ROLE_USER"/>
 
 </dataset>

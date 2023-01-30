@@ -2,17 +2,19 @@ version: '3.9'
 
 services:
   db:
-    container_name: my-bar-db
-    image: mysql:8.0.28
+    container_name: postgres
+    hostname: postgres
+    image: postgres:14.2-alpine3.15
     environment:
-      - MYSQL_DATABASE=my_bar_db
-      - MYSQL_ROOT_PASSWORD=check001
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "my_bar"
     ports:
-      - 3308:3306
+      - "5433:5432"
     expose:
-      - 3308
+      - 5433
     volumes:
-      - db:/var/lib/mysql
+      - postgres-data:/var/lib/postgresql/data
   app:
     image: my-bar-backend:latest
     container_name: my-bar-backend
@@ -20,13 +22,15 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8089:8089
+      - "8089:8089"
+    expose:
+      - 8089
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/my_bar_db?autoReconnect=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: check001
-      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      DATABASE_HOST: postgres
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_PORT: 5432
     depends_on:
       - db
 volumes:
-  db:
+  postgres-data:

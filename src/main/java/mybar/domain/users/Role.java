@@ -8,15 +8,15 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "ROLES")
+@Table(name = "roles")
 public class Role {
 
     @Id
-    @Column(name = "ROLE_NAME")
+    @Column(name = "role_name")
     private String roleName;
 
     @Basic
-    @Column(name = "DESCRIPTION")
+    @Column(name = "description")
     private String description;
 
 }

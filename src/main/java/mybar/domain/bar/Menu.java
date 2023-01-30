@@ -13,18 +13,18 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
-@Table(name = "MENU")
+@Table(name = "menu")
 public class Menu {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="MENU_ID", referencedColumnName="ID")
+    @JoinColumn(name="menu_id", referencedColumnName="id")
     private Collection<Cocktail> cocktails = new ArrayList<>();
 
     public void addCocktail(Cocktail cocktail) {

@@ -15,16 +15,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "COCKTAIL")
+@Table(name = "cocktail")
 @GenericGenerator(name = "cocktail_id", strategy = "mybar.domain.EntityIdGenerator")
 public class Cocktail {
 
     @Id
     @GeneratedValue(generator = "cocktail_id")
-    @Column(name = "ID")
+    @Column(name = "id")
     private String id;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
     /**
@@ -38,13 +38,13 @@ public class Cocktail {
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<CocktailToIngredient> cocktailToIngredientList = new LinkedList<>();
 
-    @Column(name = "MENU_ID")
+    @Column(name = "menu_id")
     private int menuId;
 
-    @Column(name = "DESCRIPTION", nullable = true)
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "IMAGE_URL", nullable = true)
+    @Column(name = "image_url")
     private String imageUrl;
 
     public void addCocktailToIngredient(CocktailToIngredient cocktailToIngredient) {

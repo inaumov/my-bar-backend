@@ -30,7 +30,7 @@ public class RatesEventConsumer {
         this.ratesService = ratesService;
     }
 
-    @KafkaListener(topics = "${kafka.events.rates-topic-name}",
+    @KafkaListener(topics = "${my-bar.events.rates-topic-name}",
             containerFactory = "kafkaListenerContainerFactory",
             groupId = "my-bar")
     public void consume(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload RecordObject<RateDto> recordObject) {

@@ -1,5 +1,4 @@
 <configuration>
-    <include resource="/org/springframework/boot/logging/logback/base.xml"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
@@ -10,4 +9,6 @@
         <appender-ref ref="STDOUT"/>
     </root>
     <logger name="mybar" level="DEBUG"/>
+    <logger name="org.testcontainers" level="INFO"/>
+    <logger name="com.github.dockerjava" level="WARN"/>
 </configuration>

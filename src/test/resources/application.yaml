@@ -1,13 +1,10 @@
 spring:
   datasource:
-    url: jdbc:tc:mysql:8.0.29:///
+    url: jdbc:tc:postgresql:14.2:///
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     show-sql: false
-    hibernate.show-sql: false
-    hibernate.use_sql_comments: false
-    hibernate.format_sql: false
     properties.hibernate.format_sql: false
   kafka:
     consumer:
@@ -17,6 +14,6 @@ spring:
 logging:
   level.org.hibernate.type.descriptor.sql: trace
 
-kafka:
+my-bar:
   events:
     rates-topic-name: rates-test-topic
