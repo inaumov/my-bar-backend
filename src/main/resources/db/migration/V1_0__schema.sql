@@ -1,61 +1,66 @@
-CREATE TABLE bottle (
-  ID            VARCHAR(255) NOT NULL,
-  BRAND_NAME    VARCHAR(255),
-  IMAGE_URL     VARCHAR(255),
-  IN_SHELF      BIT DEFAULT 0,
-  PRICE         DECIMAL(19, 2),
-  VOLUME        DOUBLE PRECISION,
-  INGREDIENT_ID INTEGER      NOT NULL,
-  PRIMARY KEY (ID)
+CREATE TABLE bottle
+(
+    id            VARCHAR(255) NOT NULL,
+    brand_name    VARCHAR(255),
+    image_url     VARCHAR(255),
+    in_shelf      BOOLEAN DEFAULT FALSE,
+    price         DECIMAL(19, 2),
+    volume        DOUBLE PRECISION,
+    ingredient_id INTEGER      NOT NULL,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE cocktail (
-  ID          VARCHAR(255) NOT NULL,
-  DESCRIPTION VARCHAR(255),
-  IMAGE_URL   VARCHAR(255),
-  MENU_ID     INTEGER,
-  NAME        VARCHAR(255),
-  PRIMARY KEY (ID)
+CREATE TABLE cocktail
+(
+    id          VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    image_url   VARCHAR(255),
+    menu_id     INTEGER,
+    name        VARCHAR(255),
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE cocktail_to_ingredient (
-  MEASUREMENT   VARCHAR(255),
-  VOLUME        DOUBLE PRECISION,
-  INGREDIENT_ID INTEGER,
-  COCKTAIL_ID   VARCHAR(255),
-  PRIMARY KEY (COCKTAIL_ID, INGREDIENT_ID)
+CREATE TABLE cocktail_to_ingredient
+(
+    measurement   VARCHAR(255),
+    volume        DOUBLE PRECISION,
+    ingredient_id INTEGER,
+    cocktail_id   VARCHAR(255),
+    PRIMARY KEY (cocktail_id, ingredient_id)
 );
 
-CREATE TABLE ingredient (
-  GROUP_NAME VARCHAR(31) NOT NULL,
-  ID         INTEGER     NOT NULL,
-  KIND       VARCHAR(255),
-  TYPE       VARCHAR(255),
-  PRIMARY KEY (ID)
+CREATE TABLE ingredient
+(
+    group_name VARCHAR(31) NOT NULL,
+    id         INTEGER     NOT NULL,
+    kind       VARCHAR(255),
+    type       VARCHAR(255),
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE menu (
-  ID   INTEGER NOT NULL,
-  NAME VARCHAR(255),
-  PRIMARY KEY (ID)
+CREATE TABLE menu
+(
+    id   INTEGER NOT NULL,
+    name VARCHAR(255),
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE bottle
-  ADD CONSTRAINT FK_BOTTLE_INGREDIENT_ID
-FOREIGN KEY (INGREDIENT_ID)
-REFERENCES ingredient (ID);
+    ADD CONSTRAINT fk_bottle_ingredient_id
+        FOREIGN KEY (ingredient_id)
+            REFERENCES ingredient (id);
 
 ALTER TABLE cocktail
-  ADD CONSTRAINT FK_COCKTAIL_MENU_ID
-FOREIGN KEY (MENU_ID)
-REFERENCES menu (ID);
+    ADD CONSTRAINT fk_cocktail_menu_id
+        FOREIGN KEY (menu_id)
+            REFERENCES menu (id);
 
 ALTER TABLE cocktail_to_ingredient
-  ADD CONSTRAINT FK_COCKTAIL_TO_INGREDIENT_INGREDIENT_ID
-FOREIGN KEY (INGREDIENT_ID)
-REFERENCES ingredient (ID);
+    ADD CONSTRAINT fk_cocktail_to_ingredient_ingredient_id
+        FOREIGN KEY (ingredient_id)
+            REFERENCES ingredient (id);
 
 ALTER TABLE cocktail_to_ingredient
-  ADD CONSTRAINT FK_COCKTAIL_TO_INGREDIENT_COCKTAIL_ID
-FOREIGN KEY (COCKTAIL_ID)
-REFERENCES cocktail (ID);
+    ADD CONSTRAINT fk_cocktail_to_ingredient_cocktail_id
+        FOREIGN KEY (cocktail_id)
+            REFERENCES cocktail (id);

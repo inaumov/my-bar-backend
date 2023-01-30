@@ -21,7 +21,7 @@ public class RatesEventService {
 
     private static final Range<Integer> starsRange = Range.of(Range.Bound.inclusive(1), Range.Bound.inclusive(10));
 
-    @Value(value = "${kafka.events.rates-topic-name}")
+    @Value(value = "${my-bar.events.rates-topic-name}")
     private String ratesTopicName;
 
     private final IEventProducer<RateDto> ratesEventProducer;

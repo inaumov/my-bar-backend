@@ -10,10 +10,10 @@ import mybar.domain.bar.ingredient.Ingredient;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "COCKTAIL_TO_INGREDIENT")
+@Table(name = "cocktail_to_ingredient")
 @AssociationOverrides({
-        @AssociationOverride(name = "pk.cocktail", joinColumns = @JoinColumn(name = "COCKTAIL_ID")),
-        @AssociationOverride(name = "pk.ingredient", joinColumns = @JoinColumn(name = "INGREDIENT_ID"))
+        @AssociationOverride(name = "pk.cocktail", joinColumns = @JoinColumn(name = "cocktail_id")),
+        @AssociationOverride(name = "pk.ingredient", joinColumns = @JoinColumn(name = "ingredient_id"))
 })
 public class CocktailToIngredient {
 
@@ -24,12 +24,12 @@ public class CocktailToIngredient {
 
     @Getter
     @Setter
-    @Column(name = "VOLUME")
+    @Column(name = "volume")
     private double volume;
 
     @Getter
     @Setter
-    @Column(name = "MEASUREMENT")
+    @Column(name = "measurement")
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
 

@@ -5,10 +5,10 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.bean.DatabaseConfigBean;
 import com.github.springtestdbunit.bean.DatabaseDataSourceConnectionFactoryBean;
 import org.awaitility.Awaitility;
+import org.dbunit.database.DefaultMetadataHandler;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.filter.IColumnFilter;
-import org.dbunit.ext.mysql.MySqlDataTypeFactory;
-import org.dbunit.ext.mysql.MySqlMetadataHandler;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -27,7 +27,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import javax.sql.DataSource;
@@ -55,12 +55,14 @@ public abstract class BaseDaoTest {
     protected final JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @Container
-    private static final MySQLContainer<?> MYSQL = new MySQLContainer<>("mysql:8.0.29")
+    private static final PostgreSQLContainer<?> dbContainer = new PostgreSQLContainer<>("postgres:14.2-alpine3.15")
             .withReuse(true)
-            .withCommand("mysqld", "--lower_case_table_names=1");
+            .withDatabaseName("my_bar")
+            .withUsername("postgres")
+            .withPassword("postgres");
 
     static {
-        MYSQL.start();
+        dbContainer.start();
     }
 
     @Autowired
@@ -97,16 +99,16 @@ public abstract class BaseDaoTest {
         @Primary
         public DataSource dataSource() {
             final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setUrl(MYSQL.getJdbcUrl());
-            dataSource.setUsername(MYSQL.getUsername());
-            dataSource.setPassword(MYSQL.getPassword());
-            dataSource.setSchema(MYSQL.getDatabaseName());
+            dataSource.setUrl(dbContainer.getJdbcUrl());
+            dataSource.setUsername(dbContainer.getUsername());
+            dataSource.setPassword(dbContainer.getPassword());
+            dataSource.setSchema(dbContainer.getDatabaseName());
 
             Awaitility.await().pollInterval(Duration.ofSeconds(2L))
                     .atMost(Duration.ofMinutes(2L))
                     .until(() -> {
                         try (final Connection c = dataSource.getConnection()) {
-                            c.prepareStatement(MYSQL.getTestQueryString());
+                            c.prepareStatement(dbContainer.getTestQueryString());
                             return true;
                         } catch (SQLException e) {
                             return false;
@@ -129,9 +131,9 @@ public abstract class BaseDaoTest {
         public DatabaseDataSourceConnectionFactoryBean dbUnitDatabaseConnection() {
             var databaseDataSourceConnectionFactoryBean = new DatabaseDataSourceConnectionFactoryBean();
             databaseDataSourceConnectionFactoryBean.setDatabaseConfig(dbUnitDatabaseConfig());
-            databaseDataSourceConnectionFactoryBean.setUsername(MYSQL.getUsername());
-            databaseDataSourceConnectionFactoryBean.setPassword(MYSQL.getPassword());
-            databaseDataSourceConnectionFactoryBean.setSchema(MYSQL.getDatabaseName());
+            databaseDataSourceConnectionFactoryBean.setUsername(dbContainer.getUsername());
+            databaseDataSourceConnectionFactoryBean.setPassword(dbContainer.getPassword());
+            databaseDataSourceConnectionFactoryBean.setSchema(dbContainer.getDatabaseName());
             databaseDataSourceConnectionFactoryBean.setDataSource(dataSource);
             return databaseDataSourceConnectionFactoryBean;
         }
@@ -139,9 +141,9 @@ public abstract class BaseDaoTest {
         private DatabaseConfigBean dbUnitDatabaseConfig() {
             DatabaseConfigBean configBean = new DatabaseConfigBean();
             configBean.setAllowEmptyFields(true);
-            configBean.setDatatypeFactory(new MySqlDataTypeFactory());
+            configBean.setDatatypeFactory(new PostgresqlDataTypeFactory());
             configBean.setCaseSensitiveTableNames(false);
-            configBean.setMetadataHandler(new MySqlMetadataHandler());
+            configBean.setMetadataHandler(new DefaultMetadataHandler());
             return configBean;
         }
 

@@ -16,13 +16,13 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfiguration {
 
-    @Value(value = "${kafka.bootstrap-address}")
-    private String bootstrapAddress;
+    @Value(value = "${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     @Bean
     public ProducerFactory<String, RecordObject<?>> producerFactory() {
         Map<String, Object> configProps = Map.of(
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress,
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, MyBarJsonSerializer.class
         );

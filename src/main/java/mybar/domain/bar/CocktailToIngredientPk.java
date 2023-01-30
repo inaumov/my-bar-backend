@@ -7,6 +7,7 @@ import mybar.domain.bar.ingredient.Ingredient;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class CocktailToIngredientPk implements Serializable {
@@ -27,12 +28,8 @@ public class CocktailToIngredientPk implements Serializable {
 
         CocktailToIngredientPk that = (CocktailToIngredientPk) o;
 
-        if (cocktail != null ? !cocktail.equals(that.cocktail) : that.cocktail != null)
-            return false;
-        if (ingredient != null ? !ingredient.equals(that.ingredient) : that.ingredient != null)
-            return false;
-
-        return true;
+        return Objects.equals(cocktail, that.cocktail)
+                && Objects.equals(ingredient, that.ingredient);
     }
 
     public int hashCode() {
