@@ -12,6 +12,8 @@ INSERT INTO users (USERNAME, PASSWORD, NAME, SURNAME, EMAIL, ACTIVE)
 VALUES ('JohnDoe', '$2a$10$AYsk4.yaHWs.mfZqtLrem.HnSrmCfUjFi/GDyf4BqMb9NiI016lA2', 'John', 'Doe', 'john.doe@mybar.com', '1');
 INSERT INTO users (USERNAME, PASSWORD, NAME, SURNAME, EMAIL, ACTIVE)
 VALUES ('test', '$2a$10$qb5rqI6oFyDmXZ1klN3XkOCn3EY0izoAgErQrh99yYjOmgMkNN8GS', 'Test', 'User', 'test.user@mybar.com', '1');
+INSERT INTO users (USERNAME, PASSWORD, NAME, SURNAME, EMAIL, ACTIVE)
+VALUES ('pvl_zbrv', null, 'Pavlo', 'Zibrov', 'pavluxa@gmail.com', '1');
 
 INSERT INTO roles (ROLE_NAME, DESCRIPTION) VALUES ('ROLE_SUPER', 'Full-powered administrator. Audit. View reports.');
 INSERT INTO roles (ROLE_NAME, DESCRIPTION) VALUES ('ROLE_ADMIN', 'User administrator role.');

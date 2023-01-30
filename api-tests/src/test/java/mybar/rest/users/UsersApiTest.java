@@ -53,7 +53,7 @@ class UsersApiTest extends ApiTest {
                 .then()
                 .assertThat()
                 .statusCode(403)
-                .body("errorMessage", Matchers.equalTo("Username [pvl_zbrv1] has been already occupied."));
+                .body("errorMessage", Matchers.equalTo("Username [pvl_zbrv] has been already occupied"));
     }
 
     @Test
@@ -69,7 +69,7 @@ class UsersApiTest extends ApiTest {
                 .then()
                 .assertThat()
                 .statusCode(403)
-                .body("errorMessage", Matchers.equalTo("There is an account with that email: pavluxa@gmail.com ."));
+                .body("errorMessage", Matchers.equalTo("There is an account with that email: pavluxa@gmail.com"));
     }
 
     @Test
