@@ -22,7 +22,7 @@ import java.util.Arrays;
 @Slf4j
 public abstract class ApiTest {
 
-    private static final String BASE_SCRIPT_FOLDER = "/sql";
+    private static final String BASE_SCRIPT_FOLDER = "sql";
 
     protected final JsonUtil jsonUtil = new JsonUtil();
 
@@ -45,7 +45,7 @@ public abstract class ApiTest {
         log.debug("The application is about to execute SQL(s): {}", Arrays.toString(fileNames));
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Arrays.stream(fileNames)
-                .map(fileName -> resolver.getResource(BASE_SCRIPT_FOLDER + fileName))
+                .map(fileName -> fileName.contains(BASE_SCRIPT_FOLDER) ? resolver.getResource(fileName) : resolver.getResource(BASE_SCRIPT_FOLDER + fileName))
                 .forEach(resource -> service.runScript(resource));
     }
 
