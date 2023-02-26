@@ -22,6 +22,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -50,6 +51,7 @@ import java.time.Duration;
         inheritListeners = false)
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
 @DataJpaTest
+@TestPropertySource("classpath:application-test.yaml")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public abstract class BaseDaoTest {
     protected final JdbcTemplate jdbcTemplate = new JdbcTemplate();
