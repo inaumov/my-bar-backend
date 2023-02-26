@@ -1,12 +1,14 @@
 package mybar.events;
 
-import mybar.web.config.kafka.KafkaConsumerConfiguration;
-import mybar.web.config.kafka.KafkaProducerConfiguration;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
+import mybar.events.common.api.RecordObject;
+import mybar.web.config.JacksonConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.KafkaContainer;
@@ -14,25 +16,22 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-@ContextConfiguration(classes = {
-        KafkaProducerConfiguration.class,
-        KafkaConsumerConfiguration.class,
-})
-@SpringBootTest
-@DirtiesContext
+@JsonTest
+@EnableAutoConfiguration
+@ImportAutoConfiguration(classes = KafkaAutoConfiguration.class)
+@Import({JacksonConfiguration.class})
 @Testcontainers
-public class KafkaTestContext {
+public abstract class KafkaTestContext {
 
     @Container
-    protected static final KafkaContainer KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.0"))
-            .withEnv(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    protected static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.0"));
 
-    @Value("${my-bar.events.rates-topic-name}")
-    protected String topic;
+    @Autowired
+    public KafkaTemplate<String, RecordObject<?>> kafkaTemplate;
 
     @DynamicPropertySource
     public static void properties(DynamicPropertyRegistry propertyRegistry) {
-        propertyRegistry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
+        propertyRegistry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
     }
 
 }
