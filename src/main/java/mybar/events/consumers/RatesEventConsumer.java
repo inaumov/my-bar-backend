@@ -30,9 +30,11 @@ public class RatesEventConsumer {
         this.ratesService = ratesService;
     }
 
-    @KafkaListener(topics = "${my-bar.events.rates-topic-name}",
+    @KafkaListener(
+            topics = "${my-bar.events.rates-topic-name}",
             containerFactory = "kafkaListenerContainerFactory",
-            groupId = "my-bar")
+            groupId = "mb-events"
+    )
     public void consume(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload RecordObject<RateDto> recordObject) {
         log.info("Received payload='{}'", recordObject);
         try {
@@ -47,8 +49,8 @@ public class RatesEventConsumer {
             rateDto.setCocktailId(cocktailId);
 
             ratesService.persistRate(userId, rateDto);
-        } catch (Throwable throwable) {
-            log.error("Could not persist rate for [{}].", key, throwable);
+        } catch (Exception throwable) {
+            log.error("Could not consume event for the record with key = [{}].", key, throwable);
         }
     }
 

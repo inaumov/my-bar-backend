@@ -1,4 +1,4 @@
-package mybar.web.config.events;
+package mybar.config.events;
 
 import mybar.events.common.api.RecordObject;
 import mybar.events.common.producer.MyBarEventProducer;

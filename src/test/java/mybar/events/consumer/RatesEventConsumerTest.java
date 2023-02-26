@@ -3,103 +3,100 @@ package mybar.events.consumer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import mybar.config.kafka.KafkaConsumerConfiguration;
 import mybar.dto.RateDto;
 import mybar.events.KafkaTestContext;
 import mybar.events.common.api.RecordObject;
 import mybar.events.consumers.RatesEventConsumer;
 import mybar.service.rates.RatesService;
-import mybar.web.config.JacksonConfiguration;
 import org.assertj.core.api.Assertions;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static org.mockito.Mockito.timeout;
+@Import(KafkaConsumerConfiguration.class)
+class RatesEventConsumerTest extends KafkaTestContext {
 
-@ContextConfiguration(
-        classes = {
-                JacksonConfiguration.class,
-                RatesEventConsumerTest.Config.class,
-                RatesEventConsumer.class
-        }
-)
-public class RatesEventConsumerTest extends KafkaTestContext {
-
-    @Autowired
-    public KafkaTemplate<String, RecordObject<?>> template;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private RatesService ratesServiceMock;
+    @MockBean
+    private RatesService ratesService;
 
-    @SpyBean
-    private RatesEventConsumer ratesEventConsumer;
     @Captor
-    private ArgumentCaptor<String> topicArgumentCaptor;
+    private ArgumentCaptor<String> keyArgumentCaptor;
     @Captor
     private ArgumentCaptor<RecordObject<RateDto>> rateDtoArgumentCaptor;
 
+    @SpyBean
+    private RatesEventConsumer target;
+
+    @Value("${my-bar.events.rates-topic-name}")
+    private String topic;
+
     @SneakyThrows
     @Test
-    public void testConsume() {
+    void testConsumeRatesEvent() {
         File json = ResourceUtils.getFile("classpath:rated_cocktail_event.json");
 
         var recordObject = objectMapper.readValue(json, new TypeReference<RecordObject<RateDto>>() {
         });
 
-        String key = "test1@cocktail8";
+        String key = "testUser@cocktailId";
 
         var expected = new RateDto();
-        expected.setCocktailId("cocktail8");
+        expected.setCocktailId("cocktailId");
         expected.setRatedAt(LocalDateTime.ofInstant(Instant.ofEpochMilli(1639939320588L), ZoneId.systemDefault()));
         expected.setStars(10);
 
-        template.send(topic, key, recordObject);
+        Mockito.doNothing()
+                .when(ratesService)
+                .persistRate("testUser", expected);
 
-        //consumer
-        Mockito.verify(ratesEventConsumer, timeout(2000L))
+        kafkaTemplate.send(topic, key, recordObject);
+
+        // test consumer
+        Awaitility.await().pollInterval(Duration.ofMillis(500L))
+                .atMost(Duration.ofSeconds(5L))
+                .untilAsserted(() -> Mockito.verify(ratesService).persistRate("testUser", expected));
+
+        verifyConsumedData(key, expected);
+    }
+
+    private void verifyConsumedData(String key, RateDto expected) {
+        Mockito.verify(target)
                 .consume(
-                        topicArgumentCaptor.capture(),
+                        keyArgumentCaptor.capture(),
                         rateDtoArgumentCaptor.capture()
                 );
 
+        Assertions.assertThat(keyArgumentCaptor.getValue())
+                .isEqualTo(key);
         RecordObject<RateDto> payload = rateDtoArgumentCaptor.getValue();
         Assertions.assertThat(payload)
                 .isNotNull();
-        Assertions.assertThat(topicArgumentCaptor.getValue())
-                .isEqualTo(key);
-        testEvents(expected, payload.getValue());
 
-        Mockito.verify(ratesServiceMock).persistRate(Mockito.eq("test1"), Mockito.eq(expected));
+        testResults(expected, payload.getValue());
     }
 
-    private void testEvents(RateDto expected, RateDto record) {
+    private void testResults(RateDto expected, RateDto record) {
         Assertions.assertThat(record)
                 .isNotNull();
         Assertions.assertThat(record)
                 .isEqualTo(expected);
-    }
-
-    @TestConfiguration
-    static class Config {
-
-        @Bean
-        RatesService ratesService() {
-            return Mockito.mock(RatesService.class);
-        }
     }
 
 }
