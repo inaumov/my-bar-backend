@@ -24,7 +24,7 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class KafkaTestContext {
 
     @Container
-    protected static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.0"));
+    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.2"));
 
     @Autowired
     public KafkaTemplate<String, RecordObject<?>> kafkaTemplate;
