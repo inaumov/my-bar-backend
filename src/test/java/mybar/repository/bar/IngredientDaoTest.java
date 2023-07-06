@@ -3,10 +3,6 @@ package mybar.repository.bar;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Range;
 import lombok.SneakyThrows;
 import mybar.api.bar.ingredient.BeverageType;
 import mybar.api.bar.ingredient.IBeverage;
@@ -20,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,7 +92,7 @@ public class IngredientDaoTest extends BaseDaoTest {
     @Test
     public void testFindByIds_When_AllExists() {
 
-        List<Ingredient> all = ingredientDao.findIn(Lists.newArrayList(1, 18, 17));
+        List<Ingredient> all = ingredientDao.findIn(List.of(1, 18, 17));
 
         assertEquals(3, all.size());
         assertEquals("Vodka", all.get(0).getKind());
@@ -105,8 +102,10 @@ public class IngredientDaoTest extends BaseDaoTest {
 
     @Test
     public void testFindByIds_When_TwoExists() {
-
-        List<Ingredient> all = ingredientDao.findIn(ContiguousSet.create(Range.closedOpen(17, 25), DiscreteDomain.integers()).asList());
+        List<Integer> ids = IntStream.rangeClosed(17, 25)
+                .boxed()
+                .toList();
+        List<Ingredient> all = ingredientDao.findIn(ids);
 
         assertEquals(all.size(), 2);
         assertEquals("Coca Cola", all.get(0).getKind());

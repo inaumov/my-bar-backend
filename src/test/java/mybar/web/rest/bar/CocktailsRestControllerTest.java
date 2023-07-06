@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.Measurement;
 import mybar.api.bar.ingredient.IBeverage;
@@ -31,6 +29,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -120,7 +119,8 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
     @Test
     public void findById_Should_ThrowNotFound() throws Exception {
 
-        when(cocktailsServiceMock.findCocktailById(TEST_ID_2)).thenThrow(new CocktailNotFoundException(TEST_ID_2));
+        when(cocktailsServiceMock.findCocktailById(TEST_ID_2))
+                .thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, get(basePath + "/{0}", TEST_ID_2)))
 
@@ -159,9 +159,9 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
         final CocktailDto second = new CocktailDto();
         second.setId("cocktail-000010");
 
-        ImmutableMap<String, List<ICocktail>> cocktails = ImmutableMap.<String, List<ICocktail>>of(
-                "shot", Lists.<ICocktail>newArrayList(first, second),
-                "other", Lists.<ICocktail>newArrayList(createCocktailDto())
+        Map<String, List<ICocktail>> cocktails = Map.of(
+                "shot", List.of(first, second),
+                "other", List.of(createCocktailDto())
         );
         when(cocktailsServiceMock.getAllCocktails()).thenReturn(cocktails);
 
@@ -202,7 +202,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
         final CocktailDto second = new CocktailDto();
         second.setId("cocktail-000010");
 
-        when(cocktailsServiceMock.getAllCocktailsForMenu("any")).thenReturn(Lists.<ICocktail>newArrayList(first, second, createCocktailDto()));
+        when(cocktailsServiceMock.getAllCocktailsForMenu("any")).thenReturn(List.of(first, second, createCocktailDto()));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER,
                 get(basePath)
@@ -256,7 +256,8 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
     @Test
     public void create_Should_ThrowMenuUnknown() throws Exception {
 
-        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class)))
+                .thenThrow(new UnknownMenuException("unknown"));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content("{}"))
@@ -307,7 +308,8 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
     @Test
     public void create_Should_ValidateIngredientsUnknown() throws Exception {
 
-        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
+        when(cocktailsServiceMock.saveCocktail(Mockito.any(ICocktail.class)))
+                .thenThrow(new UnknownIngredientsException(List.of(15, 20, 40)));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, post(basePath))
                 .content("{}"))
@@ -361,7 +363,8 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
     @Test
     public void update_Should_ThrowNotFound() throws Exception {
 
-        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new CocktailNotFoundException(TEST_ID_2));
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class)))
+                .thenThrow(new CocktailNotFoundException(TEST_ID_2));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{}"))
@@ -377,7 +380,8 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
 
     @Test
     public void update_Should_ThrowMenuUnknown() throws Exception {
-        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownMenuException("unknown"));
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class)))
+                .thenThrow(new UnknownMenuException("unknown"));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{}"))
@@ -429,7 +433,8 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
     @Test
     public void update_Should_ValidateIngredientsUnknown() throws Exception {
 
-        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class))).thenThrow(new UnknownIngredientsException(Lists.newArrayList(15, 20, 40)));
+        when(cocktailsServiceMock.updateCocktail(Mockito.any(ICocktail.class)))
+                .thenThrow(new UnknownIngredientsException(List.of(15, 20, 40)));
 
         mockMvc.perform(makePreAuthorizedRequest(USER, USER, put(basePath))
                 .content("{}"))
@@ -493,7 +498,7 @@ public class CocktailsRestControllerTest extends ARestControllerTest {
         beverage.setVolume(25);
         beverage.setMeasurement(Measurement.ML);
 
-        cocktailDto.setIngredients(ImmutableMap.<String, Collection<CocktailToIngredientDto>>of(IBeverage.GROUP_NAME, Collections.singleton(beverage)));
+        cocktailDto.setIngredients(Map.of(IBeverage.GROUP_NAME, Collections.singleton(beverage)));
         return cocktailDto;
     }
 

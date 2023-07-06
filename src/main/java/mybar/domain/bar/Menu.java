@@ -1,6 +1,5 @@
 package mybar.domain.bar;
 
-import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.api.bar.IMenu;
@@ -36,15 +35,6 @@ public class Menu {
 
     public IMenu toDto() {
         return DtoFactory.toDto(this);
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("id", id)
-                .add("name", name)
-                .toString();
-
     }
 
 }

@@ -1,7 +1,5 @@
 package mybar.service.users;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import mybar.api.users.IUser;
 import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
@@ -12,10 +10,12 @@ import mybar.exception.users.UnknownUserException;
 import mybar.exception.users.UserExistsException;
 import mybar.repository.users.RoleDao;
 import mybar.repository.users.UserDao;
+import mybar.utils.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -36,8 +36,8 @@ public class UserService {
     }
 
     public IUser createUser(IUser user) throws UserExistsException, EmailDuplicatedException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getEmail()), "Email is required.");
+        Preconditions.checkArgument(!StringUtils.hasText(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(!StringUtils.hasText(user.getEmail()), "Email is required.");
         checkUsernameDuplicated(user.getUsername());
         checkEmailDuplicated(user.getEmail());
 
@@ -74,8 +74,8 @@ public class UserService {
     // admin functions
 
     public IUser editUserInfo(IUser user) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getEmail()), "Email is required.");
+        Preconditions.checkArgument(StringUtils.hasText(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(StringUtils.hasText(user.getEmail()), "Email is required.");
         User userEntityByEmail = userDao.findByEmail(user.getEmail());
         if (Objects.equals(userEntityByEmail.getEmail(), user.getEmail())) {
             throw new UserExistsException("Email already belongs to another user");
@@ -97,7 +97,7 @@ public class UserService {
     }
 
     public IUser findByUsername(String username) throws UnknownUserException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
+        Preconditions.checkArgument(StringUtils.hasText(username), "Username is required.");
 
         return userDao.findById(username)
                 .map(this::toUserDto)
@@ -121,7 +121,7 @@ public class UserService {
     }
 
     public void activateUser(String username) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
+        Preconditions.checkArgument(StringUtils.hasText(username), "Username is required.");
 
         User userEntity = userDao.getOne(username);
         if (userEntity != null) {
@@ -132,7 +132,7 @@ public class UserService {
     }
 
     public void deactivateUser(String username) throws UnknownUserException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(username), "Username is required.");
+        Preconditions.checkArgument(StringUtils.hasText(username), "Username is required.");
 
         User userEntity = userDao.getOne(username);
         if (userEntity != null) {
@@ -192,8 +192,8 @@ public class UserService {
     }
 
     public void changePassword(IUser user, String password) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(user.getUsername()), "Username is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(password), "Password must not be empty.");
+        Preconditions.checkArgument(!StringUtils.hasText(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(!StringUtils.hasText(password), "Password must not be empty.");
 
         final User one = userDao.getOne(user.getUsername());
         one.setPassword(password);

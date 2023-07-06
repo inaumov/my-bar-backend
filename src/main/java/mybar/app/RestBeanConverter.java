@@ -1,7 +1,5 @@
 package mybar.app;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import mybar.api.bar.IBottle;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.ICocktailIngredient;
@@ -38,7 +36,7 @@ public final class RestBeanConverter {
         if (CollectionUtils.isEmpty(map)) {
             return Collections.emptyMap();
         }
-        Map<String, Collection<CocktailIngredientBean>> transformedMap = Maps.newHashMap();
+        Map<String, Collection<CocktailIngredientBean>> transformedMap = new HashMap<>();
         for (Map.Entry<String, Collection<ICocktailIngredient>> entry : map.entrySet()) {
             transformedMap.put(entry.getKey(), transformCocktailIngredients(entry.getValue()));
         }
@@ -46,7 +44,7 @@ public final class RestBeanConverter {
     }
 
     private static List<CocktailIngredientBean> transformCocktailIngredients(Collection<ICocktailIngredient> cocktailIngredients) {
-        List<CocktailIngredientBean> cocktailIngredientBeans = Lists.newArrayList();
+        List<CocktailIngredientBean> cocktailIngredientBeans = new ArrayList<>();
         for (ICocktailIngredient cocktailIngredient : cocktailIngredients) {
             cocktailIngredientBeans.add(from(cocktailIngredient));
         }

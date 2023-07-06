@@ -1,7 +1,6 @@
 package mybar.app.bean.bar.ingredient;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.api.bar.ingredient.BeverageType;
@@ -19,13 +18,4 @@ public class BeverageBean implements IBeverage {
     private String kind;
 
     private BeverageType beverageType;
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("id", id)
-                .add("kind", kind)
-                .add("beverageType", beverageType)
-                .toString();
-    }
 }

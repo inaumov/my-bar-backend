@@ -1,7 +1,5 @@
 package mybar.dto;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
@@ -10,9 +8,6 @@ import mybar.domain.bar.Bottle;
 import mybar.domain.bar.Cocktail;
 import mybar.domain.bar.CocktailToIngredient;
 import mybar.domain.bar.Menu;
-import mybar.domain.bar.ingredient.Additive;
-import mybar.domain.bar.ingredient.Beverage;
-import mybar.domain.bar.ingredient.Drink;
 import mybar.dto.bar.BottleDto;
 import mybar.dto.bar.CocktailDto;
 import mybar.dto.bar.CocktailToIngredientDto;
@@ -23,7 +18,9 @@ import mybar.dto.bar.ingredient.DrinkDto;
 import mybar.dto.bar.ingredient.IngredientBaseDto;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DtoFactory {
 
@@ -45,19 +42,12 @@ public class DtoFactory {
         return dto;
     }
 
-    private static Map<String, Collection<CocktailToIngredientDto>> convert(Collection<CocktailToIngredient> source) {
-        ListMultimap<String, CocktailToIngredientDto> result = ArrayListMultimap.create();
-        for (CocktailToIngredient cocktailToIngredient : source) {
-            CocktailToIngredientDto dto = toDto(cocktailToIngredient);
-            if (cocktailToIngredient.getIngredient() instanceof Beverage) {
-                result.put(IBeverage.GROUP_NAME, dto);
-            } else if (cocktailToIngredient.getIngredient() instanceof Drink) {
-                result.put(IDrink.GROUP_NAME, dto);
-            } else if (cocktailToIngredient.getIngredient() instanceof Additive) {
-                result.put(IAdditive.GROUP_NAME, dto);
-            }
-        }
-        return result.asMap();
+    private static Map<String, List<CocktailToIngredientDto>> convert(Collection<CocktailToIngredient> source) {
+        return source
+                .stream()
+                .collect(Collectors.groupingBy(entity -> entity.getIngredient().getGroupName(),
+                        Collectors.mapping(DtoFactory::toDto, Collectors.toList()))
+                );
     }
 
     private static CocktailToIngredientDto toDto(CocktailToIngredient entity) {

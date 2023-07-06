@@ -1,6 +1,5 @@
 package mybar.events.consumers;
 
-import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
 import mybar.dto.RateDto;
 import mybar.events.common.api.RecordObject;
@@ -16,12 +15,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Component
 public class RatesEventConsumer {
-
-    private final Splitter splitter = Splitter.on("@");
 
     private final RatesService ratesService;
 
@@ -39,7 +38,9 @@ public class RatesEventConsumer {
         log.info("Received payload='{}'", recordObject);
         try {
             RateDto rateDto = recordObject.getValue();
-            Iterable<String> keyStrings = splitter.split(key);
+            List<String> keyStrings = Pattern.compile("@")
+                    .splitAsStream(key)
+                    .toList();
             Iterator<String> stringsIt = keyStrings.iterator();
             String userId = stringsIt.next();
             String cocktailId = stringsIt.next();

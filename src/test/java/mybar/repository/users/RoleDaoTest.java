@@ -1,7 +1,6 @@
 package mybar.repository.users;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.google.common.collect.Iterables;
 import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
 import org.junit.jupiter.api.*;
@@ -22,7 +21,7 @@ public class RoleDaoTest extends UserBaseDaoTest {
 
     @Test
     public void testSelectAllRoles() {
-        int size = Iterables.size(roleDAO.findAll());
+        int size = roleDAO.findAll().size();
         assertEquals(ROLES_CNT, size);
     }
 
