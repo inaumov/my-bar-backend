@@ -36,8 +36,8 @@ public class UserService {
     }
 
     public IUser createUser(IUser user) throws UserExistsException, EmailDuplicatedException {
-        Preconditions.checkArgument(!StringUtils.hasText(user.getUsername()), "Username is required.");
-        Preconditions.checkArgument(!StringUtils.hasText(user.getEmail()), "Email is required.");
+        Preconditions.checkArgument(StringUtils.hasText(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(StringUtils.hasText(user.getEmail()), "Email is required.");
         checkUsernameDuplicated(user.getUsername());
         checkEmailDuplicated(user.getEmail());
 
@@ -192,8 +192,8 @@ public class UserService {
     }
 
     public void changePassword(IUser user, String password) {
-        Preconditions.checkArgument(!StringUtils.hasText(user.getUsername()), "Username is required.");
-        Preconditions.checkArgument(!StringUtils.hasText(password), "Password must not be empty.");
+        Preconditions.checkArgument(StringUtils.hasText(user.getUsername()), "Username is required.");
+        Preconditions.checkArgument(StringUtils.hasText(password), "Password must not be empty.");
 
         final User one = userDao.getOne(user.getUsername());
         one.setPassword(password);
