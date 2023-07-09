@@ -3,7 +3,6 @@ package mybar.app.bean.bar;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.api.bar.IBottle;
@@ -42,16 +41,6 @@ public class BottleBean implements IBottle {
     @Override
     public boolean isInShelf() {
         return YesNoEnum.YES == inShelf;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("beverage", beverage)
-                .add("brandName", brandName)
-                .add("volume", volume)
-                .add("price", price)
-                .toString();
     }
 
 }

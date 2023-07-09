@@ -1,6 +1,5 @@
 package mybar.web.rest.bar;
 
-import com.google.common.collect.Lists;
 import mybar.dto.bar.MenuDto;
 import mybar.service.bar.CocktailsService;
 import mybar.web.rest.ARestControllerTest;
@@ -12,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -50,7 +51,7 @@ public class MenuRestControllerTest extends ARestControllerTest {
         second.setId(2);
         second.setName("long");
 
-        when(cocktailsServiceMock.getAllMenuItems()).thenReturn(Lists.newArrayList(first, second));
+        when(cocktailsServiceMock.getAllMenuItems()).thenReturn(List.of(first, second));
 
         mockMvc.perform(get(basePath))
                 .andDo(print())

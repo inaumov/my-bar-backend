@@ -1,6 +1,5 @@
 package mybar.domain.bar;
 
-import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.domain.bar.ingredient.Beverage;
@@ -39,13 +38,5 @@ public class Bottle {
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("id", id)
-                .add("brandName", brandName)
-                .toString();
-    }
 
 }

@@ -1,6 +1,5 @@
 package mybar.domain.bar;
 
-import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 import mybar.api.bar.ICocktail;
@@ -56,14 +55,6 @@ public class Cocktail {
 
     public ICocktail toDto(String menuName) {
         return DtoFactory.toDto(this, menuName);
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("id", id)
-                .add("name", name)
-                .toString();
     }
 
 }

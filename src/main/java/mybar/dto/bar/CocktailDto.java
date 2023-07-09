@@ -13,7 +13,7 @@ public class CocktailDto implements ICocktail {
 
     private String id;
     private String name;
-    private Map<String, Collection<CocktailToIngredientDto>> ingredients;
+    private Map<String, ? extends Collection<CocktailToIngredientDto>> ingredients;
     private String menuName;
     private String description;
     private String imageUrl;

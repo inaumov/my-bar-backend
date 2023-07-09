@@ -1,7 +1,6 @@
 package mybar.service.bar;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Suppliers;
+import lombok.extern.slf4j.Slf4j;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
@@ -9,20 +8,27 @@ import mybar.api.bar.ingredient.IIngredient;
 import mybar.domain.bar.ingredient.Ingredient;
 import mybar.dto.DtoFactory;
 import mybar.repository.bar.IngredientDao;
+import mybar.utils.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class IngredientService {
 
-    private Set<String> GROUP_NAMES = new HashSet<>(Arrays.asList(
+    private static final Set<String> GROUP_NAMES = new HashSet<>(Arrays.asList(
             IBeverage.GROUP_NAME,
             IDrink.GROUP_NAME,
             IAdditive.GROUP_NAME
@@ -30,12 +36,18 @@ public class IngredientService {
 
     private final IngredientDao ingredientDao;
 
-    private Supplier<List<IIngredient>> allIngredientsCached = Suppliers.memoizeWithExpiration(
-            this::loadAllIngredients, 30, TimeUnit.MINUTES);
+    private Supplier<List<IIngredient>> allIngredientsCached;
 
     @Autowired
     public IngredientService(IngredientDao ingredientDao) {
         this.ingredientDao = ingredientDao;
+    }
+
+    @PostConstruct
+    public void initAllIngredients() {
+        log.info("Post construct [ingredients] cache");
+        List<IIngredient> ingredients = this.loadAllIngredients();
+        allIngredientsCached = () -> ingredients;
     }
 
     public List<IIngredient> findByGroupName(String groupName) throws IllegalArgumentException {

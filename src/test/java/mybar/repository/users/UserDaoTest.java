@@ -3,7 +3,6 @@ package mybar.repository.users;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
-import com.google.common.collect.Iterables;
 import mybar.api.users.RoleName;
 import mybar.domain.users.Role;
 import mybar.domain.users.User;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,8 +37,8 @@ public class UserDaoTest extends UserBaseDaoTest {
 
     @Test
     public void testSelectAllUsers() {
-        Iterable<User> all = userDao.findAll();
-        assertEquals(USERS_CNT, Iterables.size(all));
+        List<User> all = userDao.findAll();
+        assertEquals(USERS_CNT, all.size());
     }
 
     @ExpectedDatabase(

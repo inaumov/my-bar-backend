@@ -1,7 +1,6 @@
 package mybar.web.rest.bar;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.base.Strings;
 import mybar.common.providers.availability.IAvailabilityCalculator;
 import lombok.extern.slf4j.Slf4j;
 import mybar.api.bar.ICocktail;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -40,7 +40,7 @@ public class CocktailsController {
     @JsonView(View.Cocktail.class)
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<CocktailBean>>> allCocktails(@RequestParam(value = "filter", required = false) String menuNameParam) {
-        if (!Strings.isNullOrEmpty(menuNameParam)) {
+        if (StringUtils.hasText(menuNameParam)) {
             Map<String, List<CocktailBean>> cocktailsForMenu = findCocktailsForMenu(menuNameParam);
             return new ResponseEntity<>(cocktailsForMenu, HttpStatus.OK);
         }

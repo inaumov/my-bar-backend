@@ -1,14 +1,12 @@
 package mybar.app.cocktails;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import mybar.common.providers.availability.IAvailabilityCalculator;
 import mybar.api.bar.ingredient.IAdditive;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.api.bar.ingredient.IDrink;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.CocktailIngredientBean;
 import mybar.app.bean.bar.YesNoEnum;
+import mybar.common.providers.availability.IAvailabilityCalculator;
 import mybar.service.bar.ShelfService;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterEach;
@@ -21,10 +19,10 @@ import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
@@ -61,11 +59,11 @@ public class CocktailAvailabilityCalculatorTest {
     public void testGet() throws Exception {
         final CocktailBean emptyBean1 = new CocktailBean();
         emptyBean1.setId("cocktail-000001");
-        emptyBean1.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IDrink.GROUP_NAME, Collections.<CocktailIngredientBean>emptyList()));
+        emptyBean1.setIngredients(Map.of(IDrink.GROUP_NAME, Collections.emptyList()));
 
         final CocktailBean emptyBean2 = new CocktailBean();
         emptyBean2.setId("cocktail-000002");
-        emptyBean2.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IAdditive.GROUP_NAME, Collections.<CocktailIngredientBean>emptyList()));
+        emptyBean2.setIngredients(Map.of(IAdditive.GROUP_NAME, Collections.emptyList()));
 
         CocktailBean testNotEmptyBean = new CocktailBean();
         testNotEmptyBean.setId("cocktail-000003");
@@ -73,7 +71,7 @@ public class CocktailAvailabilityCalculatorTest {
         CocktailBean testAvailableBean = new CocktailBean();
         testNotEmptyBean.setId("cocktail-000004");
 
-        ArrayList<CocktailBean> cocktails = Lists.newArrayList(emptyBean1, emptyBean2, addIngredients(testNotEmptyBean), prepareAvailableCocktail(testAvailableBean));
+        List<CocktailBean> cocktails = List.of(emptyBean1, emptyBean2, addIngredients(testNotEmptyBean), prepareAvailableCocktail(testAvailableBean));
         for (CocktailBean cocktail : cocktails) {
             availabilityCalculator.doUpdate(cocktail);
         }
@@ -107,7 +105,7 @@ public class CocktailAvailabilityCalculatorTest {
         CocktailIngredientBean b = new CocktailIngredientBean();
         b.setIngredientId(20);
 
-        cocktailBean.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IBeverage.GROUP_NAME, Lists.newArrayList(a, b)));
+        cocktailBean.setIngredients(Map.of(IBeverage.GROUP_NAME, List.of(a, b)));
         return cocktailBean;
     }
 
@@ -119,7 +117,7 @@ public class CocktailAvailabilityCalculatorTest {
         CocktailIngredientBean c = new CocktailIngredientBean();
         c.setIngredientId(4);
 
-        cocktailBean.setIngredients(ImmutableMap.<String, Collection<CocktailIngredientBean>>of(IBeverage.GROUP_NAME, Lists.newArrayList(a, b, c)));
+        cocktailBean.setIngredients(Map.of(IBeverage.GROUP_NAME, List.of(a, b, c)));
         return cocktailBean;
     }
 

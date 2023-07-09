@@ -1,6 +1,6 @@
 package mybar.app.obfuscation;
 
-import com.google.common.base.Strings;
+import org.springframework.util.StringUtils;
 
 public class UsernameObfuscator implements IObfuscator {
 
@@ -10,12 +10,12 @@ public class UsernameObfuscator implements IObfuscator {
      * Else last symbol is obfuscated by "***" : user -> use***
      */
     public String obfuscate(String username) {
-        if (Strings.isNullOrEmpty(username)) {
+        if (!StringUtils.hasText(username)) {
             return EMPTY_STRING;
         }
         int nameLength = username.length();
         if (nameLength > 4) {
-            String obfuscatedString = Strings.repeat("*", nameLength - 4);
+            String obfuscatedString = "*".repeat(nameLength - 4);
             return new StringBuffer(username).replace(3, nameLength - 1, obfuscatedString).toString();
         } else {
             String obfuscatedString = "***";

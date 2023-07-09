@@ -1,7 +1,5 @@
 package mybar.web.rest.bar;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import mybar.api.bar.Measurement;
 import mybar.api.bar.ingredient.IAdditive;
@@ -14,12 +12,14 @@ import mybar.service.bar.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,53 +42,53 @@ public class IngredientsController {
     public ResponseEntity<Map<String, GroupedIngredientsBean>> listIngredients(
             @RequestParam(value = "filter", required = false) String groupNameParam) {
 
-        if (Strings.isNullOrEmpty(groupNameParam)) {
+        if (!StringUtils.hasText(groupNameParam)) {
             List<IIngredient> allIngredients = ingredientService.findAll();
             return new ResponseEntity<>(toMapByGroup(allIngredients), HttpStatus.OK);
         }
 
         List<IIngredient> ingredientsByGroupName = ingredientService.findByGroupName(groupNameParam);
-        ImmutableMap<String, GroupedIngredientsBean> groupedIngredientsBean = toMapByGroup(groupNameParam, ingredientsByGroupName);
+        Map<String, GroupedIngredientsBean> groupedIngredientsBean = toMapByGroup(groupNameParam, ingredientsByGroupName);
         return new ResponseEntity<>(groupedIngredientsBean, HttpStatus.OK);
     }
 
-    private static ImmutableMap<String, GroupedIngredientsBean> toMapByGroup(List<IIngredient> ingredients) {
+    private static Map<String, GroupedIngredientsBean> toMapByGroup(List<IIngredient> ingredients) {
 
         List<IBeverage> beverages = filter(ingredients, IBeverage.class);
         List<IDrink> drinks = filter(ingredients, IDrink.class);
         List<IAdditive> additives = filter(ingredients, IAdditive.class);
 
-        ImmutableMap.Builder<String, GroupedIngredientsBean> builder = ImmutableMap.builder();
-        putIfPresent(builder, IBeverage.GROUP_NAME, true, beverages);
-        putIfPresent(builder, IDrink.GROUP_NAME, true, drinks);
-        putIfPresent(builder, IAdditive.GROUP_NAME, false, additives);
+        Map<String, GroupedIngredientsBean> map = new HashMap<>();
+        putIfPresent(map, IBeverage.GROUP_NAME, true, beverages);
+        putIfPresent(map, IDrink.GROUP_NAME, true, drinks);
+        putIfPresent(map, IAdditive.GROUP_NAME, false, additives);
 
-        return builder.build();
+        return map;
     }
 
-    private static ImmutableMap<String, GroupedIngredientsBean> toMapByGroup(String groupNameParam, List<IIngredient> ingredients) {
+    private static Map<String, GroupedIngredientsBean> toMapByGroup(String groupNameParam, List<IIngredient> ingredients) {
 
-        ImmutableMap.Builder<String, GroupedIngredientsBean> builder = ImmutableMap.builder();
+        Map<String, GroupedIngredientsBean> map = new HashMap<>();
 
         switch (groupNameParam) {
             case IBeverage.GROUP_NAME: {
                 List<IBeverage> beverages = filter(ingredients, IBeverage.class);
-                putIfPresent(builder, IBeverage.GROUP_NAME, true, beverages);
+                putIfPresent(map, IBeverage.GROUP_NAME, true, beverages);
                 break;
             }
             case IDrink.GROUP_NAME: {
                 List<IDrink> drinks = filter(ingredients, IDrink.class);
-                putIfPresent(builder, IDrink.GROUP_NAME, true, drinks);
+                putIfPresent(map, IDrink.GROUP_NAME, true, drinks);
                 break;
             }
             case IAdditive.GROUP_NAME: {
                 List<IAdditive> additives = filter(ingredients, IAdditive.class);
-                putIfPresent(builder, IAdditive.GROUP_NAME, false, additives);
+                putIfPresent(map, IAdditive.GROUP_NAME, false, additives);
                 break;
             }
         }
 
-        return builder.build();
+        return map;
     }
 
     private static <T extends IIngredient> List<T> filter(List<IIngredient> ingredients, Class<T> aClass) {
@@ -99,7 +99,7 @@ public class IngredientsController {
                 .collect(Collectors.toList());
     }
 
-    private static void putIfPresent(ImmutableMap.Builder<String, GroupedIngredientsBean> builder,
+    private static void putIfPresent(Map<String, GroupedIngredientsBean> builder,
                                      String groupName, boolean isLiquid, List<? extends IIngredient> filtered) {
         if (!filtered.iterator().hasNext()) {
             builder.put(groupName, GroupedIngredientsBean.of(Collections.emptyList(), Collections.emptyList(), null));

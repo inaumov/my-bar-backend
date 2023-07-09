@@ -3,7 +3,6 @@ package mybar.repository.bar;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
-import com.google.common.base.Strings;
 import mybar.api.bar.ingredient.BeverageType;
 import mybar.domain.bar.Bottle;
 import mybar.domain.bar.ingredient.Beverage;
@@ -11,6 +10,7 @@ import mybar.repository.BaseDaoTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -106,7 +106,7 @@ public class BottleDaoTest extends BaseDaoTest {
         Bottle saved = bottleDao.save(bottle);
         commit();
 
-        assertFalse(Strings.isNullOrEmpty(saved.getId()));
+        assertTrue(StringUtils.hasText(saved.getId()));
     }
 
     @ExpectedDatabase(value = "classpath:datasets/expected/bottles-update.xml", table = "BOTTLE")

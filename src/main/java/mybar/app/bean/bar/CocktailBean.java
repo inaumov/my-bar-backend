@@ -3,7 +3,6 @@ package mybar.app.bean.bar;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.common.base.MoreObjects;
 import mybar.common.providers.availability.IAvailabilitySettable;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,15 +38,6 @@ public class CocktailBean implements ICocktail, IAvailabilitySettable {
 
     @JsonView(View.CocktailWithDetails.class)
     private String description;
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("name", name)
-                .add("imageUrl", imageUrl)
-                .add("description", description)
-                .toString();
-    }
 
     @JsonIgnore
     @Override

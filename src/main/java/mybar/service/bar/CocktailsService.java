@@ -1,11 +1,9 @@
 package mybar.service.bar;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.base.Suppliers;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Iterables;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import mybar.api.bar.ICocktail;
 import mybar.api.bar.ICocktailIngredient;
 import mybar.api.bar.IMenu;
@@ -21,12 +19,23 @@ import mybar.repository.bar.CocktailDao;
 import mybar.repository.bar.IngredientDao;
 import mybar.repository.bar.MenuDao;
 import mybar.repository.rates.RatesDao;
+import mybar.utils.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.util.function.SupplierUtils;
 
-import java.util.*;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -34,6 +43,7 @@ import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
+@Slf4j
 public class CocktailsService {
 
     private final MenuDao menuDao;
@@ -44,12 +54,11 @@ public class CocktailsService {
 
     private final RatesDao ratesDao;
 
-    private Supplier<List<IMenu>> allMenusCached = Suppliers.memoizeWithExpiration(
-            this::loadAllMenus, 30, TimeUnit.MINUTES);
+    private Supplier<List<IMenu>> allMenusCached;
 
-    private Cache<String, List<ICocktail>> cocktailsCache = CacheBuilder.newBuilder()
+    private final Cache<String, List<ICocktail>> cocktailsCache = Caffeine.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
-            .maximumSize(10)
+            .maximumSize(100)
             .build();
 
     @Autowired
@@ -60,10 +69,17 @@ public class CocktailsService {
         this.ratesDao = ratesDao;
     }
 
+    @PostConstruct
+    public void initAllIngredients() {
+        log.info("Post construct [menus] cache");
+        List<IMenu> menus = this.loadAllMenus();
+        allMenusCached = () -> menus;
+    }
+
     // menu
 
     public Collection<IMenu> getAllMenuItems() {
-        return allMenusCached.get();
+        return SupplierUtils.resolve(allMenusCached);
     }
 
     private List<IMenu> loadAllMenus() {
@@ -77,7 +93,7 @@ public class CocktailsService {
     // cocktails
 
     private void ensureAllCocktailsLoaded() {
-        if (cocktailsCache.size() == 0) {
+        if (cocktailsCache.estimatedSize() == 0) {
             List<Menu> all = menuDao.findAll();
             for (final Menu menu : all) {
                 final String menuName = menu.getName();
@@ -93,26 +109,21 @@ public class CocktailsService {
                 .collect(Collectors.toList());
     }
 
+    @SneakyThrows
     private IMenu findMenuById(final int menuId) {
-        Optional<IMenu> relatedMenu = allMenusCached.get()
+        return allMenusCached.get()
                 .stream()
                 .filter(menu -> menu.getId() == menuId)
-                .findFirst();
-        if (!relatedMenu.isPresent()) {
-            throw new UnknownMenuException(String.valueOf(menuId));
-        }
-        return relatedMenu.get();
+                .findFirst()
+                .orElseThrow(() -> new UnknownMenuException(String.valueOf(menuId)));
     }
 
     private IMenu findMenuByName(final String menuName) {
-        Optional<IMenu> relatedMenu = allMenusCached.get()
+        return allMenusCached.get()
                 .stream()
                 .filter(menu -> Objects.equals(menu.getName(), menuName))
-                .findFirst();
-        if (!relatedMenu.isPresent()) {
-            throw new UnknownMenuException(menuName);
-        }
-        return relatedMenu.get();
+                .findFirst()
+                .orElseThrow(() -> new UnknownMenuException(menuName));
     }
 
     // cocktails per menu
@@ -136,17 +147,17 @@ public class CocktailsService {
     }
 
     public ICocktail saveCocktail(ICocktail cocktail) throws UniqueCocktailNameException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getName()), "Cocktail name is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getMenuName()), "Menu name is required.");
+        Preconditions.checkArgument(StringUtils.hasText(cocktail.getName()), "Cocktail name is required.");
+        Preconditions.checkArgument(StringUtils.hasText(cocktail.getMenuName()), "Menu name is required.");
         checkCocktailExists(cocktail.getName());
 
         return performSaveOrUpdate(cocktail);
     }
 
     public ICocktail updateCocktail(ICocktail cocktail) throws CocktailNotFoundException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getId()), "Cocktail id is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getName()), "Cocktail name is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(cocktail.getMenuName()), "Menu name is required.");
+        Preconditions.checkArgument(StringUtils.hasText(cocktail.getId()), "Cocktail id is required.");
+        Preconditions.checkArgument(StringUtils.hasText(cocktail.getName()), "Cocktail name is required.");
+        Preconditions.checkArgument(StringUtils.hasText(cocktail.getMenuName()), "Menu name is required.");
 
         return performSaveOrUpdate(cocktail);
     }
@@ -166,9 +177,12 @@ public class CocktailsService {
     }
 
     private void checkIngredientsExist(Map<String, Collection<ICocktailIngredient>> ingredients) {
-        Iterable<ICocktailIngredient> newList = Iterables.concat(ingredients.values());
+        List<ICocktailIngredient> newCombinedList = new ArrayList<>();
+        for (Collection<ICocktailIngredient> cocktailIngredients : ingredients.values()) {
+            newCombinedList.addAll(cocktailIngredients);
+        }
 
-        List<Integer> asInputIds = StreamSupport.stream(newList.spliterator(), false)
+        List<Integer> asInputIds = newCombinedList.stream()
                 .map(ICocktailIngredient::getIngredientId)
                 .collect(Collectors.toList());
 
@@ -214,7 +228,7 @@ public class CocktailsService {
     }
 
     public ICocktail findCocktailById(String id) throws CocktailNotFoundException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
+        Preconditions.checkArgument(StringUtils.hasText(id), "Cocktail id is required.");
         Optional<Cocktail> cocktail = cocktailDao.findById(id);
         return cocktail
                 .map(c -> c.toDto(findMenuById(c.getMenuId()).getName()))
@@ -226,9 +240,9 @@ public class CocktailsService {
     }
 
     public void deleteCocktailById(String id) throws CocktailNotFoundException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Cocktail id is required.");
+        Preconditions.checkArgument(StringUtils.hasText(id), "Cocktail id is required.");
         cocktailDao.deleteById(id);
-        if (cocktailsCache.size() == 0) {
+        if (cocktailsCache.estimatedSize() == 0) {
             return;
         }
         for (String menuName : cocktailsCache.asMap().keySet()) {

@@ -1,9 +1,7 @@
 package mybar.service.bar;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import mybar.api.bar.IBottle;
 import mybar.api.bar.ingredient.IBeverage;
 import mybar.domain.EntityFactory;
@@ -15,9 +13,11 @@ import mybar.exception.BottleNotFoundException;
 import mybar.exception.UnknownBeverageException;
 import mybar.repository.bar.BottleDao;
 import mybar.repository.bar.IngredientDao;
+import mybar.utils.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -34,11 +34,11 @@ import static mybar.dto.DtoFactory.toDto;
 @Transactional
 public class ShelfService {
 
-    private BottleDao bottleDao;
+    private final BottleDao bottleDao;
 
-    private IngredientDao ingredientDao;
+    private final IngredientDao ingredientDao;
 
-    private Cache<String, IBottle> bottlesCache = CacheBuilder.newBuilder()
+    private final Cache<String, IBottle> bottlesCache = Caffeine.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .maximumSize(100)
             .build();
@@ -50,7 +50,7 @@ public class ShelfService {
     }
 
     public IBottle findById(final String id) throws BottleNotFoundException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
+        Preconditions.checkArgument(StringUtils.hasText(id), "Bottle id is required.");
         IBottle present = bottlesCache.getIfPresent(id);
         if (present != null) {
             return present;
@@ -69,7 +69,7 @@ public class ShelfService {
     }
 
     public IBottle saveBottle(IBottle bottle) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(bottle.getBrandName()), "Brand name is required.");
+        Preconditions.checkArgument(StringUtils.hasText(bottle.getBrandName()), "Brand name is required.");
         Preconditions.checkArgument(bottle.getBeverage() != null && bottle.getBeverage().getId() >= 0, "Beverage ID is required.");
         checkBeverageExists(bottle.getBeverage());
 
@@ -87,8 +87,8 @@ public class ShelfService {
     }
 
     public IBottle updateBottle(IBottle bottle) throws BottleNotFoundException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(bottle.getId()), "Bottle id is required.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(bottle.getBrandName()), "Brand name is required.");
+        Preconditions.checkArgument(StringUtils.hasText(bottle.getId()), "Bottle id is required.");
+        Preconditions.checkArgument(StringUtils.hasText(bottle.getBrandName()), "Brand name is required.");
         Preconditions.checkArgument(bottle.getBeverage() != null && bottle.getBeverage().getId() >= 0, "Beverage ID is required.");
         checkBeverageExists(bottle.getBeverage());
 
@@ -110,7 +110,7 @@ public class ShelfService {
     }
 
     public void deleteBottleById(final String id) throws BottleNotFoundException {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Bottle id is required.");
+        Preconditions.checkArgument(StringUtils.hasText(id), "Bottle id is required.");
         try {
             bottleDao.deleteById(id);
         } catch (EntityNotFoundException e) {
@@ -125,7 +125,7 @@ public class ShelfService {
     }
 
     private void ensureAllBottlesLoaded() {
-        if (bottlesCache.size() == 0) {
+        if (bottlesCache.estimatedSize() == 0) {
             loadAllBottles();
         }
     }

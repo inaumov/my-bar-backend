@@ -1,17 +1,18 @@
 package mybar.app.cocktails;
 
-import com.google.common.collect.Iterables;
-import mybar.common.providers.availability.IAvailabilityCalculator;
 import lombok.Setter;
 import mybar.app.bean.bar.CocktailBean;
 import mybar.app.bean.bar.CocktailIngredientBean;
+import mybar.common.providers.availability.IAvailabilityCalculator;
 import mybar.service.bar.ShelfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -29,7 +30,9 @@ public class CocktailAvailabilityCalculator implements IAvailabilityCalculator<C
     }
 
     private Boolean calculateAvailability(Map<String, Collection<CocktailIngredientBean>> cocktailIngredients) {
-        Iterable<CocktailIngredientBean> allIngredients = Iterables.concat(cocktailIngredients.values());
+        List<CocktailIngredientBean> allIngredients = new ArrayList<>();
+        cocktailIngredients.values()
+                .forEach(allIngredients::addAll);
         Iterator<CocktailIngredientBean> ingredientsIterator = allIngredients.iterator();
         if (!ingredientsIterator.hasNext()) {
             return null;
