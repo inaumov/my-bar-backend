@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "bottle")
+@Table(name = "bottles")
 @GenericGenerator(name = "bottle_id", strategy = "mybar.domain.EntityIdGenerator")
 public class Bottle {
 

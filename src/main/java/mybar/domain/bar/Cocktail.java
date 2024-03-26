@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "cocktail")
+@Table(name = "cocktails")
 @GenericGenerator(name = "cocktail_id", strategy = "mybar.domain.EntityIdGenerator")
 public class Cocktail {
 

@@ -1,7 +1,7 @@
 server:
   servlet:
     contextPath: /api/bar
-  port: 8089
+  port: 8080
   error:
     include-message: always
 
@@ -13,7 +13,7 @@ management:
 
 spring:
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5433}/${DATABASE_NAME:my_bar}?schema=${DATABASE_SCHEMA:public}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:my_bar}?schema=${DATABASE_SCHEMA:public}
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -26,7 +26,7 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        dialect: org.hibernate.dialect.PostgresPlusDialect
   flyway:
     fail-on-missing-locations: true
   kafka:

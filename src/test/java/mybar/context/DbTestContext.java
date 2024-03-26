@@ -49,7 +49,7 @@ public abstract class DbTestContext {
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-        public static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14.2-alpine3.15")
+        public static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15.6-alpine")
                 .withReuse(true)
                 .withDatabaseName("my_bar")
                 .withUsername("postgres")
