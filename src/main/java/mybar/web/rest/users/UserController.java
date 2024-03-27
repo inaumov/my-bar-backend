@@ -11,12 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,39 +34,40 @@ public class UserController {
     }
 
     @JsonView(View.UserView.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}")
+    @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public UserDetailsBean getUser(@PathVariable("username") String username) {
         IUserDetails user = userService.findByUsername(username);
         return BeanFactory.fromDetails(user);
     }
 
     @JsonView(View.UserView.class)
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public UserDetailsBean updateUser(@RequestBody UserBean userBean) {
         IUserDetails user = userService.editUserInfo(userBean);
         return BeanFactory.fromDetails(user);
     }
 
-    @PutMapping("/{username}/changePassword")
+    @PutMapping("/changePassword")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    void changePassword(@PathVariable String username, @RequestBody @Validated ChangePasswordBean passwordBean, Authentication authentication) {
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public void changePassword(@AuthenticationPrincipal UserDetails userDetails,
+                               @RequestBody @Validated ChangePasswordBean passwordBean) {
 
-        IUser user = userService.findByUsername(username);
-        if (Objects.equals(user.getUsername(), authentication.getPrincipal())) {
+        IUser user = userService.findByUsername(userDetails.getUsername());
+        if (Objects.equals(user.getUsername(), userDetails.getUsername())) {
             final String encodedPassword = passwordEncoder.encode(passwordBean.getNewPassword());
             userService.changePassword(user, encodedPassword);
         } else {
-            throw new AccessDeniedException("The requester is not of hte same identity as password owner.");
+            throw new AccessDeniedException("The requester is not of the same identity as password owner.");
         }
     }
 
     @JsonView(View.UserView.class)
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDetailsBean register(@RequestHeader HttpHeaders headers,
                                     @RequestBody RegisterUserBean registerUserBean) {
@@ -83,16 +85,16 @@ public class UserController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{username}")
+    @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deactivate(@PathVariable String username) {
         userService.deactivateUser(username);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MappingJacksonValue> getUsers() {
         List<IUser> users = userService.getAllRegisteredUsers();
 
