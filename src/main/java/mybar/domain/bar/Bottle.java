@@ -5,7 +5,7 @@ import lombok.Setter;
 import mybar.domain.bar.ingredient.Beverage;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Getter

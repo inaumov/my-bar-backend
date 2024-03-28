@@ -12,6 +12,11 @@ management:
         include: info, health, metrics
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8089
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:my_bar}?schema=${DATABASE_SCHEMA:public}
     username: ${DATABASE_USERNAME:postgres}

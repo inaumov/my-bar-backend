@@ -44,7 +44,7 @@ public class HistoryControllerTest extends ARestControllerTest {
     }
 
     @Test
-    public void test_getRatedCocktails() throws Exception {
+    void test_getRatedCocktails() throws Exception {
         History history = new History();
         history.setName(COCKTAIL_NAME);
         history.setStars(STARS);

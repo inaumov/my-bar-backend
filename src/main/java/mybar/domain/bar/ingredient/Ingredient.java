@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import mybar.api.bar.ingredient.IIngredient;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @Setter

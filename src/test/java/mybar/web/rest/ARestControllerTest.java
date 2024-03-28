@@ -5,11 +5,11 @@ import mybar.web.config.auth.AuthorizationServerConfiguration;
 import mybar.web.config.auth.ResourceServerConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
-import org.springframework.security.oauth2.common.util.JsonParser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -49,7 +49,7 @@ public abstract class ARestControllerTest {
 
         String resultString = result.andReturn().getResponse().getContentAsString();
 
-        JsonParser jsonParser = new Jackson2JsonParser();
+        JsonParser jsonParser = new GsonJsonParser();
         return jsonParser.parseMap(resultString).get("access_token").toString();
     }
 
