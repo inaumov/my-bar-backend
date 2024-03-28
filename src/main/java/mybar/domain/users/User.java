@@ -2,9 +2,9 @@ package mybar.domain.users;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 
 @Getter
@@ -34,7 +34,6 @@ public class User {
     private String email;
 
     @Column(name = "ACTIVE")
-    @Type(type = "org.hibernate.type.BooleanType")
     private boolean active;
 
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

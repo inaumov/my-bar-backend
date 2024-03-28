@@ -23,11 +23,9 @@ CREATE TABLE user_has_roles
 );
 
 ALTER TABLE user_has_roles
-    ADD CONSTRAINT fk_user_has_roles_role_name
-        FOREIGN KEY (role_name)
-            REFERENCES roles (role_name);
+    ADD FOREIGN KEY (role_name)
+        REFERENCES roles (role_name);
 
 ALTER TABLE user_has_roles
-    ADD CONSTRAINT fk_user_has_roles_username
-        FOREIGN KEY (username)
-            REFERENCES users (username);
+    ADD FOREIGN KEY (username)
+        REFERENCES users (username);

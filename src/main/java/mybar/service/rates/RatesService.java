@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Tuple;
+import jakarta.persistence.Tuple;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.*;
